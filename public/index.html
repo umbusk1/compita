@@ -11,7 +11,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -285,7 +285,8 @@
 <div class="container">
         <div class="header">
             <h1>🎯 Compita</h1>
-            <p>Sistema de Análisis de Licitaciones con IA</p>
+            <p>Sistema de Análisis de Licitaciones con IA<br>
+            Vibe-coded by Umbusk</p>
         </div>
 
         <div class="tabs">
@@ -308,7 +309,7 @@
         <!-- TAB 2: ANALIZAR LICITACIONES -->
         <div id="tab-analizar" class="tab-content">
             <h2>Analizar Licitaciones</h2>
-            
+
             <div class="form-group">
                 <label>Seleccionar Cliente</label>
                 <select id="select-cliente" style="font-size: 1.1em;">
@@ -322,14 +323,14 @@
             </div>
 
             <button class="btn btn-primary" onclick="analizarLicitaciones()">🚀 Analizar Licitaciones</button>
-            
+
             <div id="analisis-status"></div>
         </div>
 
         <!-- TAB 3: RESULTADOS -->
         <div id="tab-resultados" class="tab-content">
             <h2>Resultados de Análisis</h2>
-            
+
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <select id="filtro-cliente" onchange="cargarResultados()">
                     <option value="">Todos los clientes</option>
@@ -354,7 +355,7 @@
             <h2 id="modal-titulo">Nuevo Cliente</h2>
             <form id="form-cliente" onsubmit="guardarCliente(event)">
                 <input type="hidden" id="cliente-id">
-                
+
                 <div class="form-group">
                     <label>Nombre *</label>
                     <input type="text" id="cliente-nombre" required>
@@ -400,7 +401,7 @@
         function cambiarTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-            
+
             event.target.classList.add('active');
             document.getElementById(`tab-${tab}`).classList.add('active');
 
@@ -413,7 +414,7 @@
             try {
                 const response = await fetch(`${API_BASE}/clientes`);
                 const data = await response.json();
-                
+
                 if (data.success) {
                     clientes = data.clientes;
                     mostrarClientes();
@@ -427,7 +428,7 @@
 
         function mostrarClientes() {
             const container = document.getElementById('clientes-container');
-            
+
             if (clientes.length === 0) {
                 container.innerHTML = '<p>No hay clientes. Crea uno nuevo.</p>';
                 return;
@@ -465,7 +466,7 @@
         function mostrarModalCliente(clienteId = null) {
             document.getElementById('modal-cliente').classList.add('active');
             document.getElementById('form-cliente').reset();
-            
+
             if (clienteId) {
                 const cliente = clientes.find(c => c.id === clienteId);
                 if (cliente) {
@@ -488,7 +489,7 @@
 
         async function guardarCliente(event) {
             event.preventDefault();
-            
+
             const id = document.getElementById('cliente-id').value;
             const datos = {
                 nombre: document.getElementById('cliente-nombre').value,
@@ -509,7 +510,7 @@
                 });
 
                 const result = await response.json();
-                
+
                 if (result.success) {
                     alert(result.mensaje);
                     cerrarModalCliente();
@@ -534,7 +535,7 @@
                 });
 
                 const result = await response.json();
-                
+
                 if (result.success) {
                     alert(result.mensaje);
                     cargarClientes();
@@ -678,8 +679,8 @@
                             ${resultados.map(r => `
                                 <tr>
                                     <td>
-                                        <input type="checkbox" 
-                                               ${r.seleccionado ? 'checked' : ''} 
+                                        <input type="checkbox"
+                                               ${r.seleccionado ? 'checked' : ''}
                                                onchange="toggleSeleccion(${r.id}, this.checked)">
                                     </td>
                                     <td>${r.cliente_nombre}</td>
@@ -710,7 +711,7 @@
 
         function exportarSeleccionados() {
             const seleccionados = resultadosActuales.filter(r => r.seleccionado);
-            
+
             if (seleccionados.length === 0) {
                 alert('No hay resultados seleccionados');
                 return;
