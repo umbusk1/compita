@@ -569,7 +569,7 @@
                 const data = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
 
                 const descripciones = data.slice(1)
-                    .map(row => row[0])
+                    .map(row => row[2])
                     .filter(desc => desc && desc.trim());
 
                 if (descripciones.length === 0) {
