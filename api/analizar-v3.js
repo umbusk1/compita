@@ -52,10 +52,10 @@ export default async function handler(req, res) {
     }
 
     const cliente = clienteData[0];
-    const descripcionesLimitadas = descripciones.slice(0, 25);
+    const descripcionesLimitadas = descripciones.slice(0, 10);
 
-    if (descripciones.length > 25) {
-      console.log(`⚠️ Limitando a 25 de ${descripciones.length} descripciones`);
+    if (descripciones.length > 10) {
+      console.log(`⚠️ Limitando a 10 de ${descripciones.length} descripciones`);
     }
 
     if (!process.env.ClaudeAPIKeyForCompita) {
