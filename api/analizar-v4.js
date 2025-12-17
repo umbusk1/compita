@@ -51,9 +51,9 @@ export default async function handler(req, res) {
         try {
           const fecha = new Date(fechaPresentacion);
           const hoy = new Date();
-          hoy.setHours(0, 0, 0, 0);
+          hoy.setHours(23, 59, 59, 999); // Incluir TODO el día de hoy
 
-          if (fecha <= hoy) {
+          if (fecha < hoy) {
             return {
               pasa: false,
               razon: `Fecha vencida: ${fechaPresentacion}`
@@ -113,6 +113,12 @@ export default async function handler(req, res) {
     const descartadas = resultadosPrefiltro.filter(r => !r.pasa);
     const candidatas = resultadosPrefiltro.filter(r => r.pasa);
 
+    // LOGGING DETALLADO para diagnóstico
+    const razonesDescarte = {};
+    descartadas.forEach(d => {
+      razonesDescarte[d.razon] = (razonesDescarte[d.razon] || 0) + 1;
+    });
+    console.log('📊 RAZONES DE DESCARTE:', razonesDescarte);
     console.log(`✅ Etapa 1: ${descartadas.length} descartadas, ${candidatas.length} candidatas`);
 
     if (candidatas.length === 0) {
