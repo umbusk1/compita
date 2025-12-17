@@ -1,111 +1,197 @@
-// api/clientes.js - CRUD de Clientes (ACTUALIZADO con exclusiones)
+// api/clientes.js - CRUD de clientes con umbral de monto
 import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST,PUT,DELETE');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-    // LISTAR TODOS los clientes
-    if (req.method === 'GET' && !req.query.id) {
+    // ========== GET: Obtener clientes ==========
+    if (req.method === 'GET') {
+      const { id } = req.query;
+
+      if (id) {
+        const cliente = await sql`
+          SELECT * FROM clientes WHERE id = ${id}
+        `;
+
+        if (cliente.length === 0) {
+          return res.status(404).json({
+            success: false,
+            error: 'Cliente no encontrado'
+          });
+        }
+
+        return res.status(200).json({
+          success: true,
+          cliente: cliente[0]
+        });
+      }
+
       const clientes = await sql`
-        SELECT
-          id, nombre, descripcion,
-          criterios_alta, criterios_media, exclusiones,
-          prompt_personalizado, activo, created_at
-        FROM clientes
-        WHERE activo = true
+        SELECT * FROM clientes
         ORDER BY nombre
       `;
-      return res.status(200).json({ success: true, clientes });
+
+      return res.status(200).json({
+        success: true,
+        clientes
+      });
     }
 
-    // OBTENER UN cliente por ID
-    if (req.method === 'GET' && req.query.id) {
-      const cliente = await sql`SELECT * FROM clientes WHERE id = ${req.query.id}`;
-      if (cliente.length === 0) {
-        return res.status(404).json({ success: false, error: 'Cliente no encontrado' });
-      }
-      return res.status(200).json({ success: true, cliente: cliente[0] });
-    }
-
-    // CREAR nuevo cliente
+    // ========== POST: Crear cliente ==========
     if (req.method === 'POST') {
-      const { nombre, descripcion, criterios_alta, criterios_media, exclusiones, prompt_personalizado } = req.body;
+      const {
+        nombre,
+        descripcion,
+        criterios_alta,
+        criterios_media,
+        exclusiones,
+        monto_minimo_alta
+      } = req.body;
 
       if (!nombre) {
-        return res.status(400).json({ success: false, error: 'Nombre es requerido' });
+        return res.status(400).json({
+          success: false,
+          error: 'El nombre es requerido'
+        });
       }
 
-      if ((!criterios_alta || criterios_alta.length === 0) && (!criterios_media || criterios_media.length === 0)) {
-        return res.status(400).json({ success: false, error: 'Debe especificar al menos un criterio ALTA o MEDIA' });
-      }
+      const montoAlta = monto_minimo_alta || 1000000; // Default 1 millón
 
-      const resultado = await sql`
-        INSERT INTO clientes (nombre, descripcion, criterios_alta, criterios_media, exclusiones, prompt_personalizado)
-        VALUES (${nombre}, ${descripcion || ''}, ${criterios_alta || []}, ${criterios_media || []}, ${exclusiones || []}, ${prompt_personalizado || null})
+      const result = await sql`
+        INSERT INTO clientes (
+          nombre,
+          descripcion,
+          criterios_alta,
+          criterios_media,
+          exclusiones,
+          monto_minimo_alta,
+          activo
+        )
+        VALUES (
+          ${nombre},
+          ${descripcion || ''},
+          ${criterios_alta || []},
+          ${criterios_media || []},
+          ${exclusiones || []},
+          ${montoAlta},
+          true
+        )
         RETURNING *
       `;
 
-      return res.status(201).json({ success: true, cliente: resultado[0], mensaje: 'Cliente creado exitosamente' });
+      return res.status(201).json({
+        success: true,
+        cliente: result[0]
+      });
     }
 
-    // ACTUALIZAR cliente
+    // ========== PUT: Actualizar cliente ==========
     if (req.method === 'PUT') {
-      const { id, nombre, descripcion, criterios_alta, criterios_media, exclusiones, prompt_personalizado } = req.body;
+      const { id } = req.query;
+      const {
+        nombre,
+        descripcion,
+        criterios_alta,
+        criterios_media,
+        exclusiones,
+        monto_minimo_alta,
+        activo
+      } = req.body;
 
       if (!id) {
-        return res.status(400).json({ success: false, error: 'ID es requerido' });
+        return res.status(400).json({
+          success: false,
+          error: 'ID requerido'
+        });
       }
 
-      if ((!criterios_alta || criterios_alta.length === 0) && (!criterios_media || criterios_media.length === 0)) {
-        return res.status(400).json({ success: false, error: 'Debe especificar al menos un criterio ALTA o MEDIA' });
-      }
-
-      const resultado = await sql`
+      const result = await sql`
         UPDATE clientes
-        SET nombre = ${nombre}, descripcion = ${descripcion}, criterios_alta = ${criterios_alta},
-            criterios_media = ${criterios_media}, exclusiones = ${exclusiones || []},
-            prompt_personalizado = ${prompt_personalizado}, updated_at = NOW()
+        SET
+          nombre = ${nombre},
+          descripcion = ${descripcion || ''},
+          criterios_alta = ${criterios_alta || []},
+          criterios_media = ${criterios_media || []},
+          exclusiones = ${exclusiones || []},
+          monto_minimo_alta = ${monto_minimo_alta || 1000000},
+          activo = ${activo !== undefined ? activo : true},
+          updated_at = CURRENT_TIMESTAMP
         WHERE id = ${id}
         RETURNING *
       `;
 
-      if (resultado.length === 0) {
-        return res.status(404).json({ success: false, error: 'Cliente no encontrado' });
+      if (result.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Cliente no encontrado'
+        });
       }
 
-      return res.status(200).json({ success: true, cliente: resultado[0], mensaje: 'Cliente actualizado exitosamente' });
+      return res.status(200).json({
+        success: true,
+        cliente: result[0]
+      });
     }
 
-    // ELIMINAR cliente (soft delete)
+    // ========== DELETE: Eliminar cliente ==========
     if (req.method === 'DELETE') {
       const { id } = req.query;
+
       if (!id) {
-        return res.status(400).json({ success: false, error: 'ID es requerido' });
+        return res.status(400).json({
+          success: false,
+          error: 'ID requerido'
+        });
       }
 
-      await sql`UPDATE clientes SET activo = false, updated_at = NOW() WHERE id = ${id}`;
-      return res.status(200).json({ success: true, mensaje: 'Cliente eliminado exitosamente' });
+      // Soft delete
+      const result = await sql`
+        UPDATE clientes
+        SET activo = false, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING *
+      `;
+
+      if (result.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Cliente no encontrado'
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        mensaje: 'Cliente eliminado correctamente'
+      });
     }
 
-    return res.status(405).json({ error: 'Método no permitido' });
+    return res.status(405).json({
+      success: false,
+      error: 'Método no permitido'
+    });
 
   } catch (error) {
     console.error('Error en API clientes:', error);
-    return res.status(500).json({ success: false, error: 'Error del servidor: ' + error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message
+    });
   }
 }
 
 export const config = {
-  api: { bodyParser: { sizeLimit: '1mb' } },
+  api: {
+    bodyParser: {
+      sizeLimit: '1mb',
+    },
+  },
   maxDuration: 10,
 };
