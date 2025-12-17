@@ -11,17 +11,17 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const sql = neon(process.env.NETLIFYDATABASEURL);
+  const sql = neon(process.env.DATABASE_URL);
 
   try {
     // LISTAR TODOS los clientes
     if (req.method === 'GET' && !req.query.id) {
       const clientes = await sql`
-        SELECT 
-          id, nombre, descripcion, 
+        SELECT
+          id, nombre, descripcion,
           criterios_alta, criterios_media, exclusiones,
           prompt_personalizado, activo, created_at
-        FROM clientes 
+        FROM clientes
         WHERE activo = true
         ORDER BY nombre
       `;
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
       }
 
       const resultado = await sql`
-        UPDATE clientes 
+        UPDATE clientes
         SET nombre = ${nombre}, descripcion = ${descripcion}, criterios_alta = ${criterios_alta},
             criterios_media = ${criterios_media}, exclusiones = ${exclusiones || []},
             prompt_personalizado = ${prompt_personalizado}, updated_at = NOW()
