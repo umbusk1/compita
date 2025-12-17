@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, error: 'Debe enviar un array de descripciones' });
     }
 
-    const sql = neon(process.env.NETLIFYDATABASEURL);
+    const sql = neon(process.env.DATABASE_URL);
     const clienteData = await sql`SELECT * FROM clientes WHERE id = ${cliente_id} AND activo = true`;
 
     if (clienteData.length === 0) {
@@ -86,11 +86,11 @@ export default async function handler(req, res) {
     const candidatasLimitadas = candidatas.slice(0, 10);
     if (candidatas.length > 10) console.log(`⚠️ Limitando a 10 de ${candidatas.length} candidatas`);
 
-    if (!process.env.ClaudeAPIKeyForCompita) {
+    if (!process.env.ANTHROPIC_API_KEY) {
       return res.status(500).json({ success: false, error: 'API key no configurada' });
     }
 
-    const anthropic = new Anthropic({ apiKey: process.env.ClaudeAPIKeyForCompita });
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
     function buildPrompt(loteDescripciones) {
       const criteriosAlta = (cliente.criterios_alta || []).join(', ');
