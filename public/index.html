@@ -3,159 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compita - Sistema de Análisis de Licitaciones</title>
+    <title>Compita - Análisis de Licitaciones</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-5xl font-bold text-gray-800 mb-2">🎯 Compita</h1>
-            <p class="text-gray-600">Sistema de Análisis de Licitaciones con IA</p>
+        <!-- Header con Logo y Selector de Cliente -->
+        <div class="text-center mb-6">
+            <h1 class="text-5xl font-bold text-gray-800 mb-4">🎯 Compita</h1>
+            <p class="text-gray-600 mb-4">Sistema de Análisis de Licitaciones con IA<br>
+            Vibe-coded by Umbusk</p>
+
+            <!-- Selector Global de Cliente -->
+            <div class="max-w-md mx-auto">
+                <select id="cliente-global" onchange="seleccionarCliente()"
+                    class="w-full border-2 border-indigo-300 rounded-lg px-4 py-3 text-lg font-semibold focus:outline-none focus:border-indigo-600">
+                    <option value="">Seleccione un cliente...</option>
+                </select>
+            </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="bg-white rounded-lg shadow-lg">
-            <div class="flex border-b">
-                <button onclick="showTab('clientes')" id="tab-clientes" class="tab-button px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent">
-                    👥 Clientes
-                </button>
-                <button onclick="showTab('analizar')" id="tab-analizar" class="tab-button px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent">
-                    🔍 Analizar
-                </button>
-                <button onclick="showTab('resultados')" id="tab-resultados" class="tab-button px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent">
-                    📊 Resultados
-                </button>
-            </div>
-
-            <!-- Tab Contents -->
-            <div class="p-6">
-                <!-- CLIENTES TAB -->
-                <div id="content-clientes" class="tab-content hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Gestión de Clientes</h2>
-                        <button onclick="abrirModalCliente()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-                            + Nuevo Cliente
-                        </button>
-                    </div>
-                    <div id="lista-clientes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <!-- Contenedor Principal (Solo visible cuando hay cliente seleccionado) -->
+        <div id="contenedor-principal" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg">
+                <!-- Tabs -->
+                <div class="flex border-b">
+                    <button onclick="showTab('analisis')" id="tab-analisis"
+                        class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent">
+                        📊 Análisis
+                    </button>
+                    <button onclick="showTab('resultados')" id="tab-resultados"
+                        class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent">
+                        🎯 Resultados
+                    </button>
+                    <button onclick="showTab('historial')" id="tab-historial"
+                        class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent">
+                        📋 Historial
+                    </button>
                 </div>
 
-                <!-- ANALIZAR TAB -->
-                <div id="content-analizar" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">Análisis de Licitaciones</h2>
+                <!-- Tab Contents -->
+                <div class="p-6">
+                    <!-- TAB ANÁLISIS -->
+                    <div id="content-analisis" class="tab-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Análisis de Licitaciones</h2>
 
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Cliente</label>
-                            <select id="select-cliente-analisis" class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                                <option value="">Seleccione un cliente...</option>
-                            </select>
-                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Archivo Excel</label>
+                                <input type="file" id="file-excel" accept=".xlsx,.xls"
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                                <p class="text-sm text-gray-500 mt-1">El archivo debe tener una columna "Descripción"</p>
+                            </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Archivo Excel</label>
-                            <input type="file" id="file-excel" accept=".xlsx,.xls" class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                            <p class="text-sm text-gray-500 mt-1">El archivo debe tener una columna "Descripción"</p>
-                        </div>
+                            <button onclick="analizarExcel()" id="btn-analizar"
+                                class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-semibold text-lg">
+                                🚀 Iniciar Análisis
+                            </button>
 
-                        <button onclick="analizarExcel()" id="btn-analizar" class="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-semibold">
-                            🚀 Analizar
-                        </button>
+                            <!-- Progreso del Análisis -->
+                            <div id="progreso-container" class="hidden space-y-4">
+                                <!-- Etapa 1 -->
+                                <div id="etapa1-progress" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <div id="etapa1-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                                        <span class="text-blue-900 font-semibold">⏳ Etapa 1: Pre-filtrado</span>
+                                    </div>
+                                    <p id="etapa1-texto" class="text-sm text-blue-700 ml-9">Aplicando criterios y exclusiones...</p>
+                                </div>
 
-                        <div id="progreso-analisis" class="hidden">
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <div class="flex items-center space-x-3">
-                                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                                    <span id="mensaje-progreso" class="text-blue-800 font-medium">Analizando...</span>
+                                <!-- Etapa 2 -->
+                                <div id="etapa2-progress" class="hidden bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <div id="etapa2-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+                                        <span class="text-purple-900 font-semibold">🤖 Etapa 2: Análisis con IA</span>
+                                    </div>
+                                    <p id="etapa2-texto" class="text-sm text-purple-700 ml-9">Analizando candidatas...</p>
+                                </div>
+
+                                <!-- Resultado Final -->
+                                <div id="analisis-completado" class="hidden bg-green-50 border border-green-200 rounded-lg p-4">
+                                    <div class="flex items-center space-x-3 mb-3">
+                                        <span class="text-2xl">✅</span>
+                                        <span class="text-green-900 font-bold text-lg">Análisis Completado</span>
+                                    </div>
+                                    <div id="resumen-rapido" class="text-sm text-green-800"></div>
+                                    <button onclick="showTab('resultados')"
+                                        class="mt-4 w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                                        Ver Resultados Detallados →
+                                    </button>
                                 </div>
                             </div>
                         </div>
-
-                        <div id="resultado-analisis" class="hidden"></div>
-                    </div>
-                </div>
-
-                <!-- RESULTADOS TAB -->
-                <div id="content-resultados" class="tab-content hidden">
-                    <h2 class="text-2xl font-bold mb-6">Resultados</h2>
-
-                    <div class="flex gap-4 mb-6">
-                        <select id="filtro-cliente" onchange="cargarResultados()" class="border border-gray-300 rounded-lg px-4 py-2">
-                            <option value="">Seleccione cliente...</option>
-                        </select>
-                        <select id="filtro-relevancia" onchange="aplicarFiltros()" class="border border-gray-300 rounded-lg px-4 py-2">
-                            <option value="">Todas</option>
-                            <option value="ALTA">Alta</option>
-                            <option value="MEDIA">Media</option>
-                        </select>
-                        <button onclick="exportarSeleccionados()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                            📥 Exportar
-                        </button>
                     </div>
 
-                    <div id="estadisticas-resultados" class="grid grid-cols-3 gap-4 mb-6"></div>
-                    <div id="resumen-etapas" class="mb-6"></div>
-                    <div id="tabla-resultados"></div>
+                    <!-- TAB RESULTADOS -->
+                    <div id="content-resultados" class="tab-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Resultados del Último Análisis</h2>
+
+                        <!-- Resumen del Análisis -->
+                        <div id="resumen-analisis" class="mb-6"></div>
+
+                        <!-- Tabla de Oportunidades -->
+                        <div id="oportunidades-tabla" class="mb-4"></div>
+
+                        <!-- Acciones -->
+                        <div id="acciones-resultados" class="hidden flex gap-2">
+                            <button onclick="exportarResultados()"
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                                📥 Exportar Seleccionados
+                            </button>
+                            <button onclick="seleccionarTodos()"
+                                class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700">
+                                ✓ Seleccionar Todos
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TAB HISTORIAL -->
+                    <div id="content-historial" class="tab-content hidden">
+                        <h2 class="text-2xl font-bold mb-6">Historial de Análisis</h2>
+                        <div id="lista-historial" class="space-y-2"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal Cliente -->
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h3 class="text-xl font-bold mb-4" id="modal-titulo">Nuevo Cliente</h3>
-            <form id="form-cliente" onsubmit="guardarCliente(event)">
-                <input type="hidden" id="cliente-id">
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Nombre *</label>
-                        <input type="text" id="cliente-nombre" required class="w-full border rounded-lg px-3 py-2">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Descripción</label>
-                        <textarea id="cliente-descripcion" rows="3" class="w-full border rounded-lg px-3 py-2"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Criterios ALTA (separados por coma)</label>
-                        <textarea id="cliente-criterios-alta" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="capacitación, cursos, talleres formativos"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">💡 1-15 palabras específicas de tu negocio</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Criterios MEDIA (separados por coma)</label>
-                        <textarea id="cliente-criterios-media" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="consultoría organizacional, asesoría técnica"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">💡 10-20 palabras relacionadas</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Exclusiones - Opcional (separados por coma)</label>
-                        <textarea id="cliente-exclusiones" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="construcción, materiales, alimentos"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">💡 5-15 palabras para descartar automáticamente</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-2 mt-6">
-                    <button type="submit" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                        💾 Guardar
-                    </button>
-                    <button type="button" onclick="cerrarModalCliente()" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
-                        Cancelar
-                    </button>
-                </div>
-            </form>
+        <!-- Mensaje cuando no hay cliente seleccionado -->
+        <div id="mensaje-seleccionar" class="text-center py-12">
+            <div class="text-6xl mb-4">👆</div>
+            <p class="text-xl text-gray-600">Seleccione un cliente para comenzar</p>
         </div>
     </div>
 
     <script>
         const API_BASE = window.location.origin;
+        let clienteActual = null;
+        let analisisActual = null;
 
-        // ============ TAB NAVIGATION ============
+        // ============ INICIALIZACIÓN ============
+        async function init() {
+            await cargarClientes();
+        }
+
+        async function cargarClientes() {
+            try {
+                const response = await fetch(`${API_BASE}/api/clientes`);
+                const data = await response.json();
+
+                const select = document.getElementById('cliente-global');
+                select.innerHTML = '<option value="">Seleccione un cliente...</option>' +
+                    data.clientes
+                        .filter(c => c.activo !== false)
+                        .map(c => `<option value="${c.id}">${c.nombre}</option>`)
+                        .join('');
+            } catch (error) {
+                console.error('Error cargando clientes:', error);
+                alert('Error al cargar clientes');
+            }
+        }
+
+        async function seleccionarCliente() {
+            const clienteId = document.getElementById('cliente-global').value;
+
+            if (!clienteId) {
+                document.getElementById('contenedor-principal').classList.add('hidden');
+                document.getElementById('mensaje-seleccionar').classList.remove('hidden');
+                clienteActual = null;
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/clientes?id=${clienteId}`);
+                const data = await response.json();
+                clienteActual = data.cliente;
+
+                document.getElementById('mensaje-seleccionar').classList.add('hidden');
+                document.getElementById('contenedor-principal').classList.remove('hidden');
+
+                showTab('analisis');
+                cargarHistorial();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar datos del cliente');
+            }
+        }
+
+        // ============ TABS ============
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.tab-button').forEach(el => {
@@ -165,155 +200,41 @@
             document.getElementById(`content-${tabName}`).classList.remove('hidden');
             document.getElementById(`tab-${tabName}`).classList.add('border-indigo-600', 'text-indigo-600');
 
-            if (tabName === 'clientes') cargarClientes();
-            if (tabName === 'analizar') cargarClientesParaAnalisis();
-            if (tabName === 'resultados') {
-                cargarClientesParaFiltro();
-                cargarResultados();
+            if (tabName === 'resultados' && analisisActual) {
+                mostrarResultados();
+            } else if (tabName === 'historial') {
+                cargarHistorial();
             }
         }
 
-        // ============ CLIENTES ============
-        async function cargarClientes() {
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes`);
-                const data = await response.json();
-
-                const lista = document.getElementById('lista-clientes');
-                lista.innerHTML = data.clientes.map(c => `
-                    <div class="border rounded-lg p-4 hover:shadow-md transition">
-                        <h3 class="font-bold text-lg text-indigo-600">${c.nombre}</h3>
-                        <p class="text-sm text-gray-600 mb-2">${c.descripcion || 'Sin descripción'}</p>
-                        <div class="flex flex-wrap gap-1 mb-2">
-                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">ALTA: ${c.criterios_alta?.slice(0,2).join(', ') || 'ninguno'}</span>
-                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">MEDIA: ${c.criterios_media?.slice(0,2).join(', ') || 'ninguno'}</span>
-                        </div>
-                        ${c.exclusiones && c.exclusiones.length > 0 ? `
-                            <div class="text-xs text-red-600 mb-2">
-                                Exclusiones: ${c.exclusiones.slice(0,3).join(', ')}
-                            </div>
-                        ` : ''}
-                        <div class="flex gap-2 mt-3">
-                            <button onclick="editarCliente(${c.id})" class="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">✏️</button>
-                            <button onclick="eliminarCliente(${c.id})" class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">🗑️</button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al cargar clientes');
-            }
-        }
-
-        function abrirModalCliente() {
-            document.getElementById('modal-titulo').textContent = 'Nuevo Cliente';
-            document.getElementById('form-cliente').reset();
-            document.getElementById('cliente-id').value = '';
-            document.getElementById('modal-cliente').classList.remove('hidden');
-        }
-
-        function cerrarModalCliente() {
-            document.getElementById('modal-cliente').classList.add('hidden');
-        }
-
-        async function editarCliente(id) {
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes?id=${id}`);
-                const data = await response.json();
-                const cliente = data.cliente;
-
-                document.getElementById('modal-titulo').textContent = 'Editar Cliente';
-                document.getElementById('cliente-id').value = cliente.id;
-                document.getElementById('cliente-nombre').value = cliente.nombre;
-                document.getElementById('cliente-descripcion').value = cliente.descripcion || '';
-                document.getElementById('cliente-criterios-alta').value = cliente.criterios_alta?.join(', ') || '';
-                document.getElementById('cliente-criterios-media').value = cliente.criterios_media?.join(', ') || '';
-                document.getElementById('cliente-exclusiones').value = cliente.exclusiones?.join(', ') || '';
-
-                document.getElementById('modal-cliente').classList.remove('hidden');
-            } catch (error) {
-                alert('Error al cargar cliente');
-            }
-        }
-
-        async function guardarCliente(event) {
-            event.preventDefault();
-
-            const id = document.getElementById('cliente-id').value;
-            const datos = {
-                nombre: document.getElementById('cliente-nombre').value,
-                descripcion: document.getElementById('cliente-descripcion').value,
-                criterios_alta: document.getElementById('cliente-criterios-alta').value.split(',').map(s => s.trim()).filter(s => s),
-                criterios_media: document.getElementById('cliente-criterios-media').value.split(',').map(s => s.trim()).filter(s => s),
-                exclusiones: document.getElementById('cliente-exclusiones').value.split(',').map(s => s.trim()).filter(s => s)
-            };
-
-            try {
-                const method = id ? 'PUT' : 'POST';
-                const url = id ? `${API_BASE}/api/clientes?id=${id}` : `${API_BASE}/api/clientes`;
-
-                const response = await fetch(url, {
-                    method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
-                });
-
-                if (response.ok) {
-                    cerrarModalCliente();
-                    cargarClientes();
-                } else {
-                    alert('Error al guardar cliente');
-                }
-            } catch (error) {
-                alert('Error de conexión');
-            }
-        }
-
-        async function eliminarCliente(id) {
-            if (!confirm('¿Estás seguro de eliminar este cliente?')) return;
-
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes?id=${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    cargarClientes();
-                } else {
-                    alert('Error al eliminar cliente');
-                }
-            } catch (error) {
-                alert('Error de conexión');
-            }
-        }
-
-        // ============ ANALIZAR ============
-        async function cargarClientesParaAnalisis() {
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes`);
-                const data = await response.json();
-
-                const select = document.getElementById('select-cliente-analisis');
-                select.innerHTML = '<option value="">Seleccione un cliente...</option>' +
-                    data.clientes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
+        // ============ ANÁLISIS ============
         async function analizarExcel() {
-            const clienteId = document.getElementById('select-cliente-analisis').value;
-            const fileInput = document.getElementById('file-excel');
+            if (!clienteActual) {
+                alert('Seleccione un cliente primero');
+                return;
+            }
 
-            if (!clienteId) return alert('Seleccione un cliente');
-            if (!fileInput.files[0]) return alert('Seleccione un archivo Excel');
+            const fileInput = document.getElementById('file-excel');
+            if (!fileInput.files[0]) {
+                alert('Seleccione un archivo Excel');
+                return;
+            }
 
             const file = fileInput.files[0];
             const reader = new FileReader();
 
             reader.onload = async (e) => {
                 try {
+                    // Preparar UI
                     document.getElementById('btn-analizar').disabled = true;
-                    document.getElementById('progreso-analisis').classList.remove('hidden');
-                    document.getElementById('resultado-analisis').classList.add('hidden');
+                    document.getElementById('progreso-container').classList.remove('hidden');
+                    document.getElementById('analisis-completado').classList.add('hidden');
 
+                    // Mostrar Etapa 1
+                    document.getElementById('etapa1-progress').classList.remove('hidden');
+                    document.getElementById('etapa2-progress').classList.add('hidden');
+
+                    // Leer Excel
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -325,17 +246,28 @@
 
                     if (descripciones.length === 0) {
                         alert('No se encontró la columna "Descripción" en el Excel');
+                        resetearUI();
                         return;
                     }
 
-                    document.getElementById('mensaje-progreso').textContent =
-                        `Analizando ${descripciones.length} descripciones...`;
+                    document.getElementById('etapa1-texto').textContent =
+                        `Analizando ${descripciones.length} descripciones con criterios del cliente...`;
 
+                    // Simular pequeña pausa para que se vea la Etapa 1
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Mostrar Etapa 2
+                    document.getElementById('etapa2-progress').classList.remove('hidden');
+                    document.getElementById('etapa1-spinner').classList.add('hidden');
+                    document.getElementById('etapa1-texto').innerHTML =
+                        '<span class="text-green-600 font-semibold">✓ Completado</span>';
+
+                    // Llamar al API
                     const response = await fetch(`${API_BASE}/api/analizar-v4`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            cliente_id: parseInt(clienteId),
+                            cliente_id: clienteActual.id,
                             descripciones: descripciones,
                             guardar_en_db: true
                         })
@@ -344,285 +276,314 @@
                     const resultado = await response.json();
 
                     if (resultado.success) {
-                        mostrarResultadoAnalisis(resultado);
+                        analisisActual = resultado;
+
+                        // Actualizar Etapa 2
+                        document.getElementById('etapa2-spinner').classList.add('hidden');
+                        document.getElementById('etapa2-texto').innerHTML =
+                            '<span class="text-green-600 font-semibold">✓ Completado</span>';
+
+                        // Mostrar resumen
+                        document.getElementById('analisis-completado').classList.remove('hidden');
+
+                        const stats = resultado.estadisticas;
+                        const altaMedia = stats.alta + stats.media;
+
+                        document.getElementById('resumen-rapido').innerHTML = `
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div><strong>Lote total:</strong> ${stats.total}</div>
+                                <div><strong>Descartadas (Etapa 1):</strong> ${stats.descartadas_prefiltro}</div>
+                                <div><strong>Analizadas (Etapa 2):</strong> ${stats.analizadas_ia}</div>
+                                <div><strong>Oportunidades relevantes:</strong>
+                                    <span class="text-green-600 font-bold">${altaMedia}</span>
+                                </div>
+                            </div>
+                        `;
+
+                        // Recargar historial
+                        await cargarHistorial();
                     } else {
                         alert('Error: ' + resultado.error);
+                        resetearUI();
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Error al procesar el archivo: ' + error.message);
+                    alert('Error al procesar: ' + error.message);
+                    resetearUI();
                 } finally {
                     document.getElementById('btn-analizar').disabled = false;
-                    document.getElementById('progreso-analisis').classList.add('hidden');
                 }
             };
 
             reader.readAsArrayBuffer(file);
         }
 
-        function mostrarResultadoAnalisis(resultado) {
-            const stats = resultado.estadisticas;
-            const altaMedia = resultado.resultados.filter(r => r.relevancia === 'ALTA' || r.relevancia === 'MEDIA');
-
-            const html = `
-                <div class="bg-green-50 border border-green-200 rounded-lg p-6">
-                    <h3 class="text-xl font-bold text-green-800 mb-4">✅ Análisis Completado</h3>
-
-                    <!-- Resumen de Etapas -->
-                    <div class="bg-white rounded-lg p-4 mb-4">
-                        <h4 class="font-semibold mb-2">📊 Resumen del Análisis</h4>
-                        <div class="grid grid-cols-2 gap-2 text-sm">
-                            <div class="bg-blue-50 p-2 rounded">
-                                <span class="font-semibold">Lote total:</span> ${stats.total}
-                            </div>
-                            <div class="bg-gray-50 p-2 rounded">
-                                <span class="font-semibold">Descartadas (Etapa 1):</span> ${stats.descartadas_prefiltro}
-                            </div>
-                            <div class="bg-purple-50 p-2 rounded">
-                                <span class="font-semibold">Analizadas con IA (Etapa 2):</span> ${stats.analizadas_ia}
-                            </div>
-                            <div></div>
-                        </div>
-                    </div>
-
-                    <!-- Clasificación IA -->
-                    <div class="bg-white rounded-lg p-4 mb-4">
-                        <h4 class="font-semibold mb-2">🤖 Clasificación por IA</h4>
-                        <div class="grid grid-cols-3 gap-2 text-sm">
-                            <div class="bg-green-50 p-2 rounded text-center">
-                                <div class="text-2xl font-bold text-green-600">${stats.alta}</div>
-                                <div class="text-xs">ALTA</div>
-                            </div>
-                            <div class="bg-yellow-50 p-2 rounded text-center">
-                                <div class="text-2xl font-bold text-yellow-600">${stats.media}</div>
-                                <div class="text-xs">MEDIA</div>
-                            </div>
-                            <div class="bg-gray-50 p-2 rounded text-center">
-                                <div class="text-2xl font-bold text-gray-600">${stats.baja - stats.descartadas_prefiltro}</div>
-                                <div class="text-xs">BAJA (por contexto)</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Oportunidades Relevantes -->
-                    ${altaMedia.length > 0 ? `
-                        <div class="bg-white rounded-lg p-4">
-                            <h4 class="font-semibold mb-2 text-green-600">
-                                🎯 Oportunidades Relevantes: ${altaMedia.length}
-                            </h4>
-                            <p class="text-sm text-gray-600">
-                                Ve a la pestaña "Resultados" para ver los detalles completos
-                            </p>
-                        </div>
-                    ` : `
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                            <p class="text-yellow-800">
-                                ℹ️ No se encontraron oportunidades ALTA o MEDIA en este lote
-                            </p>
-                        </div>
-                    `}
-
-                    <button onclick="showTab('resultados')" class="mt-4 w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-                        Ver Resultados Detallados →
-                    </button>
-                </div>
-            `;
-
-            document.getElementById('resultado-analisis').innerHTML = html;
-            document.getElementById('resultado-analisis').classList.remove('hidden');
+        function resetearUI() {
+            document.getElementById('progreso-container').classList.add('hidden');
+            document.getElementById('etapa1-spinner').classList.remove('hidden');
+            document.getElementById('etapa2-spinner').classList.remove('hidden');
+            document.getElementById('btn-analizar').disabled = false;
         }
 
         // ============ RESULTADOS ============
-        let resultadosActuales = [];
-
-        async function cargarClientesParaFiltro() {
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes`);
-                const data = await response.json();
-
-                const select = document.getElementById('filtro-cliente');
-                select.innerHTML = '<option value="">Seleccione cliente...</option>' +
-                    data.clientes.map(c => `<option value="${c.id}">${c.nombre}</option>`).join('');
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        async function cargarResultados() {
-            const clienteId = document.getElementById('filtro-cliente').value;
-            if (!clienteId) {
-                document.getElementById('tabla-resultados').innerHTML =
-                    '<p class="text-gray-500 text-center py-8">Seleccione un cliente para ver resultados</p>';
+        async function mostrarResultados() {
+            if (!analisisActual) {
+                document.getElementById('resumen-analisis').innerHTML =
+                    '<p class="text-gray-500 text-center py-8">No hay análisis reciente. Ve a la pestaña Análisis para crear uno.</p>';
+                document.getElementById('oportunidades-tabla').innerHTML = '';
                 return;
             }
 
-            try {
-                const response = await fetch(`${API_BASE}/api/resultados?cliente_id=${clienteId}`);
-                const data = await response.json();
+            const stats = analisisActual.estadisticas;
+            const resultados = analisisActual.resultados || [];
 
-                // FILTRAR: Solo mostrar ALTA y MEDIA
-                resultadosActuales = data.resultados.filter(r =>
-                    r.relevancia === 'ALTA' || r.relevancia === 'MEDIA'
-                );
+            // Filtrar solo ALTA y MEDIA
+            const oportunidades = resultados.filter(r => r.relevancia === 'ALTA' || r.relevancia === 'MEDIA');
 
-                mostrarEstadisticas(data);
-                aplicarFiltros();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al cargar resultados');
-            }
-        }
+            // Resumen
+            const descartadasEtapa1 = stats.descartadas_prefiltro;
+            const analizadasIA = stats.analizadas_ia;
+            const bajasPorContexto = stats.baja - descartadasEtapa1;
 
-        function mostrarEstadisticas(data) {
-            const stats = data.estadisticas;
-            const altaMedia = resultadosActuales.length;
+            document.getElementById('resumen-analisis').innerHTML = `
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Resumen del Análisis</h3>
 
-            document.getElementById('estadisticas-resultados').innerHTML = `
-                <div class="bg-indigo-100 rounded-lg p-4 text-center">
-                    <div class="text-3xl font-bold text-indigo-600">${stats.total}</div>
-                    <div class="text-sm text-gray-600">Total</div>
-                </div>
-                <div class="bg-green-100 rounded-lg p-4 text-center">
-                    <div class="text-3xl font-bold text-green-600">${stats.alta}</div>
-                    <div class="text-sm text-gray-600">Alta</div>
-                </div>
-                <div class="bg-purple-100 rounded-lg p-4 text-center">
-                    <div class="text-3xl font-bold text-purple-600">${altaMedia}</div>
-                    <div class="text-sm text-gray-600">Seleccionados</div>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                            <div class="text-3xl font-bold text-blue-600">${stats.total}</div>
+                            <div class="text-xs text-gray-600">Lote Total</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                            <div class="text-3xl font-bold text-gray-600">${descartadasEtapa1}</div>
+                            <div class="text-xs text-gray-600">Descartadas Etapa 1</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                            <div class="text-3xl font-bold text-purple-600">${analizadasIA}</div>
+                            <div class="text-xs text-gray-600">Analizadas IA</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                            <div class="text-3xl font-bold text-green-600">${stats.alta + stats.media}</div>
+                            <div class="text-xs text-gray-600">ALTA + MEDIA</div>
+                        </div>
+                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                            <div class="text-3xl font-bold text-gray-400">${bajasPorContexto}</div>
+                            <div class="text-xs text-gray-600">BAJA contexto</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-sm bg-white rounded-lg p-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                            <span><strong>ALTA:</strong> ${stats.alta}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 bg-yellow-500 rounded-full"></span>
+                            <span><strong>MEDIA:</strong> ${stats.media}</span>
+                        </div>
+                    </div>
                 </div>
             `;
 
-            // Mostrar resumen de etapas si hay datos del análisis más reciente
-            const analisis = data.analisis_reciente;
-            if (analisis) {
-                const descartadasEtapa1 = stats.total - stats.analizadas_ia;
-                const bajasPorContexto = stats.baja - descartadasEtapa1;
-
-                document.getElementById('resumen-etapas').innerHTML = `
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h3 class="font-semibold text-blue-900 mb-3">📊 Último Análisis</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-blue-600">${stats.total}</div>
-                                <div class="text-xs text-gray-600">Lote</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-gray-600">${descartadasEtapa1}</div>
-                                <div class="text-xs text-gray-600">Descartadas Etapa 1</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-purple-600">${stats.analizadas_ia}</div>
-                                <div class="text-xs text-gray-600">Analizadas IA</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-green-600">${stats.alta + stats.media}</div>
-                                <div class="text-xs text-gray-600">ALTA/MEDIA</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-gray-500">${bajasPorContexto}</div>
-                                <div class="text-xs text-gray-600">BAJA contexto</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function aplicarFiltros() {
-            const filtroRelevancia = document.getElementById('filtro-relevancia').value;
-
-            let resultadosFiltrados = [...resultadosActuales];
-
-            if (filtroRelevancia) {
-                resultadosFiltrados = resultadosFiltrados.filter(r => r.relevancia === filtroRelevancia);
-            }
-
-            mostrarTablaResultados(resultadosFiltrados);
-        }
-
-        function mostrarTablaResultados(resultados) {
-            if (resultados.length === 0) {
-                document.getElementById('tabla-resultados').innerHTML = `
+            // Tabla de oportunidades
+            if (oportunidades.length === 0) {
+                document.getElementById('oportunidades-tabla').innerHTML = `
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-                        <p class="text-yellow-800 font-semibold">ℹ️ No hay oportunidades ALTA o MEDIA para mostrar</p>
+                        <p class="text-yellow-800 font-semibold">ℹ️ No hay oportunidades ALTA o MEDIA</p>
                         <p class="text-sm text-gray-600 mt-2">
-                            Las oportunidades clasificadas como BAJA (por pre-filtro o por contexto) no se muestran en detalle
+                            Las oportunidades clasificadas como BAJA no se muestran en detalle
                         </p>
                     </div>
                 `;
-                return;
-            }
-
-            const html = `
-                <div class="overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="p-2 text-left">✓</th>
-                                <th class="p-2 text-left">Cliente</th>
-                                <th class="p-2 text-left">Descripción</th>
-                                <th class="p-2 text-left">Qué</th>
-                                <th class="p-2 text-left">Quién</th>
-                                <th class="p-2 text-left">Relevancia</th>
-                                <th class="p-2 text-left">Razón</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${resultados.map(r => `
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="p-2">
-                                        <input type="checkbox" class="resultado-check" data-id="${r.id}">
-                                    </td>
-                                    <td class="p-2 text-sm">${r.cliente_nombre || 'N/A'}</td>
-                                    <td class="p-2 text-sm">${r.descripcion}</td>
-                                    <td class="p-2 text-sm font-medium">${r.que}</td>
-                                    <td class="p-2 text-sm">${r.quien}</td>
-                                    <td class="p-2">
-                                        <span class="px-2 py-1 rounded text-xs font-semibold ${
-                                            r.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
-                                            r.relevancia === 'MEDIA' ? 'bg-yellow-100 text-yellow-800' :
-                                            'bg-gray-100 text-gray-800'
-                                        }">
-                                            ${r.relevancia}
-                                        </span>
-                                    </td>
-                                    <td class="p-2 text-sm text-gray-600">${r.razon || r.razon_inclusion || '-'}</td>
+                document.getElementById('acciones-resultados').classList.add('hidden');
+            } else {
+                document.getElementById('oportunidades-tabla').innerHTML = `
+                    <h3 class="text-lg font-bold mb-3">🎯 Oportunidades Relevantes (${oportunidades.length})</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="border p-2">
+                                        <input type="checkbox" id="check-all" onchange="toggleTodos()">
+                                    </th>
+                                    <th class="border p-2 text-left">Descripción</th>
+                                    <th class="border p-2 text-left">Qué</th>
+                                    <th class="border p-2 text-left">Quién</th>
+                                    <th class="border p-2">Relevancia</th>
+                                    <th class="border p-2 text-left">Razón</th>
                                 </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            document.getElementById('tabla-resultados').innerHTML = html;
+                            </thead>
+                            <tbody>
+                                ${oportunidades.map((r, i) => `
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="border p-2 text-center">
+                                            <input type="checkbox" class="check-oportunidad" data-index="${i}">
+                                        </td>
+                                        <td class="border p-2 text-sm">${r.descripcion}</td>
+                                        <td class="border p-2 text-sm font-medium">${r.que}</td>
+                                        <td class="border p-2 text-sm">${r.quien}</td>
+                                        <td class="border p-2 text-center">
+                                            <span class="px-2 py-1 rounded text-xs font-bold ${
+                                                r.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
+                                                'bg-yellow-100 text-yellow-800'
+                                            }">
+                                                ${r.relevancia}
+                                            </span>
+                                        </td>
+                                        <td class="border p-2 text-sm text-gray-700">${r.razon}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                document.getElementById('acciones-resultados').classList.remove('hidden');
+            }
         }
 
-        function exportarSeleccionados() {
-            const checks = document.querySelectorAll('.resultado-check:checked');
+        function toggleTodos() {
+            const checkAll = document.getElementById('check-all');
+            document.querySelectorAll('.check-oportunidad').forEach(cb => {
+                cb.checked = checkAll.checked;
+            });
+        }
+
+        function seleccionarTodos() {
+            document.getElementById('check-all').checked = true;
+            toggleTodos();
+        }
+
+        function exportarResultados() {
+            const checks = document.querySelectorAll('.check-oportunidad:checked');
             if (checks.length === 0) {
-                alert('Seleccione al menos un resultado');
+                alert('Seleccione al menos una oportunidad');
                 return;
             }
 
-            const ids = Array.from(checks).map(c => parseInt(c.dataset.id));
-            const seleccionados = resultadosActuales.filter(r => ids.includes(r.id));
+            const resultados = analisisActual.resultados.filter(r =>
+                r.relevancia === 'ALTA' || r.relevancia === 'MEDIA'
+            );
+
+            const indices = Array.from(checks).map(c => parseInt(c.dataset.index));
+            const seleccionados = indices.map(i => resultados[i]);
 
             const ws = XLSX.utils.json_to_sheet(seleccionados.map(r => ({
-                'Cliente': r.cliente_nombre,
                 'Descripción': r.descripcion,
                 'Qué': r.que,
                 'Quién': r.quien,
                 'Relevancia': r.relevancia,
-                'Razón': r.razon || r.razon_inclusion
+                'Razón': r.razon
             })));
 
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
-            XLSX.writeFile(wb, `compita_resultados_${new Date().toISOString().split('T')[0]}.xlsx`);
+            XLSX.utils.book_append_sheet(wb, ws, 'Oportunidades');
+
+            const fecha = new Date().toISOString().split('T')[0];
+            XLSX.writeFile(wb, `compita_${clienteActual.nombre}_${fecha}.xlsx`);
         }
 
-        // Initialize
-        showTab('clientes');
+        // ============ HISTORIAL ============
+        async function cargarHistorial() {
+            if (!clienteActual) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/resultados?cliente_id=${clienteActual.id}&historial=true`);
+                const data = await response.json();
+
+                if (!data.analisis || data.analisis.length === 0) {
+                    document.getElementById('lista-historial').innerHTML = `
+                        <p class="text-gray-500 text-center py-8">No hay análisis previos</p>
+                    `;
+                    return;
+                }
+
+                document.getElementById('lista-historial').innerHTML = data.analisis.map((a, i) => `
+                    <div class="border rounded-lg">
+                        <button onclick="toggleHistorial(${i})"
+                            class="w-full flex justify-between items-center p-4 hover:bg-gray-50">
+                            <div class="text-left">
+                                <div class="font-semibold text-gray-800">
+                                    📅 ${new Date(a.created_at).toLocaleString('es-ES')}
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    ${a.total_descripciones} licitaciones •
+                                    <span class="text-green-600">${a.total_alta} ALTA</span> •
+                                    <span class="text-yellow-600">${a.total_media} MEDIA</span>
+                                </div>
+                            </div>
+                            <svg id="icono-${i}" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="detalle-${i}" class="hidden p-4 border-t bg-gray-50">
+                            <div class="space-y-2">
+                                <button onclick="verAnalisis(${a.id})"
+                                    class="w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+                                    👁️ Ver Resultados
+                                </button>
+                                <button onclick="eliminarAnalisis(${a.id})"
+                                    class="w-full bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                                    🗑️ Eliminar
+                                </button>
+                            </div>
+                            ${a.notas ? `<p class="text-sm text-gray-600 mt-2">${a.notas}</p>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('lista-historial').innerHTML =
+                    '<p class="text-red-500 text-center py-8">Error al cargar historial</p>';
+            }
+        }
+
+        function toggleHistorial(index) {
+            const detalle = document.getElementById(`detalle-${index}`);
+            const icono = document.getElementById(`icono-${index}`);
+
+            detalle.classList.toggle('hidden');
+            icono.classList.toggle('rotate-180');
+        }
+
+        async function verAnalisis(analisisId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/resultados?analisis_id=${analisisId}`);
+                const data = await response.json();
+
+                analisisActual = {
+                    estadisticas: data.estadisticas,
+                    resultados: data.resultados
+                };
+
+                showTab('resultados');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar análisis');
+            }
+        }
+
+        async function eliminarAnalisis(analisisId) {
+            if (!confirm('¿Está seguro de eliminar este análisis?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/resultados?analisis_id=${analisisId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    await cargarHistorial();
+                    alert('Análisis eliminado correctamente');
+                } else {
+                    alert('Error al eliminar');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error de conexión');
+            }
+        }
+
+        // ============ INICIALIZAR ============
+        init();
     </script>
 </body>
 </html>
