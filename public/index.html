@@ -9,11 +9,10 @@
 </head>
 <body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <!-- Header con Logo y Selector de Cliente -->
+        <!-- Header -->
         <div class="text-center mb-6">
             <h1 class="text-5xl font-bold text-gray-800 mb-4">🎯 Compita</h1>
-            <p class="text-gray-600 mb-4">Sistema de Análisis de Licitaciones con IA<br>
-            Vibe-coded by Umbusk</p>
+            <p class="text-gray-600 mb-4">Sistema de Análisis de Licitaciones con IA</p>
 
             <!-- Selector Global de Cliente -->
             <div class="max-w-md mx-auto">
@@ -22,9 +21,16 @@
                     <option value="">Seleccione un cliente...</option>
                 </select>
             </div>
+
+            <!-- Botón para gestionar clientes -->
+            <div class="mt-3">
+                <button onclick="abrirGestionClientes()" class="text-sm text-indigo-600 hover:text-indigo-800 underline">
+                    ⚙️ Gestionar Clientes
+                </button>
+            </div>
         </div>
 
-        <!-- Contenedor Principal (Solo visible cuando hay cliente seleccionado) -->
+        <!-- Contenedor Principal -->
         <div id="contenedor-principal" class="hidden">
             <div class="bg-white rounded-lg shadow-lg">
                 <!-- Tabs -->
@@ -50,11 +56,23 @@
                         <h2 class="text-2xl font-bold mb-6">Análisis de Licitaciones</h2>
 
                         <div class="space-y-4">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                                <p class="font-semibold mb-2">📋 Formato del Excel requerido:</p>
+                                <p class="text-gray-700">El archivo debe tener estas columnas exactas:</p>
+                                <ul class="list-disc ml-5 mt-1 text-gray-600">
+                                    <li>Unidad de Compras</li>
+                                    <li>Referencia</li>
+                                    <li>Descripción</li>
+                                    <li>Fecha de presentación de ofertas</li>
+                                    <li>Total estimado</li>
+                                    <li>Estado</li>
+                                </ul>
+                            </div>
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Archivo Excel</label>
                                 <input type="file" id="file-excel" accept=".xlsx,.xls"
                                     class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                                <p class="text-sm text-gray-500 mt-1">El archivo debe tener una columna "Descripción"</p>
                             </div>
 
                             <button onclick="analizarExcel()" id="btn-analizar"
@@ -70,7 +88,7 @@
                                         <div id="etapa1-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
                                         <span class="text-blue-900 font-semibold">⏳ Etapa 1: Pre-filtrado</span>
                                     </div>
-                                    <p id="etapa1-texto" class="text-sm text-blue-700 ml-9">Aplicando criterios y exclusiones...</p>
+                                    <p id="etapa1-texto" class="text-sm text-blue-700 ml-9">Aplicando filtros de fecha, estado y palabras clave...</p>
                                 </div>
 
                                 <!-- Etapa 2 -->
@@ -79,7 +97,7 @@
                                         <div id="etapa2-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
                                         <span class="text-purple-900 font-semibold">🤖 Etapa 2: Análisis con IA</span>
                                     </div>
-                                    <p id="etapa2-texto" class="text-sm text-purple-700 ml-9">Analizando candidatas...</p>
+                                    <p id="etapa2-texto" class="text-sm text-purple-700 ml-9">Analizando candidatas con Claude...</p>
                                 </div>
 
                                 <!-- Resultado Final -->
@@ -137,6 +155,77 @@
         </div>
     </div>
 
+    <!-- Modal Gestión de Clientes -->
+    <div id="modal-clientes" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Gestión de Clientes</h3>
+                <button onclick="cerrarGestionClientes()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+
+            <button onclick="abrirModalCliente()" class="mb-4 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                + Nuevo Cliente
+            </button>
+
+            <div id="lista-clientes-modal" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+    </div>
+
+    <!-- Modal Cliente (Crear/Editar) -->
+    <div id="modal-cliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-bold mb-4" id="modal-titulo">Nuevo Cliente</h3>
+            <form id="form-cliente" onsubmit="guardarCliente(event)">
+                <input type="hidden" id="cliente-id">
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Nombre *</label>
+                        <input type="text" id="cliente-nombre" required class="w-full border rounded-lg px-3 py-2">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Descripción</label>
+                        <textarea id="cliente-descripcion" rows="3" class="w-full border rounded-lg px-3 py-2"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Monto Mínimo para ALTA (DOP)</label>
+                        <input type="number" id="cliente-monto" value="1000000" step="10000" class="w-full border rounded-lg px-3 py-2">
+                        <p class="text-xs text-gray-500 mt-1">💰 Licitaciones MEDIA con monto mayor o igual se suben a ALTA</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Criterios ALTA (separados por coma)</label>
+                        <textarea id="cliente-criterios-alta" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="capacitación, cursos, talleres formativos"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">💡 Palabras específicas de tu negocio</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Criterios MEDIA (separados por coma)</label>
+                        <textarea id="cliente-criterios-media" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="consultoría, asesoría técnica"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">💡 Palabras relacionadas</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Exclusiones (separados por coma)</label>
+                        <textarea id="cliente-exclusiones" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="construcción, materiales, alimentos"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">💡 Descartar automáticamente</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-6">
+                    <button type="submit" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        💾 Guardar
+                    </button>
+                    <button type="button" onclick="cerrarModalCliente()" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const API_BASE = window.location.origin;
         let clienteActual = null;
@@ -160,7 +249,6 @@
                         .join('');
             } catch (error) {
                 console.error('Error cargando clientes:', error);
-                alert('Error al cargar clientes');
             }
         }
 
@@ -187,6 +275,141 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error al cargar datos del cliente');
+            }
+        }
+
+        // ============ GESTIÓN DE CLIENTES ============
+        function abrirGestionClientes() {
+            cargarClientesModal();
+            document.getElementById('modal-clientes').classList.remove('hidden');
+        }
+
+        function cerrarGestionClientes() {
+            document.getElementById('modal-clientes').classList.add('hidden');
+        }
+
+        async function cargarClientesModal() {
+            try {
+                const response = await fetch(`${API_BASE}/api/clientes`);
+                const data = await response.json();
+
+                const lista = document.getElementById('lista-clientes-modal');
+                lista.innerHTML = data.clientes.map(c => `
+                    <div class="border rounded-lg p-4 hover:shadow-md transition">
+                        <h3 class="font-bold text-lg text-indigo-600">${c.nombre}</h3>
+                        <p class="text-sm text-gray-600 mb-2">${c.descripcion || 'Sin descripción'}</p>
+                        <div class="text-xs text-gray-500 mb-2">
+                            💰 Monto mínimo ALTA: ${(c.monto_minimo_alta || 1000000).toLocaleString()} DOP
+                        </div>
+                        <div class="flex flex-wrap gap-1 mb-2">
+                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                                ALTA: ${(c.criterios_alta || []).length} palabras
+                            </span>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                MEDIA: ${(c.criterios_media || []).length} palabras
+                            </span>
+                        </div>
+                        <div class="flex gap-2 mt-3">
+                            <button onclick="editarCliente(${c.id})"
+                                class="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                                ✏️ Editar
+                            </button>
+                            <button onclick="eliminarCliente(${c.id})"
+                                class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                                🗑️ Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function abrirModalCliente() {
+            document.getElementById('modal-titulo').textContent = 'Nuevo Cliente';
+            document.getElementById('form-cliente').reset();
+            document.getElementById('cliente-id').value = '';
+            document.getElementById('cliente-monto').value = '1000000';
+            document.getElementById('modal-cliente').classList.remove('hidden');
+        }
+
+        function cerrarModalCliente() {
+            document.getElementById('modal-cliente').classList.add('hidden');
+        }
+
+        async function editarCliente(id) {
+            try {
+                const response = await fetch(`${API_BASE}/api/clientes?id=${id}`);
+                const data = await response.json();
+                const cliente = data.cliente;
+
+                document.getElementById('modal-titulo').textContent = 'Editar Cliente';
+                document.getElementById('cliente-id').value = cliente.id;
+                document.getElementById('cliente-nombre').value = cliente.nombre;
+                document.getElementById('cliente-descripcion').value = cliente.descripcion || '';
+                document.getElementById('cliente-monto').value = cliente.monto_minimo_alta || 1000000;
+                document.getElementById('cliente-criterios-alta').value = (cliente.criterios_alta || []).join(', ');
+                document.getElementById('cliente-criterios-media').value = (cliente.criterios_media || []).join(', ');
+                document.getElementById('cliente-exclusiones').value = (cliente.exclusiones || []).join(', ');
+
+                document.getElementById('modal-cliente').classList.remove('hidden');
+            } catch (error) {
+                alert('Error al cargar cliente');
+            }
+        }
+
+        async function guardarCliente(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('cliente-id').value;
+            const datos = {
+                nombre: document.getElementById('cliente-nombre').value,
+                descripcion: document.getElementById('cliente-descripcion').value,
+                monto_minimo_alta: parseFloat(document.getElementById('cliente-monto').value) || 1000000,
+                criterios_alta: document.getElementById('cliente-criterios-alta').value
+                    .split(',').map(s => s.trim()).filter(s => s),
+                criterios_media: document.getElementById('cliente-criterios-media').value
+                    .split(',').map(s => s.trim()).filter(s => s),
+                exclusiones: document.getElementById('cliente-exclusiones').value
+                    .split(',').map(s => s.trim()).filter(s => s)
+            };
+
+            try {
+                const method = id ? 'PUT' : 'POST';
+                const url = id ? `${API_BASE}/api/clientes?id=${id}` : `${API_BASE}/api/clientes`;
+
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+
+                if (response.ok) {
+                    cerrarModalCliente();
+                    await cargarClientes();
+                    await cargarClientesModal();
+                } else {
+                    alert('Error al guardar cliente');
+                }
+            } catch (error) {
+                alert('Error de conexión');
+            }
+        }
+
+        async function eliminarCliente(id) {
+            if (!confirm('¿Está seguro de eliminar este cliente?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/clientes?id=${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    await cargarClientes();
+                    await cargarClientesModal();
+                } else {
+                    alert('Error al eliminar cliente');
+                }
+            } catch (error) {
+                alert('Error de conexión');
             }
         }
 
@@ -225,50 +448,51 @@
 
             reader.onload = async (e) => {
                 try {
-                    // Preparar UI
                     document.getElementById('btn-analizar').disabled = true;
                     document.getElementById('progreso-container').classList.remove('hidden');
                     document.getElementById('analisis-completado').classList.add('hidden');
 
-                    // Mostrar Etapa 1
                     document.getElementById('etapa1-progress').classList.remove('hidden');
                     document.getElementById('etapa2-progress').classList.add('hidden');
 
-                    // Leer Excel
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                     const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
-                    const descripciones = jsonData.map(row =>
-                        row['Descripción'] || row['descripcion'] || row['DESCRIPCION'] || row['Descripcion'] || ''
-                    ).filter(d => d);
+                    // Mapear columnas del Excel
+                    const licitaciones = jsonData.map(row => ({
+                        unidad_compras: row['Unidad de Compras'] || row['Unidad de compras'] || '',
+                        referencia: row['Referencia'] || '',
+                        descripcion: row['Descripción'] || row['Descripcion'] || '',
+                        fecha_presentacion: row['Fecha de presentación de ofertas'] ||
+                                          row['Fecha de presentacion de ofertas'] || null,
+                        monto_estimado: row['Total estimado'] || row['Total Estimado'] || null,
+                        estado: row['Estado'] || ''
+                    })).filter(l => l.descripcion);
 
-                    if (descripciones.length === 0) {
-                        alert('No se encontró la columna "Descripción" en el Excel');
+                    if (licitaciones.length === 0) {
+                        alert('No se encontraron licitaciones válidas en el Excel');
                         resetearUI();
                         return;
                     }
 
                     document.getElementById('etapa1-texto').textContent =
-                        `Analizando ${descripciones.length} descripciones con criterios del cliente...`;
+                        `Analizando ${licitaciones.length} licitaciones con filtros...`;
 
-                    // Simular pequeña pausa para que se vea la Etapa 1
                     await new Promise(resolve => setTimeout(resolve, 1000));
 
-                    // Mostrar Etapa 2
                     document.getElementById('etapa2-progress').classList.remove('hidden');
                     document.getElementById('etapa1-spinner').classList.add('hidden');
                     document.getElementById('etapa1-texto').innerHTML =
                         '<span class="text-green-600 font-semibold">✓ Completado</span>';
 
-                    // Llamar al API
                     const response = await fetch(`${API_BASE}/api/analizar-v4`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             cliente_id: clienteActual.id,
-                            descripciones: descripciones,
+                            licitaciones: licitaciones,
                             guardar_en_db: true
                         })
                     });
@@ -278,12 +502,10 @@
                     if (resultado.success) {
                         analisisActual = resultado;
 
-                        // Actualizar Etapa 2
                         document.getElementById('etapa2-spinner').classList.add('hidden');
                         document.getElementById('etapa2-texto').innerHTML =
                             '<span class="text-green-600 font-semibold">✓ Completado</span>';
 
-                        // Mostrar resumen
                         document.getElementById('analisis-completado').classList.remove('hidden');
 
                         const stats = resultado.estadisticas;
@@ -300,7 +522,6 @@
                             </div>
                         `;
 
-                        // Recargar historial
                         await cargarHistorial();
                     } else {
                         alert('Error: ' + resultado.error);
@@ -329,18 +550,15 @@
         async function mostrarResultados() {
             if (!analisisActual) {
                 document.getElementById('resumen-analisis').innerHTML =
-                    '<p class="text-gray-500 text-center py-8">No hay análisis reciente. Ve a la pestaña Análisis para crear uno.</p>';
+                    '<p class="text-gray-500 text-center py-8">No hay análisis reciente.</p>';
                 document.getElementById('oportunidades-tabla').innerHTML = '';
                 return;
             }
 
             const stats = analisisActual.estadisticas;
             const resultados = analisisActual.resultados || [];
-
-            // Filtrar solo ALTA y MEDIA
             const oportunidades = resultados.filter(r => r.relevancia === 'ALTA' || r.relevancia === 'MEDIA');
 
-            // Resumen
             const descartadasEtapa1 = stats.descartadas_prefiltro;
             const analizadasIA = stats.analizadas_ia;
             const bajasPorContexto = stats.baja - descartadasEtapa1;
@@ -385,14 +603,10 @@
                 </div>
             `;
 
-            // Tabla de oportunidades
             if (oportunidades.length === 0) {
                 document.getElementById('oportunidades-tabla').innerHTML = `
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
                         <p class="text-yellow-800 font-semibold">ℹ️ No hay oportunidades ALTA o MEDIA</p>
-                        <p class="text-sm text-gray-600 mt-2">
-                            Las oportunidades clasificadas como BAJA no se muestran en detalle
-                        </p>
                     </div>
                 `;
                 document.getElementById('acciones-resultados').classList.add('hidden');
@@ -400,16 +614,17 @@
                 document.getElementById('oportunidades-tabla').innerHTML = `
                     <h3 class="text-lg font-bold mb-3">🎯 Oportunidades Relevantes (${oportunidades.length})</h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full border-collapse">
+                        <table class="w-full border-collapse text-sm">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="border p-2">
-                                        <input type="checkbox" id="check-all" onchange="toggleTodos()">
-                                    </th>
+                                    <th class="border p-2"><input type="checkbox" id="check-all" onchange="toggleTodos()"></th>
+                                    <th class="border p-2 text-left">Referencia</th>
                                     <th class="border p-2 text-left">Descripción</th>
                                     <th class="border p-2 text-left">Qué</th>
                                     <th class="border p-2 text-left">Quién</th>
                                     <th class="border p-2">Relevancia</th>
+                                    <th class="border p-2 text-right">Monto (DOP)</th>
+                                    <th class="border p-2">Fecha Límite</th>
                                     <th class="border p-2 text-left">Razón</th>
                                 </tr>
                             </thead>
@@ -419,9 +634,10 @@
                                         <td class="border p-2 text-center">
                                             <input type="checkbox" class="check-oportunidad" data-index="${i}">
                                         </td>
-                                        <td class="border p-2 text-sm">${r.descripcion}</td>
-                                        <td class="border p-2 text-sm font-medium">${r.que}</td>
-                                        <td class="border p-2 text-sm">${r.quien}</td>
+                                        <td class="border p-2 font-mono text-xs">${r.referencia || '-'}</td>
+                                        <td class="border p-2">${r.descripcion}</td>
+                                        <td class="border p-2 font-medium">${r.que}</td>
+                                        <td class="border p-2">${r.quien}</td>
                                         <td class="border p-2 text-center">
                                             <span class="px-2 py-1 rounded text-xs font-bold ${
                                                 r.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
@@ -430,7 +646,13 @@
                                                 ${r.relevancia}
                                             </span>
                                         </td>
-                                        <td class="border p-2 text-sm text-gray-700">${r.razon}</td>
+                                        <td class="border p-2 text-right font-semibold">
+                                            ${r.monto_estimado ? parseFloat(r.monto_estimado).toLocaleString() : '-'}
+                                        </td>
+                                        <td class="border p-2 text-center">
+                                            ${r.fecha_presentacion || '-'}
+                                        </td>
+                                        <td class="border p-2 text-gray-700">${r.razon}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -468,10 +690,15 @@
             const seleccionados = indices.map(i => resultados[i]);
 
             const ws = XLSX.utils.json_to_sheet(seleccionados.map(r => ({
+                'Referencia': r.referencia,
+                'Unidad de Compras': r.unidad_compras,
                 'Descripción': r.descripcion,
                 'Qué': r.que,
                 'Quién': r.quien,
                 'Relevancia': r.relevancia,
+                'Monto Estimado': r.monto_estimado,
+                'Fecha Presentación': r.fecha_presentacion,
+                'Estado': r.estado,
                 'Razón': r.razon
             })));
 
@@ -532,8 +759,6 @@
                 `).join('');
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('lista-historial').innerHTML =
-                    '<p class="text-red-500 text-center py-8">Error al cargar historial</p>';
             }
         }
 
@@ -582,7 +807,7 @@
             }
         }
 
-        // ============ INICIALIZAR ============
+        // Inicializar
         init();
     </script>
 </body>
