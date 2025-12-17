@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Solo POST permitido' });
   }
 
-  const sql = neon(process.env.NETLIFYDATABASEURL);
+  const sql = neon(process.env.DATABASE_URL);
 
   try {
     // Crear tabla clientes

@@ -11,21 +11,21 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const sql = neon(process.env.NETLIFYDATABASEURL);
+  const sql = neon(process.env.DATABASE_URL);
 
   try {
     // LISTAR RESULTADOS con filtros
     if (req.method === 'GET') {
-      const { 
-        cliente_id, 
-        relevancia, 
-        seleccionado, 
+      const {
+        cliente_id,
+        relevancia,
+        seleccionado,
         analisis_id,
-        limite = 100 
+        limite = 100
       } = req.query;
 
       let query = `
-        SELECT 
+        SELECT
           r.*,
           c.nombre as cliente_nombre,
           a.fecha_analisis
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
 
       valores.push(id);
       const query = `
-        UPDATE resultados 
+        UPDATE resultados
         SET ${campos.join(', ')}
         WHERE id = $${paramIndex}
         RETURNING *
@@ -150,7 +150,7 @@ export default async function handler(req, res) {
       }
 
       await sql`
-        UPDATE resultados 
+        UPDATE resultados
         SET seleccionado = ${seleccionado}
         WHERE id = ANY(${ids})
       `;
@@ -173,7 +173,7 @@ export default async function handler(req, res) {
       }
 
       const resumen = await sql`
-        SELECT 
+        SELECT
           COUNT(*) as total_analizados,
           SUM(CASE WHEN relevancia = 'ALTA' THEN 1 ELSE 0 END) as total_alta,
           SUM(CASE WHEN relevancia = 'MEDIA' THEN 1 ELSE 0 END) as total_media,
