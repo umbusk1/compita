@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const { 
       cliente_id, 
       descripciones, 
-      batchSize = 10,
+      batchSize = 5,
       guardar_en_db = true 
     } = req.body;
 
