@@ -29,6 +29,12 @@ export default async function handler(req, res) {
     const cliente = clienteData[0];
     console.log(`📊 Cliente: ${cliente.nombre} | ${licitaciones.length} licitaciones totales`);
 
+    // DIAGNÓSTICO: Ver muestra de licitaciones recibidas
+    console.log('🔍 MUESTRA DE LICITACIONES (primeras 3):');
+    licitaciones.slice(0, 3).forEach((lic, i) => {
+      console.log(`  ${i}: Fecha=${lic.fecha_presentacion}, Monto=${lic.monto_estimado}, Desc=${lic.descripcion.substring(0, 50)}...`);
+    });
+
     // ========== ETAPA 1: PRE-FILTRO AVANZADO ==========
     function prefiltrarLicitacion(lic) {
       const descripcion = (lic.descripcion || '').toLowerCase();
@@ -49,24 +55,38 @@ export default async function handler(req, res) {
       // 2. FILTRO POR FECHA
       if (fechaPresentacion) {
         try {
-          // Limpiar formato de fecha: remover "(UTC -4 horas)" y similares
+          // Limpiar formato de fecha: remover "(UTC...)" y espacios extra
           let fechaLimpia = String(fechaPresentacion).split('(')[0].trim();
+
+          console.log(`📅 Procesando fecha: Original="${fechaPresentacion}", Limpia="${fechaLimpia}"`);
 
           const fecha = new Date(fechaLimpia);
           const hoy = new Date();
 
-          // Comparar solo fechas (sin horas)
-          fecha.setHours(0, 0, 0, 0);
-          hoy.setHours(0, 0, 0, 0);
+          // Verificar si la fecha es válida
+          if (isNaN(fecha.getTime())) {
+            console.log(`⚠️ Fecha inválida, no se puede parsear: ${fechaPresentacion}`);
+            // Si no podemos parsear la fecha, la dejamos pasar
+            return null; // Continuará con otros filtros
+          }
 
-          if (fecha <= hoy) {
+          // Comparar solo fechas (sin horas)
+          const fechaSoloFecha = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+          const hoySoloFecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+
+          console.log(`📅 Comparación: Fecha licitación=${fechaSoloFecha.toISOString().split('T')[0]}, Hoy=${hoySoloFecha.toISOString().split('T')[0]}`);
+
+          if (fechaSoloFecha <= hoySoloFecha) {
+            console.log(`❌ DESCARTADA por fecha`);
             return {
               pasa: false,
               razon: `Fecha vencida o es HOY: ${fechaPresentacion}`
             };
           }
+
+          console.log(`✅ Fecha OK - es futura`);
         } catch (e) {
-          console.log('Error parseando fecha:', fechaPresentacion);
+          console.error('❌ Error parseando fecha:', fechaPresentacion, e.message);
         }
       }
 
