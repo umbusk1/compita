@@ -49,14 +49,20 @@ export default async function handler(req, res) {
       // 2. FILTRO POR FECHA
       if (fechaPresentacion) {
         try {
-          const fecha = new Date(fechaPresentacion);
-          const hoy = new Date();
-          hoy.setHours(23, 59, 59, 999); // Incluir TODO el día de hoy
+          // Limpiar formato de fecha: remover "(UTC -4 horas)" y similares
+          let fechaLimpia = String(fechaPresentacion).split('(')[0].trim();
 
-          if (fecha < hoy) {
+          const fecha = new Date(fechaLimpia);
+          const hoy = new Date();
+
+          // Comparar solo fechas (sin horas)
+          fecha.setHours(0, 0, 0, 0);
+          hoy.setHours(0, 0, 0, 0);
+
+          if (fecha <= hoy) {
             return {
               pasa: false,
-              razon: `Fecha vencida: ${fechaPresentacion}`
+              razon: `Fecha vencida o es HOY: ${fechaPresentacion}`
             };
           }
         } catch (e) {
