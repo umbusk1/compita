@@ -1,4 +1,4 @@
-// api/analizar-v4.js - SISTEMA AVANZADO CON FECHA, ESTADO Y MONTO
+// api/analizar-v4.js - SISTEMA DETERMINISTA CON VALIDACIÓN IA
 import Anthropic from '@anthropic-ai/sdk';
 import { neon } from '@neondatabase/serverless';
 
@@ -7,38 +7,22 @@ function parsearFechaDominicana(fechaStr) {
   if (!fechaStr) return null;
 
   try {
-    // Limpiar: "17/12/2025 14:00 (UTC -4 horas)" → "17/12/2025"
     const fechaLimpia = String(fechaStr).split('(')[0].trim().split(' ')[0];
-
-    // Separar: "17/12/2025" → ["17", "12", "2025"]
     const partes = fechaLimpia.split('/');
 
-    if (partes.length !== 3) {
-      console.log(`⚠️ Formato de fecha no reconocido: ${fechaStr}`);
-      return null;
-    }
+    if (partes.length !== 3) return null;
 
     const dia = parseInt(partes[0], 10);
-    const mes = parseInt(partes[1], 10) - 1; // Mes en JS es 0-indexed
+    const mes = parseInt(partes[1], 10) - 1;
     const año = parseInt(partes[2], 10);
 
-    // Validar
-    if (isNaN(dia) || isNaN(mes) || isNaN(año)) {
-      console.log(`⚠️ Fecha con valores inválidos: ${fechaStr}`);
-      return null;
-    }
+    if (isNaN(dia) || isNaN(mes) || isNaN(año)) return null;
 
     const fecha = new Date(año, mes, dia);
-
-    // Verificar que la fecha es válida
-    if (isNaN(fecha.getTime())) {
-      console.log(`⚠️ Fecha inválida después de parsear: ${fechaStr}`);
-      return null;
-    }
+    if (isNaN(fecha.getTime())) return null;
 
     return fecha;
   } catch (e) {
-    console.error(`❌ Error parseando fecha "${fechaStr}":`, e.message);
     return null;
   }
 }
@@ -53,7 +37,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
   try {
-    const { cliente_id, licitaciones, batchSize = 5, guardar_en_db = true } = req.body;
+    const { cliente_id, licitaciones, guardar_en_db = true } = req.body;
 
     if (!cliente_id) return res.status(400).json({ success: false, error: 'cliente_id es requerido' });
     if (!licitaciones || !Array.isArray(licitaciones)) {
@@ -70,15 +54,8 @@ export default async function handler(req, res) {
     const cliente = clienteData[0];
     console.log(`📊 Cliente: ${cliente.nombre} | ${licitaciones.length} licitaciones totales`);
 
-    // DIAGNÓSTICO: Ver muestra de licitaciones recibidas
-    console.log('🔍 MUESTRA DE LICITACIONES (primeras 3):');
-    licitaciones.slice(0, 3).forEach((lic, i) => {
-      const fechaParseada = parsearFechaDominicana(lic.fecha_presentacion);
-      console.log(`  ${i}: Fecha="${lic.fecha_presentacion}" → Parseada=${fechaParseada ? fechaParseada.toISOString().split('T')[0] : 'INVÁLIDA'}, Monto=${lic.monto_estimado}`);
-    });
-
-    // ========== ETAPA 1: PRE-FILTRO AVANZADO ==========
-    function prefiltrarLicitacion(lic) {
+    // ========== ETAPA 1: FILTROS DE EXCLUSIÓN ==========
+    function aplicarFiltrosExclusion(lic) {
       const descripcion = (lic.descripcion || '').toLowerCase();
       const estado = (lic.estado || '').toLowerCase();
       const fechaPresentacion = lic.fecha_presentacion;
@@ -88,10 +65,7 @@ export default async function handler(req, res) {
       const tieneEstadoExcluido = estadosExcluidos.some(e => estado.includes(e));
 
       if (tieneEstadoExcluido) {
-        return {
-          pasa: false,
-          razon: `Estado excluido: ${lic.estado}`
-        };
+        return { excluir: true, razon: `Estado excluido: ${lic.estado}` };
       }
 
       // 2. FILTRO POR FECHA
@@ -100,91 +74,97 @@ export default async function handler(req, res) {
 
         if (fecha) {
           const hoy = new Date();
-
-          // Comparar solo fechas (sin horas)
           const fechaSoloFecha = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
           const hoySoloFecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
 
-          console.log(`📅 Comparación: Licitación=${fechaSoloFecha.toISOString().split('T')[0]}, Hoy=${hoySoloFecha.toISOString().split('T')[0]}`);
-
           if (fechaSoloFecha <= hoySoloFecha) {
-            console.log(`❌ DESCARTADA por fecha`);
-            return {
-              pasa: false,
-              razon: `Fecha vencida o es HOY: ${fechaPresentacion}`
-            };
+            return { excluir: true, razon: `Fecha vencida o es HOY: ${fechaPresentacion}` };
           }
-
-          console.log(`✅ Fecha OK - es futura`);
-        } else {
-          console.log(`⚠️ No se pudo parsear fecha, se ignora filtro de fecha para: ${fechaPresentacion}`);
         }
       }
 
-      // 3. FILTRO POR EXCLUSIONES (palabras clave)
+      // 3. FILTRO POR EXCLUSIONES
       if (cliente.exclusiones && cliente.exclusiones.length > 0) {
         const tieneExclusion = cliente.exclusiones.some(excl =>
           descripcion.includes(excl.toLowerCase())
         );
 
         if (tieneExclusion) {
-          return {
-            pasa: false,
-            razon: 'Contiene palabra de exclusión'
-          };
+          return { excluir: true, razon: 'Contiene palabra de exclusión' };
         }
       }
 
-      // 4. FILTRO POR PALABRAS CLAVE (ALTA o MEDIA)
-      const criteriosAlta = cliente.criterios_alta || [];
-      const criteriosMedia = cliente.criterios_media || [];
-      const todosCriterios = [...criteriosAlta, ...criteriosMedia];
+      return { excluir: false };
+    }
 
-      if (todosCriterios.length === 0) {
-        return { pasa: true, razon: 'Cliente sin criterios - enviar a IA' };
+    const excluidas = [];
+    const candidatas = [];
+
+    licitaciones.forEach(lic => {
+      const resultado = aplicarFiltrosExclusion(lic);
+      if (resultado.excluir) {
+        excluidas.push({ ...lic, razon_exclusion: resultado.razon });
+      } else {
+        candidatas.push(lic);
       }
+    });
 
-      const palabrasEncontradas = todosCriterios.filter(palabra =>
+    console.log(`✅ Etapa 1 (Exclusión): ${excluidas.length} excluidas, ${candidatas.length} candidatas`);
+
+    // ========== ETAPA 2: CLASIFICACIÓN AUTOMÁTICA ==========
+    const palabrasClave = cliente.palabras_clave || [];
+    const umbralMonto = cliente.monto_minimo_alta || 1000000;
+
+    console.log(`🔑 Palabras clave: ${palabrasClave.join(', ')}`);
+    console.log(`💰 Umbral monto ALTA: ${umbralMonto.toLocaleString()} DOP`);
+
+    const clasificadas = candidatas.map(lic => {
+      const descripcion = (lic.descripcion || '').toLowerCase();
+
+      // Buscar palabras clave
+      const palabrasEncontradas = palabrasClave.filter(palabra =>
         descripcion.includes(palabra.toLowerCase())
       );
 
       if (palabrasEncontradas.length === 0) {
-        return {
-          pasa: false,
-          razon: 'No contiene palabras clave relevantes'
-        };
+        // No tiene palabras clave, se excluye
+        excluidas.push({
+          ...lic,
+          razon_exclusion: 'No contiene palabras clave relevantes'
+        });
+        return null;
+      }
+
+      // Tiene palabras clave → MEDIA por defecto
+      let relevancia = 'MEDIA';
+      let razon = `Palabras clave: ${palabrasEncontradas.slice(0, 3).join(', ')}`;
+
+      // Si monto >= umbral → ALTA
+      const monto = parseFloat(lic.monto_estimado);
+      if (!isNaN(monto) && monto >= umbralMonto) {
+        relevancia = 'ALTA';
+        razon += ` | Monto >= ${umbralMonto.toLocaleString()} DOP`;
       }
 
       return {
-        pasa: true,
-        razon: `Contiene: ${palabrasEncontradas.slice(0, 3).join(', ')}`,
-        palabrasEncontradas
+        ...lic,
+        relevancia,
+        razon_clasificacion: razon,
+        palabras_encontradas: palabrasEncontradas
       };
-    }
+    }).filter(Boolean); // Eliminar nulls
 
-    const resultadosPrefiltro = licitaciones.map(lic => ({
-      ...lic,
-      ...prefiltrarLicitacion(lic)
-    }));
+    console.log(`✅ Etapa 2 (Clasificación): ${clasificadas.length} oportunidades (${clasificadas.filter(c => c.relevancia === 'ALTA').length} ALTA, ${clasificadas.filter(c => c.relevancia === 'MEDIA').length} MEDIA)`);
 
-    const descartadas = resultadosPrefiltro.filter(r => !r.pasa);
-    const candidatas = resultadosPrefiltro.filter(r => r.pasa);
-
-    // LOGGING DETALLADO para diagnóstico
-    const razonesDescarte = {};
-    descartadas.forEach(d => {
-      razonesDescarte[d.razon] = (razonesDescarte[d.razon] || 0) + 1;
-    });
-    console.log('📊 RAZONES DE DESCARTE:', razonesDescarte);
-    console.log(`✅ Etapa 1: ${descartadas.length} descartadas, ${candidatas.length} candidatas`);
-
-    if (candidatas.length === 0) {
-      const resultadosFinales = descartadas.map(d => ({
-        ...extraerCamposLicitacion(d),
+    if (clasificadas.length === 0) {
+      // No hay oportunidades relevantes
+      const resultadosFinales = excluidas.map(e => ({
+        ...extraerCamposLicitacion(e),
         que: 'Descartada',
         quien: 'N/A',
         relevancia: 'BAJA',
-        razon: d.razon
+        razon: e.razon_exclusion,
+        compatible: null
       }));
 
       return res.status(200).json({
@@ -192,186 +172,150 @@ export default async function handler(req, res) {
         cliente: { id: cliente.id, nombre: cliente.nombre },
         estadisticas: {
           total: licitaciones.length,
-          descartadas_prefiltro: descartadas.length,
-          analizadas_ia: 0,
+          excluidas: excluidas.length,
+          relevantes: 0,
           alta: 0,
           media: 0,
-          baja: descartadas.length,
-          errores: 0
+          incompatibles: 0
         },
         resultados: resultadosFinales,
-        mensaje: `Pre-filtro: ${descartadas.length} descartadas, 0 requieren IA`
+        mensaje: `No se encontraron oportunidades relevantes`
       });
     }
 
-    // ========== ETAPA 2: ANÁLISIS CON IA ==========
-    const candidatasLimitadas = candidatas.slice(0, 10);
-    if (candidatas.length > 10) {
-      console.log(`⚠️ Limitando a 10 de ${candidatas.length} candidatas`);
-    }
-
+    // ========== ETAPA 3: VALIDACIÓN CON IA ==========
     if (!process.env.ANTHROPIC_API_KEY) {
       return res.status(500).json({ success: false, error: 'API key no configurada' });
     }
 
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-    function buildPrompt(loteLicitaciones) {
-      const criteriosAlta = (cliente.criterios_alta || []).join(', ');
-      const criteriosMedia = (cliente.criterios_media || []).join(', ');
+    console.log(`🤖 Etapa 3 (Validación IA): Validando ${clasificadas.length} oportunidades...`);
 
-      return `Eres un experto analizador de licitaciones para ${cliente.nombre}.
-Descripción del negocio: ${cliente.descripcion}
+    // Construir prompt de validación
+    function buildValidationPrompt(oportunidades) {
+      return `Eres un experto validador de licitaciones para ${cliente.nombre}.
 
-ESTAS DESCRIPCIONES YA PASARON FILTROS. Analiza el CONTEXTO para clasificarlas.
+DESCRIPCIÓN DEL NEGOCIO:
+${cliente.descripcion}
 
-CRITERIOS ESTRICTOS:
-- ALTA: Solo si es ${criteriosAlta} como SERVICIO DIRECTO (no materiales, no compras)
-- MEDIA: ${criteriosMedia} o servicios relacionados pero indirectos
-- BAJA: Compra de materiales, equipos, o servicios no formativos
+TAREA: Valida si estas oportunidades son COMPATIBLES con la naturaleza del negocio descrito arriba.
 
-REGLAS IMPORTANTES:
-1. "Desarrollo/creación de contenidos" = MEDIA (no es impartir formación directa)
-2. "Compra de materiales para capacitación" = BAJA (es compra, no servicio)
-3. "Impartir/dictar/ejecutar capacitación" = ALTA (servicio formativo directo)
-4. Si hay DUDA entre ALTA y MEDIA → usa MEDIA
-5. Sé CONSERVADOR con ALTA, solo casos muy claros
+CRITERIOS DE COMPATIBILIDAD:
+- ¿El servicio/producto solicitado es algo que esta empresa puede ofrecer?
+- ¿Está alineado con el giro del negocio?
+- ¿Tiene sentido que esta empresa participe en esta licitación?
 
-Para CADA licitación:
-1. QUÉ: ¿Qué se busca? (máximo 7 palabras)
-2. QUIÉN: ¿Para quién? (máximo 7 palabras)
-3. RELEVANCIA: ALTA, MEDIA o BAJA
-4. RAZÓN: Explicación breve y específica
+Para CADA oportunidad responde SOLO:
+- "compatible": true o false
+- "razon_validacion": Explicación breve (máximo 15 palabras)
+
+NO cambies la clasificación ALTA/MEDIA, solo valida compatibilidad.
 
 Responde en JSON:
 {
-  "analisis": [
-    { "indice": 0, "que": "síntesis", "quien": "destinatario", "relevancia": "MEDIA", "razon": "explicación" }
+  "validaciones": [
+    { "indice": 0, "compatible": true, "razon_validacion": "explicación" }
   ]
 }
 
-LICITACIONES:
-${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
+OPORTUNIDADES A VALIDAR:
+${oportunidades.map((o, i) => `${i}. [${o.relevancia}] ${o.descripcion}`).join('\n')}`;
     }
 
-    async function procesarLoteIA(loteLicitaciones, numeroBatch) {
-      console.log(`🤖 Lote IA ${numeroBatch}: ${loteLicitaciones.length} licitaciones`);
+    // Procesar en lotes de 10
+    const resultadosValidados = [];
+    const batchSize = 10;
+
+    for (let i = 0; i < clasificadas.length; i += batchSize) {
+      const lote = clasificadas.slice(i, Math.min(i + batchSize, clasificadas.length));
+      const numeroLote = Math.floor(i / batchSize) + 1;
+      const totalLotes = Math.ceil(clasificadas.length / batchSize);
+
+      console.log(`🤖 Validando lote ${numeroLote}/${totalLotes} (${lote.length} oportunidades)...`);
 
       try {
         const response = await anthropic.messages.create({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 4000,
-          temperature: 0, // Máxima consistencia
-          messages: [{ role: "user", content: buildPrompt(loteLicitaciones) }]
+          temperature: 0,
+          messages: [{ role: "user", content: buildValidationPrompt(lote) }]
         });
 
         const content = response.content[0].text;
         const jsonMatch = content.match(/\{[\s\S]*\}/);
 
         if (jsonMatch) {
-          const analisis = JSON.parse(jsonMatch[0]).analisis || [];
+          const validaciones = JSON.parse(jsonMatch[0]).validaciones || [];
 
-          // Logging de clasificaciones IA
-          console.log(`🤖 Clasificaciones del lote ${numeroBatch}:`);
-          analisis.forEach(a => {
-            console.log(`  ${a.indice}: ${a.relevancia} - ${a.razon.substring(0, 50)}...`);
-          });
-
-          // Mapear resultados con índices
-          return loteLicitaciones.map((lic, i) => {
-            const resultado = analisis.find(a => a.indice === i) || {
-              que: "Error", quien: "No analizado", relevancia: "ERROR", razon: "No encontrado"
+          lote.forEach((oportunidad, idx) => {
+            const validacion = validaciones.find(v => v.indice === idx) || {
+              compatible: true,
+              razon_validacion: 'No validado'
             };
 
-            return {
-              ...lic,
-              ...resultado
-            };
+            resultadosValidados.push({
+              ...oportunidad,
+              compatible: validacion.compatible,
+              razon_validacion: validacion.razon_validacion
+            });
           });
         } else {
-          return loteLicitaciones.map(lic => ({
-            ...lic,
-            que: "Error",
-            quien: "No analizado",
-            relevancia: "ERROR",
-            razon: "No se pudo extraer análisis"
-          }));
+          // Si no hay respuesta JSON válida, marcar todas como compatibles
+          lote.forEach(oportunidad => {
+            resultadosValidados.push({
+              ...oportunidad,
+              compatible: true,
+              razon_validacion: 'No se pudo validar'
+            });
+          });
         }
+
+        console.log(`✅ Lote ${numeroLote}/${totalLotes} validado`);
       } catch (error) {
-        console.error(`❌ Error lote ${numeroBatch}:`, error.message);
-        return loteLicitaciones.map(lic => ({
-          ...lic,
-          que: "Error",
-          quien: "No procesado",
-          relevancia: "ERROR",
-          razon: error.message
-        }));
-      }
-    }
-
-    const resultadosIA = [];
-    const totalLotes = Math.ceil(candidatasLimitadas.length / batchSize);
-
-    for (let i = 0; i < candidatasLimitadas.length; i += batchSize) {
-      const lote = candidatasLimitadas.slice(i, Math.min(i + batchSize, candidatasLimitadas.length));
-      const numeroLote = Math.floor(i / batchSize) + 1;
-
-      try {
-        const resultadosLote = await procesarLoteIA(lote, numeroLote);
-        resultadosIA.push(...resultadosLote);
-        console.log(`✅ Lote ${numeroLote}/${totalLotes} completado`);
-      } catch (error) {
-        console.error(`❌ Error crítico lote ${numeroLote}`);
-        lote.forEach(lic => {
-          resultadosIA.push({
-            ...lic,
-            que: "Error",
-            quien: "No procesado",
-            relevancia: "ERROR",
-            razon: "Fallo IA"
+        console.error(`❌ Error validando lote ${numeroLote}:`, error.message);
+        // En caso de error, marcar todas como compatibles
+        lote.forEach(oportunidad => {
+          resultadosValidados.push({
+            ...oportunidad,
+            compatible: true,
+            razon_validacion: 'Error en validación'
           });
         });
       }
     }
 
-    // ========== AJUSTE POR MONTO ==========
-    const umbralMonto = cliente.monto_minimo_alta || 1000000;
-    console.log(`💰 Umbral de monto para ALTA: ${umbralMonto.toLocaleString()} DOP`);
+    const incompatibles = resultadosValidados.filter(r => r.compatible === false).length;
+    console.log(`✅ Validación completa: ${incompatibles} incompatibles de ${resultadosValidados.length}`);
 
-    let ajustadosPorMonto = 0;
-    resultadosIA.forEach(r => {
-      if (r.relevancia === 'MEDIA' && r.monto_estimado && parseFloat(r.monto_estimado) >= umbralMonto) {
-        console.log(`💰 Subiendo a ALTA por monto: ${r.referencia} (${parseFloat(r.monto_estimado).toLocaleString()} DOP)`);
-        r.relevancia = 'ALTA';
-        r.razon = `${r.razon} [Subido a ALTA por monto >= ${umbralMonto.toLocaleString()}]`;
-        ajustadosPorMonto++;
-      }
-    });
-
-    if (ajustadosPorMonto > 0) {
-      console.log(`💰 Total ajustados por monto: ${ajustadosPorMonto}`);
-    }
-
-    // Combinar resultados finales
+    // Combinar todos los resultados
     const resultadosFinales = [
-      ...descartadas.map(d => ({
-        ...extraerCamposLicitacion(d),
+      ...excluidas.map(e => ({
+        ...extraerCamposLicitacion(e),
         que: 'Descartada',
         quien: 'N/A',
         relevancia: 'BAJA',
-        razon: d.razon
+        razon: e.razon_exclusion,
+        compatible: null
       })),
-      ...resultadosIA.map(r => extraerCamposLicitacion(r))
+      ...resultadosValidados.map(r => ({
+        ...extraerCamposLicitacion(r),
+        que: r.que || (r.compatible ? 'Oportunidad relevante' : 'Aparentemente incompatible'),
+        quien: r.quien || 'Por determinar',
+        relevancia: r.relevancia,
+        razon: r.razon_clasificacion,
+        razon_validacion: r.razon_validacion,
+        compatible: r.compatible
+      }))
     ];
 
     const estadisticas = {
       total: licitaciones.length,
-      descartadas_prefiltro: descartadas.length,
-      analizadas_ia: resultadosIA.length,
-      alta: resultadosIA.filter(r => r.relevancia === 'ALTA').length,
-      media: resultadosIA.filter(r => r.relevancia === 'MEDIA').length,
-      baja: resultadosIA.filter(r => r.relevancia === 'BAJA').length + descartadas.length,
-      errores: resultadosIA.filter(r => r.relevancia === 'ERROR').length
+      excluidas: excluidas.length,
+      relevantes: resultadosValidados.length,
+      alta: resultadosValidados.filter(r => r.relevancia === 'ALTA').length,
+      media: resultadosValidados.filter(r => r.relevancia === 'MEDIA').length,
+      incompatibles: incompatibles
     };
 
     // Guardar en DB
@@ -384,9 +328,14 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
             porcentaje_alta, fuente, notas
           )
           VALUES (
-            ${cliente_id}, ${estadisticas.total}, ${estadisticas.alta}, ${estadisticas.media},
-            ${estadisticas.baja}, ${((estadisticas.alta / estadisticas.total) * 100).toFixed(1)},
-            'excel', ${`Prefiltro: ${descartadas.length} descartadas, ${resultadosIA.length} analizadas`}
+            ${cliente_id},
+            ${estadisticas.total},
+            ${estadisticas.alta},
+            ${estadisticas.media},
+            ${estadisticas.excluidas},
+            ${estadisticas.alta > 0 ? ((estadisticas.alta / estadisticas.total) * 100).toFixed(1) : 0},
+            'excel',
+            ${`Excluidas: ${estadisticas.excluidas}, Relevantes: ${estadisticas.relevantes}, Incompatibles: ${estadisticas.incompatibles}`}
           )
           RETURNING id
         `;
@@ -396,13 +345,14 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
           await sql`
             INSERT INTO resultados (
               analisis_id, cliente_id, descripcion, que, quien, relevancia, razon,
-              referencia, unidad_compras, fecha_presentacion, monto_estimado, estado
+              referencia, unidad_compras, fecha_presentacion, monto_estimado, estado, compatible
             )
             VALUES (
               ${analisis_id}, ${cliente_id}, ${resultado.descripcion},
-              ${resultado.que}, ${resultado.quien}, ${resultado.relevancia}, ${resultado.razon},
+              ${resultado.que}, ${resultado.quien}, ${resultado.relevancia},
+              ${resultado.razon || ''} ${resultado.razon_validacion ? '| ' + resultado.razon_validacion : ''},
               ${resultado.referencia}, ${resultado.unidad_compras}, ${resultado.fecha_presentacion},
-              ${resultado.monto_estimado}, ${resultado.estado}
+              ${resultado.monto_estimado}, ${resultado.estado}, ${resultado.compatible}
             )
           `;
         }
@@ -418,7 +368,7 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
       analisis_id,
       estadisticas,
       resultados: resultadosFinales,
-      mensaje: `Completado: ${descartadas.length} descartadas, ${resultadosIA.length} analizadas con IA`
+      mensaje: `Completado: ${estadisticas.excluidas} excluidas, ${estadisticas.relevantes} relevantes (${estadisticas.incompatibles} aparentemente incompatibles)`
     });
 
   } catch (error) {
@@ -428,12 +378,11 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
 }
 
 function extraerCamposLicitacion(lic) {
-  // Convertir fecha al formato PostgreSQL (YYYY-MM-DD)
   let fechaDB = null;
   if (lic.fecha_presentacion) {
     const fecha = parsearFechaDominicana(lic.fecha_presentacion);
     if (fecha) {
-      fechaDB = fecha.toISOString().split('T')[0]; // "2025-12-19"
+      fechaDB = fecha.toISOString().split('T')[0];
     }
   }
 
@@ -447,7 +396,9 @@ function extraerCamposLicitacion(lic) {
     que: lic.que || '',
     quien: lic.quien || '',
     relevancia: lic.relevancia || '',
-    razon: lic.razon || ''
+    razon: lic.razon || '',
+    razon_validacion: lic.razon_validacion || null,
+    compatible: lic.compatible !== undefined ? lic.compatible : null
   };
 }
 

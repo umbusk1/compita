@@ -1,4 +1,4 @@
-// api/clientes.js - CRUD de clientes con umbral de monto
+// api/clientes.js - Sistema simplificado con palabras_clave
 import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
@@ -50,8 +50,7 @@ export default async function handler(req, res) {
       const {
         nombre,
         descripcion,
-        criterios_alta,
-        criterios_media,
+        palabras_clave,
         exclusiones,
         monto_minimo_alta
       } = req.body;
@@ -63,14 +62,13 @@ export default async function handler(req, res) {
         });
       }
 
-      const montoAlta = monto_minimo_alta || 1000000; // Default 1 millón
+      const montoAlta = monto_minimo_alta || 1000000;
 
       const result = await sql`
         INSERT INTO clientes (
           nombre,
           descripcion,
-          criterios_alta,
-          criterios_media,
+          palabras_clave,
           exclusiones,
           monto_minimo_alta,
           activo
@@ -78,8 +76,7 @@ export default async function handler(req, res) {
         VALUES (
           ${nombre},
           ${descripcion || ''},
-          ${criterios_alta || []},
-          ${criterios_media || []},
+          ${palabras_clave || []},
           ${exclusiones || []},
           ${montoAlta},
           true
@@ -99,8 +96,7 @@ export default async function handler(req, res) {
       const {
         nombre,
         descripcion,
-        criterios_alta,
-        criterios_media,
+        palabras_clave,
         exclusiones,
         monto_minimo_alta,
         activo
@@ -118,8 +114,7 @@ export default async function handler(req, res) {
         SET
           nombre = ${nombre},
           descripcion = ${descripcion || ''},
-          criterios_alta = ${criterios_alta || []},
-          criterios_media = ${criterios_media || []},
+          palabras_clave = ${palabras_clave || []},
           exclusiones = ${exclusiones || []},
           monto_minimo_alta = ${monto_minimo_alta || 1000000},
           activo = ${activo !== undefined ? activo : true},
@@ -152,7 +147,6 @@ export default async function handler(req, res) {
         });
       }
 
-      // Soft delete
       const result = await sql`
         UPDATE clientes
         SET activo = false, updated_at = CURRENT_TIMESTAMP
