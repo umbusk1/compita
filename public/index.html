@@ -539,12 +539,32 @@
                         }
 
                         document.getElementById('resumen-rapido').innerHTML = `
-                            <div class="grid grid-cols-2 gap-2 text-sm">
-                                <div><strong>Lote total:</strong> ${stats.total}</div>
-                                <div><strong>Descartadas (Etapa 1):</strong> ${stats.descartadas_prefiltro}</div>
-                                <div><strong>Analizadas (Etapa 2):</strong> ${stats.analizadas_ia}</div>
-                                <div><strong>Oportunidades relevantes:</strong>
-                                    <span class="text-green-600 font-bold">${altaMedia}</span>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-white rounded p-2">
+                                    <div class="text-xs text-gray-600">Lote total</div>
+                                    <div class="text-2xl font-bold text-blue-600">${stats.total}</div>
+                                </div>
+                                <div class="bg-white rounded p-2">
+                                    <div class="text-xs text-gray-600">Descartadas Etapa 1</div>
+                                    <div class="text-2xl font-bold text-gray-600">${stats.descartadas_prefiltro}</div>
+                                </div>
+                                <div class="bg-white rounded p-2">
+                                    <div class="text-xs text-gray-600">Analizadas con IA</div>
+                                    <div class="text-2xl font-bold text-purple-600">${stats.analizadas_ia}</div>
+                                </div>
+                                <div class="bg-white rounded p-2">
+                                    <div class="text-xs text-gray-600">🎯 Oportunidades</div>
+                                    <div class="text-2xl font-bold text-green-600">${altaMedia}</div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-3">
+                                <div class="bg-green-100 border border-green-300 rounded p-2 text-center">
+                                    <div class="text-lg font-bold text-green-700">${stats.alta}</div>
+                                    <div class="text-xs text-green-800">ALTA</div>
+                                </div>
+                                <div class="bg-yellow-100 border border-yellow-300 rounded p-2 text-center">
+                                    <div class="text-lg font-bold text-yellow-700">${stats.media}</div>
+                                    <div class="text-xs text-yellow-800">MEDIA</div>
                                 </div>
                             </div>
                             ${diagnosticoHTML}
@@ -595,7 +615,7 @@
                 <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">📊 Resumen del Análisis</h3>
 
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                    <div class="grid grid-cols-3 gap-4 mb-4">
                         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
                             <div class="text-3xl font-bold text-blue-600">${stats.total}</div>
                             <div class="text-xs text-gray-600">Lote Total</div>
@@ -606,26 +626,18 @@
                         </div>
                         <div class="bg-white rounded-lg p-3 text-center shadow-sm">
                             <div class="text-3xl font-bold text-purple-600">${analizadasIA}</div>
-                            <div class="text-xs text-gray-600">Analizadas IA</div>
-                        </div>
-                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-                            <div class="text-3xl font-bold text-green-600">${stats.alta + stats.media}</div>
-                            <div class="text-xs text-gray-600">ALTA + MEDIA</div>
-                        </div>
-                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-                            <div class="text-3xl font-bold text-gray-400">${bajasPorContexto}</div>
-                            <div class="text-xs text-gray-600">BAJA contexto</div>
+                            <div class="text-xs text-gray-600">Analizadas con IA</div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 text-sm bg-white rounded-lg p-3">
-                        <div class="flex items-center space-x-2">
-                            <span class="w-3 h-3 bg-green-500 rounded-full"></span>
-                            <span><strong>ALTA:</strong> ${stats.alta}</span>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-300 rounded-lg p-4 text-center">
+                            <div class="text-4xl font-bold text-green-700">${stats.alta}</div>
+                            <div class="text-sm font-semibold text-green-800">ALTA Relevancia</div>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                            <span><strong>MEDIA:</strong> ${stats.media}</span>
+                        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-300 rounded-lg p-4 text-center">
+                            <div class="text-4xl font-bold text-yellow-700">${stats.media}</div>
+                            <div class="text-sm font-semibold text-yellow-800">MEDIA Relevancia</div>
                         </div>
                     </div>
                 </div>
