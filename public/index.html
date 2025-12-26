@@ -196,15 +196,10 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-1">Criterios ALTA (separados por coma)</label>
-                        <textarea id="cliente-criterios-alta" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="capacitación, cursos, talleres formativos"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">💡 Palabras específicas de tu negocio</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Criterios MEDIA (separados por coma)</label>
-                        <textarea id="cliente-criterios-media" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="consultoría, asesoría técnica"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">💡 Palabras relacionadas</p>
+                        <label class="block text-sm font-medium mb-1">Palabras Clave (separados por coma)</label>
+                        <textarea id="cliente-palabras-clave" rows="3" class="w-full border rounded-lg px-3 py-2"
+                            placeholder="capacitación, formación, cursos, talleres, consultoría, asesoría, entrenamiento"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">💡 Cualquier licitación con AL MENOS una de estas palabras será clasificada como MEDIA</p>
                     </div>
 
                     <div>
@@ -302,12 +297,14 @@
                             💰 Monto mínimo ALTA: ${(c.monto_minimo_alta || 1000000).toLocaleString()} DOP
                         </div>
                         <div class="flex flex-wrap gap-1 mb-2">
-                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                                ALTA: ${(c.criterios_alta || []).length} palabras
+                            <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded">
+                                Palabras clave: ${(c.palabras_clave || c.criterios_alta || []).length}
                             </span>
-                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                                MEDIA: ${(c.criterios_media || []).length} palabras
-                            </span>
+                            ${c.exclusiones && c.exclusiones.length > 0 ? `
+                                <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
+                                    Exclusiones: ${c.exclusiones.length}
+                                </span>
+                            ` : ''}
                         </div>
                         <div class="flex gap-2 mt-3">
                             <button onclick="editarCliente(${c.id})"
@@ -349,8 +346,12 @@
                 document.getElementById('cliente-nombre').value = cliente.nombre;
                 document.getElementById('cliente-descripcion').value = cliente.descripcion || '';
                 document.getElementById('cliente-monto').value = cliente.monto_minimo_alta || 1000000;
-                document.getElementById('cliente-criterios-alta').value = (cliente.criterios_alta || []).join(', ');
-                document.getElementById('cliente-criterios-media').value = (cliente.criterios_media || []).join(', ');
+
+                // Usar palabras_clave si existe, sino combinar criterios_alta y media
+                const palabrasClave = cliente.palabras_clave ||
+                    [...(cliente.criterios_alta || []), ...(cliente.criterios_media || [])];
+                document.getElementById('cliente-palabras-clave').value = palabrasClave.join(', ');
+
                 document.getElementById('cliente-exclusiones').value = (cliente.exclusiones || []).join(', ');
 
                 document.getElementById('modal-cliente').classList.remove('hidden');
@@ -367,9 +368,7 @@
                 nombre: document.getElementById('cliente-nombre').value,
                 descripcion: document.getElementById('cliente-descripcion').value,
                 monto_minimo_alta: parseFloat(document.getElementById('cliente-monto').value) || 1000000,
-                criterios_alta: document.getElementById('cliente-criterios-alta').value
-                    .split(',').map(s => s.trim()).filter(s => s),
-                criterios_media: document.getElementById('cliente-criterios-media').value
+                palabras_clave: document.getElementById('cliente-palabras-clave').value
                     .split(',').map(s => s.trim()).filter(s => s),
                 exclusiones: document.getElementById('cliente-exclusiones').value
                     .split(',').map(s => s.trim()).filter(s => s)
