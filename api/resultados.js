@@ -67,6 +67,10 @@ export default async function handler(req, res) {
 
         const analisis = analisisData[0];
 
+        // Calcular estadísticas correctas desde resultados
+        const descartadas = resultados.filter(r => r.que === 'Descartada').length;
+        const noDescartadas = resultados.filter(r => r.que !== 'Descartada').length;
+
         return res.status(200).json({
           success: true,
           estadisticas: {
@@ -74,12 +78,8 @@ export default async function handler(req, res) {
             alta: analisis.total_alta,
             media: analisis.total_media,
             baja: analisis.total_baja,
-            descartadas_prefiltro: resultados.filter(r =>
-              r.que === 'Descartada'
-            ).length,
-            analizadas_ia: resultados.filter(r =>
-              r.que !== 'Descartada'
-            ).length
+            descartadas_prefiltro: descartadas,
+            analizadas_ia: noDescartadas
           },
           resultados
         });

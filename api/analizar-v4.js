@@ -2,6 +2,47 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { neon } from '@neondatabase/serverless';
 
+// FUNCIÓN AUXILIAR: Parsear fecha en formato DD/MM/YYYY
+function parsearFechaDominicana(fechaStr) {
+  if (!fechaStr) return null;
+
+  try {
+    // Limpiar: "17/12/2025 14:00 (UTC -4 horas)" → "17/12/2025"
+    const fechaLimpia = String(fechaStr).split('(')[0].trim().split(' ')[0];
+
+    // Separar: "17/12/2025" → ["17", "12", "2025"]
+    const partes = fechaLimpia.split('/');
+
+    if (partes.length !== 3) {
+      console.log(`⚠️ Formato de fecha no reconocido: ${fechaStr}`);
+      return null;
+    }
+
+    const dia = parseInt(partes[0], 10);
+    const mes = parseInt(partes[1], 10) - 1; // Mes en JS es 0-indexed
+    const año = parseInt(partes[2], 10);
+
+    // Validar
+    if (isNaN(dia) || isNaN(mes) || isNaN(año)) {
+      console.log(`⚠️ Fecha con valores inválidos: ${fechaStr}`);
+      return null;
+    }
+
+    const fecha = new Date(año, mes, dia);
+
+    // Verificar que la fecha es válida
+    if (isNaN(fecha.getTime())) {
+      console.log(`⚠️ Fecha inválida después de parsear: ${fechaStr}`);
+      return null;
+    }
+
+    return fecha;
+  } catch (e) {
+    console.error(`❌ Error parseando fecha "${fechaStr}":`, e.message);
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,7 +73,8 @@ export default async function handler(req, res) {
     // DIAGNÓSTICO: Ver muestra de licitaciones recibidas
     console.log('🔍 MUESTRA DE LICITACIONES (primeras 3):');
     licitaciones.slice(0, 3).forEach((lic, i) => {
-      console.log(`  ${i}: Fecha=${lic.fecha_presentacion}, Monto=${lic.monto_estimado}, Desc=${lic.descripcion.substring(0, 50)}...`);
+      const fechaParseada = parsearFechaDominicana(lic.fecha_presentacion);
+      console.log(`  ${i}: Fecha="${lic.fecha_presentacion}" → Parseada=${fechaParseada ? fechaParseada.toISOString().split('T')[0] : 'INVÁLIDA'}, Monto=${lic.monto_estimado}`);
     });
 
     // ========== ETAPA 1: PRE-FILTRO AVANZADO ==========
@@ -54,27 +96,16 @@ export default async function handler(req, res) {
 
       // 2. FILTRO POR FECHA
       if (fechaPresentacion) {
-        try {
-          // Limpiar formato de fecha: remover "(UTC...)" y espacios extra
-          let fechaLimpia = String(fechaPresentacion).split('(')[0].trim();
+        const fecha = parsearFechaDominicana(fechaPresentacion);
 
-          console.log(`📅 Procesando fecha: Original="${fechaPresentacion}", Limpia="${fechaLimpia}"`);
-
-          const fecha = new Date(fechaLimpia);
+        if (fecha) {
           const hoy = new Date();
-
-          // Verificar si la fecha es válida
-          if (isNaN(fecha.getTime())) {
-            console.log(`⚠️ Fecha inválida, no se puede parsear: ${fechaPresentacion}`);
-            // Si no podemos parsear la fecha, la dejamos pasar
-            return null; // Continuará con otros filtros
-          }
 
           // Comparar solo fechas (sin horas)
           const fechaSoloFecha = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
           const hoySoloFecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
 
-          console.log(`📅 Comparación: Fecha licitación=${fechaSoloFecha.toISOString().split('T')[0]}, Hoy=${hoySoloFecha.toISOString().split('T')[0]}`);
+          console.log(`📅 Comparación: Licitación=${fechaSoloFecha.toISOString().split('T')[0]}, Hoy=${hoySoloFecha.toISOString().split('T')[0]}`);
 
           if (fechaSoloFecha <= hoySoloFecha) {
             console.log(`❌ DESCARTADA por fecha`);
@@ -85,8 +116,8 @@ export default async function handler(req, res) {
           }
 
           console.log(`✅ Fecha OK - es futura`);
-        } catch (e) {
-          console.error('❌ Error parseando fecha:', fechaPresentacion, e.message);
+        } else {
+          console.log(`⚠️ No se pudo parsear fecha, se ignora filtro de fecha para: ${fechaPresentacion}`);
         }
       }
 
@@ -381,11 +412,20 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
 }
 
 function extraerCamposLicitacion(lic) {
+  // Convertir fecha al formato PostgreSQL (YYYY-MM-DD)
+  let fechaDB = null;
+  if (lic.fecha_presentacion) {
+    const fecha = parsearFechaDominicana(lic.fecha_presentacion);
+    if (fecha) {
+      fechaDB = fecha.toISOString().split('T')[0]; // "2025-12-19"
+    }
+  }
+
   return {
     referencia: lic.referencia || '',
     unidad_compras: lic.unidad_compras || '',
     descripcion: lic.descripcion || '',
-    fecha_presentacion: lic.fecha_presentacion || null,
+    fecha_presentacion: fechaDB,
     monto_estimado: lic.monto_estimado || null,
     estado: lic.estado || '',
     que: lic.que || '',
