@@ -223,27 +223,30 @@ export default async function handler(req, res) {
       return `Eres un experto analizador de licitaciones para ${cliente.nombre}.
 Descripción del negocio: ${cliente.descripcion}
 
-ESTAS DESCRIPCIONES YA PASARON FILTROS DE FECHA, ESTADO Y PALABRAS CLAVE.
-Analiza el CONTEXTO para clasificarlas correctamente.
+ESTAS DESCRIPCIONES YA PASARON FILTROS. Analiza el CONTEXTO para clasificarlas.
 
-CRITERIOS:
-- ALTA: ${criteriosAlta}
-- MEDIA: ${criteriosMedia}
+CRITERIOS ESTRICTOS:
+- ALTA: Solo si es ${criteriosAlta} como SERVICIO DIRECTO (no materiales, no compras)
+- MEDIA: ${criteriosMedia} o servicios relacionados pero indirectos
+- BAJA: Compra de materiales, equipos, o servicios no formativos
+
+REGLAS IMPORTANTES:
+1. "Desarrollo/creación de contenidos" = MEDIA (no es impartir formación directa)
+2. "Compra de materiales para capacitación" = BAJA (es compra, no servicio)
+3. "Impartir/dictar/ejecutar capacitación" = ALTA (servicio formativo directo)
+4. Si hay DUDA entre ALTA y MEDIA → usa MEDIA
+5. Sé CONSERVADOR con ALTA, solo casos muy claros
 
 Para CADA licitación:
 1. QUÉ: ¿Qué se busca? (máximo 7 palabras)
 2. QUIÉN: ¿Para quién? (máximo 7 palabras)
 3. RELEVANCIA: ALTA, MEDIA o BAJA
-4. RAZÓN: Justificación breve
-
-IMPORTANTE - Analiza el CONTEXTO:
-- "Capacitación para uso de equipos" → Si es servicio formativo: ALTA/MEDIA
-- "Compra de materiales para capacitación" → Solo compra: BAJA
+4. RAZÓN: Explicación breve y específica
 
 Responde en JSON:
 {
   "analisis": [
-    { "indice": 0, "que": "síntesis", "quien": "destinatario", "relevancia": "ALTA", "razon": "explicación" }
+    { "indice": 0, "que": "síntesis", "quien": "destinatario", "relevancia": "MEDIA", "razon": "explicación" }
   ]
 }
 
@@ -258,7 +261,7 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
         const response = await anthropic.messages.create({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 4000,
-          temperature: 0.1,
+          temperature: 0, // Máxima consistencia
           messages: [{ role: "user", content: buildPrompt(loteLicitaciones) }]
         });
 
@@ -267,6 +270,12 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
 
         if (jsonMatch) {
           const analisis = JSON.parse(jsonMatch[0]).analisis || [];
+
+          // Logging de clasificaciones IA
+          console.log(`🤖 Clasificaciones del lote ${numeroBatch}:`);
+          analisis.forEach(a => {
+            console.log(`  ${a.indice}: ${a.relevancia} - ${a.razon.substring(0, 50)}...`);
+          });
 
           // Mapear resultados con índices
           return loteLicitaciones.map((lic, i) => {
@@ -327,14 +336,21 @@ ${loteLicitaciones.map((lic, i) => `${i}. ${lic.descripcion}`).join('\n')}`;
 
     // ========== AJUSTE POR MONTO ==========
     const umbralMonto = cliente.monto_minimo_alta || 1000000;
+    console.log(`💰 Umbral de monto para ALTA: ${umbralMonto.toLocaleString()} DOP`);
 
+    let ajustadosPorMonto = 0;
     resultadosIA.forEach(r => {
       if (r.relevancia === 'MEDIA' && r.monto_estimado && parseFloat(r.monto_estimado) >= umbralMonto) {
+        console.log(`💰 Subiendo a ALTA por monto: ${r.referencia} (${parseFloat(r.monto_estimado).toLocaleString()} DOP)`);
         r.relevancia = 'ALTA';
         r.razon = `${r.razon} [Subido a ALTA por monto >= ${umbralMonto.toLocaleString()}]`;
-        console.log(`💰 Subido a ALTA por monto: ${r.referencia}`);
+        ajustadosPorMonto++;
       }
     });
+
+    if (ajustadosPorMonto > 0) {
+      console.log(`💰 Total ajustados por monto: ${ajustadosPorMonto}`);
+    }
 
     // Combinar resultados finales
     const resultadosFinales = [
