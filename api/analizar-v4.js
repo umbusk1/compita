@@ -48,6 +48,20 @@ export default async function handler(req, res) {
     // 2. USAR LICITACIONES DEL EXCEL (no buscar en DB)
     const todasOportunidades = licitaciones;
 
+    // DIAGNÓSTICO: Ver muestra de referencias
+    console.log(`\n[EXCEL] Total licitaciones recibidas: ${todasOportunidades.length}`);
+    console.log(`[EXCEL] Primeras 5 referencias:`);
+    todasOportunidades.slice(0, 5).forEach((lic, i) => {
+      console.log(`  ${i+1}. ${lic.referencia || 'SIN-REF'}`);
+    });
+
+    // Buscar específicamente las problemáticas
+    const problematica1 = todasOportunidades.find(l => l.referencia && l.referencia.includes('MICM-DAF-CM-2025-0090'));
+    const problematica2 = todasOportunidades.find(l => l.referencia && l.referencia.includes('MICM-DAF-CM-2025-0199'));
+
+    console.log(`[EXCEL] ¿Está MICM-DAF-CM-2025-0090? ${problematica1 ? 'SI - ' + problematica1.descripcion?.substring(0, 60) : 'NO'}`);
+    console.log(`[EXCEL] ¿Está MICM-DAF-CM-2025-0199? ${problematica2 ? 'SI - ' + problematica2.descripcion?.substring(0, 60) : 'NO'}\n`);
+
     // 3. PROCESAMIENTO: ETAPA 1 (DETERMINISTA) + ETAPA 2 (IA)
     const resultadosEtapa1 = [];
     const paraAnalizarIA = [];
