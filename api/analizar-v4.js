@@ -83,61 +83,8 @@ export default async function handler(req, res) {
     };
 
     if (guardar_en_db) {
-      try {
-        const analisisResult = await pool.query(`
-          INSERT INTO analisis (
-            cliente_id,
-            total_descripciones,
-            total_alta,
-            total_media,
-            total_baja,
-            porcentaje_alta,
-            created_at
-          ) VALUES ($1, $2, $3, $4, $5, $6, NOW())
-          RETURNING id
-        `, [
-          cliente_id,
-          todasOportunidades.length,
-          resumen.alta_relevancia,
-          resumen.media_relevancia,
-          resumen.descartadas_etapa1,
-          Math.round((resumen.alta_relevancia / todasOportunidades.length) * 100)
-        ]);
-
-        const analisisId = analisisResult.rows[0].id;
-
-        for (const resultado of resultadosIA) {
-          await pool.query(`
-            INSERT INTO resultados (
-              analisis_id,
-              unidad_compras,
-              referencia,
-              descripcion,
-              que,
-              quien,
-              relevancia,
-              monto_estimado,
-              fecha_presentacion,
-              estado,
-              razon
-            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-          `, [
-            analisisId,
-            resultado.unidad_compras || '',
-            resultado.referencia || '',
-            resultado.descripcion || '',
-            resultado.que || '',
-            resultado.quien || '',
-            resultado.relevancia,
-            resultado.monto_estimado,
-            resultado.fecha_presentacion,
-            resultado.estado || '',
-            resultado.razon || ''
-          ]);
-        }
-      } catch (dbError) {
-        console.error('Error guardando en DB:', dbError);
-      }
+      // DESHABILITADO TEMPORALMENTE - Fix de fechas pendiente
+      console.log('Guardado en DB deshabilitado temporalmente');
     }
 
     res.status(200).json({
