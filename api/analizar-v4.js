@@ -40,12 +40,19 @@ export default async function handler(req, res) {
       cliente.palabras_clave = cliente.palabras_clave.join(', ');
     }
 
+    // Si palabras_clave es null o undefined, usar string vacío
+    if (!cliente.palabras_clave) {
+      cliente.palabras_clave = '';
+    }
+
     // 2️⃣ USAR LICITACIONES DEL EXCEL (no buscar en DB)
     const todasOportunidades = licitaciones;
 
     // 3️⃣ PROCESAMIENTO: ETAPA 1 (DETERMINISTA) + ETAPA 2 (IA)
     const resultadosEtapa1 = [];
     const paraAnalizarIA = [];
+
+    console.log(`🔍 Iniciando Etapa 1: ${todasOportunidades.length} licitaciones`);
 
     for (const oportunidad of todasOportunidades) {
       const resultado = await procesarEtapa1(oportunidad, cliente);
@@ -55,6 +62,8 @@ export default async function handler(req, res) {
         paraAnalizarIA.push(oportunidad);
       }
     }
+
+    console.log(`✅ Etapa 1 completada: ${paraAnalizarIA.length} pasaron a análisis IA, ${resultadosEtapa1.filter(r => !r.pasa_etapa1).length} descartadas`);
 
     // 4️⃣ ANÁLISIS CON IA (solo las que pasaron etapa 1)
     const resultadosIA = [];
@@ -180,7 +189,21 @@ async function procesarEtapa1(oportunidad, cliente) {
     return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
   }
 
-  // 2️⃣ FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA DE PALABRAS COMPLETAS)
+  // 2️⃣ FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA FLEXIBLE - incluye singular/plural)
+  const palabrasClave = cliente.palabras_clave
+    .split(',')
+    .map(p => p.trim().toLowerCase())
+    .filter(p => p.length > 0);
+
+  const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
+
+  // Buscar cada palabra con flexibilidad para singular/plural
+  const tieneCoincidencia = palabrasClave.some(palabra => {
+    // Remover 's' final para capturar singular y plural
+    const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
+
+    // Buscar la raíz como palabra completa (con o sin 's' al final)
+    const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\  // 2️⃣ FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA DE PALABRAS COMPLETAS)
   const palabrasClave = cliente.palabras_clave
     .split(',')
     .map(p => p.trim().toLowerCase())
@@ -193,6 +216,9 @@ async function procesarEtapa1(oportunidad, cliente) {
     // Escapar caracteres especiales de regex y buscar con word boundaries
     const palabraEscapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`\\b${palabraEscapada}\\b`, 'i');
+    return regex.test(textoCompleto);
+  });');
+    const regex = new RegExp(`\\b${palabraEscapada}s?\\b`, 'i');
     return regex.test(textoCompleto);
   });
 
@@ -225,13 +251,15 @@ async function analizarConIA(oportunidad, cliente) {
   const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
 
 1. **RELEVANCIA**: ¿Qué tan relevante es para el cliente?
-   - ALTA: Coincidencia directa con servicios/productos del cliente
-   - MEDIA: Parcialmente relacionado o requiere alianzas
+   - ALTA: Coincidencia directa y fuerte con servicios/productos principales del cliente
+   - MEDIA: Relacionado o parcialmente alineado con servicios del cliente
    - BAJA: Poco relevante o fuera del alcance
 
 2. **QUÉ**: Extrae en máximo 5 palabras el objeto principal de la licitación
 3. **QUIÉN**: Extrae la entidad que licita (nombre de la institución/unidad)
 4. **RAZÓN**: Justificación breve (máximo 2 líneas)
+
+**IMPORTANTE**: Evalúa SOLO la relevancia temática. El sistema aplicará filtros adicionales de monto automáticamente.
 
 **PERFIL DEL CLIENTE:**
 ${cliente.descripcion || 'Cliente sin descripción'}
