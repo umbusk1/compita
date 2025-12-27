@@ -69,7 +69,19 @@ export default async function handler(req, res) {
     const resultadosIA = [];
     for (const oportunidad of paraAnalizarIA) {
       const analisis = await analizarConIA(oportunidad, cliente);
-      resultadosIA.push({ ...oportunidad, ...analisis });
+
+      // 🔧 ESCALADO POR MONTO: ALTA solo si monto >= monto_minimo_alta
+      const montoMinimo = cliente.monto_minimo_alta || 500000;
+      const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
+
+      // Si la IA dijo ALTA pero el monto es insuficiente, bajar a MEDIA
+      if (analisis.relevancia === 'ALTA' && montoOportunidad < montoMinimo) {
+        console.log(`📊 Escalado ALTA→MEDIA: ${analisis.referencia} (${montoOportunidad.toLocaleString()} < ${montoMinimo.toLocaleString()})`);
+        analisis.relevancia = 'MEDIA';
+        analisis.razon = `Relevancia temática alta pero monto ${montoOportunidad.toLocaleString()} DOP < ${montoMinimo.toLocaleString()} DOP. ${analisis.razon}`;
+      }
+
+      resultadosIA.push(analisis);
     }
 
     // 5️⃣ CONSTRUIR RESPUESTA
@@ -203,21 +215,7 @@ async function procesarEtapa1(oportunidad, cliente) {
     const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
 
     // Buscar la raíz como palabra completa (con o sin 's' al final)
-    const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\  // 2️⃣ FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA DE PALABRAS COMPLETAS)
-  const palabrasClave = cliente.palabras_clave
-    .split(',')
-    .map(p => p.trim().toLowerCase())
-    .filter(p => p.length > 0);
-
-  const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
-
-  // Buscar cada palabra como palabra completa (no como substring)
-  const tieneCoincidencia = palabrasClave.some(palabra => {
-    // Escapar caracteres especiales de regex y buscar con word boundaries
-    const palabraEscapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`\\b${palabraEscapada}\\b`, 'i');
-    return regex.test(textoCompleto);
-  });');
+    const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`\\b${palabraEscapada}s?\\b`, 'i');
     return regex.test(textoCompleto);
   });
@@ -316,5 +314,5 @@ RAZÓN: [tu justificación aquí]`;
 }
 
 export const config = {
-  maxDuration: 300, // 5 minutos para análisis largos
+  maxDuration: 300,
 };
