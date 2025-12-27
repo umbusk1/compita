@@ -639,6 +639,20 @@
                                     <div class="text-xs text-yellow-800">MEDIA</div>
                                 </div>
                             </div>
+
+                            ${resultado.diagnostico ? `
+                                <div class="mt-3 p-3 bg-blue-50 border border-blue-300 rounded text-xs">
+                                    <p class="font-semibold text-blue-900 mb-2">🔍 DIAGNÓSTICO DEL EXCEL</p>
+                                    <div class="space-y-1 text-blue-800">
+                                        <p>✅ Total recibido: ${resultado.diagnostico.total_recibidas}</p>
+                                        <p>📋 Primeras 5 refs: ${resultado.diagnostico.primeras_5_refs.join(', ')}</p>
+                                        <p class="font-semibold mt-2">Buscando oportunidades faltantes:</p>
+                                        <p>${resultado.diagnostico.tiene_0090 ? '✅' : '❌'} MICM-DAF-CM-2025-0090: ${resultado.diagnostico.ref_0090}</p>
+                                        <p>${resultado.diagnostico.tiene_0199 ? '✅' : '❌'} MICM-DAF-CM-2025-0199: ${resultado.diagnostico.ref_0199}</p>
+                                    </div>
+                                </div>
+                            ` : ''}
+
                             ${diagnosticoHTML}
                         `;
 
