@@ -188,13 +188,32 @@ async function procesarEtapa1(oportunidad, cliente) {
 
   let fechaLimite;
   try {
-    fechaLimite = new Date(oportunidad.fecha_presentacion);
+    const fechaStr = String(oportunidad.fecha_presentacion).split('(')[0].trim();
+
+    const partesFecha = fechaStr.split(' ')[0];
+    const partesArray = partesFecha.split('/');
+
+    if (partesArray.length === 3) {
+      const dia = parseInt(partesArray[0], 10);
+      const mes = parseInt(partesArray[1], 10) - 1;
+      const año = parseInt(partesArray[2], 10);
+
+      fechaLimite = new Date(año, mes, dia);
+
+      if (esCasoProblematico) {
+        console.log('[DEBUG] Fecha original: ' + oportunidad.fecha_presentacion);
+        console.log('[DEBUG] Fecha parseada: ' + fechaLimite.toISOString());
+      }
+    } else {
+      fechaLimite = new Date(oportunidad.fecha_presentacion);
+    }
+
     if (isNaN(fechaLimite.getTime())) {
       if (esCasoProblematico) console.log('[DEBUG] X Fecha invalida');
       return { pasa_etapa1: false, razon: 'Fecha inválida' };
     }
-  } catch {
-    if (esCasoProblematico) console.log('[DEBUG] X Fecha error');
+  } catch (error) {
+    if (esCasoProblematico) console.log('[DEBUG] X Fecha error: ' + error.message);
     return { pasa_etapa1: false, razon: 'Fecha inválida' };
   }
 
