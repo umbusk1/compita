@@ -221,6 +221,20 @@
         </div>
     </div>
 
+    <!-- Modal Oportunidades BAJA -->
+    <div id="modal-bajas" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">🔍 Oportunidades Menos Afines (BAJA Relevancia)</h3>
+                <button onclick="cerrarModalBajas()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+
+            <div id="tabla-bajas-container" class="overflow-x-auto">
+                <!-- La tabla se insertará aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
+
     <script>
         const API_BASE = window.location.origin;
         let clienteActual = null;
@@ -405,7 +419,7 @@
                     await cargarClientes();
                     await cargarClientesModal();
                 } else {
-                    alert('Error al eliminar cliente');
+                    alert('Error al eliminar');
                 }
             } catch (error) {
                 alert('Error de conexión');
@@ -427,6 +441,62 @@
             } else if (tabName === 'historial') {
                 cargarHistorial();
             }
+        }
+
+        // ============ MODAL BAJAS ============
+        function abrirModalBajas() {
+            if (!analisisActual || !analisisActual.resultados) {
+                alert('No hay datos de análisis disponibles');
+                return;
+            }
+
+            const bajas = analisisActual.resultados.filter(r => r.relevancia === 'BAJA');
+
+            if (bajas.length === 0) {
+                alert('No hay oportunidades clasificadas como BAJA');
+                return;
+            }
+
+            const tablaContainer = document.getElementById('tabla-bajas-container');
+            tablaContainer.innerHTML = `
+                <p class="text-sm text-gray-600 mb-4">
+                    Estas oportunidades fueron analizadas con IA pero se consideraron menos afines al perfil del cliente.
+                </p>
+                <table class="w-full border-collapse text-sm">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="border p-2 text-left">Referencia</th>
+                            <th class="border p-2 text-left">Descripción</th>
+                            <th class="border p-2 text-left">Qué</th>
+                            <th class="border p-2 text-left">Quién</th>
+                            <th class="border p-2 text-right">Monto (DOP)</th>
+                            <th class="border p-2">Fecha Límite</th>
+                            <th class="border p-2 text-left">Razón</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${bajas.map(r => `
+                            <tr class="hover:bg-gray-50">
+                                <td class="border p-2 font-mono text-xs">${r.referencia || '-'}</td>
+                                <td class="border p-2">${r.descripcion || '-'}</td>
+                                <td class="border p-2">${r.que || '-'}</td>
+                                <td class="border p-2">${r.quien || '-'}</td>
+                                <td class="border p-2 text-right">
+                                    ${r.monto_estimado ? parseFloat(r.monto_estimado).toLocaleString() : '-'}
+                                </td>
+                                <td class="border p-2 text-center">${r.fecha_presentacion || '-'}</td>
+                                <td class="border p-2 text-gray-700">${r.razon || '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('modal-bajas').classList.remove('hidden');
+        }
+
+        function cerrarModalBajas() {
+            document.getElementById('modal-bajas').classList.add('hidden');
         }
 
         // ============ ANÁLISIS ============
@@ -490,7 +560,6 @@
                     document.getElementById('etapa1-texto').textContent =
                         `Analizando ${licitaciones.length} licitaciones con filtros...`;
 
-                    // Logging de diagnóstico
                     console.log('📊 Muestra de licitaciones:', licitaciones.slice(0, 3));
                     console.log('💰 Montos detectados:', licitaciones.slice(0, 5).map(l => l.monto_estimado));
 
@@ -524,6 +593,7 @@
 
                         const stats = resultado.estadisticas || {};
                         const altaMedia = (stats.alta || 0) + (stats.media || 0);
+                        const bajas = (resultado.resultados || []).filter(r => r.relevancia === 'BAJA').length;
 
                         // Mostrar diagnóstico de descarte
                         let diagnosticoHTML = '';
@@ -549,9 +619,10 @@
                                     <div class="text-xs text-gray-600">Descartadas Etapa 1</div>
                                     <div class="text-2xl font-bold text-gray-600">${stats.descartadas_prefiltro || 0}</div>
                                 </div>
-                                <div class="bg-white rounded p-2">
-                                    <div class="text-xs text-gray-600">Analizadas con IA</div>
-                                    <div class="text-2xl font-bold text-purple-600">${stats.analizadas_ia || 0}</div>
+                                <div class="bg-white rounded p-2 cursor-pointer hover:bg-gray-50" onclick="abrirModalBajas()">
+                                    <div class="text-xs text-gray-600">Analizadas con IA pero menos afines</div>
+                                    <div class="text-2xl font-bold text-purple-600">${bajas}</div>
+                                    <div class="text-xs text-purple-600 underline mt-1">Ver detalles →</div>
                                 </div>
                                 <div class="bg-white rounded p-2">
                                     <div class="text-xs text-gray-600">🎯 Oportunidades</div>
@@ -607,10 +678,10 @@
             const stats = analisisActual.estadisticas || {};
             const resultados = analisisActual.resultados || [];
             const oportunidades = resultados.filter(r => r.relevancia === 'ALTA' || r.relevancia === 'MEDIA');
+            const bajas = resultados.filter(r => r.relevancia === 'BAJA');
 
             const descartadasEtapa1 = stats.descartadas_prefiltro || 0;
             const analizadasIA = stats.analizadas_ia || 0;
-            const bajasPorContexto = (stats.baja || 0) - descartadasEtapa1;
 
             document.getElementById('resumen-analisis').innerHTML = `
                 <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
@@ -625,9 +696,10 @@
                             <div class="text-3xl font-bold text-gray-600">${descartadasEtapa1}</div>
                             <div class="text-xs text-gray-600">Descartadas Etapa 1</div>
                         </div>
-                        <div class="bg-white rounded-lg p-3 text-center shadow-sm">
-                            <div class="text-3xl font-bold text-purple-600">${analizadasIA}</div>
-                            <div class="text-xs text-gray-600">Analizadas con IA</div>
+                        <div class="bg-white rounded-lg p-3 text-center shadow-sm cursor-pointer hover:bg-gray-100" onclick="abrirModalBajas()">
+                            <div class="text-3xl font-bold text-purple-600">${bajas.length}</div>
+                            <div class="text-xs text-gray-600">Analizadas con IA<br>pero menos afines</div>
+                            <div class="text-xs text-purple-600 underline mt-1">Ver detalles →</div>
                         </div>
                     </div>
 
