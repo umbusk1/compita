@@ -44,11 +44,8 @@ export default async function handler(req, res) {
 
     const todasOportunidades = licitaciones;
 
-    console.log('[EXCEL] Total recibidas: ' + todasOportunidades.length);
     const problematica1 = todasOportunidades.find(l => l.referencia && l.referencia.includes('MICM-DAF-CM-2025-0090'));
     const problematica2 = todasOportunidades.find(l => l.referencia && l.referencia.includes('MICM-DAF-CM-2025-0199'));
-    console.log('[EXCEL] Tiene 0090: ' + (!!problematica1));
-    console.log('[EXCEL] Tiene 0199: ' + (!!problematica2));
 
     const resultadosEtapa1 = [];
     const paraAnalizarIA = [];
@@ -71,7 +68,7 @@ export default async function handler(req, res) {
 
       if (analisis.relevancia === 'ALTA' && montoOportunidad < montoMinimo) {
         analisis.relevancia = 'MEDIA';
-        analisis.razon = 'Relevancia temática alta pero monto ' + montoOportunidad.toLocaleString() + ' DOP < ' + montoMinimo.toLocaleString() + ' DOP. ' + analisis.razon;
+        analisis.razon = 'Relevancia temática alta pero monto ' + montoOportunidad.toLocaleString() + ' DOP menor a ' + montoMinimo.toLocaleString() + ' DOP. ' + analisis.razon;
       }
 
       resultadosIA.push(analisis);
@@ -178,7 +175,6 @@ async function procesarEtapa1(oportunidad, cliente) {
 
   if (esCasoProblematico) {
     console.log('[DEBUG] CASO: ' + ref);
-    console.log('[DEBUG] Desc: ' + (oportunidad.descripcion || '').substring(0, 80));
   }
 
   if (!oportunidad.fecha_presentacion) {
@@ -188,20 +184,20 @@ async function procesarEtapa1(oportunidad, cliente) {
 
   let fechaLimite;
   try {
-    const fechaStr = String(oportunidad.fecha_presentacion).split('(')[0].trim();
+    const fechaOriginal = String(oportunidad.fecha_presentacion);
+    const fechaLimpia = fechaOriginal.split('(')[0].trim();
+    const soloFecha = fechaLimpia.split(' ')[0];
+    const partes = soloFecha.split('/');
 
-    const partesFecha = fechaStr.split(' ')[0];
-    const partesArray = partesFecha.split('/');
+    if (partes.length === 3) {
+      const dia = parseInt(partes[0], 10);
+      const mes = parseInt(partes[1], 10) - 1;
+      const anio = parseInt(partes[2], 10);
 
-    if (partesArray.length === 3) {
-      const dia = parseInt(partesArray[0], 10);
-      const mes = parseInt(partesArray[1], 10) - 1;
-      const año = parseInt(partesArray[2], 10);
-
-      fechaLimite = new Date(año, mes, dia);
+      fechaLimite = new Date(anio, mes, dia);
 
       if (esCasoProblematico) {
-        console.log('[DEBUG] Fecha original: ' + oportunidad.fecha_presentacion);
+        console.log('[DEBUG] Fecha original: ' + fechaOriginal);
         console.log('[DEBUG] Fecha parseada: ' + fechaLimite.toISOString());
       }
     } else {
@@ -212,8 +208,8 @@ async function procesarEtapa1(oportunidad, cliente) {
       if (esCasoProblematico) console.log('[DEBUG] X Fecha invalida');
       return { pasa_etapa1: false, razon: 'Fecha inválida' };
     }
-  } catch (error) {
-    if (esCasoProblematico) console.log('[DEBUG] X Fecha error: ' + error.message);
+  } catch (err) {
+    if (esCasoProblematico) console.log('[DEBUG] X Error parseando: ' + err.message);
     return { pasa_etapa1: false, razon: 'Fecha inválida' };
   }
 
@@ -227,7 +223,7 @@ async function procesarEtapa1(oportunidad, cliente) {
     return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
   }
 
-  if (esCasoProblematico) console.log('[DEBUG] OK Fecha: ' + fechaLimite.toISOString());
+  if (esCasoProblematico) console.log('[DEBUG] OK Fecha');
 
   const palabrasClave = cliente.palabras_clave
     .split(',')
@@ -235,14 +231,10 @@ async function procesarEtapa1(oportunidad, cliente) {
     .filter(p => p.length > 0);
 
   if (esCasoProblematico) {
-    console.log('[DEBUG] Palabras: [' + palabrasClave.join(', ') + ']');
+    console.log('[DEBUG] Palabras: ' + palabrasClave.length);
   }
 
   const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
-
-  if (esCasoProblematico) {
-    console.log('[DEBUG] Texto: ' + textoCompleto.substring(0, 100));
-  }
 
   let palabraEncontrada = null;
   const tieneCoincidencia = palabrasClave.some(palabra => {
@@ -251,8 +243,8 @@ async function procesarEtapa1(oportunidad, cliente) {
     const regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
     const encontrada = regex.test(textoCompleto);
 
-    if (esCasoProblematico) {
-      console.log('[DEBUG] Busca "' + palabra + '" -> ' + (encontrada ? 'SI' : 'NO'));
+    if (esCasoProblematico && encontrada) {
+      console.log('[DEBUG] Encontro: ' + palabra);
     }
 
     if (encontrada) {
@@ -267,7 +259,7 @@ async function procesarEtapa1(oportunidad, cliente) {
     return { pasa_etapa1: false, razon: 'No contiene palabras clave relevantes' };
   }
 
-  if (esCasoProblematico) console.log('[DEBUG] OK Palabra: "' + palabraEncontrada + '"');
+  if (esCasoProblematico) console.log('[DEBUG] OK Palabra: ' + palabraEncontrada);
 
   const estado = oportunidad.estado || '';
   if (!estado) {
@@ -276,8 +268,8 @@ async function procesarEtapa1(oportunidad, cliente) {
   }
 
   if (esCasoProblematico) {
-    console.log('[DEBUG] OK Estado: "' + estado + '"');
-    console.log('[DEBUG] PASA A ETAPA 2');
+    console.log('[DEBUG] OK Estado');
+    console.log('[DEBUG] >>> PASA A ETAPA 2 <<<');
   }
 
   return { pasa_etapa1: true };
