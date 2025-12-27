@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
+    "@neondatabase/serverless": "^0.9.0",
     "pg": "^8.13.1"
   },
   "engines": {
