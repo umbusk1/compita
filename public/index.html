@@ -570,15 +570,25 @@
                     document.getElementById('etapa1-texto').innerHTML =
                         '<span class="text-green-600 font-semibold">✓ Completado</span>';
 
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutos
+
                     const response = await fetch(`${API_BASE}/api/analizar-v4`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             cliente_id: clienteActual.id,
                             licitaciones: licitaciones,
-                            guardar_en_db: true
-                        })
+                            guardar_en_db: false
+                        }),
+                        signal: controller.signal
                     });
+
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) {
+                        throw new Error('Error en el servidor: ' + response.status);
+                    }
 
                     const resultado = await response.json();
 
