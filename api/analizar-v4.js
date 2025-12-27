@@ -16,10 +16,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { cliente_id, fecha_desde, fecha_hasta } = req.body;
+  const { cliente_id, licitaciones, guardar_en_db } = req.body;
 
-  if (!cliente_id || !fecha_desde || !fecha_hasta) {
-    return res.status(400).json({ error: 'Faltan parámetros' });
+  if (!cliente_id || !licitaciones || !Array.isArray(licitaciones)) {
+    return res.status(400).json({ error: 'Faltan parámetros: cliente_id y licitaciones son requeridos' });
   }
 
   try {
@@ -35,14 +35,13 @@ export default async function handler(req, res) {
 
     const cliente = clienteRes.rows[0];
 
-    // 2️⃣ OBTENER OPORTUNIDADES DEL PERÍODO
-    const oportunidadesRes = await pool.query(`
-      SELECT * FROM oportunidades
-      WHERE fecha_publicacion BETWEEN $1 AND $2
-      ORDER BY fecha_publicacion DESC
-    `, [fecha_desde, fecha_hasta]);
+    // Convertir palabras_clave de array a string si es necesario
+    if (Array.isArray(cliente.palabras_clave)) {
+      cliente.palabras_clave = cliente.palabras_clave.join(', ');
+    }
 
-    const todasOportunidades = oportunidadesRes.rows;
+    // 2️⃣ USAR LICITACIONES DEL EXCEL (no buscar en DB)
+    const todasOportunidades = licitaciones;
 
     // 3️⃣ PROCESAMIENTO: ETAPA 1 (DETERMINISTA) + ETAPA 2 (IA)
     const resultadosEtapa1 = [];
@@ -73,8 +72,80 @@ export default async function handler(req, res) {
       media_relevancia: resultadosIA.filter(r => r.relevancia === 'MEDIA').length
     };
 
+    // 6️⃣ GUARDAR EN BASE DE DATOS (si se solicitó)
+    if (guardar_en_db) {
+      try {
+        // Crear registro de análisis
+        const analisisResult = await pool.query(`
+          INSERT INTO analisis (
+            cliente_id,
+            total_descripciones,
+            total_alta,
+            total_media,
+            total_baja,
+            porcentaje_alta,
+            created_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, NOW())
+          RETURNING id
+        `, [
+          cliente_id,
+          todasOportunidades.length,
+          resumen.alta_relevancia,
+          resumen.media_relevancia,
+          resumen.descartadas_etapa1,
+          Math.round((resumen.alta_relevancia / todasOportunidades.length) * 100)
+        ]);
+
+        const analisisId = analisisResult.rows[0].id;
+
+        // Guardar todos los resultados
+        for (const resultado of resultadosIA) {
+          await pool.query(`
+            INSERT INTO resultados (
+              analisis_id,
+              unidad_compras,
+              referencia,
+              descripcion,
+              que,
+              quien,
+              relevancia,
+              monto_estimado,
+              fecha_presentacion,
+              estado,
+              razon
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          `, [
+            analisisId,
+            resultado.unidad_compras || '',
+            resultado.referencia || '',
+            resultado.descripcion || '',
+            resultado.que || '',
+            resultado.quien || '',
+            resultado.relevancia,
+            resultado.monto_estimado,
+            resultado.fecha_presentacion,
+            resultado.estado || '',
+            resultado.razon || ''
+          ]);
+        }
+      } catch (dbError) {
+        console.error('Error guardando en DB:', dbError);
+        // Continuar aunque falle el guardado
+      }
+    }
+
     res.status(200).json({
+      success: true,
       resumen,
+      estadisticas: {
+        total: resumen.total_lotes,
+        descartadas_prefiltro: resumen.descartadas_etapa1,
+        analizadas_ia: resumen.analizadas_ia,
+        alta: resumen.alta_relevancia,
+        media: resumen.media_relevancia,
+        baja: resumen.descartadas_etapa1
+      },
+      resultados: resultadosIA,
       oportunidades: resultadosIA
     });
 
@@ -88,9 +159,25 @@ export default async function handler(req, res) {
 // ETAPA 1: FILTRADO DETERMINISTA
 // ========================================
 async function procesarEtapa1(oportunidad, cliente) {
-  // 1️⃣ FILTRO: Fecha límite válida
-  if (!oportunidad.fecha_limite || new Date(oportunidad.fecha_limite) < new Date()) {
-    return { pasa_etapa1: false, razon: 'Fecha límite vencida o no disponible' };
+  // 1️⃣ FILTRO: Fecha de presentación válida y futura
+  if (!oportunidad.fecha_presentacion) {
+    return { pasa_etapa1: false, razon: 'Sin fecha de presentación' };
+  }
+
+  // Intentar parsear la fecha (puede venir en varios formatos del Excel)
+  let fechaLimite;
+  try {
+    fechaLimite = new Date(oportunidad.fecha_presentacion);
+    if (isNaN(fechaLimite.getTime())) {
+      return { pasa_etapa1: false, razon: 'Fecha inválida' };
+    }
+  } catch {
+    return { pasa_etapa1: false, razon: 'Fecha inválida' };
+  }
+
+  // Verificar que sea futura
+  if (fechaLimite < new Date()) {
+    return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
   }
 
   // 2️⃣ FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA DE PALABRAS COMPLETAS)
@@ -99,9 +186,7 @@ async function procesarEtapa1(oportunidad, cliente) {
     .map(p => p.trim().toLowerCase())
     .filter(p => p.length > 0);
 
-  const textoCompleto = (
-    `${oportunidad.descripcion || ''} ${oportunidad.objeto || ''}`
-  ).toLowerCase();
+  const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
 
   // Buscar cada palabra como palabra completa (no como substring)
   const tieneCoincidencia = palabrasClave.some(palabra => {
@@ -124,10 +209,10 @@ async function procesarEtapa1(oportunidad, cliente) {
     };
   }
 
-  // 4️⃣ FILTRO: Estado debe ser válido
-  const estadosValidos = ['Publicada', 'Adjudicada', 'Desierta', 'Cancelada'];
-  if (!estadosValidos.includes(oportunidad.estado)) {
-    return { pasa_etapa1: false, razon: `Estado no válido: ${oportunidad.estado}` };
+  // 4️⃣ FILTRO: Estado debe ser válido (flexible)
+  const estado = oportunidad.estado || '';
+  if (!estado) {
+    return { pasa_etapa1: false, razon: 'Sin estado definido' };
   }
 
   return { pasa_etapa1: true };
@@ -144,25 +229,27 @@ async function analizarConIA(oportunidad, cliente) {
    - MEDIA: Parcialmente relacionado o requiere alianzas
    - BAJA: Poco relevante o fuera del alcance
 
-2. **COMPATIBLE**: ¿El cliente puede ejecutar este contrato?
-   - Compatible: Tiene capacidad técnica/operativa
-   - Revisar: Necesita evaluar capacidad o alianzas
-   - Aparentemente incompatible: Fuera de alcance técnico
-
-3. **RAZÓN**: Justificación breve (máximo 2 líneas)
+2. **QUÉ**: Extrae en máximo 5 palabras el objeto principal de la licitación
+3. **QUIÉN**: Extrae la entidad que licita (nombre de la institución/unidad)
+4. **RAZÓN**: Justificación breve (máximo 2 líneas)
 
 **PERFIL DEL CLIENTE:**
-${cliente.perfil_cliente}
+${cliente.descripcion || 'Cliente sin descripción'}
+
+**PALABRAS CLAVE DEL CLIENTE:**
+${cliente.palabras_clave || 'Sin palabras clave'}
 
 **OPORTUNIDAD:**
-- Referencia: ${oportunidad.referencia}
-- Descripción: ${oportunidad.descripcion}
-- Objeto: ${oportunidad.objeto || 'N/A'}
+- Referencia: ${oportunidad.referencia || 'N/A'}
+- Unidad de Compras: ${oportunidad.unidad_compras || 'N/A'}
+- Descripción: ${oportunidad.descripcion || 'N/A'}
 - Monto: ${Number(oportunidad.monto_estimado || 0).toLocaleString()} DOP
+- Fecha Presentación: ${oportunidad.fecha_presentacion || 'N/A'}
 
 **RESPONDE SOLO EN ESTE FORMATO:**
 RELEVANCIA: [ALTA|MEDIA|BAJA]
-COMPATIBLE: [Compatible|Revisar|Aparentemente incompatible]
+QUÉ: [resumen en 5 palabras]
+QUIÉN: [nombre de la entidad]
 RAZÓN: [tu justificación aquí]`;
 
   try {
@@ -176,31 +263,30 @@ RAZÓN: [tu justificación aquí]`;
 
     // Parsear respuesta
     const relevanciaMatch = respuesta.match(/RELEVANCIA:\s*(ALTA|MEDIA|BAJA)/i);
-    const compatibleMatch = respuesta.match(/COMPATIBLE:\s*(Compatible|Revisar|Aparentemente incompatible)/i);
+    const queMatch = respuesta.match(/QUÉ:\s*(.+)/i);
+    const quienMatch = respuesta.match(/QUIÉN:\s*(.+)/i);
     const razonMatch = respuesta.match(/RAZÓN:\s*(.+)/i);
 
     return {
+      ...oportunidad,
       relevancia: relevanciaMatch ? relevanciaMatch[1].toUpperCase() : 'MEDIA',
-      compatible: compatibleMatch ? compatibleMatch[1] : 'Por determinar',
-      razon: razonMatch ? razonMatch[1].trim() : 'Análisis IA no disponible',
-      que: oportunidad.descripcion,
-      quien: oportunidad.comprador || 'N/A',
-      referencia: oportunidad.referencia,
-      monto: oportunidad.monto_estimado,
-      fecha_limite: oportunidad.fecha_limite
+      que: queMatch ? queMatch[1].trim() : oportunidad.descripcion?.substring(0, 50) || 'N/A',
+      quien: quienMatch ? quienMatch[1].trim() : oportunidad.unidad_compras || 'N/A',
+      razon: razonMatch ? razonMatch[1].trim() : 'Análisis IA no disponible'
     };
 
   } catch (error) {
     console.error('Error en análisis IA:', error);
     return {
+      ...oportunidad,
       relevancia: 'MEDIA',
-      compatible: 'Por determinar',
-      razon: 'Error en análisis IA',
-      que: oportunidad.descripcion,
-      quien: oportunidad.comprador || 'N/A',
-      referencia: oportunidad.referencia,
-      monto: oportunidad.monto_estimado,
-      fecha_limite: oportunidad.fecha_limite
+      que: oportunidad.descripcion?.substring(0, 50) || 'N/A',
+      quien: oportunidad.unidad_compras || 'N/A',
+      razon: 'Error en análisis IA'
     };
   }
 }
+
+export const config = {
+  maxDuration: 300, // 5 minutos para análisis largos
+};
