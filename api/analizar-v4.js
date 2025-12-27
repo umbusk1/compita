@@ -23,7 +23,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1️⃣ OBTENER DATOS DEL CLIENTE
+    // 1. OBTENER DATOS DEL CLIENTE
     const clienteRes = await pool.query(
       'SELECT * FROM clientes WHERE id = $1',
       [cliente_id]
@@ -45,14 +45,14 @@ export default async function handler(req, res) {
       cliente.palabras_clave = '';
     }
 
-    // 2️⃣ USAR LICITACIONES DEL EXCEL (no buscar en DB)
+    // 2. USAR LICITACIONES DEL EXCEL (no buscar en DB)
     const todasOportunidades = licitaciones;
 
-    // 3️⃣ PROCESAMIENTO: ETAPA 1 (DETERMINISTA) + ETAPA 2 (IA)
+    // 3. PROCESAMIENTO: ETAPA 1 (DETERMINISTA) + ETAPA 2 (IA)
     const resultadosEtapa1 = [];
     const paraAnalizarIA = [];
 
-    console.log(`🔍 Iniciando Etapa 1: ${todasOportunidades.length} licitaciones`);
+    console.log(`Iniciando Etapa 1: ${todasOportunidades.length} licitaciones`);
 
     for (const oportunidad of todasOportunidades) {
       const resultado = await procesarEtapa1(oportunidad, cliente);
@@ -63,20 +63,20 @@ export default async function handler(req, res) {
       }
     }
 
-    console.log(`✅ Etapa 1 completada: ${paraAnalizarIA.length} pasaron a análisis IA, ${resultadosEtapa1.filter(r => !r.pasa_etapa1).length} descartadas`);
+    console.log(`Etapa 1 completada: ${paraAnalizarIA.length} pasaron a análisis IA, ${resultadosEtapa1.filter(r => !r.pasa_etapa1).length} descartadas`);
 
-    // 4️⃣ ANÁLISIS CON IA (solo las que pasaron etapa 1)
+    // 4. ANÁLISIS CON IA (solo las que pasaron etapa 1)
     const resultadosIA = [];
     for (const oportunidad of paraAnalizarIA) {
       const analisis = await analizarConIA(oportunidad, cliente);
 
-      // 🔧 ESCALADO POR MONTO: ALTA solo si monto >= monto_minimo_alta
+      // ESCALADO POR MONTO: ALTA solo si monto >= monto_minimo_alta
       const montoMinimo = cliente.monto_minimo_alta || 500000;
       const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
 
       // Si la IA dijo ALTA pero el monto es insuficiente, bajar a MEDIA
       if (analisis.relevancia === 'ALTA' && montoOportunidad < montoMinimo) {
-        console.log(`📊 Escalado ALTA→MEDIA: ${analisis.referencia} (${montoOportunidad.toLocaleString()} < ${montoMinimo.toLocaleString()})`);
+        console.log(`Escalado ALTA->MEDIA: ${analisis.referencia} (${montoOportunidad.toLocaleString()} < ${montoMinimo.toLocaleString()})`);
         analisis.relevancia = 'MEDIA';
         analisis.razon = `Relevancia temática alta pero monto ${montoOportunidad.toLocaleString()} DOP < ${montoMinimo.toLocaleString()} DOP. ${analisis.razon}`;
       }
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
       resultadosIA.push(analisis);
     }
 
-    // 5️⃣ CONSTRUIR RESPUESTA
+    // 5. CONSTRUIR RESPUESTA
     const resumen = {
       total_lotes: todasOportunidades.length,
       descartadas_etapa1: resultadosEtapa1.filter(r => !r.pasa_etapa1).length,
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
       media_relevancia: resultadosIA.filter(r => r.relevancia === 'MEDIA').length
     };
 
-    // 6️⃣ GUARDAR EN BASE DE DATOS (si se solicitó)
+    // 6. GUARDAR EN BASE DE DATOS (si se solicitó)
     if (guardar_en_db) {
       try {
         // Crear registro de análisis
@@ -184,13 +184,13 @@ async function procesarEtapa1(oportunidad, cliente) {
   const esCasoProblematico = ref.includes('MICM-DAF-CM-2025-0090') || ref.includes('MICM-DAF-CM-2025-0199');
 
   if (esCasoProblematico) {
-    console.log(`\n🔍 DIAGNÓSTICO CASO PROBLEMÁTICO: ${ref}`);
-    console.log(`   Descripción: ${oportunidad.descripcion?.substring(0, 100)}...`);
+    console.log(`\n[DEBUG] CASO PROBLEMÁTICO: ${ref}`);
+    console.log(`[DEBUG] Descripción: ${oportunidad.descripcion?.substring(0, 100)}...`);
   }
 
-  // 1️⃣ FILTRO: Fecha de presentación válida y futura
+  // 1. FILTRO: Fecha de presentación válida y futura
   if (!oportunidad.fecha_presentacion) {
-    if (esCasoProblematico) console.log(`   ❌ DESCARTADO: Sin fecha de presentación`);
+    if (esCasoProblematico) console.log(`[DEBUG] DESCARTADO: Sin fecha de presentación`);
     return { pasa_etapa1: false, razon: 'Sin fecha de presentación' };
   }
 
@@ -199,11 +199,11 @@ async function procesarEtapa1(oportunidad, cliente) {
   try {
     fechaLimite = new Date(oportunidad.fecha_presentacion);
     if (isNaN(fechaLimite.getTime())) {
-      if (esCasoProblematico) console.log(`   ❌ DESCARTADO: Fecha inválida`);
+      if (esCasoProblematico) console.log(`[DEBUG] DESCARTADO: Fecha inválida`);
       return { pasa_etapa1: false, razon: 'Fecha inválida' };
     }
   } catch {
-    if (esCasoProblematico) console.log(`   ❌ DESCARTADO: Fecha inválida (catch)`);
+    if (esCasoProblematico) console.log(`[DEBUG] DESCARTADO: Fecha inválida (catch)`);
     return { pasa_etapa1: false, razon: 'Fecha inválida' };
   }
 
@@ -211,29 +211,29 @@ async function procesarEtapa1(oportunidad, cliente) {
   const ahora = new Date();
   if (fechaLimite < ahora) {
     if (esCasoProblematico) {
-      console.log(`   ❌ DESCARTADO: Fecha vencida`);
-      console.log(`   Fecha límite: ${fechaLimite.toISOString()}`);
-      console.log(`   Fecha actual: ${ahora.toISOString()}`);
+      console.log(`[DEBUG] DESCARTADO: Fecha vencida`);
+      console.log(`[DEBUG] Fecha límite: ${fechaLimite.toISOString()}`);
+      console.log(`[DEBUG] Fecha actual: ${ahora.toISOString()}`);
     }
     return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
   }
 
-  if (esCasoProblematico) console.log(`   ✅ Fecha OK: ${fechaLimite.toISOString()}`);
+  if (esCasoProblematico) console.log(`[DEBUG] Fecha OK: ${fechaLimite.toISOString()}`);
 
-  // 2️⃣ FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA FLEXIBLE - incluye singular/plural)
+  // 2. FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA FLEXIBLE - incluye singular/plural)
   const palabrasClave = cliente.palabras_clave
     .split(',')
     .map(p => p.trim().toLowerCase())
     .filter(p => p.length > 0);
 
   if (esCasoProblematico) {
-    console.log(`   🔑 Palabras clave del cliente: [${palabrasClave.join(', ')}]`);
+    console.log(`[DEBUG] Palabras clave del cliente: [${palabrasClave.join(', ')}]`);
   }
 
   const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
 
   if (esCasoProblematico) {
-    console.log(`   📄 Texto completo (lowercase): ${textoCompleto.substring(0, 150)}...`);
+    console.log(`[DEBUG] Texto completo (lowercase): ${textoCompleto.substring(0, 150)}...`);
   }
 
   // Buscar cada palabra con flexibilidad para singular/plural
@@ -243,71 +243,12 @@ async function procesarEtapa1(oportunidad, cliente) {
     const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
 
     // Buscar la raíz como palabra completa (con o sin 's' al final)
-    const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\// ========================================
-// ETAPA 1: FILTRADO DETERMINISTA
-// ========================================
-async function procesarEtapa1(oportunidad, cliente) {
-  // 1️⃣ FILTRO: Fecha de presentación válida y futura
-  if (!oportunidad.fecha_presentacion) {
-    return { pasa_etapa1: false, razon: 'Sin fecha de presentación' };
-  }
-
-  // Intentar parsear la fecha (puede venir en varios formatos del Excel)
-  let fechaLimite;
-  try {
-    fechaLimite = new Date(oportunidad.fecha_presentacion);
-    if (isNaN(fechaLimite.getTime())) {
-      return { pasa_etapa1: false, razon: 'Fecha inválida' };
-    }
-  } catch {
-    return { pasa_etapa1: false, razon: 'Fecha inválida' };
-  }
-
-  // Verificar que sea futura
-  if (fechaLimite < new Date()) {
-    return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
-  }
-
-  // 2️⃣ FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA FLEXIBLE - incluye singular/plural)
-  const palabrasClave = cliente.palabras_clave
-    .split(',')
-    .map(p => p.trim().toLowerCase())
-    .filter(p => p.length > 0);
-
-  const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
-
-  // Buscar cada palabra con flexibilidad para singular/plural
-  const tieneCoincidencia = palabrasClave.some(palabra => {
-    // Remover 's' final para capturar singular y plural
-    const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
-
-    // Buscar la raíz como palabra completa (con o sin 's' al final)
     const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`\\b${palabraEscapada}s?\\b`, 'i');
-    return regex.test(textoCompleto);
-  });
-
-  if (!tieneCoincidencia) {
-    return { pasa_etapa1: false, razon: 'No contiene palabras clave relevantes' };
-  }
-
-  // 3️⃣ NO HAY FILTRO DE MONTO EN ETAPA 1
-  // Dejamos pasar TODO con palabras clave, sin importar el monto.
-  // El monto solo se usa en Etapa 2 para clasificar ALTA vs MEDIA.
-
-  // 4️⃣ FILTRO: Estado debe ser válido (flexible)
-  const estado = oportunidad.estado || '';
-  if (!estado) {
-    return { pasa_etapa1: false, razon: 'Sin estado definido' };
-  }
-
-  return { pasa_etapa1: true };
-}');
     const regex = new RegExp(`\\b${palabraEscapada}s?\\b`, 'i');
     const encontrada = regex.test(textoCompleto);
 
     if (esCasoProblematico) {
-      console.log(`   🔎 Buscando "${palabra}" (raíz: "${raiz}") → ${encontrada ? '✅ ENCONTRADA' : '❌ NO'}`);
+      console.log(`[DEBUG] Buscando "${palabra}" (raíz: "${raiz}") -> ${encontrada ? 'SI ENCONTRADA' : 'NO'}`);
     }
 
     if (encontrada) {
@@ -318,26 +259,26 @@ async function procesarEtapa1(oportunidad, cliente) {
   });
 
   if (!tieneCoincidencia) {
-    if (esCasoProblematico) console.log(`   ❌ DESCARTADO: No contiene palabras clave relevantes`);
+    if (esCasoProblematico) console.log(`[DEBUG] DESCARTADO: No contiene palabras clave relevantes`);
     return { pasa_etapa1: false, razon: 'No contiene palabras clave relevantes' };
   }
 
-  if (esCasoProblematico) console.log(`   ✅ Palabra clave encontrada: "${palabraEncontrada}"`);
+  if (esCasoProblematico) console.log(`[DEBUG] Palabra clave encontrada: "${palabraEncontrada}"`);
 
-  // 3️⃣ NO HAY FILTRO DE MONTO EN ETAPA 1
+  // 3. NO HAY FILTRO DE MONTO EN ETAPA 1
   // Dejamos pasar TODO con palabras clave, sin importar el monto.
   // El monto solo se usa en Etapa 2 para clasificar ALTA vs MEDIA.
 
-  // 4️⃣ FILTRO: Estado debe ser válido (flexible)
+  // 4. FILTRO: Estado debe ser válido (flexible)
   const estado = oportunidad.estado || '';
   if (!estado) {
-    if (esCasoProblematico) console.log(`   ❌ DESCARTADO: Sin estado definido`);
+    if (esCasoProblematico) console.log(`[DEBUG] DESCARTADO: Sin estado definido`);
     return { pasa_etapa1: false, razon: 'Sin estado definido' };
   }
 
   if (esCasoProblematico) {
-    console.log(`   ✅ Estado OK: "${estado}"`);
-    console.log(`   🎉 PASA A ETAPA 2 (Análisis IA)\n`);
+    console.log(`[DEBUG] Estado OK: "${estado}"`);
+    console.log(`[DEBUG] PASA A ETAPA 2 (Análisis IA)\n`);
   }
 
   return { pasa_etapa1: true };
