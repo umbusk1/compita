@@ -23,7 +23,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. OBTENER DATOS DEL CLIENTE
     const clienteRes = await pool.query(
       'SELECT * FROM clientes WHERE id = $1',
       [cliente_id]
@@ -35,48 +34,24 @@ export default async function handler(req, res) {
 
     const cliente = clienteRes.rows[0];
 
-    // Convertir palabras_clave de array a string si es necesario
     if (Array.isArray(cliente.palabras_clave)) {
       cliente.palabras_clave = cliente.palabras_clave.join(', ');
     }
 
-    // Si palabras_clave es null o undefined, usar string vacío
     if (!cliente.palabras_clave) {
       cliente.palabras_clave = '';
     }
 
-    // 2. USAR LICITACIONES DEL EXCEL (no buscar en DB)
     const todasOportunidades = licitaciones;
 
-    // DIAGNÓSTICO: Ver muestra de referencias
-    console.log('\n[EXCEL] Total licitaciones recibidas: ' + todasOportunidades.length);
-    console.log('[EXCEL] Primeras 5 referencias:');
-    todasOportunidades.slice(0, 5).forEach((lic, i) => {
-      console.log('  ' + (i+1) + '. ' + (lic.referencia || 'SIN-REF'));
-    });
-
-    // Buscar específicamente las problemáticas
+    console.log('[EXCEL] Total recibidas: ' + todasOportunidades.length);
     const problematica1 = todasOportunidades.find(l => l.referencia && l.referencia.includes('MICM-DAF-CM-2025-0090'));
     const problematica2 = todasOportunidades.find(l => l.referencia && l.referencia.includes('MICM-DAF-CM-2025-0199'));
+    console.log('[EXCEL] Tiene 0090: ' + (!!problematica1));
+    console.log('[EXCEL] Tiene 0199: ' + (!!problematica2));
 
-    if (problematica1) {
-      console.log('[EXCEL] Encontrada MICM-DAF-CM-2025-0090: ' + problematica1.descripcion.substring(0, 60));
-    } else {
-      console.log('[EXCEL] NO encontrada MICM-DAF-CM-2025-0090');
-    }
-
-    if (problematica2) {
-      console.log('[EXCEL] Encontrada MICM-DAF-CM-2025-0199: ' + problematica2.descripcion.substring(0, 60));
-    } else {
-      console.log('[EXCEL] NO encontrada MICM-DAF-CM-2025-0199');
-    }
-    console.log('');
-
-    // 3. PROCESAMIENTO: ETAPA 1 (DETERMINISTA) + ETAPA 2 (IA)
     const resultadosEtapa1 = [];
     const paraAnalizarIA = [];
-
-    console.log('Iniciando Etapa 1: ' + todasOportunidades.length + ' licitaciones');
 
     for (const oportunidad of todasOportunidades) {
       const resultado = await procesarEtapa1(oportunidad, cliente);
@@ -87,20 +62,14 @@ export default async function handler(req, res) {
       }
     }
 
-    console.log('Etapa 1 completada: ' + paraAnalizarIA.length + ' pasaron a análisis IA, ' + resultadosEtapa1.filter(r => !r.pasa_etapa1).length + ' descartadas');
-
-    // 4. ANÁLISIS CON IA (solo las que pasaron etapa 1)
     const resultadosIA = [];
     for (const oportunidad of paraAnalizarIA) {
       const analisis = await analizarConIA(oportunidad, cliente);
 
-      // ESCALADO POR MONTO: ALTA solo si monto >= monto_minimo_alta
       const montoMinimo = cliente.monto_minimo_alta || 500000;
       const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
 
-      // Si la IA dijo ALTA pero el monto es insuficiente, bajar a MEDIA
       if (analisis.relevancia === 'ALTA' && montoOportunidad < montoMinimo) {
-        console.log('Escalado ALTA->MEDIA: ' + analisis.referencia + ' (' + montoOportunidad.toLocaleString() + ' < ' + montoMinimo.toLocaleString() + ')');
         analisis.relevancia = 'MEDIA';
         analisis.razon = 'Relevancia temática alta pero monto ' + montoOportunidad.toLocaleString() + ' DOP < ' + montoMinimo.toLocaleString() + ' DOP. ' + analisis.razon;
       }
@@ -108,7 +77,6 @@ export default async function handler(req, res) {
       resultadosIA.push(analisis);
     }
 
-    // 5. CONSTRUIR RESPUESTA
     const resumen = {
       total_lotes: todasOportunidades.length,
       descartadas_etapa1: resultadosEtapa1.filter(r => !r.pasa_etapa1).length,
@@ -117,10 +85,8 @@ export default async function handler(req, res) {
       media_relevancia: resultadosIA.filter(r => r.relevancia === 'MEDIA').length
     };
 
-    // 6. GUARDAR EN BASE DE DATOS (si se solicitó)
     if (guardar_en_db) {
       try {
-        // Crear registro de análisis
         const analisisResult = await pool.query(`
           INSERT INTO analisis (
             cliente_id,
@@ -143,7 +109,6 @@ export default async function handler(req, res) {
 
         const analisisId = analisisResult.rows[0].id;
 
-        // Guardar todos los resultados
         for (const resultado of resultadosIA) {
           await pool.query(`
             INSERT INTO resultados (
@@ -175,7 +140,6 @@ export default async function handler(req, res) {
         }
       } catch (dbError) {
         console.error('Error guardando en DB:', dbError);
-        // Continuar aunque falle el guardado
       }
     }
 
@@ -191,7 +155,15 @@ export default async function handler(req, res) {
         baja: resumen.descartadas_etapa1
       },
       resultados: resultadosIA,
-      oportunidades: resultadosIA
+      oportunidades: resultadosIA,
+      diagnostico: {
+        total_recibidas: todasOportunidades.length,
+        primeras_5_refs: todasOportunidades.slice(0, 5).map(l => l.referencia),
+        tiene_0090: !!problematica1,
+        tiene_0199: !!problematica2,
+        ref_0090: problematica1 ? problematica1.referencia : 'NO ENCONTRADA',
+        ref_0199: problematica2 ? problematica2.referencia : 'NO ENCONTRADA'
+      }
     });
 
   } catch (error) {
@@ -200,79 +172,68 @@ export default async function handler(req, res) {
   }
 }
 
-// ========================================
-// ETAPA 1: FILTRADO DETERMINISTA
-// ========================================
 async function procesarEtapa1(oportunidad, cliente) {
   const ref = oportunidad.referencia || 'SIN-REF';
   const esCasoProblematico = ref.includes('MICM-DAF-CM-2025-0090') || ref.includes('MICM-DAF-CM-2025-0199');
 
   if (esCasoProblematico) {
-    console.log('\n[DEBUG] CASO PROBLEMÁTICO: ' + ref);
-    console.log('[DEBUG] Descripción: ' + oportunidad.descripcion.substring(0, 100) + '...');
+    console.log('[DEBUG] CASO: ' + ref);
+    console.log('[DEBUG] Desc: ' + (oportunidad.descripcion || '').substring(0, 80));
   }
 
-  // 1. FILTRO: Fecha de presentación válida y futura
   if (!oportunidad.fecha_presentacion) {
-    if (esCasoProblematico) console.log('[DEBUG] DESCARTADO: Sin fecha de presentación');
+    if (esCasoProblematico) console.log('[DEBUG] X Sin fecha');
     return { pasa_etapa1: false, razon: 'Sin fecha de presentación' };
   }
 
-  // Intentar parsear la fecha (puede venir en varios formatos del Excel)
   let fechaLimite;
   try {
     fechaLimite = new Date(oportunidad.fecha_presentacion);
     if (isNaN(fechaLimite.getTime())) {
-      if (esCasoProblematico) console.log('[DEBUG] DESCARTADO: Fecha inválida');
+      if (esCasoProblematico) console.log('[DEBUG] X Fecha invalida');
       return { pasa_etapa1: false, razon: 'Fecha inválida' };
     }
   } catch {
-    if (esCasoProblematico) console.log('[DEBUG] DESCARTADO: Fecha inválida (catch)');
+    if (esCasoProblematico) console.log('[DEBUG] X Fecha error');
     return { pasa_etapa1: false, razon: 'Fecha inválida' };
   }
 
-  // Verificar que sea futura
   const ahora = new Date();
   if (fechaLimite < ahora) {
     if (esCasoProblematico) {
-      console.log('[DEBUG] DESCARTADO: Fecha vencida');
-      console.log('[DEBUG] Fecha límite: ' + fechaLimite.toISOString());
-      console.log('[DEBUG] Fecha actual: ' + ahora.toISOString());
+      console.log('[DEBUG] X Fecha vencida');
+      console.log('[DEBUG] Limite: ' + fechaLimite.toISOString());
+      console.log('[DEBUG] Ahora: ' + ahora.toISOString());
     }
     return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
   }
 
-  if (esCasoProblematico) console.log('[DEBUG] Fecha OK: ' + fechaLimite.toISOString());
+  if (esCasoProblematico) console.log('[DEBUG] OK Fecha: ' + fechaLimite.toISOString());
 
-  // 2. FILTRADO ETAPA 1: Palabras clave (BÚSQUEDA FLEXIBLE - incluye singular/plural)
   const palabrasClave = cliente.palabras_clave
     .split(',')
     .map(p => p.trim().toLowerCase())
     .filter(p => p.length > 0);
 
   if (esCasoProblematico) {
-    console.log('[DEBUG] Palabras clave del cliente: [' + palabrasClave.join(', ') + ']');
+    console.log('[DEBUG] Palabras: [' + palabrasClave.join(', ') + ']');
   }
 
   const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
 
   if (esCasoProblematico) {
-    console.log('[DEBUG] Texto completo (lowercase): ' + textoCompleto.substring(0, 150) + '...');
+    console.log('[DEBUG] Texto: ' + textoCompleto.substring(0, 100));
   }
 
-  // Buscar cada palabra con flexibilidad para singular/plural
   let palabraEncontrada = null;
   const tieneCoincidencia = palabrasClave.some(palabra => {
-    // Remover 's' final para capturar singular y plural
     const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
-
-    // Buscar la raíz como palabra completa (con o sin 's' al final)
     const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
     const encontrada = regex.test(textoCompleto);
 
     if (esCasoProblematico) {
-      console.log('[DEBUG] Buscando "' + palabra + '" (raíz: "' + raiz + '") -> ' + (encontrada ? 'SI ENCONTRADA' : 'NO'));
+      console.log('[DEBUG] Busca "' + palabra + '" -> ' + (encontrada ? 'SI' : 'NO'));
     }
 
     if (encontrada) {
@@ -283,34 +244,26 @@ async function procesarEtapa1(oportunidad, cliente) {
   });
 
   if (!tieneCoincidencia) {
-    if (esCasoProblematico) console.log('[DEBUG] DESCARTADO: No contiene palabras clave relevantes');
+    if (esCasoProblematico) console.log('[DEBUG] X Sin palabras clave');
     return { pasa_etapa1: false, razon: 'No contiene palabras clave relevantes' };
   }
 
-  if (esCasoProblematico) console.log('[DEBUG] Palabra clave encontrada: "' + palabraEncontrada + '"');
+  if (esCasoProblematico) console.log('[DEBUG] OK Palabra: "' + palabraEncontrada + '"');
 
-  // 3. NO HAY FILTRO DE MONTO EN ETAPA 1
-  // Dejamos pasar TODO con palabras clave, sin importar el monto.
-  // El monto solo se usa en Etapa 2 para clasificar ALTA vs MEDIA.
-
-  // 4. FILTRO: Estado debe ser válido (flexible)
   const estado = oportunidad.estado || '';
   if (!estado) {
-    if (esCasoProblematico) console.log('[DEBUG] DESCARTADO: Sin estado definido');
+    if (esCasoProblematico) console.log('[DEBUG] X Sin estado');
     return { pasa_etapa1: false, razon: 'Sin estado definido' };
   }
 
   if (esCasoProblematico) {
-    console.log('[DEBUG] Estado OK: "' + estado + '"');
-    console.log('[DEBUG] PASA A ETAPA 2 (Análisis IA)\n');
+    console.log('[DEBUG] OK Estado: "' + estado + '"');
+    console.log('[DEBUG] PASA A ETAPA 2');
   }
 
   return { pasa_etapa1: true };
 }
 
-// ========================================
-// ETAPA 2: ANÁLISIS CON IA
-// ========================================
 async function analizarConIA(oportunidad, cliente) {
   const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
 
@@ -353,7 +306,6 @@ RAZÓN: [tu justificación aquí]`;
 
     const respuesta = message.content[0].text;
 
-    // Parsear respuesta
     const relevanciaMatch = respuesta.match(/RELEVANCIA:\s*(ALTA|MEDIA|BAJA)/i);
     const queMatch = respuesta.match(/QUÉ:\s*(.+)/i);
     const quienMatch = respuesta.match(/QUIÉN:\s*(.+)/i);
