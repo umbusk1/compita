@@ -224,14 +224,9 @@ async function procesarEtapa1(oportunidad, cliente) {
     return { pasa_etapa1: false, razon: 'No contiene palabras clave relevantes' };
   }
 
-  // 3️⃣ FILTRO: Monto mínimo
-  const monto = parseFloat(oportunidad.monto_estimado || 0);
-  if (monto < cliente.monto_minimo) {
-    return {
-      pasa_etapa1: false,
-      razon: `Monto ${monto.toLocaleString()} DOP < Mínimo ${cliente.monto_minimo.toLocaleString()} DOP`
-    };
-  }
+  // 3️⃣ NO HAY FILTRO DE MONTO EN ETAPA 1
+  // Dejamos pasar TODO con palabras clave, sin importar el monto.
+  // El monto solo se usa en Etapa 2 para clasificar ALTA vs MEDIA.
 
   // 4️⃣ FILTRO: Estado debe ser válido (flexible)
   const estado = oportunidad.estado || '';
