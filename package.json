@@ -2,6 +2,7 @@
   "name": "compita",
   "version": "1.0.0",
   "description": "Sistema multi-cliente de análisis de licitaciones con IA",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vercel dev",
@@ -9,6 +10,9 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
-    "@neondatabase/serverless": "^0.9.0"
+    "pg": "^8.13.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
