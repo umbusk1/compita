@@ -208,6 +208,53 @@ async function procesarEtapa1(oportunidad, cliente) {
 
   if (esCasoProblematico) console.log('[DEBUG] OK Palabra: ' + palabraEncontrada);
 
+  // 3. FILTRO: Exclusiones
+  if (cliente.exclusiones && cliente.exclusiones.length > 0) {
+    const exclusiones = Array.isArray(cliente.exclusiones)
+      ? cliente.exclusiones
+      : cliente.exclusiones.split(',').map(e => e.trim()).filter(e => e.length > 0);
+
+    const exclusionesLower = exclusiones.map(e => e.toLowerCase());
+
+    for (const exclusion of exclusionesLower) {
+      const raiz = exclusion.endsWith('s') ? exclusion.slice(0, -1) : exclusion;
+      const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\  if (!tieneCoincidencia) {
+    if (esCasoProblematico) console.log('[DEBUG] X Sin palabras clave');
+    return { pasa_etapa1: false, razon: 'No contiene palabras clave relevantes' };
+  }
+
+  if (esCasoProblematico) console.log('[DEBUG] OK Palabra: ' + palabraEncontrada);
+
+  const estado = oportunidad.estado || '';
+  if (!estado) {
+    if (esCasoProblematico) console.log('[DEBUG] X Sin estado');
+    return { pasa_etapa1: false, razon: 'Sin estado definido' };
+  }
+
+  if (esCasoProblematico) {
+    console.log('[DEBUG] OK Estado');
+    console.log('[DEBUG] >>> PASA A ETAPA 2 <<<');
+  }
+
+  return { pasa_etapa1: true };
+}');
+      const regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
+
+      if (regex.test(textoCompleto)) {
+        if (esCasoProblematico) {
+          console.log('[DEBUG] X Exclusion encontrada: ' + exclusion);
+        }
+        return {
+          pasa_etapa1: false,
+          razon: 'Contiene palabra de exclusión: ' + exclusion
+        };
+      }
+    }
+
+    if (esCasoProblematico) console.log('[DEBUG] OK Sin exclusiones');
+  }
+
+  // 4. FILTRO: Estado debe ser válido (flexible)
   const estado = oportunidad.estado || '';
   if (!estado) {
     if (esCasoProblematico) console.log('[DEBUG] X Sin estado');
