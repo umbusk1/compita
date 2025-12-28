@@ -899,17 +899,23 @@
 
         async function verAnalisis(analisisId) {
             try {
+                // Primero cargar los datos
                 const response = await fetch(`${API_BASE}/api/resultados?analisis_id=${analisisId}`);
                 const data = await response.json();
 
+                console.log('📊 Datos cargados del historial:', data);
+
+                // Setear analisisActual con la estructura correcta
                 analisisActual = {
                     estadisticas: data.estadisticas,
                     resultados: data.resultados
                 };
 
+                console.log('✅ analisisActual seteado:', analisisActual);
+
+                // Cambiar a la pestaña resultados (esto llamará a mostrarResultados automáticamente)
                 showTab('resultados');
-                // Forzar la actualización de los detalles
-                mostrarResultados();
+
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error al cargar análisis');
