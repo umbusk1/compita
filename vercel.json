@@ -9,11 +9,5 @@
     "api/resultados.js": {
       "maxDuration": 10
     }
-  },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/public/$1"
-    }
-  ]
+  }
 }
