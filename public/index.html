@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compita - Análisis de Licitaciones</title>
+    <link rel="icon" href="/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -82,33 +83,31 @@
 
                             <!-- Progreso del Análisis -->
                             <div id="progreso-container" class="hidden space-y-4">
-                                <!-- Etapa 1 -->
-                                <div id="etapa1-progress" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <div id="etapa1-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                                        <span class="text-blue-900 font-semibold">⏳ Etapa 1: Pre-filtrado</span>
+                                <!-- Etapas 1 y 2 lado a lado -->
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Etapa 1 -->
+                                    <div id="etapa1-progress" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <div class="flex items-center space-x-3 mb-2">
+                                            <div id="etapa1-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                                            <span class="text-blue-900 font-semibold">⏳ Etapa 1: Pre-filtrado</span>
+                                        </div>
+                                        <p id="etapa1-texto" class="text-sm text-blue-700 ml-9">Aplicando filtros de fecha, estado y palabras clave...</p>
                                     </div>
-                                    <p id="etapa1-texto" class="text-sm text-blue-700 ml-9">Aplicando filtros de fecha, estado y palabras clave...</p>
-                                </div>
 
-                                <!-- Etapa 2 -->
-                                <div id="etapa2-progress" class="hidden bg-purple-50 border border-purple-200 rounded-lg p-4">
-                                    <div class="flex items-center space-x-3 mb-2">
-                                        <div id="etapa2-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
-                                        <span class="text-purple-900 font-semibold">🤖 Etapa 2: Análisis con IA</span>
+                                    <!-- Etapa 2 -->
+                                    <div id="etapa2-progress" class="hidden bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                        <div class="flex items-center space-x-3 mb-2">
+                                            <div id="etapa2-spinner" class="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
+                                            <span class="text-purple-900 font-semibold">🤖 Etapa 2: Análisis con IA</span>
+                                        </div>
+                                        <p id="etapa2-texto" class="text-sm text-purple-700 ml-9">Analizando candidatas con Claude...</p>
                                     </div>
-                                    <p id="etapa2-texto" class="text-sm text-purple-700 ml-9">Analizando candidatas con Claude...</p>
                                 </div>
 
                                 <!-- Resultado Final -->
                                 <div id="analisis-completado" class="hidden bg-green-50 border border-green-200 rounded-lg p-4">
-                                    <div class="flex items-center space-x-3 mb-3">
-                                        <span class="text-2xl">✅</span>
-                                        <span class="text-green-900 font-bold text-lg">Análisis Completado</span>
-                                    </div>
-                                    <div id="resumen-rapido" class="text-sm text-green-800 mb-3"></div>
                                     <button onclick="showTab('resultados')"
-                                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                                        class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 font-semibold">
                                         Ver Resultados Detallados →
                                     </button>
                                 </div>
@@ -154,6 +153,17 @@
             <p class="text-xl text-gray-600">Seleccione un cliente para comenzar</p>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 mt-8">
+        <div class="flex items-center justify-center gap-2 text-sm text-gray-600">
+            <span>Vibe-coded by</span>
+            <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition">
+                <img src="/logo-umbusk.png" alt="Umbusk" class="h-6 inline-block">
+            </a>
+            <span>and Claude from Anthropic.</span>
+        </div>
+    </footer>
 
     <!-- Modal Gestión de Clientes -->
     <div id="modal-clientes" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -597,18 +607,11 @@
 
                         document.getElementById('etapa2-spinner').classList.add('hidden');
                         document.getElementById('etapa2-texto').innerHTML =
-                            '<span class="text-green-600 font-semibold">✓ Completado</span>';
+                            `<span class="text-green-600 font-semibold">✓ Completado: ${stats.total || 0} licitaciones procesadas</span>`;
 
                         document.getElementById('analisis-completado').classList.remove('hidden');
 
                         const stats = resultado.estadisticas || {};
-
-                        // AJUSTE 1: Resumen simplificado
-                        document.getElementById('resumen-rapido').innerHTML = `
-                            <p class="text-sm text-green-800">
-                                ✅ Análisis completado con ${stats.total || 0} licitaciones procesadas
-                            </p>
-                        `;
 
                         await cargarHistorial();
                     } else {
