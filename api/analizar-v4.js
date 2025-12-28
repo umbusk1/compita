@@ -176,7 +176,7 @@ export default async function handler(req, res) {
           guardados++;
         }
 
-        // Guardar descartados de Etapa 1 como BAJA con razón específica
+        // Guardar descartados de Etapa 1 con relevancia DESCARTADA
         for (let i = 0; i < resultadosEtapa1.length; i++) {
           const etapa1 = resultadosEtapa1[i];
           if (!etapa1.pasa_etapa1) {
@@ -206,8 +206,8 @@ export default async function handler(req, res) {
               fechaISO,
               oportunidad.monto_estimado || null,
               oportunidad.estado || '',
-              'BAJA',
-              'Descartada',
+              'DESCARTADA',
+              'Descartada en pre-filtrado',
               oportunidad.unidad_compras || '',
               etapa1.razon || 'Descartada en pre-filtrado'
             ]);
