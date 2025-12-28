@@ -908,6 +908,8 @@
                 };
 
                 showTab('resultados');
+                // Forzar la actualización de los detalles
+                mostrarResultados();
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error al cargar análisis');
