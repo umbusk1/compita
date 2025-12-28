@@ -49,7 +49,8 @@ export default async function handler(req, res) {
               WHEN relevancia = 'ALTA' THEN 1
               WHEN relevancia = 'MEDIA' THEN 2
               WHEN relevancia = 'BAJA' THEN 3
-              ELSE 4
+              WHEN relevancia = 'DESCARTADA' THEN 4
+              ELSE 5
             END,
             id
         `;
@@ -68,8 +69,10 @@ export default async function handler(req, res) {
         const analisis = analisisData[0];
 
         // Calcular estadísticas correctas desde resultados
-        const descartadas = resultados.filter(r => r.que === 'Descartada').length;
-        const noDescartadas = resultados.filter(r => r.que !== 'Descartada').length;
+        const descartadas = resultados.filter(r => r.relevancia === 'DESCARTADA').length;
+        const analizadasIA = resultados.filter(r =>
+          r.relevancia === 'ALTA' || r.relevancia === 'MEDIA' || r.relevancia === 'BAJA'
+        ).length;
 
         return res.status(200).json({
           success: true,
@@ -79,7 +82,7 @@ export default async function handler(req, res) {
             media: analisis.total_media,
             baja: analisis.total_baja,
             descartadas_prefiltro: descartadas,
-            analizadas_ia: noDescartadas
+            analizadas_ia: analizadasIA
           },
           resultados
         });
@@ -120,7 +123,8 @@ export default async function handler(req, res) {
               WHEN relevancia = 'ALTA' THEN 1
               WHEN relevancia = 'MEDIA' THEN 2
               WHEN relevancia = 'BAJA' THEN 3
-              ELSE 4
+              WHEN relevancia = 'DESCARTADA' THEN 4
+              ELSE 5
             END,
             id
         `;
@@ -131,6 +135,11 @@ export default async function handler(req, res) {
 
         const analisis = analisisData[0];
 
+        const descartadas = resultados.filter(r => r.relevancia === 'DESCARTADA').length;
+        const analizadasIA = resultados.filter(r =>
+          r.relevancia === 'ALTA' || r.relevancia === 'MEDIA' || r.relevancia === 'BAJA'
+        ).length;
+
         return res.status(200).json({
           success: true,
           analisis_reciente: analisis,
@@ -139,12 +148,8 @@ export default async function handler(req, res) {
             alta: analisis.total_alta,
             media: analisis.total_media,
             baja: analisis.total_baja,
-            descartadas_prefiltro: resultados.filter(r =>
-              r.que === 'Descartada'
-            ).length,
-            analizadas_ia: resultados.filter(r =>
-              r.que !== 'Descartada'
-            ).length
+            descartadas_prefiltro: descartadas,
+            analizadas_ia: analizadasIA
           },
           resultados
         });
