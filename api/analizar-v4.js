@@ -114,11 +114,37 @@ export default async function handler(req, res) {
         const analisisId = analisisInsert.rows[0].id;
         console.log(`✅ Análisis creado con ID: ${analisisId}`);
 
+        // Función auxiliar para convertir fecha dominicana a ISO
+        function convertirFechaParaDB(fechaStr) {
+          if (!fechaStr) return null;
+
+          try {
+            const fechaLimpia = String(fechaStr).split('(')[0].trim();
+            const soloFecha = fechaLimpia.split(' ')[0];
+            const partes = soloFecha.split('/');
+
+            if (partes.length === 3) {
+              const dia = String(partes[0]).padStart(2, '0');
+              const mes = String(partes[1]).padStart(2, '0');
+              const anio = partes[2];
+
+              // Retornar en formato ISO: YYYY-MM-DD
+              return `${anio}-${mes}-${dia}`;
+            }
+            return null;
+          } catch (err) {
+            console.error('Error convirtiendo fecha:', err);
+            return null;
+          }
+        }
+
         // 2. Guardar todos los resultados (IA + descartados)
         let guardados = 0;
 
         // Guardar resultados de IA (ALTA, MEDIA, BAJA)
         for (const resultado of resultadosIA) {
+          const fechaISO = convertirFechaParaDB(resultado.fecha_presentacion);
+
           await pool.query(`
             INSERT INTO resultados (
               analisis_id,
@@ -139,7 +165,7 @@ export default async function handler(req, res) {
             resultado.referencia || '',
             resultado.unidad_compras || '',
             resultado.descripcion || '',
-            resultado.fecha_presentacion || null,
+            fechaISO,
             resultado.monto_estimado || null,
             resultado.estado || '',
             resultado.relevancia,
@@ -155,6 +181,8 @@ export default async function handler(req, res) {
           const etapa1 = resultadosEtapa1[i];
           if (!etapa1.pasa_etapa1) {
             const oportunidad = todasOportunidades[i];
+            const fechaISO = convertirFechaParaDB(oportunidad.fecha_presentacion);
+
             await pool.query(`
               INSERT INTO resultados (
                 analisis_id,
@@ -175,7 +203,7 @@ export default async function handler(req, res) {
               oportunidad.referencia || '',
               oportunidad.unidad_compras || '',
               oportunidad.descripcion || '',
-              oportunidad.fecha_presentacion || null,
+              fechaISO,
               oportunidad.monto_estimado || null,
               oportunidad.estado || '',
               'BAJA',
