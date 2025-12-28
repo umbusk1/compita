@@ -157,7 +157,11 @@
     <!-- Footer -->
     <footer class="text-center py-6 mt-8">
         <div class="flex items-center justify-center gap-2 text-sm text-gray-600">
-            <span>Vibe-coded by <a href="https://umbusk.com" target="_new">UMBUSK</a> and Claude from Anthropic.</span>
+            <span>Vibe-coded by</span>
+            <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition">
+                <img src="/logo-umbusk.png" alt="Umbusk" class="h-6 inline-block">
+            </a>
+            <span>and Claude from Anthropic.</span>
         </div>
     </footer>
 
@@ -601,13 +605,13 @@
                     if (resultado.success) {
                         analisisActual = resultado;
 
+                        const stats = resultado.estadisticas || {};
+
                         document.getElementById('etapa2-spinner').classList.add('hidden');
                         document.getElementById('etapa2-texto').innerHTML =
                             `<span class="text-green-600 font-semibold">✓ Completado: ${stats.total || 0} licitaciones procesadas</span>`;
 
                         document.getElementById('analisis-completado').classList.remove('hidden');
-
-                        const stats = resultado.estadisticas || {};
 
                         await cargarHistorial();
                     } else {
