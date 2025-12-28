@@ -79,11 +79,120 @@ export default async function handler(req, res) {
       descartadas_etapa1: resultadosEtapa1.filter(r => !r.pasa_etapa1).length,
       analizadas_ia: resultadosIA.length,
       alta_relevancia: resultadosIA.filter(r => r.relevancia === 'ALTA').length,
-      media_relevancia: resultadosIA.filter(r => r.relevancia === 'MEDIA').length
+      media_relevancia: resultadosIA.filter(r => r.relevancia === 'MEDIA').length,
+      baja_relevancia: resultadosIA.filter(r => r.relevancia === 'BAJA').length
     };
 
+    // ========== GUARDAR EN BASE DE DATOS ==========
     if (guardar_en_db) {
-      console.log('Guardado en DB deshabilitado temporalmente');
+      try {
+        console.log('💾 Guardando análisis en base de datos...');
+
+        // 1. Crear registro de análisis
+        const analisisInsert = await pool.query(`
+          INSERT INTO analisis (
+            cliente_id,
+            total_descripciones,
+            total_alta,
+            total_media,
+            total_baja,
+            porcentaje_alta
+          )
+          VALUES ($1, $2, $3, $4, $5, $6)
+          RETURNING id
+        `, [
+          cliente_id,
+          resumen.total_lotes,
+          resumen.alta_relevancia,
+          resumen.media_relevancia,
+          resumen.baja_relevancia,
+          resumen.total_lotes > 0
+            ? Math.round((resumen.alta_relevancia / resumen.total_lotes) * 100)
+            : 0
+        ]);
+
+        const analisisId = analisisInsert.rows[0].id;
+        console.log(`✅ Análisis creado con ID: ${analisisId}`);
+
+        // 2. Guardar todos los resultados (IA + descartados)
+        let guardados = 0;
+
+        // Guardar resultados de IA (ALTA, MEDIA, BAJA)
+        for (const resultado of resultadosIA) {
+          await pool.query(`
+            INSERT INTO resultados (
+              analisis_id,
+              referencia,
+              unidad_compras,
+              descripcion,
+              fecha_presentacion,
+              monto_estimado,
+              estado,
+              relevancia,
+              que,
+              quien,
+              razon
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+          `, [
+            analisisId,
+            resultado.referencia || '',
+            resultado.unidad_compras || '',
+            resultado.descripcion || '',
+            resultado.fecha_presentacion || null,
+            resultado.monto_estimado || null,
+            resultado.estado || '',
+            resultado.relevancia,
+            resultado.que || '',
+            resultado.quien || '',
+            resultado.razon || ''
+          ]);
+          guardados++;
+        }
+
+        // Guardar descartados de Etapa 1 como BAJA con razón específica
+        for (let i = 0; i < resultadosEtapa1.length; i++) {
+          const etapa1 = resultadosEtapa1[i];
+          if (!etapa1.pasa_etapa1) {
+            const oportunidad = todasOportunidades[i];
+            await pool.query(`
+              INSERT INTO resultados (
+                analisis_id,
+                referencia,
+                unidad_compras,
+                descripcion,
+                fecha_presentacion,
+                monto_estimado,
+                estado,
+                relevancia,
+                que,
+                quien,
+                razon
+              )
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            `, [
+              analisisId,
+              oportunidad.referencia || '',
+              oportunidad.unidad_compras || '',
+              oportunidad.descripcion || '',
+              oportunidad.fecha_presentacion || null,
+              oportunidad.monto_estimado || null,
+              oportunidad.estado || '',
+              'BAJA',
+              'Descartada',
+              oportunidad.unidad_compras || '',
+              etapa1.razon || 'Descartada en pre-filtrado'
+            ]);
+            guardados++;
+          }
+        }
+
+        console.log(`✅ ${guardados} resultados guardados en base de datos`);
+
+      } catch (dbError) {
+        console.error('❌ Error guardando en base de datos:', dbError);
+        // No falla el request, solo logea el error
+      }
     }
 
     res.status(200).json({
@@ -95,7 +204,7 @@ export default async function handler(req, res) {
         analizadas_ia: resumen.analizadas_ia,
         alta: resumen.alta_relevancia,
         media: resumen.media_relevancia,
-        baja: resumen.descartadas_etapa1
+        baja: resumen.baja_relevancia
       },
       resultados: resultadosIA,
       oportunidades: resultadosIA,
