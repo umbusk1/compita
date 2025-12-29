@@ -1,4 +1,4 @@
-// api/registro.js - Registro de usuarios con confirmación por email
+// api/registro.js - Registro con creación automática de empresa
 import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -86,6 +86,40 @@ export default async function handler(req, res) {
       });
     }
 
+    // ========== EXTRAER DOMINIO DEL EMAIL ==========
+
+    const dominioEmpresa = email.split('@')[1]?.toLowerCase();
+
+    // ========== CALCULAR FECHAS DEL TRIAL ==========
+
+    const ahora = new Date();
+    const trialFin = new Date(ahora);
+    trialFin.setDate(trialFin.getDate() + 7);
+
+    // ========== CREAR EMPRESA ==========
+
+    const empresaResult = await sql`
+      INSERT INTO empresas (
+        nombre,
+        dominio,
+        plan,
+        trial_inicio,
+        trial_fin,
+        activo
+      )
+      VALUES (
+        ${empresa.trim()},
+        ${dominioEmpresa},
+        'free_trial',
+        ${ahora.toISOString()},
+        ${trialFin.toISOString()},
+        true
+      )
+      RETURNING id, nombre, dominio, trial_fin
+    `;
+
+    const nuevaEmpresa = empresaResult[0];
+
     // ========== HASHEAR CONTRASEÑA ==========
 
     const salt = await bcrypt.genSalt(10);
@@ -99,12 +133,6 @@ export default async function handler(req, res) {
       { expiresIn: '7d' }
     );
 
-    // ========== CALCULAR FECHAS DEL TRIAL ==========
-
-    const ahora = new Date();
-    const trialFin = new Date(ahora);
-    trialFin.setDate(trialFin.getDate() + 7);
-
     // ========== CREAR USUARIO ==========
 
     const resultado = await sql`
@@ -116,7 +144,9 @@ export default async function handler(req, res) {
         trial_inicio,
         trial_fin,
         email_confirmado,
-        activo
+        activo,
+        empresa_id,
+        rol
       )
       VALUES (
         ${email.toLowerCase()},
@@ -126,9 +156,11 @@ export default async function handler(req, res) {
         ${ahora.toISOString()},
         ${trialFin.toISOString()},
         false,
-        true
+        true,
+        ${nuevaEmpresa.id},
+        'owner'
       )
-      RETURNING id, email, empresa, trial_inicio, trial_fin, created_at
+      RETURNING id, email, empresa, empresa_id, trial_fin, created_at
     `;
 
     const nuevoUsuario = resultado[0];
@@ -196,7 +228,6 @@ export default async function handler(req, res) {
       });
     } catch (emailError) {
       console.error('Error enviando email:', emailError);
-      // No falla el registro si falla el email
     }
 
     // ========== RESPUESTA EXITOSA ==========
@@ -208,6 +239,7 @@ export default async function handler(req, res) {
         id: nuevoUsuario.id,
         email: nuevoUsuario.email,
         empresa: nuevoUsuario.empresa,
+        empresa_id: nuevoUsuario.empresa_id,
         trial_fin: nuevoUsuario.trial_fin
       }
     });
