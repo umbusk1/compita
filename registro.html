@@ -108,7 +108,13 @@
                 <!-- Mensaje de éxito -->
                 <div id="mensaje-exito" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                     <p class="text-green-800 font-semibold mb-2">✅ ¡Registro exitoso!</p>
-                    <p class="text-green-700 text-sm">Revisa tu email para confirmar tu cuenta.</p>
+                    <p class="text-green-700 text-sm mb-3">
+                        Hemos enviado un email de confirmación a tu dirección de correo.
+                        Por favor revisa tu bandeja de entrada (y spam) y haz clic en el botón para activar tu cuenta.
+                    </p>
+                    <p class="text-green-700 text-sm font-semibold">
+                        Después de confirmar tu email, podrás iniciar sesión.
+                    </p>
                 </div>
 
                 <!-- Mensaje de error -->
@@ -219,13 +225,8 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Éxito - mostrar mensaje y redirigir
+                    // Éxito - mostrar mensaje (SIN redirigir automáticamente)
                     mostrarExito();
-
-                    // Redirigir después de 3 segundos
-                    setTimeout(() => {
-                        window.location.href = '/login.html?registro=exitoso';
-                    }, 3000);
                 } else {
                     // Error del servidor
                     mostrarError(data.error || 'Error al crear la cuenta. Intenta nuevamente.');
