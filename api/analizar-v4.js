@@ -16,30 +16,30 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { cliente_id, licitaciones, guardar_en_db } = req.body;
+  const { empresa_id, licitaciones, guardar_en_db } = req.body;
 
-  if (!cliente_id || !licitaciones || !Array.isArray(licitaciones)) {
-    return res.status(400).json({ error: 'Faltan parámetros: cliente_id y licitaciones son requeridos' });
+  if (!empresa_id || !licitaciones || !Array.isArray(licitaciones)) {
+    return res.status(400).json({ error: 'Faltan parámetros: empresa_id y licitaciones son requeridos' });
   }
 
   try {
-    const clienteRes = await pool.query(
-      'SELECT * FROM clientes WHERE id = $1',
-      [cliente_id]
+    const empresaRes = await pool.query(
+      'SELECT * FROM empresas WHERE id = $1',
+      [empresa_id]
     );
 
-    if (clienteRes.rows.length === 0) {
-      return res.status(404).json({ error: 'Cliente no encontrado' });
+    if (empresaRes.rows.length === 0) {
+      return res.status(404).json({ error: 'Empresa no encontrada' });
     }
 
-    const cliente = clienteRes.rows[0];
+    const empresa = empresaRes.rows[0];
 
-    if (Array.isArray(cliente.palabras_clave)) {
-      cliente.palabras_clave = cliente.palabras_clave.join(', ');
+    if (Array.isArray(empresa.palabras_clave)) {
+      empresa.palabras_clave = empresa.palabras_clave.join(', ');
     }
 
-    if (!cliente.palabras_clave) {
-      cliente.palabras_clave = '';
+    if (!empresa.palabras_clave) {
+      empresa.palabras_clave = '';
     }
 
     const todasOportunidades = licitaciones;
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
     const paraAnalizarIA = [];
 
     for (const oportunidad of todasOportunidades) {
-      const resultado = await procesarEtapa1(oportunidad, cliente);
+      const resultado = await procesarEtapa1(oportunidad, empresa);
       resultadosEtapa1.push(resultado);
 
       if (resultado.pasa_etapa1) {
@@ -61,9 +61,9 @@ export default async function handler(req, res) {
 
     const resultadosIA = [];
     for (const oportunidad of paraAnalizarIA) {
-      const analisis = await analizarConIA(oportunidad, cliente);
+      const analisis = await analizarConIA(oportunidad, empresa);
 
-      const montoMinimo = cliente.monto_minimo_alta || 500000;
+      const montoMinimo = empresa.monto_minimo_alta || 500000;
       const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
 
       if (analisis.relevancia === 'ALTA' && montoOportunidad < montoMinimo) {
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
         // 1. Crear registro de análisis
         const analisisInsert = await pool.query(`
           INSERT INTO analisis (
-            cliente_id,
+            empresa_id,
             total_descripciones,
             total_alta,
             total_media,
@@ -101,7 +101,7 @@ export default async function handler(req, res) {
           VALUES ($1, $2, $3, $4, $5, $6)
           RETURNING id
         `, [
-          cliente_id,
+          empresa_id,
           resumen.total_lotes,
           resumen.alta_relevancia,
           resumen.media_relevancia,
@@ -148,6 +148,7 @@ export default async function handler(req, res) {
           await pool.query(`
             INSERT INTO resultados (
               analisis_id,
+              empresa_id,
               referencia,
               unidad_compras,
               descripcion,
@@ -159,9 +160,10 @@ export default async function handler(req, res) {
               quien,
               razon
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
           `, [
             analisisId,
+            empresa_id,
             resultado.referencia || '',
             resultado.unidad_compras || '',
             resultado.descripcion || '',
@@ -186,6 +188,7 @@ export default async function handler(req, res) {
             await pool.query(`
               INSERT INTO resultados (
                 analisis_id,
+                empresa_id,
                 referencia,
                 unidad_compras,
                 descripcion,
@@ -197,9 +200,10 @@ export default async function handler(req, res) {
                 quien,
                 razon
               )
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             `, [
               analisisId,
+              empresa_id,
               oportunidad.referencia || '',
               oportunidad.unidad_compras || '',
               oportunidad.descripcion || '',
@@ -252,7 +256,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function procesarEtapa1(oportunidad, cliente) {
+async function procesarEtapa1(oportunidad, empresa) {
   const ref = oportunidad.referencia || 'SIN-REF';
   const esCasoProblematico = ref.includes('MICM-DAF-CM-2025-0090') || ref.includes('MICM-DAF-CM-2025-0199');
 
@@ -308,7 +312,7 @@ async function procesarEtapa1(oportunidad, cliente) {
 
   if (esCasoProblematico) console.log('[DEBUG] OK Fecha');
 
-  const palabrasClave = cliente.palabras_clave
+  const palabrasClave = empresa.palabras_clave
     .split(',')
     .map(p => p.trim().toLowerCase())
     .filter(p => p.length > 0);
@@ -344,10 +348,10 @@ async function procesarEtapa1(oportunidad, cliente) {
 
   if (esCasoProblematico) console.log('[DEBUG] OK Palabra: ' + palabraEncontrada);
 
-  if (cliente.exclusiones && cliente.exclusiones.length > 0) {
-    const exclusiones = Array.isArray(cliente.exclusiones)
-      ? cliente.exclusiones
-      : cliente.exclusiones.split(',').map(e => e.trim()).filter(e => e.length > 0);
+  if (empresa.exclusiones && empresa.exclusiones.length > 0) {
+    const exclusiones = Array.isArray(empresa.exclusiones)
+      ? empresa.exclusiones
+      : empresa.exclusiones.split(',').map(e => e.trim()).filter(e => e.length > 0);
 
     const exclusionesLower = exclusiones.map(e => e.toLowerCase());
 
@@ -384,7 +388,7 @@ async function procesarEtapa1(oportunidad, cliente) {
   return { pasa_etapa1: true };
 }
 
-async function analizarConIA(oportunidad, cliente) {
+async function analizarConIA(oportunidad, empresa) {
   const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
 
 1. **RELEVANCIA**: ¿Qué tan relevante es para el cliente?
@@ -399,10 +403,10 @@ async function analizarConIA(oportunidad, cliente) {
 **IMPORTANTE**: Evalúa SOLO la relevancia temática. El sistema aplicará filtros adicionales de monto automáticamente.
 
 **PERFIL DEL CLIENTE:**
-${cliente.descripcion || 'Cliente sin descripción'}
+${empresa.descripcion || 'Cliente sin descripción'}
 
 **PALABRAS CLAVE DEL CLIENTE:**
-${cliente.palabras_clave || 'Sin palabras clave'}
+${empresa.palabras_clave || 'Sin palabras clave'}
 
 **OPORTUNIDAD:**
 - Referencia: ${oportunidad.referencia || 'N/A'}
