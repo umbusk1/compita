@@ -1,4 +1,4 @@
-// api/registro.js - Registro de usuarios con confirmación por email
+// api/registro.js - Registro de usuarios con confirmación por email (CON DEBUG)
 import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -133,12 +133,17 @@ export default async function handler(req, res) {
 
     const nuevoUsuario = resultado[0];
 
-    // ========== ENVIAR EMAIL DE CONFIRMACIÓN ==========
+    // ========== ENVIAR EMAIL DE CONFIRMACIÓN (CON DEBUG) ==========
 
     const confirmUrl = `https://${req.headers.host}/confirmar-email.html?token=${tokenConfirmacion}`;
 
+    console.log('🔵 INTENTANDO ENVIAR EMAIL...');
+    console.log('📧 Para:', nuevoUsuario.email);
+    console.log('🔑 API Key presente:', !!process.env.RESEND_API_KEY);
+    console.log('🔑 API Key primeros caracteres:', process.env.RESEND_API_KEY?.substring(0, 10));
+
     try {
-      await resend.emails.send({
+      const emailData = {
         from: 'Compita <onboarding@resend.dev>',
         to: nuevoUsuario.email,
         subject: 'Confirma tu cuenta - Compita 🎯',
@@ -193,10 +198,24 @@ export default async function handler(req, res) {
           </body>
           </html>
         `
-      });
+      };
+
+      console.log('📤 Datos del email:', JSON.stringify({
+        from: emailData.from,
+        to: emailData.to,
+        subject: emailData.subject
+      }));
+
+      const emailResponse = await resend.emails.send(emailData);
+
+      console.log('✅ Respuesta de Resend:', JSON.stringify(emailResponse));
+
     } catch (emailError) {
-      console.error('Error enviando email:', emailError);
-      // No falla el registro si falla el email
+      console.error('❌ ERROR ENVIANDO EMAIL:');
+      console.error('Error completo:', emailError);
+      console.error('Mensaje:', emailError.message);
+      console.error('Status:', emailError.statusCode);
+      console.error('Response:', emailError.response?.data);
     }
 
     // ========== RESPUESTA EXITOSA ==========
