@@ -9,14 +9,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 min-h-screen">
-    <!-- Header con link al landing -->
+    <!-- Header -->
     <div class="bg-white border-b border-gray-200 py-2 px-4">
         <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-sm text-gray-600 hover:text-indigo-600 transition">
-                ← Volver al inicio
+            <a href="/dashboard.html" class="text-sm text-gray-600 hover:text-indigo-600 transition">
+                ← Volver al Dashboard
             </a>
-            <div class="text-xs text-gray-500">
-                Sesión activa
+            <div class="flex items-center gap-4">
+                <span id="usuario-empresa" class="text-xs text-gray-500"></span>
+                <button onclick="cerrarSesion()" class="text-sm text-red-600 hover:text-red-800 transition">
+                    Cerrar Sesión
+                </button>
             </div>
         </div>
     </div>
@@ -27,24 +30,15 @@
             <h1 class="text-5xl font-bold text-gray-800 mb-4">🎯 Compita</h1>
             <p class="text-gray-600 mb-4">Sistema de Análisis de Licitaciones con IA</p>
 
-            <!-- Selector Global de Cliente -->
-            <div class="max-w-md mx-auto">
-                <select id="cliente-global" onchange="seleccionarCliente()"
-                    class="w-full border-2 border-indigo-300 rounded-lg px-4 py-3 text-lg font-semibold focus:outline-none focus:border-indigo-600">
-                    <option value="">Seleccione un cliente...</option>
-                </select>
-            </div>
-
-            <!-- Botón para gestionar clientes -->
-            <div class="mt-3">
-                <button onclick="abrirGestionClientes()" class="text-sm text-indigo-600 hover:text-indigo-800 underline">
-                    ⚙️ Gestionar Clientes
-                </button>
+            <!-- Mostrar empresa actual -->
+            <div id="empresa-actual-display" class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 max-w-md mx-auto">
+                <div class="text-sm text-gray-600">Analizando para:</div>
+                <div id="empresa-nombre-display" class="text-lg font-bold text-indigo-700"></div>
             </div>
         </div>
 
         <!-- Contenedor Principal -->
-        <div id="contenedor-principal" class="hidden">
+        <div id="contenedor-principal">
             <div class="bg-white rounded-lg shadow-lg">
                 <!-- Tabs -->
                 <div class="flex border-b">
@@ -70,16 +64,18 @@
 
                         <div class="space-y-4">
                             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
-                                <p class="font-semibold mb-2">📋 Formato del Excel requerido:</p>
-                                <p class="text-gray-700">El archivo debe tener estas columnas exactas:</p>
-                                <ul class="list-disc ml-5 mt-1 text-gray-600">
-                                    <li>Unidad de Compras</li>
-                                    <li>Referencia</li>
-                                    <li>Descripción</li>
-                                    <li>Fecha de presentación de ofertas</li>
-                                    <li>Total estimado</li>
-                                    <li>Estado</li>
-                                </ul>
+                                <p class="font-semibold mb-2">📋 Instrucciones:</p>
+                                <ol class="list-decimal ml-5 text-gray-700 space-y-1">
+                                    <li>Ve al portal de licitaciones del gobierno</li>
+                                    <li>Selecciona toda la tabla de licitaciones (Ctrl+A)</li>
+                                    <li>Copia los datos (Ctrl+C)</li>
+                                    <li>Pega en un Excel nuevo (Ctrl+V)</li>
+                                    <li>Guarda el archivo Excel</li>
+                                    <li>Sube el archivo aquí ⬇️</li>
+                                </ol>
+                                <p class="text-xs text-gray-500 mt-2">
+                                    ℹ️ No necesitas editar nada, el sistema detectará automáticamente las columnas correctas
+                                </p>
                             </div>
 
                             <div>
@@ -158,12 +154,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Mensaje cuando no hay cliente seleccionado -->
-        <div id="mensaje-seleccionar" class="text-center py-12">
-            <div class="text-6xl mb-4">👆</div>
-            <p class="text-xl text-gray-600">Seleccione un cliente para comenzar</p>
-        </div>
     </div>
 
     <!-- Footer -->
@@ -177,77 +167,11 @@
         </div>
     </footer>
 
-    <!-- Modal Gestión de Clientes -->
-    <div id="modal-clientes" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold">Gestión de Clientes</h3>
-                <button onclick="cerrarGestionClientes()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-
-            <button onclick="abrirModalCliente()" class="mb-4 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-                + Nuevo Cliente
-            </button>
-
-            <div id="lista-clientes-modal" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-        </div>
-    </div>
-
-    <!-- Modal Cliente (Crear/Editar) -->
-    <div id="modal-cliente" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <h3 class="text-xl font-bold mb-4" id="modal-titulo">Nuevo Cliente</h3>
-            <form id="form-cliente" onsubmit="guardarCliente(event)">
-                <input type="hidden" id="cliente-id">
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Nombre *</label>
-                        <input type="text" id="cliente-nombre" required class="w-full border rounded-lg px-3 py-2">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Descripción</label>
-                        <textarea id="cliente-descripcion" rows="3" class="w-full border rounded-lg px-3 py-2"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Monto Mínimo para ALTA (DOP)</label>
-                        <input type="number" id="cliente-monto" value="1000000" step="10000" class="w-full border rounded-lg px-3 py-2">
-                        <p class="text-xs text-gray-500 mt-1">💰 Licitaciones MEDIA con monto mayor o igual se suben a ALTA</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Palabras Clave (separados por coma)</label>
-                        <textarea id="cliente-palabras-clave" rows="3" class="w-full border rounded-lg px-3 py-2"
-                            placeholder="capacitación, formación, cursos, talleres, consultoría, asesoría, entrenamiento"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">💡 Cualquier licitación con AL MENOS una de estas palabras será clasificada como MEDIA</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Exclusiones (separados por coma)</label>
-                        <textarea id="cliente-exclusiones" rows="2" class="w-full border rounded-lg px-3 py-2" placeholder="construcción, materiales, alimentos"></textarea>
-                        <p class="text-xs text-gray-500 mt-1">💡 Descartar automáticamente</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-2 mt-6">
-                    <button type="submit" class="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                        💾 Guardar
-                    </button>
-                    <button type="button" onclick="cerrarModalCliente()" class="flex-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
-                        Cancelar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Modal Oportunidades BAJA -->
     <div id="modal-bajas" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold">🔍 Oportunidades Menos Afines (BAJA Relevancia)</h3>
+                <h3 class="text-2xl font-bold">📁 Oportunidades Menos Afines (BAJA Relevancia)</h3>
                 <button onclick="cerrarModalBajas()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
             </div>
 
@@ -259,193 +183,86 @@
 
     <script>
         const API_BASE = window.location.origin;
-        let clienteActual = null;
+        let empresaActual = null;
+        let usuarioActual = null;
         let analisisActual = null;
 
         // ============ INICIALIZACIÓN ============
         async function init() {
-            await cargarClientes();
+            await verificarAutenticacion();
         }
 
-        async function cargarClientes() {
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes`);
-                const data = await response.json();
+        async function verificarAutenticacion() {
+            // Buscar token en localStorage o sessionStorage
+            const token = localStorage.getItem('compita_token') || sessionStorage.getItem('compita_token');
+            const usuarioStr = localStorage.getItem('compita_usuario') || sessionStorage.getItem('compita_usuario');
 
-                const select = document.getElementById('cliente-global');
-                select.innerHTML = '<option value="">Seleccione un cliente...</option>' +
-                    data.clientes
-                        .filter(c => c.activo !== false)
-                        .map(c => `<option value="${c.id}">${c.nombre}</option>`)
-                        .join('');
-            } catch (error) {
-                console.error('Error cargando clientes:', error);
-            }
-        }
-
-        async function seleccionarCliente() {
-            const clienteId = document.getElementById('cliente-global').value;
-
-            if (!clienteId) {
-                document.getElementById('contenedor-principal').classList.add('hidden');
-                document.getElementById('mensaje-seleccionar').classList.remove('hidden');
-                clienteActual = null;
+            if (!token || !usuarioStr) {
+                // No hay sesión, redirigir a login
+                window.location.href = '/login.html';
                 return;
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/clientes?id=${clienteId}`);
-                const data = await response.json();
-                clienteActual = data.cliente;
+                usuarioActual = JSON.parse(usuarioStr);
 
-                document.getElementById('mensaje-seleccionar').classList.add('hidden');
-                document.getElementById('contenedor-principal').classList.remove('hidden');
+                // Mostrar información del usuario en el header
+                document.getElementById('usuario-empresa').textContent = usuarioActual.empresa;
 
-                showTab('analisis');
-                cargarHistorial();
+                // Cargar la empresa del usuario automáticamente
+                await cargarEmpresaUsuario();
+
             } catch (error) {
-                console.error('Error:', error);
-                alert('Error al cargar datos del cliente');
+                console.error('Error al verificar autenticación:', error);
+                window.location.href = '/login.html';
             }
         }
 
-        // ============ GESTIÓN DE CLIENTES ============
-        function abrirGestionClientes() {
-            cargarClientesModal();
-            document.getElementById('modal-clientes').classList.remove('hidden');
-        }
+        async function cargarEmpresaUsuario() {
+            if (!usuarioActual || !usuarioActual.id) {
+                alert('Error: No se pudo identificar al usuario');
+                return;
+            }
 
-        function cerrarGestionClientes() {
-            document.getElementById('modal-clientes').classList.add('hidden');
-        }
-
-        async function cargarClientesModal() {
             try {
+                // Buscar la empresa asociada al usuario
+                // Nota: Esto asume que empresa_id está guardado en el usuario
+                // Si no, necesitaremos buscar por nombre o email
                 const response = await fetch(`${API_BASE}/api/clientes`);
                 const data = await response.json();
 
-                const lista = document.getElementById('lista-clientes-modal');
-                lista.innerHTML = data.clientes.map(c => `
-                    <div class="border rounded-lg p-4 hover:shadow-md transition">
-                        <h3 class="font-bold text-lg text-indigo-600">${c.nombre}</h3>
-                        <p class="text-sm text-gray-600 mb-2">${c.descripcion || 'Sin descripción'}</p>
-                        <div class="text-xs text-gray-500 mb-2">
-                            💰 Monto mínimo ALTA: ${(c.monto_minimo_alta || 1000000).toLocaleString()} DOP
-                        </div>
-                        <div class="flex flex-wrap gap-1 mb-2">
-                            <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded">
-                                Palabras clave: ${(c.palabras_clave || c.criterios_alta || []).length}
-                            </span>
-                            ${c.exclusiones && c.exclusiones.length > 0 ? `
-                                <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded">
-                                    Exclusiones: ${c.exclusiones.length}
-                                </span>
-                            ` : ''}
-                        </div>
-                        <div class="flex gap-2 mt-3">
-                            <button onclick="editarCliente(${c.id})"
-                                class="text-sm bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
-                                ✏️ Editar
-                            </button>
-                            <button onclick="eliminarCliente(${c.id})"
-                                class="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
-                                🗑️ Eliminar
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
+                // Buscar la empresa que corresponde al usuario actual
+                // Esto puede variar según cómo relates usuarios y empresas
+                const empresa = data.clientes.find(c =>
+                    c.nombre === usuarioActual.empresa ||
+                    c.id === usuarioActual.empresa_id
+                );
 
-        function abrirModalCliente() {
-            document.getElementById('modal-titulo').textContent = 'Nuevo Cliente';
-            document.getElementById('form-cliente').reset();
-            document.getElementById('cliente-id').value = '';
-            document.getElementById('cliente-monto').value = '1000000';
-            document.getElementById('modal-cliente').classList.remove('hidden');
-        }
+                if (empresa) {
+                    empresaActual = empresa;
+                    document.getElementById('empresa-nombre-display').textContent = empresa.nombre;
 
-        function cerrarModalCliente() {
-            document.getElementById('modal-cliente').classList.add('hidden');
-        }
-
-        async function editarCliente(id) {
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes?id=${id}`);
-                const data = await response.json();
-                const cliente = data.cliente;
-
-                document.getElementById('modal-titulo').textContent = 'Editar Cliente';
-                document.getElementById('cliente-id').value = cliente.id;
-                document.getElementById('cliente-nombre').value = cliente.nombre;
-                document.getElementById('cliente-descripcion').value = cliente.descripcion || '';
-                document.getElementById('cliente-monto').value = cliente.monto_minimo_alta || 1000000;
-
-                // Usar palabras_clave si existe, sino combinar criterios_alta y media
-                const palabrasClave = cliente.palabras_clave ||
-                    [...(cliente.criterios_alta || []), ...(cliente.criterios_media || [])];
-                document.getElementById('cliente-palabras-clave').value = palabrasClave.join(', ');
-
-                document.getElementById('cliente-exclusiones').value = (cliente.exclusiones || []).join(', ');
-
-                document.getElementById('modal-cliente').classList.remove('hidden');
-            } catch (error) {
-                alert('Error al cargar cliente');
-            }
-        }
-
-        async function guardarCliente(event) {
-            event.preventDefault();
-
-            const id = document.getElementById('cliente-id').value;
-            const datos = {
-                nombre: document.getElementById('cliente-nombre').value,
-                descripcion: document.getElementById('cliente-descripcion').value,
-                monto_minimo_alta: parseFloat(document.getElementById('cliente-monto').value) || 1000000,
-                palabras_clave: document.getElementById('cliente-palabras-clave').value
-                    .split(',').map(s => s.trim()).filter(s => s),
-                exclusiones: document.getElementById('cliente-exclusiones').value
-                    .split(',').map(s => s.trim()).filter(s => s)
-            };
-
-            try {
-                const method = id ? 'PUT' : 'POST';
-                const url = id ? `${API_BASE}/api/clientes?id=${id}` : `${API_BASE}/api/clientes`;
-
-                const response = await fetch(url, {
-                    method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datos)
-                });
-
-                if (response.ok) {
-                    cerrarModalCliente();
-                    await cargarClientes();
-                    await cargarClientesModal();
+                    // Mostrar la pestaña de análisis directamente
+                    showTab('analisis');
                 } else {
-                    alert('Error al guardar cliente');
+                    alert('No se encontró la empresa asociada a tu usuario');
+                    window.location.href = '/dashboard.html';
                 }
             } catch (error) {
-                alert('Error de conexión');
+                console.error('Error cargando empresa:', error);
+                alert('Error al cargar datos de la empresa');
             }
         }
 
-        async function eliminarCliente(id) {
-            if (!confirm('¿Está seguro de eliminar este cliente?')) return;
+        function cerrarSesion() {
+            // Limpiar tokens
+            localStorage.removeItem('compita_token');
+            localStorage.removeItem('compita_usuario');
+            sessionStorage.removeItem('compita_token');
+            sessionStorage.removeItem('compita_usuario');
 
-            try {
-                const response = await fetch(`${API_BASE}/api/clientes?id=${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    await cargarClientes();
-                    await cargarClientesModal();
-                } else {
-                    alert('Error al eliminar');
-                }
-            } catch (error) {
-                alert('Error de conexión');
-            }
+            // Redirigir a login
+            window.location.href = '/login.html';
         }
 
         // ============ TABS ============
@@ -482,7 +299,7 @@
             const tablaContainer = document.getElementById('tabla-bajas-container');
             tablaContainer.innerHTML = `
                 <p class="text-sm text-gray-600 mb-4">
-                    Estas oportunidades fueron analizadas con IA pero se consideraron menos afines al perfil del cliente.
+                    Estas oportunidades fueron analizadas con IA pero se consideraron menos afines al perfil de la empresa.
                 </p>
                 <table class="w-full border-collapse text-sm">
                     <thead class="bg-gray-100">
@@ -523,8 +340,8 @@
 
         // ============ ANÁLISIS ============
         async function analizarExcel() {
-            if (!clienteActual) {
-                alert('Seleccione un cliente primero');
+            if (!empresaActual) {
+                alert('Error: No se ha cargado la empresa');
                 return;
             }
 
@@ -549,13 +366,20 @@
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
                     const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
-                    // Mapear columnas del Excel
+                    // NUEVO: Leer con header desde fila 21 (índice 20)
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, {
+                        range: 20,  // Empieza desde fila 21 (índice 20)
+                        defval: ''  // Valor por defecto para celdas vacías
+                    });
+
+                    console.log('📊 Muestra de datos raw del Excel:', jsonData.slice(0, 3));
+
+                    // Mapear columnas del Excel (ahora los encabezados ya están correctos)
                     const licitaciones = jsonData.map(row => {
                         // Parsear monto correctamente
                         let montoEstimado = null;
-                        const montoRaw = row['Total estimado'] || row['Total Estimado'] || '';
+                        const montoRaw = row['Total estimado'] || '';
                         if (montoRaw) {
                             // Limpiar: remover símbolos de moneda, comas, espacios
                             const montoLimpio = String(montoRaw).replace(/[^\d.]/g, '');
@@ -563,27 +387,27 @@
                         }
 
                         return {
-                            unidad_compras: row['Unidad de Compras'] || row['Unidad de compras'] || '',
+                            unidad_compras: row['Unidad de Compras'] || '',
                             referencia: row['Referencia'] || '',
-                            descripcion: row['Descripción'] || row['Descripcion'] || '',
-                            fecha_presentacion: row['Fecha de presentación de ofertas'] ||
-                                              row['Fecha de presentacion de ofertas'] || null,
+                            descripcion: row['Descripción'] || '',
+                            fecha_publicacion: row['Fecha de publicación'] || null,
+                            fecha_presentacion: row['Fecha de presentación de ofertas'] || null,
                             monto_estimado: montoEstimado,
                             estado: row['Estado'] || ''
                         };
-                    }).filter(l => l.descripcion);
+                    }).filter(l => l.descripcion && l.descripcion.trim() !== '');
 
                     if (licitaciones.length === 0) {
-                        alert('No se encontraron licitaciones válidas en el Excel');
+                        alert('No se encontraron licitaciones válidas en el Excel. Verifica que el archivo tenga el formato correcto.');
                         resetearUI();
                         return;
                     }
 
+                    console.log('✅ Licitaciones parseadas:', licitaciones.length);
+                    console.log('📋 Muestra:', licitaciones.slice(0, 3));
+
                     document.getElementById('etapa1-texto').textContent =
                         `Analizando ${licitaciones.length} licitaciones con filtros...`;
-
-                    console.log('📊 Muestra de licitaciones:', licitaciones.slice(0, 3));
-                    console.log('💰 Montos detectados:', licitaciones.slice(0, 5).map(l => l.monto_estimado));
 
                     await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -599,7 +423,7 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            cliente_id: clienteActual.id,
+                            empresa_id: empresaActual.id,
                             licitaciones: licitaciones,
                             guardar_en_db: true
                         }),
@@ -802,15 +626,15 @@
             XLSX.utils.book_append_sheet(wb, ws, 'Oportunidades');
 
             const fecha = new Date().toISOString().split('T')[0];
-            XLSX.writeFile(wb, `compita_${clienteActual.nombre}_${fecha}.xlsx`);
+            XLSX.writeFile(wb, `compita_${empresaActual.nombre}_${fecha}.xlsx`);
         }
 
         // ============ HISTORIAL ============
         async function cargarHistorial() {
-            if (!clienteActual) return;
+            if (!empresaActual) return;
 
             try {
-                const response = await fetch(`${API_BASE}/api/resultados?cliente_id=${clienteActual.id}&historial=true`);
+                const response = await fetch(`${API_BASE}/api/resultados?empresa_id=${empresaActual.id}&historial=true`);
                 const data = await response.json();
 
                 if (!data.analisis || data.analisis.length === 0) {
@@ -820,7 +644,6 @@
                     return;
                 }
 
-                // AJUSTE 2: Nuevo diseño del historial con checkboxes e íconos
                 document.getElementById('lista-historial').innerHTML = `
                     <div class="mb-4 flex gap-2">
                         <button onclick="seleccionarTodosHistorial()"
@@ -875,7 +698,6 @@
             }
         }
 
-        // AJUSTE 2: Nuevas funciones para el historial
         function seleccionarTodosHistorial() {
             const checks = document.querySelectorAll('.check-historial');
             const allChecked = Array.from(checks).every(c => c.checked);
