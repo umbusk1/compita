@@ -8,6 +8,12 @@
     },
     "api/resultados.js": {
       "maxDuration": 10
+    },
+    "api/registro.js": {
+      "maxDuration": 10
+    },
+    "api/init-usuarios.js": {
+      "maxDuration": 10
     }
   }
 }
