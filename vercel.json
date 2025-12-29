@@ -17,6 +17,15 @@
     },
     "api/init-usuarios.js": {
       "maxDuration": 10
+    },
+    "api/confirmar-email.js": {
+      "maxDuration": 10
+    },
+    "api/recuperar-password.js": {
+      "maxDuration": 10
+    },
+    "api/resetear-password.js": {
+      "maxDuration": 10
     }
   }
 }
