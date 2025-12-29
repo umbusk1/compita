@@ -9,15 +9,15 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
-      success: false, 
-      error: 'Método no permitido' 
+    return res.status(405).json({
+      success: false,
+      error: 'Método no permitido'
     });
   }
 
@@ -35,8 +35,8 @@ export default async function handler(req, res) {
 
     // Buscar usuario
     const usuarios = await sql`
-      SELECT id, email, empresa, activo 
-      FROM usuarios 
+      SELECT id, email, empresa, activo
+      FROM usuarios
       WHERE email = ${email.toLowerCase()}
     `;
 
@@ -60,7 +60,7 @@ export default async function handler(req, res) {
 
     // Generar token de recuperación (válido por 1 hora)
     const tokenRecuperacion = jwt.sign(
-      { 
+      {
         id: usuario.id,
         email: usuario.email,
         tipo: 'recuperacion'
@@ -71,8 +71,8 @@ export default async function handler(req, res) {
 
     // Guardar token en la base de datos
     await sql`
-      UPDATE usuarios 
-      SET 
+      UPDATE usuarios
+      SET
         token_confirmacion = ${tokenRecuperacion},
         updated_at = NOW()
       WHERE id = ${usuario.id}
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
 
     // Enviar email
     await resend.emails.send({
-      from: 'Compita <onboarding@resend.dev>',
+      from: 'Compita <notificaciones@compita.umbusk.com>',
       to: usuario.email,
       subject: 'Recupera tu contraseña - Compita',
       html: `
@@ -110,13 +110,13 @@ export default async function handler(req, res) {
             <div class="content">
               <h2>Hola,</h2>
               <p>Recibimos una solicitud para recuperar tu contraseña de <strong>${usuario.empresa}</strong>.</p>
-              
+
               <p>Haz clic en el siguiente botón para crear una nueva contraseña:</p>
-              
+
               <center>
                 <a href="${resetUrl}" class="button">Crear Nueva Contraseña</a>
               </center>
-              
+
               <div class="warning">
                 <strong>⚠️ Importante:</strong>
                 <ul>
@@ -125,7 +125,7 @@ export default async function handler(req, res) {
                   <li>Tu contraseña actual seguirá siendo válida</li>
                 </ul>
               </div>
-              
+
               <p>Si el botón no funciona, copia y pega este link en tu navegador:</p>
               <p style="background: #f5f5f5; padding: 10px; word-break: break-all; font-size: 12px;">
                 ${resetUrl}
