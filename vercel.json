@@ -6,6 +6,9 @@
     "api/clientes.js": {
       "maxDuration": 10
     },
+    "api/empresas.js": {
+      "maxDuration": 10
+    },
     "api/resultados.js": {
       "maxDuration": 10
     },
