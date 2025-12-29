@@ -12,6 +12,9 @@
     "api/registro.js": {
       "maxDuration": 10
     },
+    "api/login.js": {
+      "maxDuration": 10
+    },
     "api/init-usuarios.js": {
       "maxDuration": 10
     }
