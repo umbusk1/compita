@@ -1,4 +1,4 @@
-// api/resultados.js - Gestión de resultados con historial
+// api/resultados.js - Gestión de resultados con empresas
 import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
@@ -14,10 +14,10 @@ export default async function handler(req, res) {
   try {
     // ========== GET: Obtener resultados ==========
     if (req.method === 'GET') {
-      const { cliente_id, analisis_id, historial } = req.query;
+      const { empresa_id, analisis_id, historial } = req.query;
 
-      // CASO 1: Historial de análisis por cliente
-      if (historial && cliente_id) {
+      // CASO 1: Historial de análisis por empresa
+      if (historial && empresa_id) {
         const analisis = await sql`
           SELECT
             id,
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
             porcentaje_alta,
             notas
           FROM analisis
-          WHERE cliente_id = ${cliente_id}
+          WHERE empresa_id = ${empresa_id}
           ORDER BY created_at DESC
         `;
 
@@ -88,11 +88,11 @@ export default async function handler(req, res) {
         });
       }
 
-      // CASO 3: Todos los resultados de un cliente (último análisis)
-      if (cliente_id) {
+      // CASO 3: Todos los resultados de una empresa (último análisis)
+      if (empresa_id) {
         const ultimoAnalisis = await sql`
           SELECT id FROM analisis
-          WHERE cliente_id = ${cliente_id}
+          WHERE empresa_id = ${empresa_id}
           ORDER BY created_at DESC
           LIMIT 1
         `;
