@@ -76,7 +76,7 @@
         </div>
 
         <!-- Grid de opciones -->
-        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
             <!-- Card: Analizar Licitaciones -->
             <a href="/app.html" class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition group">
                 <div class="flex items-start justify-between mb-4">
@@ -105,6 +105,132 @@
                     Administra tu perfil empresarial, contraseña y configuración
                 </p>
             </a>
+        </div>
+
+        <!-- Widget de Upgrade -->
+        <div class="max-w-4xl mx-auto mt-8">
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="text-3xl">🚀</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">¡Quiero el Upgrade!</h3>
+                            <p class="text-sm text-gray-600">Desbloquea todo el potencial de Compita</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acordeón de Planes -->
+                <div class="space-y-3">
+                    <!-- Plan Estándar -->
+                    <details class="bg-white rounded-lg border-2 border-gray-200 hover:border-indigo-300 transition">
+                        <summary class="px-4 py-3 cursor-pointer font-semibold text-gray-900 flex items-center justify-between">
+                            <span>📊 Plan Estándar - $10/mes</span>
+                            <span class="text-xs text-indigo-600">Más Popular</span>
+                        </summary>
+                        <div class="px-4 pb-4 pt-2 border-t">
+                            <ul class="space-y-2 mb-4 text-sm">
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Análisis ilimitados</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Hasta 1000 licitaciones</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>3 usuarios</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Historial 3 meses</span>
+                                </li>
+                            </ul>
+                            <button
+                                onclick="irAStripe('estandar')"
+                                class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold"
+                            >
+                                💳 Suscribirme Ahora
+                            </button>
+                        </div>
+                    </details>
+
+                    <!-- Plan Business -->
+                    <details class="bg-white rounded-lg border-2 border-gray-200 hover:border-indigo-300 transition">
+                        <summary class="px-4 py-3 cursor-pointer font-semibold text-gray-900">
+                            💼 Plan Business - $20/mes
+                        </summary>
+                        <div class="px-4 pb-4 pt-2 border-t">
+                            <ul class="space-y-2 mb-4 text-sm">
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Todo en Estándar</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Licitaciones ilimitadas</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Usuarios ilimitados</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Historial ilimitado</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Alertas por email</span>
+                                </li>
+                            </ul>
+                            <button
+                                onclick="irAStripe('business')"
+                                class="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold"
+                            >
+                                💳 Suscribirme Ahora
+                            </button>
+                        </div>
+                    </details>
+
+                    <!-- Plan Enterprise -->
+                    <details class="bg-white rounded-lg border-2 border-gray-200 hover:border-purple-300 transition">
+                        <summary class="px-4 py-3 cursor-pointer font-semibold text-gray-900 flex items-center justify-between">
+                            <span>🏢 Plan Enterprise - Personalizado</span>
+                            <span class="text-xs text-purple-600">Premium</span>
+                        </summary>
+                        <div class="px-4 pb-4 pt-2 border-t">
+                            <ul class="space-y-2 mb-4 text-sm">
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Todo en Business</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Apoyo en preparación de documentos</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Soporte prioritario</span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span class="text-green-600">✓</span>
+                                    <span>Consultor dedicado</span>
+                                </li>
+                            </ul>
+                            <button
+                                onclick="contactarWhatsApp()"
+                                class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-semibold flex items-center justify-center gap-2"
+                            >
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                                </svg>
+                                Contactar por WhatsApp
+                            </button>
+                        </div>
+                    </details>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -165,6 +291,18 @@
 
             // Redirigir a login
             window.location.href = '/login.html';
+        }
+
+        function irAStripe(plan) {
+            // TODO: Integración con Stripe
+            alert('🚧 Integración con Stripe próximamente\n\nPlan seleccionado: ' + plan.toUpperCase());
+            // Aquí irá la lógica de Stripe Checkout
+        }
+
+        function contactarWhatsApp() {
+            const mensaje = encodeURIComponent('Hola, estoy interesado en el Plan Enterprise de Compita.');
+            const numeroWhatsApp = '18095551234'; // Reemplazar con tu número real
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${mensaje}`, '_blank');
         }
     </script>
 </body>
