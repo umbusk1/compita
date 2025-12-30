@@ -18,7 +18,7 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <span id="usuario-empresa" class="text-sm text-gray-600 font-semibold"></span>
-                    <button 
+                    <button
                         onclick="cerrarSesion()"
                         class="text-sm text-red-600 hover:text-red-800 font-semibold"
                     >
@@ -76,7 +76,7 @@
         </div>
 
         <!-- Grid de opciones -->
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <!-- Card: Analizar Licitaciones -->
             <a href="/app.html" class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition group">
                 <div class="flex items-start justify-between mb-4">
@@ -93,42 +93,16 @@
                 </p>
             </a>
 
-            <!-- Card: Mis Clientes -->
-            <a href="/clientes.html" class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition group">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="text-5xl">👥</div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition">
-                    Gestionar Clientes
-                </h3>
-                <p class="text-gray-600">
-                    Administra tus clientes y sus criterios de búsqueda
-                </p>
-            </a>
-
-            <!-- Card: Historial -->
-            <a href="/historial.html" class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition group">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="text-5xl">📁</div>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition">
-                    Historial de Análisis
-                </h3>
-                <p class="text-gray-600">
-                    Revisa todos tus análisis anteriores
-                </p>
-            </a>
-
-            <!-- Card: Mi Cuenta -->
+            <!-- Card: Cuenta -->
             <a href="/cuenta.html" class="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition group">
                 <div class="flex items-start justify-between mb-4">
                     <div class="text-5xl">⚙️</div>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition">
-                    Mi Cuenta
+                    Cuenta
                 </h3>
                 <p class="text-gray-600">
-                    Configura tu perfil y preferencias
+                    Administra tu perfil empresarial, contraseña y configuración
                 </p>
             </a>
         </div>
@@ -153,23 +127,23 @@
 
             try {
                 const usuario = JSON.parse(usuarioStr);
-                
+
                 // Mostrar información del usuario
                 document.getElementById('usuario-empresa').textContent = usuario.empresa;
                 document.getElementById('usuario-nombre').textContent = usuario.empresa;
-                
+
                 // Calcular días restantes del trial
                 if (usuario.trial_fin) {
                     const ahora = new Date();
                     const trialFin = new Date(usuario.trial_fin);
                     const diasRestantes = Math.max(0, Math.ceil((trialFin - ahora) / (1000 * 60 * 60 * 24)));
-                    
+
                     document.getElementById('dias-restantes').textContent = diasRestantes;
-                    
+
                     // Actualizar barra de progreso (7 días = 100%)
                     const progreso = (diasRestantes / 7) * 100;
                     document.getElementById('barra-progreso').style.width = progreso + '%';
-                    
+
                     // Mostrar mensaje si el trial expiró
                     if (diasRestantes === 0) {
                         document.getElementById('trial-card').classList.add('hidden');
@@ -188,7 +162,7 @@
             localStorage.removeItem('compita_usuario');
             sessionStorage.removeItem('compita_token');
             sessionStorage.removeItem('compita_usuario');
-            
+
             // Redirigir a login
             window.location.href = '/login.html';
         }

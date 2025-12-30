@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuenta - Compita</title>
+    <link rel="icon" href="/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <a href="/dashboard.html" class="text-indigo-600 hover:text-indigo-800 transition">
+                        ← Volver al Dashboard
+                    </a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span id="usuario-email" class="text-sm text-gray-600 font-semibold"></span>
+                    <button
+                        onclick="cerrarSesion()"
+                        class="text-sm text-red-600 hover:text-red-800 font-semibold"
+                    >
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Tabs -->
+            <div class="flex border-b">
+                <button
+                    onclick="showTab('perfil')"
+                    id="tab-perfil"
+                    class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent"
+                >
+                    🏢 Perfil de Empresa
+                </button>
+                <button
+                    onclick="showTab('seguridad')"
+                    id="tab-seguridad"
+                    class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent"
+                >
+                    🔒 Seguridad
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="p-8">
+                <!-- TAB: Perfil de Empresa -->
+                <div id="content-perfil" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Perfil de Empresa</h2>
+
+                    <form id="form-perfil" onsubmit="guardarPerfil(event)">
+                        <div class="space-y-6">
+                            <!-- Nombre -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Nombre de la Empresa *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="empresa-nombre"
+                                    required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                    placeholder="Ej: Consultores ABC"
+                                >
+                            </div>
+
+                            <!-- Descripción -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Descripción de la Empresa
+                                </label>
+                                <textarea
+                                    id="empresa-descripcion"
+                                    rows="4"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                    placeholder="Describe a qué se dedica tu empresa..."
+                                ></textarea>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Esta descripción ayuda a la IA a entender mejor tu perfil
+                                </p>
+                            </div>
+
+                            <!-- Palabras Clave -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Palabras Clave (separadas por coma)
+                                </label>
+                                <textarea
+                                    id="empresa-palabras-clave"
+                                    rows="3"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                    placeholder="capacitación, formación, cursos, talleres, consultoría"
+                                ></textarea>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    💡 Licitaciones con AL MENOS una de estas palabras serán clasificadas como MEDIA relevancia
+                                </p>
+                            </div>
+
+                            <!-- Exclusiones -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Exclusiones (separadas por coma)
+                                </label>
+                                <textarea
+                                    id="empresa-exclusiones"
+                                    rows="2"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                    placeholder="construcción, materiales, alimentos"
+                                ></textarea>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    🚫 Licitaciones con estas palabras serán descartadas automáticamente
+                                </p>
+                            </div>
+
+                            <!-- Monto Mínimo -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Monto Mínimo para ALTA Relevancia (DOP)
+                                </label>
+                                <input
+                                    type="number"
+                                    id="empresa-monto-minimo"
+                                    step="10000"
+                                    min="0"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                    placeholder="500000"
+                                >
+                                <p class="text-xs text-gray-500 mt-1">
+                                    💰 Licitaciones MEDIA con monto mayor o igual se subirán a ALTA
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="flex gap-4 mt-8">
+                            <button
+                                type="submit"
+                                class="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition"
+                            >
+                                💾 Guardar Cambios
+                            </button>
+                            <button
+                                type="button"
+                                onclick="cargarPerfil()"
+                                class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition"
+                            >
+                                ↺ Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TAB: Seguridad -->
+                <div id="content-seguridad" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Seguridad</h2>
+
+                    <!-- Email (solo lectura) -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Email de la cuenta
+                        </label>
+                        <div class="text-gray-900 font-semibold" id="email-readonly"></div>
+                        <p class="text-xs text-gray-500 mt-1">
+                            El email no puede ser modificado
+                        </p>
+                    </div>
+
+                    <!-- Cambiar Contraseña -->
+                    <form id="form-password" onsubmit="cambiarPassword(event)">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Contraseña Actual *
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password-actual"
+                                    required
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                >
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Nueva Contraseña *
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password-nueva"
+                                    required
+                                    minlength="8"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                >
+                                <p class="text-xs text-gray-500 mt-1">
+                                    Mínimo 8 caracteres
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Confirmar Nueva Contraseña *
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password-confirmar"
+                                    required
+                                    minlength="8"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+                                >
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="mt-6 w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition"
+                        >
+                            🔒 Cambiar Contraseña
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let usuarioActual = null;
+        let empresaActual = null;
+
+        // ============ INICIALIZACIÓN ============
+        window.addEventListener('DOMContentLoaded', function() {
+            verificarAutenticacion();
+        });
+
+        async function verificarAutenticacion() {
+            const token = localStorage.getItem('compita_token') || sessionStorage.getItem('compita_token');
+            const usuarioStr = localStorage.getItem('compita_usuario') || sessionStorage.getItem('compita_usuario');
+
+            if (!token || !usuarioStr) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            try {
+                usuarioActual = JSON.parse(usuarioStr);
+                document.getElementById('usuario-email').textContent = usuarioActual.email;
+                document.getElementById('email-readonly').textContent = usuarioActual.email;
+
+                await cargarPerfil();
+                showTab('perfil');
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = '/login.html';
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('compita_token');
+            localStorage.removeItem('compita_usuario');
+            sessionStorage.removeItem('compita_token');
+            sessionStorage.removeItem('compita_usuario');
+            window.location.href = '/login.html';
+        }
+
+        // ============ TABS ============
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(el => {
+                el.classList.remove('border-indigo-600', 'text-indigo-600');
+            });
+
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('border-indigo-600', 'text-indigo-600');
+        }
+
+        // ============ PERFIL DE EMPRESA ============
+        async function cargarPerfil() {
+            if (!usuarioActual || !usuarioActual.empresa_id) {
+                alert('Error: No se encontró la empresa');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    alert('Error al cargar perfil de empresa');
+                    return;
+                }
+
+                empresaActual = data.empresa;
+
+                // Llenar formulario
+                document.getElementById('empresa-nombre').value = empresaActual.nombre || '';
+                document.getElementById('empresa-descripcion').value = empresaActual.descripcion || '';
+
+                // Convertir arrays a strings
+                const palabrasClave = Array.isArray(empresaActual.palabras_clave)
+                    ? empresaActual.palabras_clave.join(', ')
+                    : '';
+                document.getElementById('empresa-palabras-clave').value = palabrasClave;
+
+                const exclusiones = Array.isArray(empresaActual.exclusiones)
+                    ? empresaActual.exclusiones.join(', ')
+                    : '';
+                document.getElementById('empresa-exclusiones').value = exclusiones;
+
+                document.getElementById('empresa-monto-minimo').value = empresaActual.monto_minimo_alta || 500000;
+
+            } catch (error) {
+                console.error('Error cargando perfil:', error);
+                alert('Error al cargar perfil de empresa');
+            }
+        }
+
+        async function guardarPerfil(event) {
+            event.preventDefault();
+
+            if (!usuarioActual || !usuarioActual.empresa_id) {
+                alert('Error: No se encontró la empresa');
+                return;
+            }
+
+            const datos = {
+                nombre: document.getElementById('empresa-nombre').value.trim(),
+                descripcion: document.getElementById('empresa-descripcion').value.trim(),
+                palabras_clave: document.getElementById('empresa-palabras-clave').value
+                    .split(',').map(s => s.trim()).filter(s => s),
+                exclusiones: document.getElementById('empresa-exclusiones').value
+                    .split(',').map(s => s.trim()).filter(s => s),
+                monto_minimo_alta: parseFloat(document.getElementById('empresa-monto-minimo').value) || 500000
+            };
+
+            if (!datos.nombre) {
+                alert('El nombre de la empresa es requerido');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Perfil actualizado correctamente');
+
+                    // Actualizar nombre en localStorage si cambió
+                    if (datos.nombre !== usuarioActual.empresa) {
+                        usuarioActual.empresa = datos.nombre;
+                        const storageKey = localStorage.getItem('compita_usuario') ? 'compita_usuario' : 'sessionStorage';
+                        if (storageKey === 'compita_usuario') {
+                            localStorage.setItem('compita_usuario', JSON.stringify(usuarioActual));
+                        } else {
+                            sessionStorage.setItem('compita_usuario', JSON.stringify(usuarioActual));
+                        }
+                    }
+
+                    await cargarPerfil();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error guardando perfil:', error);
+                alert('Error al guardar cambios');
+            }
+        }
+
+        // ============ CAMBIAR CONTRASEÑA ============
+        async function cambiarPassword(event) {
+            event.preventDefault();
+
+            const passwordActual = document.getElementById('password-actual').value;
+            const passwordNueva = document.getElementById('password-nueva').value;
+            const passwordConfirmar = document.getElementById('password-confirmar').value;
+
+            if (passwordNueva !== passwordConfirmar) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            if (passwordNueva.length < 8) {
+                alert('La nueva contraseña debe tener al menos 8 caracteres');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/cambiar-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('compita_token') || sessionStorage.getItem('compita_token')}`
+                    },
+                    body: JSON.stringify({
+                        email: usuarioActual.email,
+                        password_actual: passwordActual,
+                        password_nueva: passwordNueva
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('✅ Contraseña actualizada correctamente');
+                    document.getElementById('form-password').reset();
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error cambiando contraseña:', error);
+                alert('Error al cambiar contraseña');
+            }
+        }
+    </script>
+</body>
+</html>
