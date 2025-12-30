@@ -18,9 +18,6 @@
     "api/login.js": {
       "maxDuration": 10
     },
-    "api/init-usuarios.js": {
-      "maxDuration": 10
-    },
     "api/confirmar-email.js": {
       "maxDuration": 10
     },
@@ -28,6 +25,9 @@
       "maxDuration": 10
     },
     "api/resetear-password.js": {
+      "maxDuration": 10
+    },
+    "api/cambiar-password.js": {
       "maxDuration": 10
     }
   }
