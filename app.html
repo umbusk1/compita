@@ -219,28 +219,20 @@
         }
 
         async function cargarEmpresaUsuario() {
-            if (!usuarioActual || !usuarioActual.id) {
-                alert('Error: No se pudo identificar al usuario');
+            if (!usuarioActual || !usuarioActual.empresa_id) {
+                alert('Error: No se encontró la empresa asociada a tu usuario');
+                window.location.href = '/dashboard.html';
                 return;
             }
 
             try {
-                // Buscar la empresa asociada al usuario
-                // Nota: Esto asume que empresa_id está guardado en el usuario
-                // Si no, necesitaremos buscar por nombre o email
-                const response = await fetch(`${API_BASE}/api/clientes`);
+                // Buscar la empresa por ID directamente
+                const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}`);
                 const data = await response.json();
 
-                // Buscar la empresa que corresponde al usuario actual
-                // Esto puede variar según cómo relates usuarios y empresas
-                const empresa = data.clientes.find(c =>
-                    c.nombre === usuarioActual.empresa ||
-                    c.id === usuarioActual.empresa_id
-                );
-
-                if (empresa) {
-                    empresaActual = empresa;
-                    document.getElementById('empresa-nombre-display').textContent = empresa.nombre;
+                if (data.success && data.empresa) {
+                    empresaActual = data.empresa;
+                    document.getElementById('empresa-nombre-display').textContent = empresaActual.nombre;
 
                     // Mostrar la pestaña de análisis directamente
                     showTab('analisis');
