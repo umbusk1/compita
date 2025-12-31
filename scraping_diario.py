@@ -360,8 +360,8 @@ def scraping_diario():
                             else:
                                 url_detalle = href
                     
-                    fecha_pub_limpia = fecha_pub.replace(" (UTC -4 horas)", "").strip()
-                    fecha_pres_limpia = fecha_pres.replace(" (UTC -4 horas)", "").strip()
+                    fecha_pub_limpia = fecha_pub.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
+                    fecha_pres_limpia = fecha_pres.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
                     
                     fecha_publicacion = convertir_fecha(fecha_pub_limpia)
                     fecha_presentacion = convertir_fecha(fecha_pres_limpia)
