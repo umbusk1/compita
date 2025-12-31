@@ -67,20 +67,16 @@
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-12">
                     <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                        📊 Licitaciones 2026 en Tiempo Real
+                        📊 Licitaciones en Tiempo Real
                     </h2>
                     <p class="text-xl text-gray-600">
                         Datos actualizados diariamente desde el portal oficial SECP
                     </p>
                 </div>
 
-                <!-- Stats Cards -->
-                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- Stats Cards - Solo 3 tarjetas -->
+                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                     <!-- Placeholder mientras carga -->
-                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
-                        <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
-                        <div class="h-10 bg-gray-300 rounded w-1/2"></div>
-                    </div>
                     <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
                         <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
                         <div class="h-10 bg-gray-300 rounded w-1/2"></div>
@@ -97,7 +93,7 @@
 
                 <!-- Pestañas Mensuales -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Timeline Detallado por Mes</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Timeline Detallado de 2026 por Mes</h3>
 
                     <!-- Tabs -->
                     <div class="flex gap-2 mb-6 border-b border-gray-200" id="month-tabs">
@@ -113,7 +109,6 @@
         </div>
     </section>
 
-    <!-- Resto del contenido igual... (continuamos con las secciones originales) -->
     <!-- Problema -->
     <section class="py-20 bg-white">
         <div class="container mx-auto px-4">
@@ -141,9 +136,6 @@
             </div>
         </div>
     </section>
-
-    <!-- (Resto de secciones iguales: Demo, Cómo Funciona, Resultados, Pricing, FAQ, CTA, Footer) -->
-    <!-- Por brevedad, mantengo las mismas que antes -->
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-gray-400 py-12">
@@ -204,6 +196,7 @@
     <script>
     let chartInstance = null;
     let datosCompletos = null;
+    let maxGlobalCalculado = 50; // Variable global para mantener el máximo consistente
 
     // Determinar los 3 meses a mostrar (ventana móvil)
     function obtenerTresMeses() {
@@ -211,9 +204,6 @@
         const meses = [];
         const nombresCortos = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
-        // Si estamos en 2025, mostrar Ene, Feb, Mar de 2026
-        // Si estamos en Ene 2026, mostrar Ene, Feb, Mar
-        // Si estamos en Feb 2026, mostrar Feb, Mar, Abr
         let mesInicio = hoy.getMonth(); // 0-11
         let añoInicio = hoy.getFullYear();
 
@@ -271,25 +261,41 @@
         });
 
         // Actualizar gráfico
-        actualizarGrafico(datosMes, mesSeleccionado.nombreCompleto);
+        actualizarGrafico(datosMes, mesSeleccionado);
     }
 
-    function actualizarGrafico(datos, titulo) {
+    function actualizarGrafico(datos, mesInfo) {
         if (chartInstance) {
             chartInstance.destroy();
+        }
+
+        // Determinar el número de días del mes
+        const diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
+
+        // Crear objeto con los datos existentes
+        const datosPorDia = {};
+        datos.forEach(d => {
+            const fecha = new Date(d.fecha);
+            const dia = fecha.getDate();
+            datosPorDia[dia] = d.cantidad;
+        });
+
+        // Crear arrays con TODOS los días del mes (rellenar con 0 los días sin datos)
+        const diasCompletos = [];
+        const cantidades = [];
+        for (let dia = 1; dia <= diasEnMes; dia++) {
+            diasCompletos.push(dia);
+            cantidades.push(datosPorDia[dia] || 0);
         }
 
         const ctx = document.getElementById('grafico-diario').getContext('2d');
         chartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: datos.map(d => {
-                    const fecha = new Date(d.fecha);
-                    return fecha.getDate(); // Solo el día del mes
-                }),
+                labels: diasCompletos,
                 datasets: [{
                     label: 'Licitaciones por Día',
-                    data: datos.map(d => d.cantidad),
+                    data: cantidades,
                     backgroundColor: 'rgba(79, 70, 229, 0.6)',
                     borderColor: 'rgba(79, 70, 229, 1)',
                     borderWidth: 2
@@ -305,7 +311,7 @@
                     },
                     title: {
                         display: true,
-                        text: `Licitaciones Diarias - ${titulo}`,
+                        text: `Licitaciones Diarias - ${mesInfo.nombreCompleto}`,
                         font: { size: 18, weight: 'bold' }
                     }
                 },
@@ -318,6 +324,11 @@
                     },
                     y: {
                         beginAtZero: true,
+                        max: maxGlobalCalculado,
+                        ticks: {
+                            stepSize: 5,
+                            precision: 0
+                        },
                         title: {
                             display: true,
                             text: 'Cantidad de Licitaciones'
@@ -334,10 +345,16 @@
             const data = await response.json();
             datosCompletos = data;
 
-            // Llenar tarjetas de estadísticas
+            // Calcular el máximo global de todos los datos del año para mantener escala consistente
+            const todasCantidades = data.por_dia.map(d => d.cantidad);
+            maxGlobalCalculado = Math.max(...todasCantidades, 50);
+            // Redondear hacia arriba al múltiplo de 5 más cercano
+            maxGlobalCalculado = Math.ceil(maxGlobalCalculado / 5) * 5;
+
+            // Llenar tarjetas de estadísticas (SOLO 3 tarjetas)
             document.getElementById('stats-cards').innerHTML = `
                 <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6">
-                    <p class="text-gray-600 text-sm mb-2">Total Licitaciones</p>
+                    <p class="text-gray-600 text-sm mb-2">Total Licitaciones que tienen fechas de cierre para presentar ofertas</p>
                     <p class="text-4xl font-bold text-blue-600">${data.stats.total}</p>
                     <p class="text-xs text-gray-500 mt-2">${data.stats.por_estado.abiertas} abiertas</p>
                 </div>
@@ -351,11 +368,6 @@
                     <p class="text-4xl font-bold text-purple-600">${data.stats.promedio_diario}</p>
                     <p class="text-xs text-gray-500 mt-2">licitaciones/día</p>
                 </div>
-                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg shadow p-6">
-                    <p class="text-gray-600 text-sm mb-2">Mes Más Activo</p>
-                    <p class="text-4xl font-bold text-orange-600">${data.stats.mes_mas_activo}</p>
-                    <p class="text-xs text-gray-500 mt-2">${data.stats.cantidad_mes_mas_activo} licitaciones</p>
-                </div>
             `;
 
             // Crear pestañas y gráfico inicial
@@ -366,7 +378,7 @@
         } catch (error) {
             console.error('Error cargando estadísticas:', error);
             document.getElementById('stats-cards').innerHTML = `
-                <div class="col-span-4 text-center text-gray-600 p-6">
+                <div class="col-span-3 text-center text-gray-600 p-6">
                     <p class="text-lg mb-2">📊 Estadísticas próximamente</p>
                     <p class="text-sm">Los datos se actualizarán diariamente</p>
                 </div>
