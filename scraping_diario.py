@@ -117,13 +117,18 @@ def scraping_diario():
         try:
             print(f"🌐 Navegando al portal...")
             page.goto(PORTAL_URL)
-            time.sleep(3)
+            time.sleep(5)  # Más tiempo para que cargue completamente en headless
             
             # ================================================================
             # FASE 1: CARGAR PRIMERAS PÁGINAS
             # ================================================================
             print("\n📥 FASE 1: CARGANDO LICITACIONES RECIENTES")
             print("="*70 + "\n")
+            
+            # Hacer scroll inicial para asegurar que el botón "Ver más" sea visible
+            print("📜 Haciendo scroll para activar carga de botón...")
+            page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+            time.sleep(2)
             
             clicks_exitosos = 0
             
@@ -134,12 +139,14 @@ def scraping_diario():
                 
                 try:
                     boton = page.locator("text='Ver más'").first
-                    if boton.is_visible(timeout=2000):
+                    if boton.is_visible(timeout=5000):  # Timeout aumentado a 5 segundos
                         boton.click()
                         clicks_exitosos += 1
                         boton_encontrado = True
                         print(f"✅")
-                        time.sleep(2)
+                        time.sleep(4)  # Más tiempo para que cargue la siguiente página
+                        # Scroll después de cada click para mantener el botón visible
+                        page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                 except:
                     pass
                 
@@ -153,7 +160,8 @@ def scraping_diario():
                                 clicks_exitosos += 1
                                 boton_encontrado = True
                                 print(f"✅")
-                                time.sleep(2)
+                                time.sleep(4)
+                                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
                                 break
                     except:
                         pass
