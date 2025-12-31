@@ -61,6 +61,48 @@
         </div>
     </section>
 
+    <!-- Estadísticas en Tiempo Real - NUEVA SECCIÓN -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                        📊 Licitaciones 2026 en Tiempo Real
+                    </h2>
+                    <p class="text-xl text-gray-600">
+                        Datos actualizados diariamente desde el portal oficial SECP
+                    </p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <!-- Se llenan dinámicamente con JavaScript -->
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+                        <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                    </div>
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+                        <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                    </div>
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+                        <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                    </div>
+                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
+                        <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+                        <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                    </div>
+                </div>
+
+                <!-- Gráfico -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <canvas id="grafico-licitaciones" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Problema -->
     <section class="py-20 bg-white">
         <div class="container mx-auto px-4">
@@ -424,5 +466,95 @@
             </div>
         </div>
     </footer>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Script de visualización -->
+    <script>
+    async function cargarEstadisticas() {
+        try {
+            // Cargar JSON generado por Python
+            const response = await fetch('/stats-2026.json');
+            const data = await response.json();
+
+            // Llenar tarjetas de estadísticas
+            document.getElementById('stats-cards').innerHTML = `
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6">
+                    <p class="text-gray-600 text-sm mb-2">Total Licitaciones</p>
+                    <p class="text-4xl font-bold text-blue-600">${data.stats.total}</p>
+                    <p class="text-xs text-gray-500 mt-2">${data.stats.por_estado.abiertas} abiertas</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow p-6">
+                    <p class="text-gray-600 text-sm mb-2">Días Activos</p>
+                    <p class="text-4xl font-bold text-green-600">${data.stats.dias_con_licitaciones}</p>
+                    <p class="text-xs text-gray-500 mt-2">de 365 días</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow p-6">
+                    <p class="text-gray-600 text-sm mb-2">Promedio Diario</p>
+                    <p class="text-4xl font-bold text-purple-600">${data.stats.promedio_diario}</p>
+                    <p class="text-xs text-gray-500 mt-2">licitaciones/día</p>
+                </div>
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg shadow p-6">
+                    <p class="text-gray-600 text-sm mb-2">Mes Más Activo</p>
+                    <p class="text-4xl font-bold text-orange-600">${data.stats.mes_mas_activo}</p>
+                    <p class="text-xs text-gray-500 mt-2">${data.stats.cantidad_mes_mas_activo} licitaciones</p>
+                </div>
+            `;
+
+            // Crear gráfico
+            const ctx = document.getElementById('grafico-licitaciones').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.por_mes.map(m => m.mes),
+                    datasets: [{
+                        label: 'Licitaciones por Mes',
+                        data: data.por_mes.map(m => m.cantidad),
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Distribución de Licitaciones 2026 por Mes',
+                            font: { size: 18, weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Licitaciones'
+                            }
+                        }
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.error('Error cargando estadísticas:', error);
+            document.getElementById('stats-cards').innerHTML = `
+                <div class="col-span-4 text-center text-gray-600 p-6">
+                    <p class="text-lg mb-2">📊 Estadísticas próximamente</p>
+                    <p class="text-sm">Los datos se actualizarán diariamente</p>
+                </div>
+            `;
+        }
+    }
+
+    // Cargar al iniciar la página
+    document.addEventListener('DOMContentLoaded', cargarEstadisticas);
+    </script>
 </body>
 </html>
