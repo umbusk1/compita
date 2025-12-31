@@ -2,6 +2,397 @@
 COMPITA - Scraping Diario Automático
 =====================================
 Versión optimizada para ejecutarse diariamente de lunes a sábado a las 7 AM.
+Basado en el script que funcionó exitosamente con el baseline.
+
+Fecha: 31 de diciembre 2025
+Autor: Desarrollo para Moisesp/Compita
+"""
+
+import os
+import time
+from datetime import datetime
+from decimal import Decimal
+import re
+from playwright.sync_api import sync_playwright
+import psycopg2
+from psycopg2.extras import execute_values
+
+# ============================================================================
+# CONFIGURACIÓN PARA SCRAPING DIARIO
+# ============================================================================
+
+PORTAL_URL = "https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index"
+FECHA_MINIMA = "2026-01-01"
+MAX_CLICKS = 10  # Solo 10 clicks para el scraping diario (en lugar de 50)
+
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+# ============================================================================
+# FUNCIONES AUXILIARES
+# ============================================================================
+
+def limpiar_monto(texto_monto):
+    """Convierte texto como "280,000.00 Pesos Dominicanos" a número decimal."""
+    if not texto_monto:
+        return None, None
+    
+    numeros = re.findall(r'[\d,\.]+', texto_monto)
+    if not numeros:
+        return None, None
+    
+    monto_str = numeros[0].replace(',', '')
+    
+    moneda = "DOP"
+    if "USD" in texto_monto.upper() or "DÓLAR" in texto_monto.upper():
+        moneda = "USD"
+    
+    try:
+        monto = Decimal(monto_str)
+        return monto, moneda
+    except:
+        return None, None
+
+
+def convertir_fecha(texto_fecha):
+    """Convierte fecha en formato DD/MM/YYYY HH:MM a datetime."""
+    if not texto_fecha:
+        return None
+    
+    try:
+        formatos = [
+            "%d/%m/%Y %H:%M",
+            "%d/%m/%Y %H:%M:%S",
+            "%d/%m/%Y",
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d"
+        ]
+        
+        for formato in formatos:
+            try:
+                return datetime.strptime(texto_fecha.strip(), formato)
+            except:
+                continue
+        
+        return None
+    except:
+        return None
+
+
+def conectar_base_datos():
+    """Crea conexión a la base de datos Neon PostgreSQL."""
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        print("✅ Conexión exitosa a base de datos Neon")
+        return conn
+    except Exception as e:
+        print(f"❌ Error conectando a base de datos: {e}")
+        return None
+
+
+# ============================================================================
+# FUNCIÓN PRINCIPAL - SCRAPING DIARIO
+# ============================================================================
+
+def scrapear_con_clicks_multiples():
+    """
+    Estrategia eficiente:
+    1. Hacer clicks múltiples en "Ver más" (hasta MAX_CLICKS)
+    2. Scrapear TODO de una sola vez
+    """
+    
+    print("\n" + "="*70)
+    print("🚀 SCRAPING DE LICITACIONES 2026 - SCRAPING DIARIO")
+    print("="*70)
+    print(f"📄 Se harán hasta {MAX_CLICKS} clicks en 'Ver más'")
+    print(f"📅 Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M')}\n")
+    
+    licitaciones_encontradas = []
+    
+    with sync_playwright() as p:
+        print("📱 Abriendo navegador (modo headless)...")
+        browser = p.chromium.launch(headless=True)  # headless=True para GitHub Actions
+        page = browser.new_page()
+        page.set_default_timeout(30000)
+        
+        try:
+            print(f"🌐 Navegando al portal...")
+            page.goto(PORTAL_URL)
+            time.sleep(3)
+            
+            # ================================================================
+            # FASE 1: CARGAR LICITACIONES (CLICKS MÚLTIPLES)
+            # ================================================================
+            print("\n" + "="*70)
+            print("📥 FASE 1: CARGANDO LICITACIONES")
+            print("="*70 + "\n")
+            
+            clicks_exitosos = 0
+            
+            # Hacer clicks hasta que el botón desaparezca o se alcance el límite
+            while clicks_exitosos < MAX_CLICKS:
+                print(f"🔄 Click #{clicks_exitosos + 1}...", end=" ")
+                
+                boton_encontrado = False
+                
+                # Intentar encontrar el botón "Ver más"
+                try:
+                    boton = page.locator("text='Ver más'").first
+                    if boton.is_visible(timeout=2000):
+                        boton.click()
+                        clicks_exitosos += 1
+                        boton_encontrado = True
+                        print(f"✅")
+                        time.sleep(2)  # Esperar a que carguen más licitaciones
+                except:
+                    pass
+                
+                # Si no funcionó, intentar buscar enlace
+                if not boton_encontrado:
+                    try:
+                        enlaces = page.query_selector_all("a")
+                        for enlace in enlaces:
+                            texto = enlace.inner_text().strip()
+                            if "Ver más" in texto or "ver más" in texto:
+                                enlace.click()
+                                clicks_exitosos += 1
+                                boton_encontrado = True
+                                print(f"✅")
+                                time.sleep(2)
+                                break
+                    except:
+                        pass
+                
+                if not boton_encontrado:
+                    print(f"")
+                    print(f"\n   ✅ Ya no hay más botón 'Ver más'")
+                    print(f"   ℹ️  Se cargaron todas las licitaciones disponibles")
+                    break
+            
+            if clicks_exitosos >= MAX_CLICKS:
+                print(f"\n   ℹ️  Se alcanzó el límite de {MAX_CLICKS} clicks")
+            
+            print(f"\n✅ Fase 1 completada: {clicks_exitosos} clicks exitosos\n")
+            
+            # ================================================================
+            # FASE 2: SCRAPEAR TODO DE UNA VEZ
+            # ================================================================
+            print("="*70)
+            print("📊 FASE 2: EXTRAYENDO TODAS LAS LICITACIONES")
+            print("="*70 + "\n")
+            
+            # Esperar un momento para asegurar que todo cargó
+            time.sleep(2)
+            
+            # Obtener tabla
+            page.wait_for_selector("table", timeout=10000)
+            filas = page.query_selector_all("table tbody tr")
+            
+            print(f"✅ Tabla cargada con {len(filas)} filas")
+            
+            # Buscar la fila gigante con todas las licitaciones
+            fila_principal = None
+            for fila in filas:
+                celdas = fila.query_selector_all("td")
+                if len(celdas) > 100:
+                    fila_principal = celdas
+                    print(f"✅ Fila principal tiene {len(celdas)} celdas")
+                    print(f"📊 Esto representa aproximadamente {(len(celdas)-93)//10} licitaciones\n")
+                    break
+            
+            if not fila_principal:
+                print("❌ No se encontró la fila principal")
+                return licitaciones_encontradas
+            
+            # Procesar todas las licitaciones
+            print("🔍 Procesando licitaciones...\n")
+            
+            inicio = 93
+            total_procesadas = 0
+            
+            for i in range(inicio, len(fila_principal), 10):
+                try:
+                    if i + 8 >= len(fila_principal):
+                        break
+                    
+                    unidad = fila_principal[i].inner_text().strip()
+                    referencia = fila_principal[i+1].inner_text().strip()
+                    descripcion = fila_principal[i+2].inner_text().strip()
+                    fecha_pub = fila_principal[i+4].inner_text().strip()
+                    fecha_pres = fila_principal[i+5].inner_text().strip()
+                    total_estimado = fila_principal[i+6].inner_text().strip()
+                    estado = fila_principal[i+7].inner_text().strip()
+                    
+                    if not referencia:
+                        continue
+                    
+                    # Obtener URL de detalle
+                    boton_detalle = fila_principal[i+8].query_selector("a")
+                    url_detalle = ""
+                    if boton_detalle:
+                        href = boton_detalle.get_attribute("href")
+                        if href:
+                            if href.startswith("/"):
+                                url_detalle = f"https://comunidad.comprasdominicana.gob.do{href}"
+                            else:
+                                url_detalle = href
+                    
+                    # Limpiar fechas
+                    fecha_pub_limpia = fecha_pub.replace(" (UTC -4 horas)", "").strip()
+                    fecha_pres_limpia = fecha_pres.replace(" (UTC -4 horas)", "").strip()
+                    
+                    fecha_publicacion = convertir_fecha(fecha_pub_limpia)
+                    fecha_presentacion = convertir_fecha(fecha_pres_limpia)
+                    
+                    total_procesadas += 1
+                    
+                    # Mostrar progreso cada 50 licitaciones
+                    if total_procesadas % 50 == 0:
+                        print(f"   📌 Procesadas: {total_procesadas}...")
+                    
+                    # Limpiar monto
+                    monto, moneda = limpiar_monto(total_estimado)
+                    
+                    # FILTRAR: Solo licitaciones de 2026+
+                    if fecha_presentacion and fecha_presentacion.year >= 2026:
+                        licitacion = {
+                            'unidad_compras': unidad,
+                            'referencia': referencia,
+                            'descripcion': descripcion,
+                            'fecha_publicacion': fecha_publicacion,
+                            'fecha_presentacion': fecha_presentacion,
+                            'total_estimado_texto': total_estimado,
+                            'monto_estimado': monto,
+                            'moneda': moneda,
+                            'estado': estado,
+                            'url_detalle': url_detalle
+                        }
+                        
+                        licitaciones_encontradas.append(licitacion)
+                        
+                        # Mostrar primeras 10
+                        if len(licitaciones_encontradas) <= 10:
+                            print(f"   ✓ [{len(licitaciones_encontradas)}] {referencia[:40]:<40} | {fecha_pres_limpia[:16]}")
+                
+                except Exception as e:
+                    continue
+            
+            print(f"\n✅ Procesamiento completado:")
+            print(f"   - Total de licitaciones procesadas: {total_procesadas}")
+            print(f"   - Licitaciones de 2026 encontradas: {len(licitaciones_encontradas)}")
+            if len(licitaciones_encontradas) > 10:
+                print(f"   (mostrando solo las primeras 10)")
+        
+        except Exception as e:
+            print(f"\n❌ Error durante scraping: {e}")
+        
+        finally:
+            print("\n🔒 Cerrando navegador...")
+            browser.close()
+    
+    return licitaciones_encontradas
+
+
+# ============================================================================
+# GUARDAR EN BASE DE DATOS
+# ============================================================================
+
+def guardar_en_base_datos(licitaciones):
+    """Guarda las licitaciones en la tabla 'licitaciones' de Neon."""
+    
+    if not licitaciones:
+        print("\n⚠️  No hay licitaciones para guardar")
+        return
+    
+    print(f"\n💾 Guardando {len(licitaciones)} licitaciones en base de datos...")
+    
+    # FILTRAR DUPLICADOS: Solo la primera ocurrencia de cada referencia
+    referencias_vistas = set()
+    licitaciones_unicas = []
+    duplicados = 0
+    
+    for lic in licitaciones:
+        if lic['referencia'] not in referencias_vistas:
+            licitaciones_unicas.append(lic)
+            referencias_vistas.add(lic['referencia'])
+        else:
+            duplicados += 1
+    
+    if duplicados > 0:
+        print(f"⚠️  Se encontraron {duplicados} referencias duplicadas en los datos")
+        print(f"✅ Insertando {len(licitaciones_unicas)} licitaciones únicas")
+    
+    conn = conectar_base_datos()
+    if not conn:
+        return
+    
+    try:
+        cursor = conn.cursor()
+        
+        valores = []
+        for lic in licitaciones_unicas:
+            valores.append((
+                lic['unidad_compras'],
+                lic['referencia'],
+                lic['descripcion'],
+                lic['fecha_publicacion'],
+                lic['fecha_presentacion'],
+                lic['total_estimado_texto'],
+                lic['monto_estimado'],
+                lic['moneda'],
+                lic['estado'],
+                lic['url_detalle']
+            ))
+        
+        query = """
+            INSERT INTO licitaciones (
+                unidad_compras, referencia, descripcion, 
+                fecha_publicacion, fecha_presentacion, 
+                total_estimado_texto, monto_estimado, moneda, 
+                estado, url_detalle
+            )
+            VALUES %s
+            ON CONFLICT (referencia) DO UPDATE SET
+                estado = EXCLUDED.estado,
+                actualizado_en = NOW()
+        """
+        
+        execute_values(cursor, query, valores)
+        conn.commit()
+        
+        print(f"✅ Se guardaron exitosamente {len(licitaciones_unicas)} licitaciones")
+        
+        cursor.close()
+        conn.close()
+        
+    except Exception as e:
+        print(f"❌ Error guardando en base de datos: {e}")
+        if conn:
+            conn.rollback()
+            conn.close()
+
+
+# ============================================================================
+# EJECUTAR EL SCRIPT
+# ============================================================================
+
+if __name__ == "__main__":
+    # Hacer el scraping con clicks múltiples
+    licitaciones = scrapear_con_clicks_multiples()
+    
+    # Mostrar resumen
+    print("\n" + "="*70)
+    print("📊 RESUMEN FINAL")
+    print("="*70)
+    print(f"Total de licitaciones de 2026 encontradas: {len(licitaciones)}")
+    
+    # Guardar en base de datos
+    if licitaciones:
+        guardar_en_base_datos(licitaciones)
+    
+    print("\n✨ Proceso completado\n")"""
+COMPITA - Scraping Diario Automático
+=====================================
+Versión optimizada para ejecutarse diariamente de lunes a sábado a las 7 AM.
 Solo carga las primeras páginas (10 clicks) donde están las licitaciones más recientes.
 
 Fecha: 31 de diciembre 2025
