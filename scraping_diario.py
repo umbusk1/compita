@@ -331,6 +331,7 @@ def scraping_diario():
             
             inicio = 93
             total_procesadas = 0
+            fechas_debug = []  # Para debugging
             
             for i in range(inicio, len(fila_principal), 10):
                 try:
@@ -365,6 +366,16 @@ def scraping_diario():
                     fecha_publicacion = convertir_fecha(fecha_pub_limpia)
                     fecha_presentacion = convertir_fecha(fecha_pres_limpia)
                     
+                    # DEBUG: Guardar primeras 10 fechas
+                    if total_procesadas < 10:
+                        fechas_debug.append({
+                            'num': total_procesadas + 1,
+                            'ref': referencia[:30],
+                            'fecha_texto': fecha_pres_limpia,
+                            'fecha_convertida': fecha_presentacion,
+                            'año': fecha_presentacion.year if fecha_presentacion else None
+                        })
+                    
                     total_procesadas += 1
                     
                     if total_procesadas % 25 == 0:
@@ -398,6 +409,15 @@ def scraping_diario():
             print(f"\n✅ Procesamiento completado:")
             print(f"   - Total procesadas: {total_procesadas}")
             print(f"   - Licitaciones 2026: {len(licitaciones_encontradas)}")
+            
+            # Mostrar debug de fechas
+            if fechas_debug:
+                print(f"\n🔍 DEBUG - Primeras 10 fechas procesadas:")
+                print("="*70)
+                for f in fechas_debug:
+                    estado_conversion = "✅" if f['fecha_convertida'] else "❌"
+                    print(f"  {f['num']:2}. {f['ref']:<30} | Texto: '{f['fecha_texto'][:20]:<20}' | Año: {f['año']} {estado_conversion}")
+                print("="*70)
         
         except Exception as e:
             print(f"\n❌ Error durante scraping: {e}")
