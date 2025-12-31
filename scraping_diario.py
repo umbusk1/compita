@@ -371,7 +371,8 @@ def scraping_diario():
                         fechas_debug.append({
                             'num': total_procesadas + 1,
                             'ref': referencia[:30],
-                            'fecha_texto': fecha_pres_limpia,
+                            'fecha_original': fecha_pres[:60],  # Texto SIN limpiar
+                            'fecha_limpia': fecha_pres_limpia[:40],  # Texto limpio
                             'fecha_convertida': fecha_presentacion,
                             'año': fecha_presentacion.year if fecha_presentacion else None
                         })
@@ -416,7 +417,10 @@ def scraping_diario():
                 print("="*70)
                 for f in fechas_debug:
                     estado_conversion = "✅" if f['fecha_convertida'] else "❌"
-                    print(f"  {f['num']:2}. {f['ref']:<30} | Texto: '{f['fecha_texto'][:20]:<20}' | Año: {f['año']} {estado_conversion}")
+                    print(f"\n  {f['num']:2}. {f['ref']}")
+                    print(f"      Original: '{f['fecha_original']}'")
+                    print(f"      Limpia:   '{f['fecha_limpia']}'")
+                    print(f"      Año:      {f['año']} {estado_conversion}")
                 print("="*70)
         
         except Exception as e:
