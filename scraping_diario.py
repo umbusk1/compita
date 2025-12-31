@@ -142,7 +142,50 @@ def scraping_diario():
             
             time.sleep(3)  # Espera adicional después del scroll
             
-            # PASO 3: Buscar y hacer clicks en "Ver más"
+            # PASO 3: DEBUG - Ver qué elementos hay
+            print("\n🔍 DEBUGGING: Buscando botones en la página...")
+            try:
+                # Buscar TODOS los enlaces y botones
+                todos_elementos = page.query_selector_all("a, button")
+                print(f"   Total de enlaces/botones encontrados: {len(todos_elementos)}")
+                
+                # Mostrar los primeros 20 textos
+                textos_encontrados = []
+                for i, elem in enumerate(todos_elementos[:30]):
+                    try:
+                        texto = elem.inner_text().strip()
+                        if texto and len(texto) < 50:
+                            textos_encontrados.append(texto)
+                    except:
+                        pass
+                
+                print(f"   Primeros textos encontrados:")
+                for i, texto in enumerate(textos_encontrados[:15], 1):
+                    print(f"     {i}. '{texto}'")
+                
+                # Buscar específicamente cualquier cosa con "ver" o "más"
+                elementos_con_ver = []
+                for elem in todos_elementos:
+                    try:
+                        texto = elem.inner_text().strip().lower()
+                        if "ver" in texto or "más" in texto or "mas" in texto:
+                            elementos_con_ver.append(texto)
+                    except:
+                        pass
+                
+                if elementos_con_ver:
+                    print(f"\n   ✅ Encontrados {len(elementos_con_ver)} elementos con 'ver' o 'más':")
+                    for texto in elementos_con_ver[:10]:
+                        print(f"     - '{texto}'")
+                else:
+                    print(f"\n   ❌ NO se encontró ningún elemento con 'ver' o 'más'")
+                
+            except Exception as e:
+                print(f"   Error en debugging: {e}")
+            
+            print("\n" + "="*70)
+            
+            # PASO 4: Buscar y hacer clicks en "Ver más"
             clicks_exitosos = 0
             intentos_fallidos = 0
             max_intentos_fallidos = 3
