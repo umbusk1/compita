@@ -503,7 +503,7 @@ def guardar_en_base_datos(licitaciones):
         execute_values(cursor, query, valores)
         
         # Contar cuántas son nuevas vs actualizadas
-        cursor.execute("SELECT COUNT(*) FROM licitaciones WHERE DATE(creado_en) = CURRENT_DATE")
+        cursor.execute("SELECT COUNT(*) FROM licitaciones WHERE DATE(scrapeado_en) = CURRENT_DATE")
         nuevas_hoy = cursor.fetchone()[0]
         
         conn.commit()
