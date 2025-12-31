@@ -163,31 +163,17 @@
         <div class="container mx-auto px-4">
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-4xl font-bold text-gray-900 text-center mb-16">
-                    Cuatro pasos simples
+                    Tres pasos simples
                 </h2>
 
                 <div class="space-y-12">
-                    <div class="flex gap-6 items-start">
-                        <div class="bg-gray-400 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">
-                            0
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Copia la data del portal oficial y pégala en Excel</h3>
-                            <p class="text-gray-600 mb-3">Visita el <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">Sistema Electrónico de Contrataciones Públicas (SECP)</a> y extrae las licitaciones a Excel.</p>
-                            <div class="inline-flex items-center gap-2 bg-indigo-50 text-indigo-700 px-4 py-2 rounded-lg text-sm">
-                                <span>💡</span>
-                                <span class="font-medium">Pronto: Importación automática sin descargar nada</span>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="flex gap-6 items-start">
                         <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">
                             1
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Sube tu Excel a Compita</h3>
-                            <p class="text-gray-600">El archivo debe tener el formato estándar del SECP. Compita lo reconoce automáticamente.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Crea tu perfil de empresa</h3>
+                            <p class="text-gray-600">Define las palabras clave de tu interés, exclusiones y una breve descripción de tu empresa. Compita aprende qué licitaciones son relevantes para ti.</p>
                         </div>
                     </div>
 
@@ -196,8 +182,8 @@
                             2
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Claude AI analiza una selección de posibles oportunidades</h3>
-                            <p class="text-gray-600">Nuestra sistema en una 1ra etapa selecciona por palabras clave y exclusiones; y en una 2da etapa, la IA entiende el contexto y evalúa la relevancia según el perfil de tu empresa, en segundos.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">El sistema analiza automáticamente las licitaciones cada día</h3>
+                            <p class="text-gray-600">Nuestro scraper carga diariamente todas las nuevas licitaciones del <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">portal SECP</a>. Claude AI las analiza en dos etapas: primero filtra por palabras clave, luego evalúa la relevancia según el perfil de tu empresa.</p>
                         </div>
                     </div>
 
@@ -206,8 +192,8 @@
                             3
                         </div>
                         <div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Recibe solo las oportunidades de  ALTA y MEDIA relevancia para tu empresa</h3>
-                            <p class="text-gray-600">Un dashboard limpio muestra las licitaciones que realmente importan, indicando relevancia y monto. Exporta a Excel con un clic.</p>
+                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Recibe solo las oportunidades de ALTA y MEDIA relevancia</h3>
+                            <p class="text-gray-600">Un dashboard limpio muestra las licitaciones que realmente importan, con alertas por email opcionales. Ve el nivel de relevancia, monto y detalles. Exporta a Excel con un clic.</p>
                         </div>
                     </div>
                 </div>
@@ -499,7 +485,7 @@
             meses.push({
                 numero: mes + 1,
                 nombre: nombresCortos[mes],
-                nombreCompleto: new Date(año, mes).toLocaleDateString('es', { month: 'long', year: 'numeric' }),
+                nombreCompleto: new Date(año, mes).toLocaleDateString('es', { month: 'long' }),
                 año: año
             });
         }
@@ -633,12 +619,12 @@
 
             // Llenar tarjetas de estadísticas (SOLO 2 tarjetas)
             document.getElementById('stats-cards').innerHTML = `
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6">
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6 text-center">
                     <p class="text-gray-600 text-sm mb-2">Total Licitaciones</p>
                     <p class="text-4xl font-bold text-blue-600">${data.stats.total}</p>
                     <p class="text-xs text-gray-500 mt-2">${data.stats.por_estado.abiertas} abiertas</p>
                 </div>
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow p-6">
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow p-6 text-center">
                     <p class="text-gray-600 text-sm mb-2">Promedio Diario</p>
                     <p class="text-4xl font-bold text-purple-600">${data.stats.promedio_diario}</p>
                     <p class="text-xs text-gray-500 mt-2">licitaciones/día</p>
