@@ -117,7 +117,6 @@ def scraping_diario():
         try:
             print(f"🌐 Navegando al portal...")
             page.goto(PORTAL_URL)
-            time.sleep(5)  # Más tiempo para que cargue completamente en headless
             
             # ================================================================
             # FASE 1: CARGAR PRIMERAS PÁGINAS
@@ -125,50 +124,137 @@ def scraping_diario():
             print("\n📥 FASE 1: CARGANDO LICITACIONES RECIENTES")
             print("="*70 + "\n")
             
-            # Hacer scroll inicial para asegurar que el botón "Ver más" sea visible
-            print("📜 Haciendo scroll para activar carga de botón...")
-            page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-            time.sleep(2)
+            # PASO 1: Esperar a que la tabla inicial cargue
+            print("⏳ Esperando a que cargue la tabla inicial...")
+            try:
+                page.wait_for_selector("table tbody tr", timeout=15000)
+                print("✅ Tabla inicial cargada")
+            except Exception as e:
+                print(f"⚠️  Advertencia esperando tabla: {e}")
             
+            time.sleep(5)  # Tiempo adicional para JavaScript
+            
+            # PASO 2: Scroll para activar lazy loading
+            print("📜 Activando carga dinámica con scroll...")
+            for _ in range(3):
+                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                time.sleep(1)
+            
+            time.sleep(3)  # Espera adicional después del scroll
+            
+            # PASO 3: Buscar y hacer clicks en "Ver más"
             clicks_exitosos = 0
+            intentos_fallidos = 0
+            max_intentos_fallidos = 3
             
-            while clicks_exitosos < MAX_CLICKS:
-                print(f"🔄 Click #{clicks_exitosos + 1}...", end=" ")
+            while clicks_exitosos < MAX_CLICKS and intentos_fallidos < max_intentos_fallidos:
+                print(f"🔄 Click #{clicks_exitosos + 1}...", end=" ", flush=True)
                 
                 boton_encontrado = False
                 
+                # Estrategia 1: Buscar por texto exacto con múltiples selectores
                 try:
-                    boton = page.locator("text='Ver más'").first
-                    if boton.is_visible(timeout=5000):  # Timeout aumentado a 5 segundos
-                        boton.click()
-                        clicks_exitosos += 1
-                        boton_encontrado = True
-                        print(f"✅")
-                        time.sleep(4)  # Más tiempo para que cargue la siguiente página
-                        # Scroll después de cada click para mantener el botón visible
-                        page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                except:
-                    pass
-                
-                if not boton_encontrado:
-                    try:
-                        enlaces = page.query_selector_all("a")
-                        for enlace in enlaces:
-                            texto = enlace.inner_text().strip()
-                            if "Ver más" in texto or "ver más" in texto:
-                                enlace.click()
+                    # Primero, hacer scroll para asegurar que el botón esté visible
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    time.sleep(1)
+                    
+                    # Buscar el botón con diferentes variaciones
+                    selectores_a_probar = [
+                        "text='Ver más'",
+                        "text='ver más'",
+                        "text='VER MÁS'",
+                        "a:has-text('Ver más')",
+                        "button:has-text('Ver más')",
+                        "[onclick*='VerMas']",
+                        "[onclick*='vermas']"
+                    ]
+                    
+                    for selector in selectores_a_probar:
+                        try:
+                            boton = page.locator(selector).first
+                            if boton.is_visible(timeout=2000):
+                                # Scroll al botón para asegurar que está en viewport
+                                boton.scroll_into_view_if_needed()
+                                time.sleep(0.5)
+                                boton.click()
                                 clicks_exitosos += 1
                                 boton_encontrado = True
-                                print(f"✅")
-                                time.sleep(4)
-                                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                                print(f"✅ (selector: {selector[:20]}...)")
+                                time.sleep(5)  # Esperar a que cargue la siguiente página
+                                intentos_fallidos = 0  # Reset contador
                                 break
+                        except:
+                            continue
+                    
+                    if boton_encontrado:
+                        continue
+                        
+                except Exception as e:
+                    pass
+                
+                # Estrategia 2: Buscar manualmente entre todos los enlaces
+                if not boton_encontrado:
+                    try:
+                        page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                        time.sleep(1)
+                        
+                        enlaces = page.query_selector_all("a, button")
+                        for enlace in enlaces:
+                            try:
+                                texto = enlace.inner_text().strip().lower()
+                                if "ver más" in texto or "ver mas" in texto:
+                                    if enlace.is_visible():
+                                        enlace.scroll_into_view_if_needed()
+                                        time.sleep(0.5)
+                                        enlace.click()
+                                        clicks_exitosos += 1
+                                        boton_encontrado = True
+                                        print(f"✅ (búsqueda manual)")
+                                        time.sleep(5)
+                                        intentos_fallidos = 0
+                                        break
+                            except:
+                                continue
+                    except:
+                        pass
+                
+                # Estrategia 3: JavaScript click directo
+                if not boton_encontrado:
+                    try:
+                        # Intentar click con JavaScript
+                        resultado = page.evaluate("""
+                            () => {
+                                const elementos = Array.from(document.querySelectorAll('a, button'));
+                                for (let elem of elementos) {
+                                    const texto = elem.innerText || elem.textContent || '';
+                                    if (texto.toLowerCase().includes('ver más') || texto.toLowerCase().includes('ver mas')) {
+                                        elem.click();
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                        """)
+                        
+                        if resultado:
+                            clicks_exitosos += 1
+                            boton_encontrado = True
+                            print(f"✅ (JavaScript)")
+                            time.sleep(5)
+                            intentos_fallidos = 0
                     except:
                         pass
                 
                 if not boton_encontrado:
-                    print(f"\n   ℹ️  No hay más botón 'Ver más' disponible")
-                    break
+                    intentos_fallidos += 1
+                    print(f"❌ (intento {intentos_fallidos}/{max_intentos_fallidos})")
+                    
+                    if intentos_fallidos >= max_intentos_fallidos:
+                        print(f"\n   ℹ️  No se encontró botón 'Ver más' después de {max_intentos_fallidos} intentos")
+                        break
+                    
+                    # Esperar y reintentar
+                    time.sleep(3)
             
             print(f"\n✅ Se cargaron {clicks_exitosos} páginas adicionales\n")
             
