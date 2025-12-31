@@ -70,16 +70,17 @@
                         📊 Licitaciones en Tiempo Real
                     </h2>
                     <p class="text-xl text-gray-600">
-                        Datos de licitaciones que tienen fechas de cierre para presentar ofertas, actualizados diariamente desde el portal oficial SECP
+                        Datos actualizados diariamente desde el portal oficial SECP
                     </p>
                 </div>
 
-                <!-- Stats Cards - Solo 3 tarjetas -->
-                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <!-- Stats Cards - Solo 2 tarjetas -->
+                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
                     <!-- Placeholder mientras carga -->
                     <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
                         <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
                         <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                    </div>
                     <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
                         <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
                         <div class="h-10 bg-gray-300 rounded w-1/2"></div>
@@ -88,7 +89,7 @@
 
                 <!-- Pestañas Mensuales -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Detalles de 2026 por Mes</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Timeline Detallado de 2026 por Mes</h3>
 
                     <!-- Tabs -->
                     <div class="flex gap-2 mb-6 border-b border-gray-200" id="month-tabs">
@@ -306,7 +307,7 @@
                     },
                     title: {
                         display: true,
-                        text: `Licitaciones según fecha tope para presentar ofertas - ${mesInfo.nombreCompleto}`,
+                        text: `Licitaciones Diarias - ${mesInfo.nombreCompleto}`,
                         font: { size: 18, weight: 'bold' }
                     }
                 },
@@ -349,9 +350,14 @@
             // Llenar tarjetas de estadísticas (SOLO 3 tarjetas)
             document.getElementById('stats-cards').innerHTML = `
                 <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6">
-                    <p class="text-gray-600 text-sm mb-2">Total Licitaciones</p>
+                    <p class="text-gray-600 text-sm mb-2">Total Licitaciones que tienen fechas de cierre para presentar ofertas</p>
                     <p class="text-4xl font-bold text-blue-600">${data.stats.total}</p>
                     <p class="text-xs text-gray-500 mt-2">${data.stats.por_estado.abiertas} abiertas</p>
+                </div>
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg shadow p-6">
+                    <p class="text-gray-600 text-sm mb-2">Días Activos</p>
+                    <p class="text-4xl font-bold text-green-600">${data.stats.dias_con_licitaciones}</p>
+                    <p class="text-xs text-gray-500 mt-2">de 365 días</p>
                 </div>
                 <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow p-6">
                     <p class="text-gray-600 text-sm mb-2">Promedio Diario</p>
@@ -368,7 +374,7 @@
         } catch (error) {
             console.error('Error cargando estadísticas:', error);
             document.getElementById('stats-cards').innerHTML = `
-                <div class="col-span-3 text-center text-gray-600 p-6">
+                <div class="col-span-2 text-center text-gray-600 p-6">
                     <p class="text-lg mb-2">📊 Estadísticas próximamente</p>
                     <p class="text-sm">Los datos se actualizarán diariamente</p>
                 </div>
