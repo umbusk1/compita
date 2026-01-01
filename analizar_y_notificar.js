@@ -206,11 +206,15 @@ async function analizarDiario() {
   console.log('='*70 + '\n');
 
   try {
-    // 1. Obtener empresas activas
+    // 1. Obtener empresas activas con email del owner
     console.log('📋 Obteniendo empresas activas...');
-    const empresasRes = await pool.query(
-      'SELECT * FROM empresas WHERE activo = true'
-    );
+    const empresasRes = await pool.query(`
+      SELECT e.*, u.email as owner_email
+      FROM empresas e
+      JOIN usuarios u ON u.empresa_id = e.id
+      WHERE e.activo = true
+      AND u.rol = 'owner'
+    `);
     const empresas = empresasRes.rows;
     console.log(`✅ ${empresas.length} empresas activas encontradas\n`);
 
@@ -299,7 +303,7 @@ async function analizarDiario() {
       resultadosPorEmpresa.push({
         empresa_id: empresa.id,
         nombre: empresa.nombre,
-        email: empresa.dominio, // Asumo que dominio es el email
+        email: empresa.owner_email, // Email del owner
         plan: empresa.plan,
         total: oportunidades.length,
         alta: alta.length,
