@@ -1,11 +1,11 @@
-"""
+/*
 COMPITA - Análisis Diario y Notificaciones
 ===========================================
 Analiza licitaciones nuevas para cada empresa activa y envía emails personalizados.
 
 Fecha: 01 de enero 2026
 Autor: Desarrollo para Moisesp/Compita
-"""
+*/
 
 import Anthropic from '@anthropic-ai/sdk';
 import pkg from 'pg';
