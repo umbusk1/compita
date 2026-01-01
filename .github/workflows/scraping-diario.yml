@@ -2,8 +2,8 @@ name: Scraping Diario de Licitaciones
 
 on:
   schedule:
-    - cron: "0 11 * * 1-6"
-  workflow_dispatch:
+    - cron: "0 11 * * 1-6"  # 7 AM hora RD (11 UTC), lunes a sábado
+  workflow_dispatch:  # Permite ejecución manual
 
 jobs:
   scraping:
@@ -30,11 +30,33 @@ jobs:
         run: |
           python scraping_diario.py
       
+      - name: Generar estadísticas para landing page
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python generar_stats.py
+      
+      - name: Configurar Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      
+      - name: Commit y push de stats-2026.json
+        run: |
+          git add stats-2026.json
+          if git diff --staged --quiet; then
+            echo "No hay cambios en stats-2026.json"
+          else
+            git commit -m "🤖 Actualizar estadísticas - $(date '+%Y-%m-%d %H:%M')"
+            git push
+          fi
+        continue-on-error: true
+      
       - name: Notificar resultado
         if: always()
         run: |
           if [ $? -eq 0 ]; then
-            echo "✅ Scraping completado exitosamente"
+            echo "✅ Scraping y actualización de estadísticas completados exitosamente"
           else
-            echo "❌ Scraping falló"
+            echo "⚠️ Hubo algún problema durante la ejecución"
           fi
