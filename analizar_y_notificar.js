@@ -1,0 +1,71 @@
+name: Scraping Diario de Licitaciones
+
+on:
+  schedule:
+    - cron: "0 11 * * 1-6"  # 7 AM hora RD (11 UTC), lunes a sábado
+  workflow_dispatch:  # Permite ejecución manual
+
+jobs:
+  scraping:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+      
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      
+      - name: Instalar dependencias
+        run: |
+          pip install playwright psycopg2-binary python-dotenv
+          playwright install chromium
+          playwright install-deps
+          npm install @anthropic-ai/sdk pg resend
+      
+      - name: Ejecutar scraping
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python scraping_diario.py
+      
+      - name: Generar estadísticas para landing page
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          python generar_stats.py
+      
+      - name: Analizar y notificar oportunidades
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          node analizar_y_notificar.js
+      
+      - name: Configurar Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      
+      - name: Commit y push de stats-2026.json
+        run: |
+          git add stats-2026.json
+          if git diff --staged --quiet; then
+            echo "No hay cambios en stats-2026.json"
+          else
+            git commit -m "🤖 Actualizar estadísticas - $(date '+%Y-%m-%d %H:%M')"
+            git push
+          fi
+        continue-on-error: true
+      
+      - name: Notificar resultado
+        if: always()
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✅ Scraping y actualización de estadísticas completados exitosamente"
+          else
+            echo "⚠️ Hubo algún problema durante la ejecución"
+          fi
