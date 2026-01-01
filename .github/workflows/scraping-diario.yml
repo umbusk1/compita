@@ -23,6 +23,7 @@ jobs:
           pip install playwright psycopg2-binary python-dotenv
           playwright install chromium
           playwright install-deps
+          npm install @anthropic-ai/sdk pg resend
       
       - name: Ejecutar scraping
         env:
@@ -35,6 +36,14 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           python generar_stats.py
+      
+      - name: Analizar y notificar oportunidades
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          node analizar_y_notificar.js
       
       - name: Configurar Git
         run: |
