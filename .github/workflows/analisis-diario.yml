@@ -1,20 +1,20 @@
-name: Análisis Diario Automático
+name: Análisis y Notificaciones Diarias
 
 on:
   schedule:
-    - cron: '30 11 * * 1-6'  # 7:30 AM RD (11:30 UTC), lunes a sábado
+    - cron: '30 11 * * 1-6'  # 7:30 AM RD, lunes a sábado
   workflow_dispatch:  # Permite ejecución manual
 
 jobs:
-  analizar:
+  analizar-y-notificar:
     runs-on: ubuntu-latest
     
     steps:
-      - name: 🔍 Ejecutar análisis automático
+      - name: 🔍 Ejecutar análisis y notificaciones
         run: |
-          echo "🚀 Iniciando análisis diario..."
+          echo "🚀 Iniciando análisis y notificaciones..."
           
-          response=$(curl -X POST https://compita.umbusk.com/api/analizar-diario.js \
+          response=$(curl -X POST https://compita.umbusk.com/api/analizar-y-notificar.js \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -w "\nHTTP_CODE:%{http_code}" \
@@ -30,7 +30,7 @@ jobs:
             exit 1
           fi
           
-          echo "✅ Análisis completado exitosamente"
+          echo "✅ Proceso completado exitosamente"
       
       - name: 📊 Resultado
         if: always()
