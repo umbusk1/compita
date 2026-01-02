@@ -276,10 +276,19 @@ async function analizarDiario() {
       JOIN usuarios u ON u.empresa_id = e.id
       WHERE u.activo = true
         AND e.palabras_clave IS NOT NULL
-        AND e.palabras_clave != ''
     `);
 
-    const empresas = empresasRes.rows;
+    // Filtrar en JavaScript las empresas que tienen palabras clave válidas
+    const empresas = empresasRes.rows.filter(emp => {
+      // Convertir array a string si es necesario
+      let palabrasClave = emp.palabras_clave;
+      if (Array.isArray(palabrasClave)) {
+        palabrasClave = palabrasClave.join(', ');
+      }
+      // Solo incluir si tiene palabras clave (no vacío)
+      return palabrasClave && palabrasClave.trim().length > 0;
+    });
+
     console.log(`✅ ${empresas.length} empresas activas\n`);
 
     if (empresas.length === 0) {
