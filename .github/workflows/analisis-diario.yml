@@ -1,0 +1,42 @@
+name: Análisis Diario Automático
+
+on:
+  schedule:
+    - cron: '30 11 * * 1-6'  # 7:30 AM RD (11:30 UTC), lunes a sábado
+  workflow_dispatch:  # Permite ejecución manual
+
+jobs:
+  analizar:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🔍 Ejecutar análisis automático
+        run: |
+          echo "🚀 Iniciando análisis diario..."
+          
+          response=$(curl -X POST https://compita.umbusk.com/api/analizar-diario.js \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -w "\nHTTP_CODE:%{http_code}" \
+            -s)
+          
+          http_code=$(echo "$response" | grep "HTTP_CODE" | cut -d':' -f2)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "$body"
+          
+          if [ "$http_code" != "200" ]; then
+            echo "❌ Error: HTTP $http_code"
+            exit 1
+          fi
+          
+          echo "✅ Análisis completado exitosamente"
+      
+      - name: 📊 Resultado
+        if: always()
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✅ Workflow completado"
+          else
+            echo "❌ Workflow falló"
+          fi
