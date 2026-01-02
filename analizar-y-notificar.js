@@ -262,8 +262,6 @@ async function analizarDiario() {
   try {
     // 1. Obtener empresas activas con usuario owner
     console.log('🏢 Obteniendo empresas activas...');
-    // 1. Obtener empresas activas con usuario owner
-    console.log('🏢 Obteniendo empresas activas...');
     const empresasRes = await pool.query(`
       SELECT
         e.id,
