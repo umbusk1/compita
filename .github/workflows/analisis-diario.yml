@@ -14,7 +14,7 @@ jobs:
         run: |
           echo "🚀 Iniciando análisis y notificaciones..."
           
-          response=$(curl -X POST https://compita.umbusk.com/api/analizar-y-notificar.js \
+          response=$(curl -X POST https://compita.umbusk.com/api/analizar-notificar-v2.js \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -w "\nHTTP_CODE:%{http_code}" \
