@@ -446,10 +446,27 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
 
     // Guardar cada resultado
     for (const oportunidad of oportunidades) {
+      // ⭐ NUEVO: Buscar el licitacion_id usando la referencia
+      const licitacionRes = await pool.query(
+        'SELECT id FROM licitaciones WHERE referencia = $1 LIMIT 1',
+        [oportunidad.referencia]
+      );
+
+      const licitacionId = licitacionRes.rows.length > 0
+        ? licitacionRes.rows[0].id
+        : null;
+
+      if (!licitacionId) {
+        console.warn(`⚠️  No se encontró licitacion_id para referencia: ${oportunidad.referencia}`);
+        continue; // Saltar si no existe la licitación
+      }
+
+      // ⭐ MODIFICADO: Ahora incluye licitacion_id
       await pool.query(`
         INSERT INTO resultados (
           analisis_id,
           empresa_id,
+          licitacion_id,
           referencia,
           unidad_compras,
           descripcion,
@@ -464,10 +481,11 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
           vista,
           notificada
         )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       `, [
         analisisId,
         empresaId,
+        licitacionId,        // ⭐ NUEVO
         oportunidad.referencia || '',
         oportunidad.unidad_compras || '',
         oportunidad.descripcion || '',
