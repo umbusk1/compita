@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
     const token = authHeader.split(' ')[1];
     let decoded;
-    
+
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET || 'compita-secret-2024');
     } catch (error) {
@@ -75,8 +75,9 @@ export default async function handler(req, res) {
     // ========== OBTENER OPORTUNIDADES ==========
     // JOIN entre resultados y licitaciones
     // Solo traer ALTA y MEDIA
+    // USAR NOMBRES CORRECTOS DE COLUMNAS
     const oportunidades = await sql`
-      SELECT 
+      SELECT
         r.id as resultado_id,
         r.relevancia,
         r.razon,
@@ -84,19 +85,19 @@ export default async function handler(req, res) {
         r.notificada,
         l.id as licitacion_id,
         l.referencia,
-        l.que,
-        l.quien,
+        l.descripcion as que,
+        l.unidad_compras as quien,
         l.monto_estimado,
         l.fecha_presentacion,
         l.url_detalle,
         l.fecha_publicacion,
-        l.scraped_at
+        l.scrapeado_en as scraped_at
       FROM resultados r
       JOIN licitaciones l ON r.licitacion_id = l.id
       WHERE r.empresa_id = ${empresa_id}
         AND r.relevancia IN ('ALTA', 'MEDIA')
         AND r.fecha_analisis >= ${fechaLimite.toISOString()}
-      ORDER BY 
+      ORDER BY
         CASE r.relevancia
           WHEN 'ALTA' THEN 1
           WHEN 'MEDIA' THEN 2
