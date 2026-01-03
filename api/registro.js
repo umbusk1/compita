@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-    const { email, empresa, password } = req.body;
+    const { email, empresa, password, plan } = req.body;
 
     // ========== VALIDACIONES ==========
 
@@ -73,6 +73,10 @@ export default async function handler(req, res) {
       });
     }
 
+    // Validar que el plan sea válido (si se proporciona)
+    const planesValidos = ['estandar', 'business', 'enterprise'];
+    const planDeseado = plan && planesValidos.includes(plan) ? plan : 'estandar';
+
     // ========== VERIFICAR SI EL EMAIL YA EXISTE ==========
 
     const usuarioExistente = await sql`
@@ -97,6 +101,8 @@ export default async function handler(req, res) {
     trialFin.setDate(trialFin.getDate() + 7);
 
     // ========== CREAR EMPRESA ==========
+    // Nota: Todos empiezan con 'free_trial' de 7 días
+    // El campo 'plan_deseado' guarda qué plan quiere después del trial
 
     const empresaResult = await sql`
       INSERT INTO empresas (
@@ -169,6 +175,13 @@ export default async function handler(req, res) {
 
     const confirmUrl = `https://${req.headers.host}/confirmar-email.html?token=${tokenConfirmacion}`;
 
+    // Personalizar mensaje según el plan deseado
+    const mensajePlan = planDeseado === 'business'
+      ? 'Has elegido el Plan Business ($20/mes). Después del trial, podrás activar tu suscripción.'
+      : planDeseado === 'enterprise'
+      ? 'Has mostrado interés en el Plan Enterprise. Nos pondremos en contacto contigo.'
+      : 'Has elegido el Plan Estándar ($10/mes). Después del trial, podrás activar tu suscripción.';
+
     try {
       await resend.emails.send({
         from: 'Compita <notificaciones@compita.umbusk.com>',
@@ -201,8 +214,11 @@ export default async function handler(req, res) {
                 <div class="highlight">
                   <strong>✅ Tu cuenta está lista</strong><br>
                   <strong>📧 Email:</strong> ${nuevoUsuario.email}<br>
-                  <strong>🎁 Trial:</strong> 7 días gratis
+                  <strong>🎁 Trial:</strong> 7 días gratis<br>
+                  <strong>📋 Plan:</strong> ${planDeseado.charAt(0).toUpperCase() + planDeseado.slice(1)}
                 </div>
+
+                <p>${mensajePlan}</p>
 
                 <p>Para activar tu cuenta, confirma tu email haciendo clic en el botón:</p>
 
@@ -240,7 +256,8 @@ export default async function handler(req, res) {
         email: nuevoUsuario.email,
         empresa: nuevoUsuario.empresa,
         empresa_id: nuevoUsuario.empresa_id,
-        trial_fin: nuevoUsuario.trial_fin
+        trial_fin: nuevoUsuario.trial_fin,
+        plan_deseado: planDeseado
       }
     });
 
