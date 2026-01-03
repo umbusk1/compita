@@ -9,9 +9,6 @@
     "api/usuario.js": {
       "maxDuration": 5
     },
-    "api/clientes.js": {
-      "maxDuration": 10
-    },
     "api/empresas.js": {
       "maxDuration": 10
     },
