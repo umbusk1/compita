@@ -1,7 +1,13 @@
 {
   "functions": {
-    "api/analizar-v4.js": {
+    "api/analizar-notificar-v2.js": {
       "maxDuration": 300
+    },
+    "api/obtener-oportunidades.js": {
+      "maxDuration": 10
+    },
+    "api/usuario.js": {
+      "maxDuration": 5
     },
     "api/clientes.js": {
       "maxDuration": 10
