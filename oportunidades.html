@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oportunidades - Compita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🎯</span>
+                        <span class="text-xl font-bold text-gray-800">Compita</span>
+                    </div>
+                    <a href="/oportunidades.html" class="text-indigo-600 font-semibold">Oportunidades</a>
+                    <a href="/cuenta.html" class="text-gray-600 hover:text-gray-900">Mi Cuenta</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
+                    <button onclick="cerrarSesion()" class="text-sm text-gray-600 hover:text-red-600">Salir</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Medidor de Trial (solo para plan gratuito) -->
+        <div id="medidor-trial" class="hidden mb-6">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-md p-4 text-white">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-white/20 rounded-full p-2">
+                            <span class="text-2xl">⏰</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium opacity-90">Prueba Gratuita</p>
+                            <p class="text-lg font-bold" id="dias-restantes">7 días restantes</p>
+                        </div>
+                    </div>
+                    <a href="/cuenta.html#planes" class="bg-white text-indigo-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition">
+                        Actualizar Plan
+                    </a>
+                </div>
+                <div class="mt-3 bg-white/20 rounded-full h-2 overflow-hidden">
+                    <div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Tus Oportunidades</h1>
+                    <p class="text-gray-600 mt-1">Licitaciones relevantes para tu empresa</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="exportarExcel()" class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium">
+                        <span>📥</span>
+                        <span>Exportar Excel</span>
+                    </button>
+                    <button onclick="cargarOportunidades()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
+                        <span>🔄</span>
+                        <span>Actualizar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros y Búsqueda -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Búsqueda -->
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                    <input 
+                        type="text" 
+                        id="busqueda"
+                        placeholder="Palabra clave..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                        onkeyup="filtrarOportunidades()"
+                    >
+                </div>
+
+                <!-- Filtro Relevancia -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Relevancia</label>
+                    <select 
+                        id="filtro-relevancia"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                        onchange="filtrarOportunidades()"
+                    >
+                        <option value="todas">Todas</option>
+                        <option value="ALTA">Solo ALTA</option>
+                        <option value="MEDIA">Solo MEDIA</option>
+                        <option value="BAJA">Solo BAJA</option>
+                    </select>
+                </div>
+
+                <!-- Ordenar -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ordenar por</label>
+                    <select 
+                        id="ordenar"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                        onchange="filtrarOportunidades()"
+                    >
+                        <option value="relevancia">Relevancia</option>
+                        <option value="fecha">Fecha cierre</option>
+                        <option value="monto">Monto</option>
+                        <option value="reciente">Más recientes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Estadísticas rápidas -->
+            <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-green-600" id="count-alta">0</p>
+                    <p class="text-sm text-gray-600">ALTA</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-yellow-600" id="count-media">0</p>
+                    <p class="text-sm text-gray-600">MEDIA</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-gray-600" id="count-total">0</p>
+                    <p class="text-sm text-gray-600">TOTAL</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Oportunidades -->
+        <div id="lista-oportunidades">
+            <!-- Se llena dinámicamente -->
+            <div class="text-center py-12">
+                <div class="text-4xl mb-4">🔍</div>
+                <p class="text-gray-600">Cargando oportunidades...</p>
+            </div>
+        </div>
+
+        <!-- Sin resultados -->
+        <div id="sin-resultados" class="hidden bg-white rounded-lg shadow-sm p-12 text-center">
+            <div class="text-6xl mb-4">📭</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">No hay oportunidades por ahora</h3>
+            <p class="text-gray-600 mb-6">El sistema analiza nuevas licitaciones diariamente de lunes a sábado.</p>
+            <a href="/cuenta.html" class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
+                Verificar tu perfil empresarial
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let todasOportunidades = [];
+        let oportunidadesFiltradas = [];
+
+        // Verificar autenticación
+        window.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            await cargarDatosUsuario();
+            await cargarOportunidades();
+        });
+
+        async function cargarDatosUsuario() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/usuario`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('nombre-empresa').textContent = data.empresa;
+
+                    // Mostrar medidor si está en trial
+                    if (data.plan === 'free_trial') {
+                        mostrarMedidorTrial(data.trial_fin);
+                    }
+                } else {
+                    cerrarSesion();
+                }
+            } catch (error) {
+                console.error('Error cargando usuario:', error);
+            }
+        }
+
+        function mostrarMedidorTrial(trialFin) {
+            const medidor = document.getElementById('medidor-trial');
+            medidor.classList.remove('hidden');
+
+            const ahora = new Date();
+            const fin = new Date(trialFin);
+            const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
+            const porcentaje = (diasRestantes / 7) * 100;
+
+            document.getElementById('dias-restantes').textContent = 
+                diasRestantes > 1 ? `${diasRestantes} días restantes` : `${diasRestantes} día restante`;
+            document.getElementById('barra-progreso').style.width = `${Math.max(0, porcentaje)}%`;
+        }
+
+        async function cargarOportunidades() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/obtener-oportunidades`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    todasOportunidades = data.oportunidades || [];
+                    filtrarOportunidades();
+                } else {
+                    mostrarError();
+                }
+            } catch (error) {
+                console.error('Error cargando oportunidades:', error);
+                mostrarError();
+            }
+        }
+
+        function filtrarOportunidades() {
+            const busqueda = document.getElementById('busqueda').value.toLowerCase();
+            const relevancia = document.getElementById('filtro-relevancia').value;
+            const ordenar = document.getElementById('ordenar').value;
+
+            // Filtrar
+            oportunidadesFiltradas = todasOportunidades.filter(op => {
+                const matchBusqueda = !busqueda || 
+                    op.referencia.toLowerCase().includes(busqueda) ||
+                    op.que.toLowerCase().includes(busqueda) ||
+                    op.quien.toLowerCase().includes(busqueda);
+
+                const matchRelevancia = relevancia === 'todas' || op.relevancia === relevancia;
+
+                return matchBusqueda && matchRelevancia;
+            });
+
+            // Ordenar
+            if (ordenar === 'relevancia') {
+                const orden = { 'ALTA': 1, 'MEDIA': 2, 'BAJA': 3 };
+                oportunidadesFiltradas.sort((a, b) => orden[a.relevancia] - orden[b.relevancia]);
+            } else if (ordenar === 'fecha') {
+                oportunidadesFiltradas.sort((a, b) => new Date(a.fecha_presentacion) - new Date(b.fecha_presentacion));
+            } else if (ordenar === 'monto') {
+                oportunidadesFiltradas.sort((a, b) => (b.monto_estimado || 0) - (a.monto_estimado || 0));
+            } else if (ordenar === 'reciente') {
+                oportunidadesFiltradas.sort((a, b) => new Date(b.fecha_analisis) - new Date(a.fecha_analisis));
+            }
+
+            renderizarOportunidades();
+            actualizarEstadisticas();
+        }
+
+        function renderizarOportunidades() {
+            const container = document.getElementById('lista-oportunidades');
+            const sinResultados = document.getElementById('sin-resultados');
+
+            if (oportunidadesFiltradas.length === 0) {
+                container.innerHTML = '';
+                sinResultados.classList.remove('hidden');
+                return;
+            }
+
+            sinResultados.classList.add('hidden');
+
+            const html = oportunidadesFiltradas.map(op => `
+                <div class="bg-white rounded-lg shadow-sm p-6 mb-4 hover:shadow-md transition">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold ${
+                                    op.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
+                                    op.relevancia === 'MEDIA' ? 'bg-yellow-100 text-yellow-800' :
+                                    'bg-gray-100 text-gray-800'
+                                }">
+                                    ${op.relevancia}
+                                </span>
+                                ${op.es_nuevo ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">NUEVO</span>' : ''}
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 mb-2">${op.referencia}</h3>
+                        </div>
+                        <span class="text-xl font-bold text-gray-900">
+                            ${formatearMonto(op.monto_estimado)}
+                        </span>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-sm text-gray-600 font-semibold mb-1">¿Qué?</p>
+                            <p class="text-sm text-gray-800">${op.que}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 font-semibold mb-1">¿Quién?</p>
+                            <p class="text-sm text-gray-800">${op.quien}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <p class="text-sm text-gray-600 font-semibold mb-2">🎯 Por qué es relevante:</p>
+                        <p class="text-sm text-gray-800">${op.razon}</p>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                        <div class="flex items-center gap-4 text-sm text-gray-600">
+                            <span>📅 Cierre: ${formatearFecha(op.fecha_presentacion)}</span>
+                            <span>🕐 ${calcularDiasRestantes(op.fecha_presentacion)}</span>
+                        </div>
+                        <a href="${op.url_detalle || '#'}" target="_blank" rel="noopener noreferrer" 
+                           class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm font-semibold">
+                            Ver en SECP →
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        function actualizarEstadisticas() {
+            const alta = todasOportunidades.filter(op => op.relevancia === 'ALTA').length;
+            const media = todasOportunidades.filter(op => op.relevancia === 'MEDIA').length;
+            
+            document.getElementById('count-alta').textContent = alta;
+            document.getElementById('count-media').textContent = media;
+            document.getElementById('count-total').textContent = todasOportunidades.length;
+        }
+
+        function formatearMonto(monto) {
+            if (!monto) return 'N/A';
+            return new Intl.NumberFormat('es-DO', { 
+                style: 'currency', 
+                currency: 'DOP',
+                minimumFractionDigits: 0 
+            }).format(monto);
+        }
+
+        function formatearFecha(fecha) {
+            if (!fecha) return 'N/A';
+            return new Date(fecha).toLocaleDateString('es-DO', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function calcularDiasRestantes(fecha) {
+            if (!fecha) return '';
+            const ahora = new Date();
+            const cierre = new Date(fecha);
+            const dias = Math.ceil((cierre - ahora) / (1000 * 60 * 60 * 24));
+            
+            if (dias < 0) return '❌ Cerrada';
+            if (dias === 0) return '⚠️ Cierra hoy';
+            if (dias === 1) return '⚠️ Cierra mañana';
+            if (dias <= 7) return `⚠️ ${dias} días`;
+            return `✅ ${dias} días`;
+        }
+
+        function exportarExcel() {
+            alert('🚧 Función de exportación próximamente');
+        }
+
+        function mostrarError() {
+            document.getElementById('lista-oportunidades').innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                    <div class="text-4xl mb-4">⚠️</div>
+                    <p class="text-red-800 font-semibold">Error cargando oportunidades</p>
+                    <button onclick="cargarOportunidades()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        Reintentar
+                    </button>
+                </div>
+            `;
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>
