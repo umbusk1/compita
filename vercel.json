@@ -24,13 +24,10 @@
     "api/confirmar-email.js": {
       "maxDuration": 10
     },
-    "api/recuperar-password.js": {
+    "api/password.js": {
       "maxDuration": 10
     },
-    "api/resetear-password.js": {
-      "maxDuration": 10
-    },
-    "api/cambiar-password.js": {
+    "api/admin.js": {
       "maxDuration": 10
     }
   }
