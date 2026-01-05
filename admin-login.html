@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Compita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 to-purple-600 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+        <!-- Logo y Título -->
+        <div class="text-center mb-8">
+            <div class="inline-block bg-indigo-100 p-4 rounded-full mb-4">
+                <span class="text-4xl">🔐</span>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+            <p class="text-gray-600">Compita - Panel de Administración</p>
+        </div>
+
+        <!-- Formulario -->
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email de Administrador</label>
+                <input 
+                    type="email" 
+                    id="email"
+                    required
+                    placeholder="admin@ejemplo.com"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition"
+                >
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
+                <input 
+                    type="password" 
+                    id="password"
+                    required
+                    placeholder="••••••••"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition"
+                >
+            </div>
+
+            <!-- Mensaje de error -->
+            <div id="error-message" class="hidden bg-red-50 border border-red-200 rounded-lg p-4">
+                <p class="text-red-800 text-sm font-medium">❌ <span id="error-text"></span></p>
+            </div>
+
+            <!-- Botón -->
+            <button 
+                type="submit"
+                id="submit-btn"
+                class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg shadow-lg hover:shadow-xl"
+            >
+                Iniciar Sesión
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="mt-8 pt-6 border-t border-gray-200 text-center">
+            <a href="/" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                ← Volver al inicio
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        // Verificar si ya está autenticado
+        window.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('admin_token');
+            if (token) {
+                // Verificar si el token es válido
+                fetch(`${API_BASE}/api/admin-verify`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                .then(res => res.ok ? window.location.href = '/admin.html' : null)
+                .catch(() => {});
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            
+            // Deshabilitar botón
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verificando...';
+            errorDiv.classList.add('hidden');
+
+            try {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                const response = await fetch(`${API_BASE}/api/admin-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Guardar token
+                    localStorage.setItem('admin_token', data.token);
+                    
+                    // Redirigir al dashboard
+                    window.location.href = '/admin.html';
+                } else {
+                    // Mostrar error
+                    errorText.textContent = data.error || 'Credenciales incorrectas';
+                    errorDiv.classList.remove('hidden');
+                    
+                    // Habilitar botón
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Iniciar Sesión';
+                }
+            } catch (error) {
+                console.error('Error de login:', error);
+                errorText.textContent = 'Error de conexión. Intenta nuevamente.';
+                errorDiv.classList.remove('hidden');
+                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Iniciar Sesión';
+            }
+        });
+    </script>
+</body>
+</html>
