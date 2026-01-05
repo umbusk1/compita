@@ -2,7 +2,6 @@
   "name": "compita",
   "version": "1.0.0",
   "description": "Sistema multi-cliente de análisis de licitaciones con IA",
-  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vercel dev",
