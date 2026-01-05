@@ -126,7 +126,7 @@
                 <!-- Tab: Sistema -->
                 <div id="content-sistema" class="tab-content hidden">
                     <h2 class="text-xl font-bold text-gray-900 mb-6">Estado del Sistema</h2>
-                    
+
                     <div class="space-y-4">
                         <!-- Último Scraping -->
                         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
@@ -199,7 +199,7 @@
         async function cargarDatosAdmin() {
             try {
                 const token = localStorage.getItem('admin_token');
-                const response = await fetch(`${API_BASE}/api/admin-verify`, {
+                const response = await fetch(`${API_BASE}/api/admin?action=verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -219,13 +219,13 @@
         async function cargarEstadisticas() {
             try {
                 const token = localStorage.getItem('admin_token');
-                const response = await fetch(`${API_BASE}/api/admin-stats`, {
+                const response = await fetch(`${API_BASE}/api/admin?action=stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    
+
                     // Actualizar métricas
                     document.getElementById('total-empresas').textContent = data.total_empresas || 0;
                     document.getElementById('licitaciones-hoy').textContent = data.licitaciones_hoy || 0;
@@ -237,8 +237,13 @@
 
                     // Cargar info del sistema
                     if (data.ultimo_scraping) {
-                        document.getElementById('ultimo-scraping').textContent = 
+                        document.getElementById('ultimo-scraping').textContent =
                             `${new Date(data.ultimo_scraping).toLocaleString('es-DO')} - ${data.licitaciones_hoy} licitaciones`;
+                    }
+
+                    if (data.ultimo_analisis) {
+                        document.getElementById('ultimo-analisis').textContent =
+                            `${new Date(data.ultimo_analisis).toLocaleString('es-DO')}`;
                     }
 
                     // Cargar admins
@@ -251,7 +256,7 @@
 
         function cargarTablaEmpresas(empresas) {
             const tbody = document.getElementById('tabla-empresas');
-            
+
             if (empresas.length === 0) {
                 tbody.innerHTML = `
                     <tr>
@@ -303,7 +308,7 @@
 
         function cargarListaAdmins(admins) {
             const lista = document.getElementById('lista-admins');
-            
+
             if (admins.length === 0) {
                 lista.innerHTML = '<p class="text-gray-500 text-center py-8">📭 No hay administradores</p>';
                 return;
@@ -328,7 +333,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        ${admin.activo ? 
+                        ${admin.activo ?
                             '<span class="text-green-600 text-sm font-medium">✓ Activo</span>' :
                             '<span class="text-red-600 text-sm font-medium">✗ Inactivo</span>'
                         }
@@ -342,7 +347,7 @@
         function cambiarTab(tab) {
             // Ocultar todos los contenidos
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            
+
             // Quitar estilo activo de todos los tabs
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('border-indigo-600', 'text-indigo-600');
@@ -351,7 +356,7 @@
 
             // Mostrar contenido activo
             document.getElementById(`content-${tab}`).classList.remove('hidden');
-            
+
             // Activar tab
             const tabBtn = document.getElementById(`tab-${tab}`);
             tabBtn.classList.add('border-indigo-600', 'text-indigo-600');
