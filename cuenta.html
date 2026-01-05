@@ -398,14 +398,13 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/cambiar-password`, {
+                const response = await fetch(`${API_BASE}/api/password?action=change`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('compita_token') || sessionStorage.getItem('compita_token')}`
                     },
                     body: JSON.stringify({
-                        email: usuarioActual.email,
                         password_actual: passwordActual,
                         password_nueva: passwordNueva
                     })
