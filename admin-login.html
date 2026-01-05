@@ -21,8 +21,8 @@
         <form id="login-form" class="space-y-6">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Email de Administrador</label>
-                <input 
-                    type="email" 
+                <input
+                    type="email"
                     id="email"
                     required
                     placeholder="admin@ejemplo.com"
@@ -32,8 +32,8 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
-                <input 
-                    type="password" 
+                <input
+                    type="password"
                     id="password"
                     required
                     placeholder="••••••••"
@@ -47,7 +47,7 @@
             </div>
 
             <!-- Botón -->
-            <button 
+            <button
                 type="submit"
                 id="submit-btn"
                 class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg shadow-lg hover:shadow-xl"
@@ -72,7 +72,7 @@
             const token = localStorage.getItem('admin_token');
             if (token) {
                 // Verificar si el token es válido
-                fetch(`${API_BASE}/api/admin-verify`, {
+                fetch(`${API_BASE}/api/admin?action=verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 .then(res => res.ok ? window.location.href = '/admin.html' : null)
@@ -82,11 +82,11 @@
 
         document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const submitBtn = document.getElementById('submit-btn');
             const errorDiv = document.getElementById('error-message');
             const errorText = document.getElementById('error-text');
-            
+
             // Deshabilitar botón
             submitBtn.disabled = true;
             submitBtn.textContent = 'Verificando...';
@@ -96,7 +96,7 @@
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
 
-                const response = await fetch(`${API_BASE}/api/admin-login`, {
+                const response = await fetch(`${API_BASE}/api/admin?action=login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -107,14 +107,14 @@
                 if (response.ok) {
                     // Guardar token
                     localStorage.setItem('admin_token', data.token);
-                    
+
                     // Redirigir al dashboard
                     window.location.href = '/admin.html';
                 } else {
                     // Mostrar error
                     errorText.textContent = data.error || 'Credenciales incorrectas';
                     errorDiv.classList.remove('hidden');
-                    
+
                     // Habilitar botón
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Iniciar Sesión';
@@ -123,7 +123,7 @@
                 console.error('Error de login:', error);
                 errorText.textContent = 'Error de conexión. Intenta nuevamente.';
                 errorDiv.classList.remove('hidden');
-                
+
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Iniciar Sesión';
             }
