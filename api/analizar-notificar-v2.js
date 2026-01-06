@@ -300,7 +300,7 @@ async function analizarDiario() {
     console.log('📥 Obteniendo licitaciones de hoy...');
     const licitacionesRes = await pool.query(`
       SELECT * FROM licitaciones
-      WHERE DATE(scrapeado_en) = CURRENT_DATE
+      WHERE DATE(scrapeado_en) = '2026-01-05'
       ORDER BY scrapeado_en DESC
     `);
     const licitaciones = licitacionesRes.rows;
