@@ -111,21 +111,21 @@ async function handleStats(req, res) {
   );
   const oportunidadesTotales = await pool.query('SELECT COUNT(*) as total FROM resultados');
   const emailsHoy = await pool.query(
-    `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados 
+    `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados
      WHERE DATE(fecha_analisis) = CURRENT_DATE`
   );
 
-  const empresas = await pool.query(`
-    SELECT 
-      e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin,
-      u.email as usuario_email, u.nombre as usuario_nombre,
-      COUNT(r.id) as oportunidades_count
-    FROM empresas e
-    LEFT JOIN usuarios u ON u.empresa_id = e.id
-    LEFT JOIN resultados r ON r.empresa_id = e.id
-    GROUP BY e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin, u.email, u.nombre
-    ORDER BY e.id
-  `);
+const empresas = await pool.query(`
+  SELECT
+    e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin,
+    u.email as usuario_email,
+    COUNT(r.id) as oportunidades_count
+  FROM empresas e
+  LEFT JOIN usuarios u ON u.empresa_id = e.id
+  LEFT JOIN resultados r ON r.empresa_id = e.id
+  GROUP BY e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin, u.email
+  ORDER BY e.id
+`);
 
   const administradores = await pool.query(`
     SELECT id, nombre, email, rol, activo, creado_en, ultimo_acceso
