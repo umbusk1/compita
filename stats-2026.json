@@ -1,12 +1,12 @@
 {
-  "ultima_actualizacion": "2026-01-06 01:41:39",
+  "ultima_actualizacion": "2026-01-06 11:14:15",
   "stats": {
     "total": 500,
     "por_estado": {
       "abiertas": 500,
       "todas": {
-        "Proceso publicado": 395,
         "Published": 84,
+        "Proceso publicado": 395,
         "Proceso cancelado": 3,
         "ClosedForReplies": 11,
         "Awarded": 7
