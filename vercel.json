@@ -6,6 +6,12 @@
     "api/obtener-oportunidades.js": {
       "maxDuration": 10
     },
+    "api/obtener-empresa.js": {
+      "maxDuration": 10
+    },
+    "api/actualizar-empresa.js": {
+      "maxDuration": 10
+    },
     "api/usuario.js": {
       "maxDuration": 5
     },
