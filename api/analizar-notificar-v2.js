@@ -55,7 +55,7 @@ export default async function handler(req, res) {
 
   try {
     // 1. Analizar oportunidades
-    const resultados = await analizarDiario();
+    const { resultados, empresasProcesadas } = await analizarDiario();
 
     // 2. Enviar notificaciones
     let emailsEnviados = 0;
@@ -405,7 +405,7 @@ async function analizarDiario() {
       });
     }
 
-    return resultadosPorEmpresa;
+    return { resultados: resultadosPorEmpresa, empresasProcesadas };
 
   } catch (error) {
     console.error('\n❌ Error en análisis:', error);
