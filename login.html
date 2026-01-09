@@ -153,13 +153,13 @@
 
                 if (response.ok) {
                     // Guardar token (nombre simple para compatibilidad con dashboard)
-                    if (recordar) {
-                        localStorage.setItem('token', data.token);
-                        localStorage.setItem('usuario', JSON.stringify(data.usuario));
-                    } else {
-                        sessionStorage.setItem('token', data.token);
-                        sessionStorage.setItem('usuario', JSON.stringify(data.usuario));
-                    }
+				if (recordar) {
+					localStorage.setItem('token', data.token);
+					localStorage.setItem('user', JSON.stringify(data.usuario));  // ← CAMBIO
+				} else {
+					sessionStorage.setItem('token', data.token);
+					sessionStorage.setItem('user', JSON.stringify(data.usuario)); // ← CAMBIO
+				}
 
                     // Redirigir al dashboard de oportunidades
                     window.location.href = '/oportunidades.html';
