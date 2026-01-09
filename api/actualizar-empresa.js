@@ -56,7 +56,7 @@ export default async function handler(req, res) {
 
     // ========== ACTUALIZAR EMPRESA ==========
     // IMPORTANTE: Actualizar SOLO la empresa del usuario logueado (empresa_id del token)
-    
+
     const resultado = await sql`
       UPDATE empresas
       SET
@@ -64,8 +64,7 @@ export default async function handler(req, res) {
         descripcion = ${descripcion?.trim() || ''},
         palabras_clave = ${palabras_clave || []},
         exclusiones = ${exclusiones || []},
-        monto_minimo_alta = ${monto_minimo_alta || 500000},
-        actualizado_en = NOW()
+        monto_minimo_alta = ${monto_minimo_alta || 500000}
       WHERE id = ${decoded.empresa_id}
       RETURNING id, nombre, descripcion, palabras_clave, exclusiones, monto_minimo_alta
     `;
