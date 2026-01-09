@@ -104,10 +104,14 @@ export default async function handler(req, res) {
     // Nota: Todos empiezan con 'free_trial' de 7 días
     // El campo 'plan_deseado' guarda qué plan quiere después del trial
 
+    // 🆕 Crear una descripción por defecto basada en el nombre de la empresa
+    const descripcionDefault = `Empresa interesada en licitaciones públicas en República Dominicana.`;
+
     const empresaResult = await sql`
       INSERT INTO empresas (
         nombre,
         dominio,
+        descripcion,
         plan,
         trial_inicio,
         trial_fin,
@@ -116,6 +120,7 @@ export default async function handler(req, res) {
       VALUES (
         ${empresa.trim()},
         ${dominioEmpresa},
+        ${descripcionDefault},
         'free_trial',
         ${ahora.toISOString()},
         ${trialFin.toISOString()},
