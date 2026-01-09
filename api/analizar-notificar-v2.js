@@ -314,14 +314,15 @@ async function analizarDiario() {
 
       // 🆕 OBTENER LICITACIONES SEGÚN SI ES NUEVA O NO
       let licitaciones;
-      if (esEmpresaNueva) {
-        console.log('   🆕 Empresa nueva - Analizando TODAS las licitaciones abiertas');
-        const licitacionesRes = await pool.query(`
-          SELECT * FROM licitaciones
-          WHERE fecha_presentacion > NOW()
-          ORDER BY scrapeado_en DESC
-        `);
-        licitaciones = licitacionesRes.rows;
+		if (esEmpresaNueva) {
+		  console.log('   🆕 Empresa nueva - Analizando últimas 100 licitaciones abiertas');
+		  const licitacionesRes = await pool.query(`
+			SELECT * FROM licitaciones
+			WHERE fecha_presentacion > NOW()
+			ORDER BY scrapeado_en DESC
+			LIMIT 100
+		  `);
+		  licitaciones = licitacionesRes.rows;
       } else {
         console.log('   📅 Empresa existente - Analizando solo licitaciones de hoy');
         const licitacionesRes = await pool.query(`
