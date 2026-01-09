@@ -291,7 +291,7 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/obtener-empresa`, {
+                const response = await fetch(`${API_BASE}/api/empresa`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -347,7 +347,7 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/actualizar-empresa`, {
+                const response = await fetch(`${API_BASE}/api/empresa`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
