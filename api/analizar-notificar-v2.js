@@ -71,7 +71,7 @@ export default async function handler(req, res) {
     console.log('\n════════════════════════════════════════════════════════════');
     console.log('📊 RESUMEN FINAL');
     console.log('════════════════════════════════════════════════════════════');
-    console.log(`✅ Empresas procesadas: ${resultados.length}`);
+    console.log(`✅ Empresas procesadas: ${empresasProcesadas}`);
     console.log(`📧 Notificaciones enviadas: ${emailsEnviados}`);
     console.log(`⏱️  Duración: ${duracionTotal} segundos`);
     console.log('════════════════════════════════════════════════════════════\n');
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       timestamp: new Date().toISOString(),
-      empresas_procesadas: resultados.length,
+      empresas_procesadas: empresasProcesadas,
       emails_enviados: emailsEnviados,
       duracion_segundos: parseFloat(duracionTotal),
       detalle: resultados.map(r => ({
@@ -290,6 +290,7 @@ async function analizarDiario() {
     });
 
     console.log(`✅ ${empresas.length} empresas activas\n`);
+    let empresasProcesadas = 0; // Contador de empresas realmente procesadas
 
     if (empresas.length === 0) {
       console.log('⚠️  No hay empresas activas');
@@ -315,6 +316,7 @@ async function analizarDiario() {
     const resultadosPorEmpresa = [];
 
     for (const empresa of empresas) {
+	  empresasProcesadas++; // Contamos cada empresa que procesamos
       console.log(`\n📊 ${empresa.nombre} (${empresa.plan})`);
 
       // Verificar qué ya fue analizado
