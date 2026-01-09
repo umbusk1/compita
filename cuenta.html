@@ -13,8 +13,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <a href="/dashboard.html" class="text-indigo-600 hover:text-indigo-800 transition">
-                        ← Volver al Dashboard
+                    <a href="/oportunidades.html" class="text-indigo-600 hover:text-indigo-800 transition">
+                        ← Volver a Oportunidades
                     </a>
                 </div>
                 <div class="flex items-center gap-4">
@@ -242,8 +242,8 @@
         });
 
         async function verificarAutenticacion() {
-            const token = localStorage.getItem('compita_token') || sessionStorage.getItem('compita_token');
-            const usuarioStr = localStorage.getItem('compita_usuario') || sessionStorage.getItem('compita_usuario');
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            const usuarioStr = localStorage.getItem('user') || sessionStorage.getItem('user');
 
             if (!token || !usuarioStr) {
                 window.location.href = '/login.html';
@@ -264,10 +264,10 @@
         }
 
         function cerrarSesion() {
-            localStorage.removeItem('compita_token');
-            localStorage.removeItem('compita_usuario');
-            sessionStorage.removeItem('compita_token');
-            sessionStorage.removeItem('compita_usuario');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
             window.location.href = '/login.html';
         }
 
@@ -290,7 +290,11 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}`);
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/obtener-empresa`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
                 const data = await response.json();
 
                 if (!data.success) {
@@ -304,16 +308,11 @@
                 document.getElementById('empresa-nombre').value = empresaActual.nombre || '';
                 document.getElementById('empresa-descripcion').value = empresaActual.descripcion || '';
 
-                // Convertir arrays a strings
-                const palabrasClave = Array.isArray(empresaActual.palabras_clave)
-                    ? empresaActual.palabras_clave.join(', ')
-                    : '';
-                document.getElementById('empresa-palabras-clave').value = palabrasClave;
+                // palabras_clave ya viene como string del endpoint
+                document.getElementById('empresa-palabras-clave').value = empresaActual.palabras_clave || '';
 
-                const exclusiones = Array.isArray(empresaActual.exclusiones)
-                    ? empresaActual.exclusiones.join(', ')
-                    : '';
-                document.getElementById('empresa-exclusiones').value = exclusiones;
+                // exclusiones ya viene como string del endpoint
+                document.getElementById('empresa-exclusiones').value = empresaActual.exclusiones || '';
 
                 document.getElementById('empresa-monto-minimo').value = empresaActual.monto_minimo_alta || 500000;
 
@@ -347,9 +346,13 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/actualizar-empresa`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
                     body: JSON.stringify(datos)
                 });
 
@@ -361,11 +364,11 @@
                     // Actualizar nombre en localStorage si cambió
                     if (datos.nombre !== usuarioActual.empresa) {
                         usuarioActual.empresa = datos.nombre;
-                        const storageKey = localStorage.getItem('compita_usuario') ? 'compita_usuario' : 'sessionStorage';
-                        if (storageKey === 'compita_usuario') {
-                            localStorage.setItem('compita_usuario', JSON.stringify(usuarioActual));
+                        const storageKey = localStorage.getItem('user') ? 'localStorage' : 'sessionStorage';
+                        if (storageKey === 'localStorage') {
+                            localStorage.setItem('user', JSON.stringify(usuarioActual));
                         } else {
-                            sessionStorage.setItem('compita_usuario', JSON.stringify(usuarioActual));
+                            sessionStorage.setItem('user', JSON.stringify(usuarioActual));
                         }
                     }
 
@@ -398,11 +401,12 @@
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/password?action=change`, {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/cambiar-password`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('compita_token') || sessionStorage.getItem('compita_token')}`
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
                         password_actual: passwordActual,
