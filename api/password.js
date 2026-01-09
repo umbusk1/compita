@@ -1,224 +1,322 @@
-const { Pool } = require('pg');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { Resend } = require('resend');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
+// api/password.js - Gestión de contraseñas (usuarios y admin)
+import { neon } from '@neondatabase/serverless';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const JWT_SECRET = process.env.JWT_SECRET || 'compita-jwt-secret-2026';
 
-// Verificar token
-function verificarToken(authHeader) {
-  try {
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return null;
-    }
-    const token = authHeader.substring(7);
-    return jwt.verify(token, JWT_SECRET);
-  } catch (error) {
-    return null;
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
-}
 
-// Handler principal
-module.exports = async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({
+      success: false,
+      error: 'Método no permitido'
+    });
+  }
+
+  const sql = neon(process.env.DATABASE_URL);
   const { action } = req.query;
 
   try {
-    switch(action) {
-      case 'change':
-        return await handleCambiar(req, res);
-      case 'recover':
-        return await handleRecuperar(req, res);
-      case 'reset':
-        return await handleResetear(req, res);
-      default:
-        return res.status(400).json({ error: 'Acción no especificada. Use ?action=change|recover|reset' });
+    // ========== CAMBIAR CONTRASEÑA (Usuario normal) ==========
+    if (action === 'change') {
+      return await cambiarPasswordUsuario(req, res, sql);
     }
+
+    // ========== SOLICITAR RESET ADMIN ==========
+    if (action === 'request-reset-admin') {
+      return await solicitarResetAdmin(req, res, sql);
+    }
+
+    // ========== CONFIRMAR RESET ADMIN ==========
+    if (action === 'confirm-reset-admin') {
+      return await confirmarResetAdmin(req, res, sql);
+    }
+
+    return res.status(400).json({
+      success: false,
+      error: 'Acción no válida. Use: change, request-reset-admin, confirm-reset-admin'
+    });
+
   } catch (error) {
     console.error('Error en password API:', error);
-    return res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({
+      success: false,
+      error: 'Error al procesar solicitud'
+    });
   }
-};
+}
 
-// CAMBIAR PASSWORD (usuario autenticado)
-async function handleCambiar(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+// ============================================================================
+// CAMBIAR CONTRASEÑA (Usuario normal)
+// ============================================================================
+async function cambiarPasswordUsuario(req, res, sql) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({
+      success: false,
+      error: 'No autorizado'
+    });
   }
 
-  const usuario = verificarToken(req.headers.authorization);
-  if (!usuario) {
-    return res.status(401).json({ error: 'No autorizado' });
+  const token = authHeader.split(' ')[1];
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET || 'compita-secret-2024');
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      error: 'Token inválido'
+    });
   }
 
   const { password_actual, password_nueva } = req.body;
 
   if (!password_actual || !password_nueva) {
-    return res.status(400).json({ error: 'Contraseñas requeridas' });
+    return res.status(400).json({
+      success: false,
+      error: 'Contraseñas requeridas'
+    });
   }
 
   if (password_nueva.length < 8) {
-    return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
+    return res.status(400).json({
+      success: false,
+      error: 'La nueva contraseña debe tener al menos 8 caracteres'
+    });
   }
 
-  // Verificar contraseña actual
-  const result = await pool.query(
-    'SELECT password_hash FROM usuarios WHERE id = $1',
-    [usuario.id]
-  );
+  const usuario = await sql`
+    SELECT id, password_hash FROM usuarios WHERE email = ${decoded.email}
+  `;
 
-  if (result.rows.length === 0) {
-    return res.status(404).json({ error: 'Usuario no encontrado' });
+  if (usuario.length === 0) {
+    return res.status(404).json({
+      success: false,
+      error: 'Usuario no encontrado'
+    });
   }
 
-  const passwordValida = await bcrypt.compare(password_actual, result.rows[0].password_hash);
-
-  if (!passwordValida) {
-    return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+  const passwordValido = await bcrypt.compare(password_actual, usuario[0].password_hash);
+  if (!passwordValido) {
+    return res.status(401).json({
+      success: false,
+      error: 'Contraseña actual incorrecta'
+    });
   }
 
-  // Cambiar contraseña
-  const nuevoHash = await bcrypt.hash(password_nueva, 10);
+  const salt = await bcrypt.genSalt(10);
+  const nuevoHash = await bcrypt.hash(password_nueva, salt);
 
-  await pool.query(
-    'UPDATE usuarios SET password_hash = $1 WHERE id = $2',
-    [nuevoHash, usuario.id]
-  );
+  await sql`
+    UPDATE usuarios
+    SET password_hash = ${nuevoHash}
+    WHERE id = ${usuario[0].id}
+  `;
 
-  return res.json({ 
-    success: true, 
-    message: 'Contraseña actualizada exitosamente' 
+  return res.status(200).json({
+    success: true,
+    mensaje: 'Contraseña actualizada correctamente'
   });
 }
 
-// RECUPERAR PASSWORD (enviar email con token)
-async function handleRecuperar(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
+// ============================================================================
+// SOLICITAR RESET ADMIN
+// ============================================================================
+async function solicitarResetAdmin(req, res, sql) {
   const { email } = req.body;
 
   if (!email) {
-    return res.status(400).json({ error: 'Email requerido' });
-  }
-
-  // Buscar usuario
-  const result = await pool.query(
-    'SELECT id, nombre FROM usuarios WHERE email = $1',
-    [email.toLowerCase()]
-  );
-
-  // Siempre devolver éxito por seguridad (no revelar si el email existe)
-  if (result.rows.length === 0) {
-    return res.json({ 
-      success: true, 
-      message: 'Si el email existe, recibirás instrucciones para resetear tu contraseña' 
+    return res.status(400).json({
+      success: false,
+      error: 'Email requerido'
     });
   }
 
-  const usuario = result.rows[0];
+  const admin = await sql`
+    SELECT id, nombre, email, activo
+    FROM administradores
+    WHERE email = ${email.toLowerCase()}
+  `;
 
-  // Generar token de recuperación (válido por 1 hora)
+  // Por seguridad, siempre devolvemos success incluso si el email no existe
+  if (admin.length === 0 || !admin[0].activo) {
+    return res.status(200).json({
+      success: true,
+      mensaje: 'Si el email existe, recibirás un link de recuperación'
+    });
+  }
+
+  const adminData = admin[0];
+
+  // Generar token de reset con expiración de 1 hora
   const resetToken = jwt.sign(
-    { id: usuario.id, type: 'password_reset' },
-    JWT_SECRET,
+    {
+      admin_id: adminData.id,
+      email: adminData.email,
+      tipo: 'reset_admin'
+    },
+    process.env.JWT_SECRET || 'compita-secret-2024',
     { expiresIn: '1h' }
   );
 
-  // URL de reseteo
-  const resetUrl = `${process.env.VERCEL_URL || 'https://compita.umbusk.com'}/resetear-password.html?token=${resetToken}`;
+  // Enviar email con link de reset
+  const resetUrl = `https://${req.headers.host}/confirmar-reset-admin.html?token=${resetToken}`;
 
-  // Enviar email
   try {
     await resend.emails.send({
-      from: 'Compita <notificaciones@compita.umbusk.com>',
-      to: email,
-      subject: 'Recuperar contraseña - Compita',
+      from: 'Compita Admin <notificaciones@compita.umbusk.com>',
+      to: adminData.email,
+      subject: '🔐 Recuperar Contraseña - Admin Compita',
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #4F46E5;">Recuperar Contraseña</h2>
-          <p>Hola ${usuario.nombre},</p>
-          <p>Recibimos una solicitud para resetear tu contraseña en Compita.</p>
-          <p>Haz clic en el siguiente botón para crear una nueva contraseña:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${resetUrl}" 
-               style="background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;">
-              Resetear Contraseña
-            </a>
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
+            .button { display: inline-block; background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+            .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🔐 Recuperar Contraseña</h1>
+            </div>
+            <div class="content">
+              <h2>Hola ${adminData.nombre},</h2>
+              <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta de administrador en Compita.</p>
+
+              <p>Haz clic en el botón para crear una nueva contraseña:</p>
+
+              <center>
+                <a href="${resetUrl}" class="button">Restablecer Contraseña</a>
+              </center>
+
+              <p>Si el botón no funciona, copia y pega este link en tu navegador:</p>
+              <p style="background: #f5f5f5; padding: 10px; word-break: break-all; font-size: 12px;">
+                ${resetUrl}
+              </p>
+
+              <div class="warning">
+                <strong>⚠️ Importante:</strong>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                  <li>Este link expira en <strong>1 hora</strong></li>
+                  <li>Solo puede ser usado una vez</li>
+                  <li>Si no solicitaste este cambio, ignora este email</li>
+                </ul>
+              </div>
+            </div>
+            <div class="footer">
+              <p>Este email fue enviado por Compita Admin Panel</p>
+              <p>Si no solicitaste este cambio, tu cuenta está segura</p>
+            </div>
           </div>
-          <p style="color: #666; font-size: 14px;">Este enlace es válido por 1 hora.</p>
-          <p style="color: #666; font-size: 14px;">Si no solicitaste este cambio, ignora este email.</p>
-          <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-          <p style="color: #999; font-size: 12px;">Compita - Sistema de Análisis de Licitaciones</p>
-        </div>
+        </body>
+        </html>
       `
     });
+
+    console.log(`✉️ Email de reset enviado a: ${adminData.email}`);
+
   } catch (emailError) {
     console.error('Error enviando email:', emailError);
-    // No revelar el error al usuario
+    // No revelamos que hubo error para evitar enumerar emails válidos
   }
 
-  return res.json({ 
-    success: true, 
-    message: 'Si el email existe, recibirás instrucciones para resetear tu contraseña' 
+  return res.status(200).json({
+    success: true,
+    mensaje: 'Si el email existe, recibirás un link de recuperación'
   });
 }
 
-// RESETEAR PASSWORD (con token del email)
-async function handleResetear(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+// ============================================================================
+// CONFIRMAR RESET ADMIN
+// ============================================================================
+async function confirmarResetAdmin(req, res, sql) {
+  const { token, nueva_password } = req.body;
+
+  if (!token || !nueva_password) {
+    return res.status(400).json({
+      success: false,
+      error: 'Token y contraseña requeridos'
+    });
   }
 
-  const { token, password_nueva } = req.body;
-
-  if (!token || !password_nueva) {
-    return res.status(400).json({ error: 'Token y contraseña requeridos' });
-  }
-
-  if (password_nueva.length < 8) {
-    return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
+  if (nueva_password.length < 8) {
+    return res.status(400).json({
+      success: false,
+      error: 'La contraseña debe tener al menos 8 caracteres'
+    });
   }
 
   // Verificar token
   let decoded;
   try {
-    decoded = jwt.verify(token, JWT_SECRET);
-    
-    // Verificar que sea un token de reset
-    if (decoded.type !== 'password_reset') {
-      return res.status(401).json({ error: 'Token inválido' });
-    }
+    decoded = jwt.verify(token, process.env.JWT_SECRET || 'compita-secret-2024');
   } catch (error) {
-    return res.status(401).json({ error: 'Token expirado o inválido' });
+    return res.status(401).json({
+      success: false,
+      error: 'Token inválido o expirado'
+    });
   }
 
-  // Verificar que el usuario existe
-  const result = await pool.query(
-    'SELECT id FROM usuarios WHERE id = $1',
-    [decoded.id]
-  );
-
-  if (result.rows.length === 0) {
-    return res.status(404).json({ error: 'Usuario no encontrado' });
+  // Verificar que sea un token de reset de admin
+  if (decoded.tipo !== 'reset_admin') {
+    return res.status(401).json({
+      success: false,
+      error: 'Token no válido para esta operación'
+    });
   }
+
+  // Verificar que el admin existe y está activo
+  const admin = await sql`
+    SELECT id, email, activo
+    FROM administradores
+    WHERE id = ${decoded.admin_id} AND email = ${decoded.email}
+  `;
+
+  if (admin.length === 0 || !admin[0].activo) {
+    return res.status(404).json({
+      success: false,
+      error: 'Administrador no encontrado'
+    });
+  }
+
+  // Generar nuevo hash
+  const salt = await bcrypt.genSalt(10);
+  const nuevoHash = await bcrypt.hash(nueva_password, salt);
 
   // Actualizar contraseña
-  const nuevoHash = await bcrypt.hash(password_nueva, 10);
+  await sql`
+    UPDATE administradores
+    SET password_hash = ${nuevoHash}
+    WHERE id = ${decoded.admin_id}
+  `;
 
-  await pool.query(
-    'UPDATE usuarios SET password_hash = $1 WHERE id = $2',
-    [nuevoHash, decoded.id]
-  );
+  console.log(`✅ Contraseña de admin actualizada: ${admin[0].email}`);
 
-  return res.json({ 
-    success: true, 
-    message: 'Contraseña actualizada exitosamente. Ya puedes iniciar sesión.' 
+  return res.status(200).json({
+    success: true,
+    mensaje: 'Contraseña actualizada correctamente'
   });
 }
+
+export const config = {
+  maxDuration: 10,
+};
