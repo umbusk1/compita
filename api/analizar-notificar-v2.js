@@ -3,8 +3,9 @@ COMPITA - Análisis Diario y Notificaciones (Endpoint Vercel)
 =============================================================
 Analiza licitaciones nuevas para cada empresa activa y envía emails personalizados.
 
-Fecha: 02 de enero 2026
+Fecha: 09 de enero 2026
 Autor: Desarrollo para Moisesp/Compita
+CAMBIO: Detecta empresas nuevas y analiza TODAS las licitaciones abiertas para ellas
 */
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -280,44 +281,63 @@ async function analizarDiario() {
 
     // Filtrar en JavaScript las empresas que tienen palabras clave válidas
     const empresas = empresasRes.rows.filter(emp => {
-      // Convertir array a string si es necesario
       let palabrasClave = emp.palabras_clave;
       if (Array.isArray(palabrasClave)) {
         palabrasClave = palabrasClave.join(', ');
       }
-      // Solo incluir si tiene palabras clave (no vacío)
       return palabrasClave && palabrasClave.trim().length > 0;
     });
 
     console.log(`✅ ${empresas.length} empresas activas\n`);
-    let empresasProcesadas = 0; // Contador de empresas realmente procesadas
+    let empresasProcesadas = 0;
 
     if (empresas.length === 0) {
       console.log('⚠️  No hay empresas activas');
-      return [];
+      return { resultados: [], empresasProcesadas: 0 };
     }
 
-    // 2. Obtener licitaciones de HOY
-    console.log('📥 Obteniendo licitaciones de hoy...');
-    const licitacionesRes = await pool.query(`
-      SELECT * FROM licitaciones
-      WHERE DATE(scrapeado_en) = CURRENT_DATE
-      ORDER BY scrapeado_en DESC
-    `);
-    const licitaciones = licitacionesRes.rows;
-    console.log(`✅ ${licitaciones.length} licitaciones nuevas\n`);
-
-    if (licitaciones.length === 0) {
-      console.log('⚠️  No hay licitaciones nuevas hoy');
-      return [];
-    }
-
-    // 3. Analizar para cada empresa
+    // 2. Analizar para cada empresa
     const resultadosPorEmpresa = [];
 
     for (const empresa of empresas) {
-	  empresasProcesadas++; // Contamos cada empresa que procesamos
+      empresasProcesadas++;
       console.log(`\n📊 ${empresa.nombre} (${empresa.plan})`);
+
+      // 🆕 DETECTAR SI ES EMPRESA NUEVA
+      const historialRes = await pool.query(`
+        SELECT COUNT(*) as total
+        FROM resultados
+        WHERE empresa_id = $1
+      `, [empresa.id]);
+
+      const esEmpresaNueva = parseInt(historialRes.rows[0].total) === 0;
+
+      // 🆕 OBTENER LICITACIONES SEGÚN SI ES NUEVA O NO
+      let licitaciones;
+      if (esEmpresaNueva) {
+        console.log('   🆕 Empresa nueva - Analizando TODAS las licitaciones abiertas');
+        const licitacionesRes = await pool.query(`
+          SELECT * FROM licitaciones
+          WHERE fecha_presentacion > NOW()
+          ORDER BY scrapeado_en DESC
+        `);
+        licitaciones = licitacionesRes.rows;
+      } else {
+        console.log('   📅 Empresa existente - Analizando solo licitaciones de hoy');
+        const licitacionesRes = await pool.query(`
+          SELECT * FROM licitaciones
+          WHERE DATE(scrapeado_en) = CURRENT_DATE
+          ORDER BY scrapeado_en DESC
+        `);
+        licitaciones = licitacionesRes.rows;
+      }
+
+      console.log(`   📊 Total licitaciones a revisar: ${licitaciones.length}`);
+
+      if (licitaciones.length === 0) {
+        console.log('   ⚠️  No hay licitaciones para revisar');
+        continue;
+      }
 
       // Verificar qué ya fue analizado
       const yaAnalizadasRes = await pool.query(`
@@ -448,7 +468,6 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
 
     // Guardar cada resultado
     for (const oportunidad of oportunidades) {
-      // ⭐ NUEVO: Buscar el licitacion_id usando la referencia
       const licitacionRes = await pool.query(
         'SELECT id FROM licitaciones WHERE referencia = $1 LIMIT 1',
         [oportunidad.referencia]
@@ -460,10 +479,9 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
 
       if (!licitacionId) {
         console.warn(`⚠️  No se encontró licitacion_id para referencia: ${oportunidad.referencia}`);
-        continue; // Saltar si no existe la licitación
+        continue;
       }
 
-      // ⭐ MODIFICADO: Ahora incluye licitacion_id
       await pool.query(`
         INSERT INTO resultados (
           analisis_id,
@@ -487,7 +505,7 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
       `, [
         analisisId,
         empresaId,
-        licitacionId,        // ⭐ NUEVO
+        licitacionId,
         oportunidad.referencia || '',
         oportunidad.unidad_compras || '',
         oportunidad.descripcion || '',
