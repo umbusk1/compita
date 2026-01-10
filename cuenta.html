@@ -391,17 +391,18 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/password`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        password_actual: passwordActual,
-                        password_nueva: passwordNueva
-                    })
-                });
+				const response = await fetch(`${API_BASE}/api/password`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					},
+					body: JSON.stringify({
+						action: 'change',
+						password_actual: passwordActual,
+						password_nueva: passwordNueva
+					})
+				});
 
                 const result = await response.json();
 
