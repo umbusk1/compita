@@ -136,30 +136,30 @@
             ocultarMensajes();
 
             try {
-                // Llamar al API de login
-                const response = await fetch('/api/login', {
+                // CAMBIO IMPORTANTE: Ahora usamos /api/auth con action: 'login'
+                const response = await fetch('/api/auth', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        action: 'login',
                         email,
-                        password,
-                        recordar
+                        password
                     })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Guardar token (nombre simple para compatibilidad con dashboard)
-				if (recordar) {
-					localStorage.setItem('token', data.token);
-					localStorage.setItem('user', JSON.stringify(data.usuario));  // ← CAMBIO
-				} else {
-					sessionStorage.setItem('token', data.token);
-					sessionStorage.setItem('user', JSON.stringify(data.usuario)); // ← CAMBIO
-				}
+                    // Guardar token y datos del usuario
+                    if (recordar) {
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                    } else {
+                        sessionStorage.setItem('token', data.token);
+                        sessionStorage.setItem('user', JSON.stringify(data.user));
+                    }
 
                     // Redirigir al dashboard de oportunidades
                     window.location.href = '/oportunidades.html';

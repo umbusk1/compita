@@ -269,16 +269,24 @@
 
         async function procesarTrialGratuito() {
             try {
-                const response = await fetch(`${API_BASE}/api/registro`, {
+                // CAMBIO IMPORTANTE: Ahora usamos /api/auth con action: 'registro'
+                const response = await fetch(`${API_BASE}/api/auth`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datosRegistro)
+                    body: JSON.stringify({
+                        action: 'registro',
+                        email: datosRegistro.email,
+                        password: datosRegistro.password,
+                        nombre: datosRegistro.email.split('@')[0], // Usamos la parte antes del @ como nombre
+                        empresa: datosRegistro.empresa
+                    })
                 });
 
                 const result = await response.json();
 
-                if (result.success) {
-                    alert('✅ Cuenta creada exitosamente!\n\nRevisa tu email para confirmar tu cuenta.');
+                // CAMBIO: Verificamos si la respuesta fue exitosa (status 201)
+                if (response.ok) {
+                    alert('✅ ' + result.message);
                     window.location.href = '/login.html';
                 } else {
                     alert('❌ Error: ' + result.error);
