@@ -155,9 +155,9 @@ async function handleLogin(req, res, email, password) {
     }
 
     // Verificar si el email está confirmado
-    if (!user.email_confirmado) {
-      return res.status(403).json({ error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.' });
-    }
+    //if (!user.email_confirmado) {
+    //  return res.status(403).json({ error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu //bandeja de entrada.' });
+    //}
 
     // Generar JWT token
     const token = jwt.sign(
