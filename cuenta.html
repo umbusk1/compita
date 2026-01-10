@@ -291,28 +291,34 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/empresa`, {
+                // CAMBIO: Ahora usamos /api/perfil?type=empresa
+                const response = await fetch(`${API_BASE}/api/perfil?type=empresa`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                const data = await response.json();
-
-                if (!data.success) {
+                if (!response.ok) {
                     alert('Error al cargar perfil de empresa');
                     return;
                 }
 
-                empresaActual = data.empresa;
+                // CAMBIO: El endpoint ahora devuelve directamente el objeto empresa
+                empresaActual = await response.json();
 
                 // Llenar formulario
                 document.getElementById('empresa-nombre').value = empresaActual.nombre || '';
                 document.getElementById('empresa-descripcion').value = empresaActual.descripcion || '';
 
-                // palabras_clave ya viene como string del endpoint
-                document.getElementById('empresa-palabras-clave').value = empresaActual.palabras_clave || '';
+                // palabras_clave: convertir array a string separado por comas
+                const palabrasClave = Array.isArray(empresaActual.palabras_clave)
+                    ? empresaActual.palabras_clave.join(', ')
+                    : (empresaActual.palabras_clave || '');
+                document.getElementById('empresa-palabras-clave').value = palabrasClave;
 
-                // exclusiones ya viene como string del endpoint
-                document.getElementById('empresa-exclusiones').value = empresaActual.exclusiones || '';
+                // exclusiones: convertir array a string separado por comas
+                const exclusiones = Array.isArray(empresaActual.exclusiones)
+                    ? empresaActual.exclusiones.join(', ')
+                    : (empresaActual.exclusiones || '');
+                document.getElementById('empresa-exclusiones').value = exclusiones;
 
                 document.getElementById('empresa-monto-minimo').value = empresaActual.monto_minimo_alta || 500000;
 
@@ -331,7 +337,6 @@
             }
 
             const datos = {
-                nombre: document.getElementById('empresa-nombre').value.trim(),
                 descripcion: document.getElementById('empresa-descripcion').value.trim(),
                 palabras_clave: document.getElementById('empresa-palabras-clave').value
                     .split(',').map(s => s.trim()).filter(s => s),
@@ -340,14 +345,10 @@
                 monto_minimo_alta: parseFloat(document.getElementById('empresa-monto-minimo').value) || 500000
             };
 
-            if (!datos.nombre) {
-                alert('El nombre de la empresa es requerido');
-                return;
-            }
-
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/empresa`, {
+                // CAMBIO: Ahora usamos /api/perfil con POST
+                const response = await fetch(`${API_BASE}/api/perfil`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -358,20 +359,8 @@
 
                 const result = await response.json();
 
-                if (result.success) {
-                    alert('✅ Perfil actualizado correctamente');
-
-                    // Actualizar nombre en localStorage si cambió
-                    if (datos.nombre !== usuarioActual.empresa) {
-                        usuarioActual.empresa = datos.nombre;
-                        const storageKey = localStorage.getItem('user') ? 'localStorage' : 'sessionStorage';
-                        if (storageKey === 'localStorage') {
-                            localStorage.setItem('user', JSON.stringify(usuarioActual));
-                        } else {
-                            sessionStorage.setItem('user', JSON.stringify(usuarioActual));
-                        }
-                    }
-
+                if (response.ok) {
+                    alert('✅ ' + result.message);
                     await cargarPerfil();
                 } else {
                     alert('Error: ' + result.error);
@@ -402,7 +391,7 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/cambiar-password`, {
+                const response = await fetch(`${API_BASE}/api/password`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -416,7 +405,7 @@
 
                 const result = await response.json();
 
-                if (result.success) {
+                if (response.ok) {
                     alert('✅ Contraseña actualizada correctamente');
                     document.getElementById('form-password').reset();
                 } else {

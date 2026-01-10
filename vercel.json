@@ -2,11 +2,10 @@
   "functions": {
     "api/analizar-notificar-v2.js": { "maxDuration": 300 },
     "api/obtener-oportunidades.js": { "maxDuration": 10 },
-    "api/empresa.js": { "maxDuration": 10 },
-    "api/usuario.js": { "maxDuration": 10 },
     "api/empresas.js": { "maxDuration": 10 },
     "api/resultados.js": { "maxDuration": 10 },
     "api/auth.js": { "maxDuration": 10 },
+    "api/perfil.js": { "maxDuration": 10 },
     "api/confirmar-email.js": { "maxDuration": 10 },
     "api/password.js": { "maxDuration": 10 },
     "api/admin.js": { "maxDuration": 10 }

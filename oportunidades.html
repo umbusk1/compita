@@ -167,17 +167,19 @@
         async function cargarDatosUsuario() {
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/usuario`, {
+                // CAMBIO: Ahora usamos /api/perfil?type=usuario
+                const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('nombre-empresa').textContent = data.empresa;
+                    // CAMBIO: Ahora los datos de empresa vienen en data.empresa
+                    document.getElementById('nombre-empresa').textContent = data.empresa.nombre;
 
                     // Mostrar medidor si está en trial
-                    if (data.plan === 'free_trial') {
-                        mostrarMedidorTrial(data.trial_fin);
+                    if (data.empresa.plan === 'free_trial') {
+                        mostrarMedidorTrial(data.empresa.trial_fin);
                     }
                 } else {
                     cerrarSesion();
