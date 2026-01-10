@@ -72,13 +72,13 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     // Encriptar la contraseña
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Crear el usuario
-    const userResult = await pool.query(
-      `INSERT INTO usuarios (email, password_hash, empresa_id, rol, activo, email_confirmado, trial_fin)
-       VALUES ($1, $2, $3, 'admin', true, false, $4)
-       RETURNING id, email, empresa_id, rol, trial_fin`,
-      [email, passwordHash, empresaId, empresaResult.rows[0].trial_fin]
-    );
+	// Crear el usuario
+	const userResult = await pool.query(
+	  `INSERT INTO usuarios (email, password_hash, empresa_id, empresa, rol, activo, email_confirmado, trial_fin)
+	   VALUES ($1, $2, $3, $4, 'admin', true, false, $5)
+	   RETURNING id, email, empresa_id, rol, trial_fin`,
+	  [email, passwordHash, empresaId, empresa, empresaResult.rows[0].trial_fin]
+	);
 
     const usuario = userResult.rows[0];
 
