@@ -391,14 +391,13 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-				const response = await fetch(`${API_BASE}/api/password`, {
+				const response = await fetch(`${API_BASE}/api/password?action=change`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 						'Authorization': `Bearer ${token}`
 					},
 					body: JSON.stringify({
-						action: 'change',
 						password_actual: passwordActual,
 						password_nueva: passwordNueva
 					})
