@@ -59,10 +59,10 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
 	// Extraer el dominio del email
 	const dominio = email.split('@')[1];
 
-	// Crear la empresa nueva
+	// Crear la empresa nueva con valores por defecto
 	const empresaResult = await pool.query(
-	  `INSERT INTO empresas (nombre, dominio, plan, activo, trial_inicio, trial_fin)
-	   VALUES ($1, $2, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
+	  `INSERT INTO empresas (nombre, dominio, descripcion, palabras_clave, exclusiones, monto_minimo_alta, plan, activo, trial_inicio, trial_fin)
+	   VALUES ($1, $2, '', ARRAY[]::text[], ARRAY[]::text[], 500000, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
 	   RETURNING id, nombre, plan, trial_inicio, trial_fin`,
 	  [empresa, dominio]
 	);
