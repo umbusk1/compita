@@ -56,13 +56,16 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
       return res.status(400).json({ error: 'Este email ya está registrado' });
     }
 
-    // Crear la empresa nueva
-    const empresaResult = await pool.query(
-      `INSERT INTO empresas (nombre, plan, activo, trial_inicio, trial_fin)
-       VALUES ($1, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
-       RETURNING id, nombre, plan, trial_inicio, trial_fin`,
-      [empresa]
-    );
+	// Extraer el dominio del email
+	const dominio = email.split('@')[1];
+
+	// Crear la empresa nueva
+	const empresaResult = await pool.query(
+	  `INSERT INTO empresas (nombre, dominio, plan, activo, trial_inicio, trial_fin)
+	   VALUES ($1, $2, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
+	   RETURNING id, nombre, plan, trial_inicio, trial_fin`,
+	  [empresa, dominio]
+	);
 
     const empresaId = empresaResult.rows[0].id;
 
