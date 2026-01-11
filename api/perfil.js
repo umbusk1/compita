@@ -57,14 +57,14 @@ export default async function handler(req, res) {
 // FUNCIÓN: Obtener datos del usuario
 async function handleGetUsuario(req, res, userId) {
   try {
-    const result = await pool.query(
-      `SELECT u.id, u.email, u.rol, u.activo, u.email_confirmado, u.trial_fin,
-              e.id as empresa_id, e.nombre as empresa_nombre, e.plan, e.trial_fin as empresa_trial_fin
-       FROM usuarios u
-       JOIN empresas e ON u.empresa_id = e.id
-       WHERE u.id = $1`,
-      [userId]
-    );
+	const result = await pool.query(
+	  `SELECT u.id, u.email, u.rol, u.activo, u.email_confirmado, u.trial_fin,
+			  e.id as empresa_id, e.nombre as empresa_nombre, e.plan, e.activo as empresa_activa, e.trial_fin as empresa_trial_fin
+	   FROM usuarios u
+	   JOIN empresas e ON u.empresa_id = e.id
+	   WHERE u.id = $1`,
+	  [userId]
+	);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -72,20 +72,21 @@ async function handleGetUsuario(req, res, userId) {
 
     const user = result.rows[0];
 
-    return res.status(200).json({
-      id: user.id,
-      email: user.email,
-      rol: user.rol,
-      activo: user.activo,
-      email_confirmado: user.email_confirmado,
-      trial_fin: user.trial_fin,
-      empresa: {
-        id: user.empresa_id,
-        nombre: user.empresa_nombre,
-        plan: user.plan,
-        trial_fin: user.empresa_trial_fin
-      }
-    });
+	return res.status(200).json({
+	  id: user.id,
+	  email: user.email,
+	  rol: user.rol,
+	  activo: user.activo,
+	  email_confirmado: user.email_confirmado,
+	  trial_fin: user.trial_fin,
+	  empresa: {
+		id: user.empresa_id,
+		nombre: user.empresa_nombre,
+		plan: user.plan,
+		activo: user.empresa_activa,
+		trial_fin: user.empresa_trial_fin
+	  }
+	});
 
   } catch (error) {
     console.error('Error al obtener usuario:', error);
