@@ -261,11 +261,79 @@
             document.getElementById('opciones-pago').classList.remove('hidden');
         }
 
-        async function procesarSuscripcion() {
-            // Aquí se conectará con Stripe
-            alert('🚧 Integración con Stripe próximamente\n\nPor ahora te registraremos con trial gratuito de 7 días.');
-            await procesarTrialGratuito();
-        }
+		async function procesarSuscripcion() {
+			try {
+				// Primero crear la cuenta
+				const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						action: 'registro',
+						email: datosRegistro.email,
+						password: datosRegistro.password,
+						nombre: datosRegistro.email.split('@')[0],
+						empresa: datosRegistro.empresa
+					})
+				});
+
+				if (!responseRegistro.ok) {
+					const error = await responseRegistro.json();
+					alert('❌ Error: ' + error.error);
+					return;
+				}
+
+				// Hacer login automático para obtener el token
+				const responseLogin = await fetch(`${API_BASE}/api/auth`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						action: 'login',
+						email: datosRegistro.email,
+						password: datosRegistro.password
+					})
+				});
+
+				if (!responseLogin.ok) {
+					alert('❌ Cuenta creada pero error al iniciar sesión. Por favor inicia sesión manualmente.');
+					window.location.href = '/login.html';
+					return;
+				}
+
+				const loginData = await responseLogin.json();
+				const token = loginData.token;
+
+				// Guardar token temporalmente
+				sessionStorage.setItem('token', token);
+				sessionStorage.setItem('user', JSON.stringify(loginData.user));
+
+				// Crear sesión de checkout en Stripe
+				const responseCheckout = await fetch(`${API_BASE}/api/stripe-checkout`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					},
+					body: JSON.stringify({
+						plan: planSeleccionado
+					})
+				});
+
+				if (!responseCheckout.ok) {
+					const error = await responseCheckout.json();
+					alert('❌ Error creando sesión de pago: ' + error.error);
+					return;
+				}
+
+				const checkoutData = await responseCheckout.json();
+
+				// Redirigir a Stripe Checkout
+				window.location.href = checkoutData.checkout_url;
+
+			} catch (error) {
+				console.error('Error:', error);
+				alert('❌ Error al procesar suscripción. Por favor intenta nuevamente.');
+			}
+		}
 
         async function procesarTrialGratuito() {
             try {
