@@ -139,8 +139,9 @@ async function handleSubscriptionUpdated(subscription) {
   const customerId = subscription.customer;
   const status = subscription.status; // active, past_due, canceled, etc.
 
-  // 🆕 NUEVO: Extraer el plan actual de la suscripción
-  const priceId = subscription.items.data[0]?.price.id;
+  // 🆕 CORREGIDO: Buscar el item activo (quantity > 0)
+  const activeItem = subscription.items.data.find(item => item.quantity > 0);
+  const priceId = activeItem?.price.id;
   let plan = null;
 
   // Mapear price_id de Stripe a nuestros nombres de plan
@@ -149,6 +150,8 @@ async function handleSubscriptionUpdated(subscription) {
   } else if (priceId === process.env.STRIPE_PRICE_BUSINESS) {
     plan = 'business';
   }
+
+  console.log(`📊 Price ID detectado: ${priceId} → Plan: ${plan}`);
 
   // Buscar empresa
   const result = await pool.query(
@@ -166,7 +169,7 @@ async function handleSubscriptionUpdated(subscription) {
   // Determinar si la empresa debe estar activa
   const activo = ['active', 'trialing'].includes(status);
 
-  // 🆕 MODIFICADO: Actualizar también el plan
+  // Actualizar también el plan
   if (plan) {
     await pool.query(
       `UPDATE empresas
@@ -184,7 +187,7 @@ async function handleSubscriptionUpdated(subscription) {
        WHERE id = $2`,
       [activo, empresaId]
     );
-    console.log(`✅ Empresa ${empresaId} - Estado: ${activo ? 'Activa' : 'Inactiva'}`);
+    console.log(`⚠️ Empresa ${empresaId} - Plan no identificado. Estado: ${activo ? 'Activa' : 'Inactiva'}`);
   }
 }
 
