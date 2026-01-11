@@ -31,8 +31,8 @@ export default async function handler(req, res) {
   }
 
   const token = authHeader.split(' ')[1];
-
   let decoded;
+
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
@@ -42,9 +42,12 @@ export default async function handler(req, res) {
   const userId = decoded.userId;
 
   try {
-    // Obtener email del usuario
+    // Obtener empresa y stripe_customer_id del usuario
     const userResult = await pool.query(
-      `SELECT email FROM usuarios WHERE id = $1`,
+      `SELECT u.email, u.empresa_id, e.stripe_customer_id, e.stripe_subscription_id
+       FROM usuarios u
+       JOIN empresas e ON u.empresa_id = e.id
+       WHERE u.id = $1`,
       [userId]
     );
 
@@ -53,26 +56,37 @@ export default async function handler(req, res) {
     }
 
     const user = userResult.rows[0];
+    let customerId = user.stripe_customer_id;
 
-    // Buscar Customer en Stripe
-    const customers = await stripe.customers.list({
-      email: user.email,
-      limit: 1
-    });
-
-    if (customers.data.length === 0) {
-      return res.status(404).json({
-        error: 'No tienes una cuenta de facturación activa. Suscríbete primero a un plan.'
+    // Si no tenemos el customer_id en la BD, buscarlo en Stripe
+    if (!customerId) {
+      const customers = await stripe.customers.list({
+        email: user.email,
+        limit: 1
       });
+
+      if (customers.data.length === 0) {
+        return res.status(404).json({
+          error: 'No tienes una cuenta de facturación activa. Suscríbete primero a un plan.'
+        });
+      }
+
+      customerId = customers.data[0].id;
     }
 
-    const customer = customers.data[0];
+    // Configuración para crear el portal
+    const portalConfig = {
+      customer: customerId,
+      return_url: `${req.headers.origin}/cuenta.html`
+    };
+
+    // Si tenemos subscription_id, agregarlo para mejor experiencia
+    if (user.stripe_subscription_id) {
+      portalConfig.configuration = undefined; // Usar configuración por defecto del dashboard
+    }
 
     // Crear sesión del Portal de Facturación
-    const session = await stripe.billingPortal.sessions.create({
-      customer: customer.id,
-      return_url: `${req.headers.origin}/cuenta.html`
-    });
+    const session = await stripe.billingPortal.sessions.create(portalConfig);
 
     return res.status(200).json({
       portal_url: session.url
