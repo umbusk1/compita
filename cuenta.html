@@ -49,6 +49,13 @@
                 >
                     🔒 Seguridad
                 </button>
+                <button
+                    onclick="showTab('facturacion')"
+                    id="tab-facturacion"
+                    class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent"
+                >
+                    💳 Facturación
+                </button>
             </div>
 
             <!-- Tab Content -->
@@ -227,6 +234,68 @@
                         </button>
                     </form>
                 </div>
+
+                <!-- TAB: Facturación -->
+                <div id="content-facturacion" class="tab-content hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Facturación</h2>
+
+                    <!-- Información del Plan -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 mb-6 border border-indigo-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 font-medium mb-1">Plan Actual</p>
+                                <p class="text-2xl font-bold text-gray-900" id="plan-actual">Cargando...</p>
+                                <p class="text-sm text-gray-600 mt-1" id="estado-plan">Cargando...</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600 font-medium mb-1">Estado</p>
+                                <span id="badge-estado" class="px-3 py-1 rounded-full text-sm font-semibold">
+                                    Activo
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón Portal de Stripe -->
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Gestionar Suscripción</h3>
+                        <p class="text-gray-600 mb-6">
+                            Accede al portal de facturación para:
+                        </p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center gap-2 text-gray-700">
+                                <span class="text-green-600">✓</span>
+                                Ver y descargar tus facturas
+                            </li>
+                            <li class="flex items-center gap-2 text-gray-700">
+                                <span class="text-green-600">✓</span>
+                                Actualizar tu método de pago
+                            </li>
+                            <li class="flex items-center gap-2 text-gray-700">
+                                <span class="text-green-600">✓</span>
+                                Cambiar de plan
+                            </li>
+                            <li class="flex items-center gap-2 text-gray-700">
+                                <span class="text-green-600">✓</span>
+                                Cancelar tu suscripción
+                            </li>
+                        </ul>
+                        <button
+                            onclick="abrirPortalFacturacion()"
+                            class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
+                        >
+                            🔗 Abrir Portal de Facturación
+                        </button>
+                    </div>
+
+                    <!-- Información Adicional -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <p class="text-sm text-gray-600">
+                            <strong>Nota:</strong> Serás redirigido a un portal seguro gestionado por Stripe,
+                            nuestro proveedor de pagos. Todos los cambios se reflejarán automáticamente en tu cuenta.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -256,6 +325,7 @@
                 document.getElementById('email-readonly').textContent = usuarioActual.email;
 
                 await cargarPerfil();
+                await cargarInfoFacturacion();
                 showTab('perfil');
             } catch (error) {
                 console.error('Error:', error);
@@ -291,7 +361,6 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                // CAMBIO: Ahora usamos /api/perfil?type=empresa
                 const response = await fetch(`${API_BASE}/api/perfil?type=empresa`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -301,7 +370,6 @@
                     return;
                 }
 
-                // CAMBIO: El endpoint ahora devuelve directamente el objeto empresa
                 empresaActual = await response.json();
 
                 // Llenar formulario
@@ -347,7 +415,6 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                // CAMBIO: Ahora usamos /api/perfil con POST
                 const response = await fetch(`${API_BASE}/api/perfil`, {
                     method: 'POST',
                     headers: {
@@ -391,17 +458,17 @@
 
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-				const response = await fetch(`${API_BASE}/api/password?action=change`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
-					},
-					body: JSON.stringify({
-						password_actual: passwordActual,
-						password_nueva: passwordNueva
-					})
-				});
+                const response = await fetch(`${API_BASE}/api/password?action=change`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        password_actual: passwordActual,
+                        password_nueva: passwordNueva
+                    })
+                });
 
                 const result = await response.json();
 
@@ -414,6 +481,79 @@
             } catch (error) {
                 console.error('Error cambiando contraseña:', error);
                 alert('Error al cambiar contraseña');
+            }
+        }
+
+        // ============ FACTURACIÓN ============
+        async function cargarInfoFacturacion() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Mostrar plan
+                    const planNombres = {
+                        'free_trial': 'Prueba Gratuita',
+                        'estandar': 'Estándar ($10/mes)',
+                        'business': 'Business ($20/mes)',
+                        'cancelado': 'Cancelado'
+                    };
+
+                    document.getElementById('plan-actual').textContent =
+                        planNombres[data.empresa.plan] || data.empresa.plan;
+
+                    // Estado del plan
+                    if (data.empresa.plan === 'free_trial') {
+                        const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
+                        document.getElementById('estado-plan').textContent =
+                            `${diasRestantes} días restantes de prueba`;
+                    } else if (data.empresa.plan === 'cancelado') {
+                        document.getElementById('estado-plan').textContent = 'Suscripción cancelada';
+                    } else {
+                        document.getElementById('estado-plan').textContent = 'Renovación automática mensual';
+                    }
+
+                    // Badge de estado
+                    const badge = document.getElementById('badge-estado');
+                    if (data.empresa.activo) {
+                        badge.textContent = 'Activo';
+                        badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';
+                    } else {
+                        badge.textContent = 'Inactivo';
+                        badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';
+                    }
+                }
+            } catch (error) {
+                console.error('Error cargando info de facturación:', error);
+            }
+        }
+
+        async function abrirPortalFacturacion() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/stripe-portal`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Redirigir al portal de Stripe
+                    window.location.href = data.portal_url;
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al abrir portal de facturación');
             }
         }
     </script>
