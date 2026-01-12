@@ -58,7 +58,10 @@ export default async function handler(req, res) {
     const user = userResult.rows[0];
     let customerId = user.stripe_customer_id;
 
-    // Si no tenemos el customer_id en la BD, buscarlo en Stripe
+    // Extraer action del body (necesario para la lógica siguiente)
+    const { action, plan } = req.body;
+
+    // Si no tenemos el customer_id en la BD, buscarlo o crearlo en Stripe
     if (!customerId) {
       const customers = await stripe.customers.list({
         email: user.email,
@@ -66,17 +69,39 @@ export default async function handler(req, res) {
       });
 
       if (customers.data.length === 0) {
-        return res.status(404).json({
-          error: 'No tienes una cuenta de facturación activa. Suscríbete primero a un plan.'
-        });
-      }
+        // Si no existe y estamos haciendo checkout, crear el customer
+        if (action === 'create_checkout') {
+          const newCustomer = await stripe.customers.create({
+            email: user.email,
+            metadata: {
+              empresa_id: user.empresa_id.toString()
+            }
+          });
+          customerId = newCustomer.id;
 
-      customerId = customers.data[0].id;
+          // Guardar el customer_id en la BD
+          await pool.query(
+            'UPDATE empresas SET stripe_customer_id = $1 WHERE id = $2',
+            [customerId, user.empresa_id]
+          );
+        } else {
+          // Para otras acciones (como portal), devolver error
+          return res.status(404).json({
+            error: 'No tienes una cuenta de facturación activa. Suscríbete primero a un plan.'
+          });
+        }
+      } else {
+        customerId = customers.data[0].id;
+
+        // Actualizar la BD con el customer_id encontrado
+        await pool.query(
+          'UPDATE empresas SET stripe_customer_id = $1 WHERE id = $2',
+          [customerId, user.empresa_id]
+        );
+      }
     }
 
     // ====== NUEVA FUNCIONALIDAD: Crear Checkout Session ======
-    const { action, plan } = req.body;
-
     if (action === 'create_checkout') {
       // Validar plan
       if (!plan || !['estandar', 'business'].includes(plan)) {
