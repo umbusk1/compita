@@ -37,21 +37,36 @@
                     <p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
                 </div>
 
-                <!-- Banner Trial a la derecha (solo visible en free_trial) -->
-                <div id="medidor-trial" class="hidden">
-                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white min-w-[280px]">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="text-xl">⏰</span>
-                            <div>
-                                <p class="text-xs font-medium opacity-90">Prueba Gratuita</p>
-                                <p class="text-sm font-bold" id="dias-restantes">7 días restantes</p>
-                            </div>
-                        </div>
-                        <div class="bg-white/20 rounded-full h-1.5 overflow-hidden">
-                            <div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
-                        </div>
-                    </div>
-                </div>
+				<!-- Banner Trial a la derecha (solo visible en free_trial) -->
+				<div id="medidor-trial" class="hidden">
+					<div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white min-w-[280px]">
+						<div class="flex items-center gap-2 mb-2">
+							<span class="text-xl">⏰</span>
+							<div>
+								<p class="text-xs font-medium opacity-90">Prueba Gratuita</p>
+								<p class="text-sm font-bold" id="dias-restantes">7 días restantes</p>
+							</div>
+						</div>
+						<div class="bg-white/20 rounded-full h-1.5 overflow-hidden mb-3">
+							<div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
+						</div>
+						<!-- Botones de Upgrade -->
+						<div class="flex gap-2">
+							<button
+								onclick="iniciarUpgrade('estandar')"
+								class="flex-1 bg-white text-indigo-600 px-3 py-1.5 rounded text-xs font-bold hover:bg-indigo-50 transition"
+							>
+								$10/mes
+							</button>
+							<button
+								onclick="iniciarUpgrade('business')"
+								class="flex-1 bg-yellow-400 text-gray-900 px-3 py-1.5 rounded text-xs font-bold hover:bg-yellow-300 transition"
+							>
+								$20/mes
+							</button>
+						</div>
+					</div>
+				</div>
 
                 <!-- Botones a la derecha -->
                 <div class="flex gap-3">
