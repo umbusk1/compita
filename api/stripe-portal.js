@@ -5,6 +5,7 @@ import pkg from 'pg';
 const { Pool } = pkg;
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -32,7 +33,6 @@ export default async function handler(req, res) {
 
   const token = authHeader.split(' ')[1];
   let decoded;
-
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
@@ -74,6 +74,46 @@ export default async function handler(req, res) {
       customerId = customers.data[0].id;
     }
 
+    // ====== NUEVA FUNCIONALIDAD: Crear Checkout Session ======
+    const { action, plan } = req.body;
+
+    if (action === 'create_checkout') {
+      // Validar plan
+      if (!plan || !['estandar', 'business'].includes(plan)) {
+        return res.status(400).json({ error: 'Plan inválido' });
+      }
+
+      // Determinar el Price ID según el plan
+      const priceId = plan === 'estandar'
+        ? process.env.STRIPE_PRICE_ESTANDAR
+        : process.env.STRIPE_PRICE_BUSINESS;
+
+      // Crear Checkout Session
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: `${req.headers.origin}/oportunidades.html?checkout=success`,
+        cancel_url: `${req.headers.origin}/cuenta.html?checkout=cancelled`,
+        metadata: {
+          empresa_id: user.empresa_id.toString(),
+          plan: plan
+        },
+        customer_email: user.email,
+      });
+
+      return res.status(200).json({
+        checkout_url: session.url
+      });
+    }
+
+    // ====== FUNCIONALIDAD ORIGINAL: Abrir Customer Portal ======
     // Configuración para crear el portal
     const portalConfig = {
       customer: customerId,
@@ -93,7 +133,7 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('Error creando portal de facturación:', error);
-    return res.status(500).json({ error: 'Error al acceder al portal de facturación' });
+    console.error('Error en stripe-portal:', error);
+    return res.status(500).json({ error: 'Error al procesar solicitud' });
   }
 }
