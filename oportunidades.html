@@ -37,36 +37,65 @@
                     <p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
                 </div>
 
-				<!-- Banner Trial a la derecha (solo visible en free_trial) -->
-				<div id="medidor-trial" class="hidden">
-					<div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white min-w-[280px]">
-						<div class="flex items-center gap-2 mb-2">
-							<span class="text-xl">⏰</span>
-							<div>
-								<p class="text-xs font-medium opacity-90">Prueba Gratuita</p>
-								<p class="text-sm font-bold" id="dias-restantes">7 días restantes</p>
-							</div>
+			<!-- Banner Trial a la derecha (solo visible en free_trial) -->
+			<div id="medidor-trial" class="hidden flex flex-col gap-4">
+				<!-- Medidor de días restantes -->
+				<div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white min-w-[280px]">
+					<div class="flex items-center gap-2 mb-2">
+						<span class="text-xl">⏰</span>
+						<div>
+							<p class="text-xs font-medium opacity-90">Prueba Gratuita</p>
+							<p class="text-sm font-bold" id="dias-restantes">7 días restantes</p>
 						</div>
-						<div class="bg-white/20 rounded-full h-1.5 overflow-hidden mb-3">
-							<div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
-						</div>
-						<!-- Botones de Upgrade -->
-						<div class="flex gap-2">
+					</div>
+					<div class="bg-white/20 rounded-full h-1.5 overflow-hidden">
+						<div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
+					</div>
+				</div>
+
+				<!-- Llamado a la acción para suscribirse -->
+				<div class="bg-white rounded-lg border-2 border-indigo-200 p-4 min-w-[320px]">
+					<p class="text-sm font-semibold text-gray-800 mb-3 text-center">
+						¡Suscríbete a uno de nuestros planes para que continues recibiendo las oportunidades que importan!
+					</p>
+
+					<div class="flex gap-3">
+						<!-- Plan Estándar -->
+						<div class="flex-1">
 							<button
 								onclick="iniciarUpgrade('estandar')"
-								class="flex-1 bg-white text-indigo-600 px-3 py-1.5 rounded text-xs font-bold hover:bg-indigo-50 transition"
+								class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-bold text-center shadow-md hover:shadow-lg"
 							>
-								$10/mes
+								<div class="text-xs opacity-90 mb-1">Plan Estándar</div>
+								<div class="text-lg">$10/mes</div>
 							</button>
 							<button
-								onclick="iniciarUpgrade('business')"
-								class="flex-1 bg-yellow-400 text-gray-900 px-3 py-1.5 rounded text-xs font-bold hover:bg-yellow-300 transition"
+								onclick="abrirModalPlan('estandar')"
+								class="block w-full text-center text-xs text-indigo-600 hover:text-indigo-800 mt-2 underline"
 							>
-								$20/mes
+								Ver detalles →
+							</button>
+						</div>
+
+						<!-- Plan Business -->
+						<div class="flex-1">
+							<button
+								onclick="iniciarUpgrade('business')"
+								class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-4 py-3 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center shadow-md hover:shadow-lg"
+							>
+								<div class="text-xs opacity-90 mb-1">Plan Business</div>
+								<div class="text-lg">$20/mes</div>
+							</button>
+							<button
+								onclick="abrirModalPlan('business')"
+								class="block w-full text-center text-xs text-orange-600 hover:text-orange-800 mt-2 underline"
+							>
+								Ver detalles →
 							</button>
 						</div>
 					</div>
 				</div>
+			</div>
 
                 <!-- Botones a la derecha -->
                 <div class="flex gap-3">
@@ -161,6 +190,134 @@
             </a>
         </div>
     </div>
+
+<!-- Modales de Planes -->
+<!-- Modal Plan Estándar -->
+<div id="modal-estandar" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-t-2xl">
+            <div class="flex items-start justify-between">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">Plan Estándar</h3>
+                    <p class="text-3xl font-bold">$10<span class="text-lg font-normal">/mes</span></p>
+                </div>
+                <button onclick="cerrarModalPlan('estandar')" class="text-white hover:text-gray-200 text-2xl">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <p class="text-gray-600 mb-6">Perfecto para empresas que buscan oportunidades de manera constante.</p>
+
+            <h4 class="font-bold text-gray-900 mb-3">✨ Incluye:</h4>
+            <ul class="space-y-3 mb-6">
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Análisis diario automático de licitaciones</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Notificaciones por email de oportunidades ALTA y MEDIA</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Dashboard con todas tus oportunidades</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Filtros por relevancia, fecha y monto</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Perfil empresarial personalizable</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Soporte por email</span>
+                </li>
+            </ul>
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-indigo-800">
+                    <strong>💡 Ideal para:</strong> Empresas que participan regularmente en licitaciones públicas y quieren mantenerse al día con las oportunidades relevantes.
+                </p>
+            </div>
+
+            <button
+                onclick="iniciarUpgrade('estandar'); cerrarModalPlan('estandar');"
+                class="w-full bg-indigo-600 text-white px-6 py-4 rounded-lg hover:bg-indigo-700 transition font-bold text-lg shadow-lg hover:shadow-xl"
+            >
+                Suscribirme Ahora
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Plan Business -->
+<div id="modal-business" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 p-6 rounded-t-2xl">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="inline-block bg-gray-900 text-yellow-400 text-xs font-bold px-2 py-1 rounded mb-2">
+                        MÁS POPULAR
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Plan Business</h3>
+                    <p class="text-3xl font-bold">$20<span class="text-lg font-normal">/mes</span></p>
+                </div>
+                <button onclick="cerrarModalPlan('business')" class="text-gray-900 hover:text-gray-700 text-2xl">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <p class="text-gray-600 mb-6">La solución premium para empresas que quieren maximizar sus oportunidades.</p>
+
+            <h4 class="font-bold text-gray-900 mb-3">✨ Todo lo del Plan Estándar, más:</h4>
+            <ul class="space-y-3 mb-6">
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Emails detallados</strong> con análisis completo de cada oportunidad</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Análisis avanzado de relevancia</strong> con IA</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Prioridad en notificaciones</strong> (las recibes primero)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Exportación a Excel</strong> de todas tus oportunidades</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Soporte prioritario</strong> por email y chat</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Acceso anticipado</strong> a nuevas funcionalidades</span>
+                </li>
+            </ul>
+
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-orange-800">
+                    <strong>🚀 Ideal para:</strong> Empresas que compiten activamente por contratos públicos y necesitan información detallada y oportuna para preparar mejores propuestas.
+                </p>
+            </div>
+
+            <button
+                onclick="iniciarUpgrade('business'); cerrarModalPlan('business');"
+                class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-lg shadow-lg hover:shadow-xl"
+            >
+                Suscribirme Ahora
+            </button>
+        </div>
+    </div>
+</div>
 
     <script>
         const API_BASE = window.location.origin;
@@ -426,6 +583,25 @@
 				alert('Error al iniciar upgrade');
 			}
 		}
+
+    function abrirModalPlan(plan) {
+	    document.getElementById(`modal-${plan}`).classList.remove('hidden');
+	    document.body.style.overflow = 'hidden'; // Prevenir scroll del body
+	}
+
+	function cerrarModalPlan(plan) {
+	    document.getElementById(`modal-${plan}`).classList.add('hidden');
+	    document.body.style.overflow = 'auto'; // Restaurar scroll del body
+	}
+
+	// Cerrar modal al hacer clic fuera de él
+	document.addEventListener('click', function(event) {
+	    if (event.target.id === 'modal-estandar' || event.target.id === 'modal-business') {
+	        const plan = event.target.id.replace('modal-', '');
+	        cerrarModalPlan(plan);
+	    }
+});
+
     </script>
 </body>
 </html>
