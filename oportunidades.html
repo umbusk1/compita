@@ -396,6 +396,42 @@
             sessionStorage.removeItem('token');
             window.location.href = '/login.html';
         }
+
+        async function iniciarUpgrade(plan) {
+		    try {
+		        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+		        // Mostrar loading
+		        const btnTexto = plan === 'estandar' ? '$10/mes' : '$20/mes';
+		        event.target.textContent = 'Cargando...';
+		        event.target.disabled = true;
+
+		        const response = await fetch(`${API_BASE}/api/crear-checkout`, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		                'Authorization': `Bearer ${token}`
+		            },
+		            body: JSON.stringify({ plan: plan })
+		        });
+
+		        if (response.ok) {
+		            const data = await response.json();
+		            // Redirigir a Stripe Checkout
+		            window.location.href = data.checkout_url;
+		        } else {
+		            const error = await response.json();
+		            alert('Error: ' + error.error);
+		            event.target.textContent = btnTexto;
+		            event.target.disabled = false;
+		        }
+		    } catch (error) {
+		        console.error('Error:', error);
+		        alert('Error al iniciar upgrade');
+		        event.target.textContent = plan === 'estandar' ? '$10/mes' : '$20/mes';
+		        event.target.disabled = false;
+		    }
+		}
     </script>
 </body>
 </html>
