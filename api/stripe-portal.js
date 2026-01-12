@@ -113,24 +113,28 @@ export default async function handler(req, res) {
         ? process.env.STRIPE_PRICE_ESTANDAR
         : process.env.STRIPE_PRICE_BUSINESS;
 
-	// Crear Checkout Session
-	const session = await stripe.checkout.sessions.create({
-	  customer: customerId,
-	  payment_method_types: ['card'],
-	  line_items: [
-		{
-		  price: priceId,
-		  quantity: 1,
-		},
-	  ],
-	  mode: 'subscription',
-	  success_url: `${req.headers.origin}/oportunidades.html?checkout=success`,
-	  cancel_url: `${req.headers.origin}/cuenta.html?checkout=cancelled`,
-	  metadata: {
-		empresa_id: user.empresa_id.toString(),
-		plan: plan
-	  }
-	});
+      // Crear Checkout Session
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: `${req.headers.origin}/oportunidades.html?checkout=success`,
+        cancel_url: `${req.headers.origin}/cuenta.html?checkout=cancelled`,
+        metadata: {
+          empresa_id: user.empresa_id.toString(),
+          plan: plan
+        }
+      });
+
+      return res.status(200).json({
+        checkout_url: session.url
+      });
     }
 
     // ====== FUNCIONALIDAD ORIGINAL: Abrir Customer Portal ======
