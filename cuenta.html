@@ -256,6 +256,37 @@
                         </div>
                     </div>
 
+					<!-- Botones de Upgrade (solo visible para free_trial) -->
+					<div id="upgrade-section" class="hidden bg-white border-2 border-indigo-200 rounded-lg p-6 mb-6">
+						<p class="text-sm font-semibold text-gray-800 mb-4 text-center">
+							¡Suscríbete a uno de nuestros planes para que continues recibiendo las oportunidades que importan!
+						</p>
+
+						<div class="flex gap-4">
+							<!-- Plan Estándar -->
+							<div class="flex-1">
+								<button
+									onclick="iniciarUpgrade('estandar')"
+									class="w-full bg-indigo-600 text-white px-6 py-4 rounded-lg hover:bg-indigo-700 transition font-bold text-center shadow-md hover:shadow-lg"
+								>
+									<div class="text-xs opacity-90 mb-1">Plan Estándar</div>
+									<div class="text-xl">$10/mes</div>
+								</button>
+							</div>
+
+							<!-- Plan Business -->
+							<div class="flex-1">
+								<button
+									onclick="iniciarUpgrade('business')"
+									class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center shadow-md hover:shadow-lg"
+								>
+									<div class="text-xs opacity-90 mb-1">Plan Business</div>
+									<div class="text-xl">$20/mes</div>
+								</button>
+							</div>
+						</div>
+					</div>
+
                     <!-- Botón Portal de Stripe -->
                     <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">Gestionar Suscripción</h3>
@@ -485,52 +516,59 @@
         }
 
         // ============ FACTURACIÓN ============
-        async function cargarInfoFacturacion() {
-            try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+		async function cargarInfoFacturacion() {
+			try {
+				const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+				const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+					headers: { 'Authorization': `Bearer ${token}` }
+				});
 
-                if (response.ok) {
-                    const data = await response.json();
+				if (response.ok) {
+					const data = await response.json();
 
-                    // Mostrar plan
-                    const planNombres = {
-                        'free_trial': 'Prueba Gratuita',
-                        'estandar': 'Estándar ($10/mes)',
-                        'business': 'Business ($20/mes)',
-                        'cancelado': 'Cancelado'
-                    };
+					// Mostrar plan
+					const planNombres = {
+						'free_trial': 'Prueba Gratuita',
+						'estandar': 'Estándar ($10/mes)',
+						'business': 'Business ($20/mes)',
+						'cancelado': 'Cancelado'
+					};
 
-                    document.getElementById('plan-actual').textContent =
-                        planNombres[data.empresa.plan] || data.empresa.plan;
+					document.getElementById('plan-actual').textContent =
+						planNombres[data.empresa.plan] || data.empresa.plan;
 
-                    // Estado del plan
-                    if (data.empresa.plan === 'free_trial') {
-                        const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
-                        document.getElementById('estado-plan').textContent =
-                            `${diasRestantes} días restantes de prueba`;
-                    } else if (data.empresa.plan === 'cancelado') {
-                        document.getElementById('estado-plan').textContent = 'Suscripción cancelada';
-                    } else {
-                        document.getElementById('estado-plan').textContent = 'Renovación automática mensual';
-                    }
+					// Estado del plan
+					if (data.empresa.plan === 'free_trial') {
+						const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
+						document.getElementById('estado-plan').textContent =
+							`${diasRestantes} días restantes de prueba`;
+					} else if (data.empresa.plan === 'cancelado') {
+						document.getElementById('estado-plan').textContent = 'Suscripción cancelada';
+					} else {
+						document.getElementById('estado-plan').textContent = 'Renovación automática mensual';
+					}
 
-                    // Badge de estado
-                    const badge = document.getElementById('badge-estado');
-                    if (data.empresa.activo) {
-                        badge.textContent = 'Activo';
-                        badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';
-                    } else {
-                        badge.textContent = 'Inactivo';
-                        badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';
-                    }
-                }
-            } catch (error) {
-                console.error('Error cargando info de facturación:', error);
-            }
-        }
+					// Badge de estado
+					const badge = document.getElementById('badge-estado');
+					if (data.empresa.activo) {
+						badge.textContent = 'Activo';
+						badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';
+					} else {
+						badge.textContent = 'Inactivo';
+						badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';
+					}
+
+					// Mostrar botones de upgrade si está en trial
+					if (data.empresa.plan === 'free_trial') {
+						document.getElementById('upgrade-section').classList.remove('hidden');
+					} else {
+						document.getElementById('upgrade-section').classList.add('hidden');
+					}
+				}
+			} catch (error) {
+				console.error('Error cargando info de facturación:', error);
+			}
+		}
 
         async function abrirPortalFacturacion() {
             try {
@@ -556,6 +594,37 @@
                 alert('Error al abrir portal de facturación');
             }
         }
+
+		async function iniciarUpgrade(plan) {
+			try {
+				const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+				const response = await fetch(`${API_BASE}/api/stripe-portal`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					},
+					body: JSON.stringify({
+						action: 'create_checkout',
+						plan: plan
+					})
+				});
+
+				if (response.ok) {
+					const data = await response.json();
+					// Redirigir a Stripe Checkout
+					window.location.href = data.checkout_url;
+				} else {
+					const error = await response.json();
+					alert('Error: ' + error.error);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('Error al iniciar upgrade');
+			}
+		}
+
     </script>
 </body>
 </html>
