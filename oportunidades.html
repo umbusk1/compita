@@ -5,23 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oportunidades - Compita</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menú móvil */
+        .mobile-menu {
+            display: none;
+        }
+        .mobile-menu.active {
+            display: block;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Navbar -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-2">
-                        <span class="text-2xl">🎯</span>
-                        <span class="text-xl font-bold text-gray-800">Compita</span>
-                    </div>
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🎯</span>
+                    <span class="text-xl font-bold text-gray-800">Compita</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-6">
                     <a href="/oportunidades.html" class="text-indigo-600 font-semibold">Oportunidades</a>
                     <a href="/cuenta.html" class="text-gray-600 hover:text-gray-900">Mi Cuenta</a>
-                </div>
-                <div class="flex items-center gap-4">
                     <span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
                     <button onclick="cerrarSesion()" class="text-sm text-gray-600 hover:text-red-600">Salir</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
+                <div class="flex flex-col gap-4">
+                    <a href="/oportunidades.html" onclick="toggleMobileMenu()" class="text-indigo-600 font-semibold py-2">Oportunidades</a>
+                    <a href="/cuenta.html" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-gray-900 py-2">Mi Cuenta</a>
+                    <span class="text-sm text-gray-600 py-2" id="nombre-empresa-mobile">Cargando...</span>
+                    <button onclick="cerrarSesion()" class="text-left text-sm text-red-600 hover:text-red-800 py-2">Salir</button>
                 </div>
             </div>
         </div>
@@ -29,82 +57,82 @@
 
     <div class="container mx-auto px-4 py-6">
         <!-- Header con Banner integrado -->
-        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <div class="flex items-start justify-between gap-6">
+        <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6">
+            <!-- Desktop Layout -->
+            <div class="hidden md:flex items-start justify-between gap-6">
+                <!-- Título a la izquierda -->
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-2xl font-bold text-gray-900">Oportunidades</h1>
+                        <button
+                            onclick="abrirModalAnalisis()"
+                            class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline"
+                        >
+                            ¿Cómo funciona el análisis?
+                        </button>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
+                </div>
 
-			<!-- Título a la izquierda -->
-			<div>
-				<div class="flex items-center gap-3">
-					<h1 class="text-2xl font-bold text-gray-900">Oportunidades</h1>
-					<button
-						onclick="abrirModalAnalisis()"
-						class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline"
-					>
-						¿Cómo funciona el análisis?
-					</button>
-				</div>
-				<p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
-			</div>
+                <!-- Banner Trial a la derecha (solo visible en free_trial) -->
+                <div id="medidor-trial" class="hidden flex flex-col gap-4">
+                    <!-- Medidor de días restantes -->
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white min-w-[280px]">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xl">⏰</span>
+                            <div>
+                                <p class="text-xs font-medium opacity-90">Prueba Gratuita (con las prestaciones del Plan Estándar)</p>
+                                <p class="text-sm font-bold" id="dias-restantes">7 días restantes</p>
+                            </div>
+                        </div>
+                        <div class="bg-white/20 rounded-full h-1.5 overflow-hidden">
+                            <div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                    </div>
 
-			<!-- Banner Trial a la derecha (solo visible en free_trial) -->
-			<div id="medidor-trial" class="hidden flex flex-col gap-4">
-				<!-- Medidor de días restantes -->
-				<div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white min-w-[280px]">
-					<div class="flex items-center gap-2 mb-2">
-						<span class="text-xl">⏰</span>
-						<div>
-							<p class="text-xs font-medium opacity-90">Prueba Gratuita (con las prestaciones del Plan Estándar)</p>
-							<p class="text-sm font-bold" id="dias-restantes">7 días restantes</p>
-						</div>
-					</div>
-					<div class="bg-white/20 rounded-full h-1.5 overflow-hidden">
-						<div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
-					</div>
-				</div>
+                    <!-- Llamado a la acción para suscribirse -->
+                    <div class="bg-white rounded-lg border-2 border-indigo-200 p-4 min-w-[320px]">
+                        <p class="text-sm font-semibold text-gray-800 mb-3 text-center">
+                            ¡Suscríbete a uno de nuestros planes para que continues recibiendo las oportunidades que importan!
+                        </p>
 
-				<!-- Llamado a la acción para suscribirse -->
-				<div class="bg-white rounded-lg border-2 border-indigo-200 p-4 min-w-[320px]">
-					<p class="text-sm font-semibold text-gray-800 mb-3 text-center">
-						¡Suscríbete a uno de nuestros planes para que continues recibiendo las oportunidades que importan!
-					</p>
+                        <div class="flex gap-3">
+                            <!-- Plan Estándar -->
+                            <div class="flex-1">
+                                <button
+                                    onclick="iniciarUpgrade('estandar')"
+                                    class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-bold text-center shadow-md hover:shadow-lg"
+                                >
+                                    <div class="text-xs opacity-90 mb-1">Plan Estándar</div>
+                                    <div class="text-lg">$10/mes</div>
+                                </button>
+                                <button
+                                    onclick="abrirModalPlan('estandar')"
+                                    class="block w-full text-center text-xs text-indigo-600 hover:text-indigo-800 mt-2 underline"
+                                >
+                                    Ver detalles →
+                                </button>
+                            </div>
 
-					<div class="flex gap-3">
-						<!-- Plan Estándar -->
-						<div class="flex-1">
-							<button
-								onclick="iniciarUpgrade('estandar')"
-								class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-bold text-center shadow-md hover:shadow-lg"
-							>
-								<div class="text-xs opacity-90 mb-1">Plan Estándar</div>
-								<div class="text-lg">$10/mes</div>
-							</button>
-							<button
-								onclick="abrirModalPlan('estandar')"
-								class="block w-full text-center text-xs text-indigo-600 hover:text-indigo-800 mt-2 underline"
-							>
-								Ver detalles →
-							</button>
-						</div>
-
-						<!-- Plan Business -->
-						<div class="flex-1">
-							<button
-								onclick="iniciarUpgrade('business')"
-								class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-4 py-3 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center shadow-md hover:shadow-lg"
-							>
-								<div class="text-xs opacity-90 mb-1">Plan Business</div>
-								<div class="text-lg">$20/mes</div>
-							</button>
-							<button
-								onclick="abrirModalPlan('business')"
-								class="block w-full text-center text-xs text-orange-600 hover:text-orange-800 mt-2 underline"
-							>
-								Ver detalles →
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
+                            <!-- Plan Business -->
+                            <div class="flex-1">
+                                <button
+                                    onclick="iniciarUpgrade('business')"
+                                    class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-4 py-3 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center shadow-md hover:shadow-lg"
+                                >
+                                    <div class="text-xs opacity-90 mb-1">Plan Business</div>
+                                    <div class="text-lg">$20/mes</div>
+                                </button>
+                                <button
+                                    onclick="abrirModalPlan('business')"
+                                    class="block w-full text-center text-xs text-orange-600 hover:text-orange-800 mt-2 underline"
+                                >
+                                    Ver detalles →
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Botones a la derecha -->
                 <div class="flex gap-3">
@@ -118,24 +146,81 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Mobile Layout -->
+            <div class="md:hidden space-y-4">
+                <!-- Título -->
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900">Oportunidades</h1>
+                    <button
+                        onclick="abrirModalAnalisis()"
+                        class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline mt-1"
+                    >
+                        ¿Cómo funciona el análisis?
+                    </button>
+                </div>
+
+                <!-- Banner Trial móvil -->
+                <div id="medidor-trial-mobile" class="hidden">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-lg">⏰</span>
+                            <div class="flex-1">
+                                <p class="text-xs font-medium opacity-90">Prueba Gratuita</p>
+                                <p class="text-sm font-bold" id="dias-restantes-mobile">7 días restantes</p>
+                            </div>
+                        </div>
+                        <div class="bg-white/20 rounded-full h-1.5 overflow-hidden">
+                            <div id="barra-progreso-mobile" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <button
+                            onclick="iniciarUpgrade('estandar')"
+                            class="bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition font-bold text-center text-sm"
+                        >
+                            Estándar<br>$10/mes
+                        </button>
+                        <button
+                            onclick="iniciarUpgrade('business')"
+                            class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-3 py-2 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center text-sm"
+                        >
+                            Business<br>$20/mes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botones móvil -->
+                <div class="flex gap-2">
+                    <button onclick="exportarExcel()" class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition font-medium text-sm">
+                        <span>📥</span>
+                        <span>Excel</span>
+                    </button>
+                    <button onclick="cargarOportunidades()" class="flex-1 flex items-center justify-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition font-medium text-sm">
+                        <span>🔄</span>
+                        <span>Actualizar</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Contadores y Filtros en una sola línea -->
-        <div class="flex gap-4 items-start mb-6">
+        <!-- Contadores y Filtros -->
+        <div class="space-y-4 mb-6">
             <!-- Contadores -->
-            <div class="flex gap-4 flex-shrink-0">
-                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl px-6 py-4 shadow-sm border border-green-200">
-                    <p class="text-3xl font-bold text-green-700 text-center" id="count-alta">0</p>
+            <div class="flex gap-4">
+                <div class="flex-1 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-sm border border-green-200">
+                    <p class="text-2xl md:text-3xl font-bold text-green-700 text-center" id="count-alta">0</p>
                     <p class="text-xs font-medium text-green-800 text-center mt-1">ALTA</p>
                 </div>
-                <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl px-6 py-4 shadow-sm border border-yellow-200">
-                    <p class="text-3xl font-bold text-yellow-700 text-center" id="count-media">0</p>
+                <div class="flex-1 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-sm border border-yellow-200">
+                    <p class="text-2xl md:text-3xl font-bold text-yellow-700 text-center" id="count-media">0</p>
                     <p class="text-xs font-medium text-yellow-800 text-center mt-1">MEDIA</p>
                 </div>
             </div>
 
             <!-- Filtros -->
-            <div class="flex-1 grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Búsqueda -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
@@ -190,7 +275,7 @@
         </div>
 
         <!-- Sin resultados -->
-        <div id="sin-resultados" class="hidden bg-white rounded-lg shadow-sm p-12 text-center">
+        <div id="sin-resultados" class="hidden bg-white rounded-lg shadow-sm p-8 md:p-12 text-center">
             <div class="text-6xl mb-4">📭</div>
             <h3 class="text-xl font-bold text-gray-900 mb-2">No hay oportunidades por ahora</h3>
             <p class="text-gray-600 mb-6">El sistema analiza nuevas licitaciones diariamente de lunes a sábado.</p>
@@ -333,8 +418,8 @@
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-2xl">
             <div class="flex items-start justify-between">
-                <h3 class="text-2xl font-bold">¿Cómo es el análisis de Compita?</h3>
-                <button onclick="cerrarModalAnalisis()" class="text-white hover:text-gray-200 text-2xl">
+                <h3 class="text-xl md:text-2xl font-bold">¿Cómo es el análisis de Compita?</h3>
+                <button onclick="cerrarModalAnalisis()" class="text-white hover:text-gray-200 text-2xl flex-shrink-0 ml-2">
                     ✕
                 </button>
             </div>
@@ -348,17 +433,17 @@
                         <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Fase 1</span>
                         Filtro Rápido ⚡
                     </h4>
-                    <p class="text-gray-700 mb-2">Cada licitación nueva se revisa para verificar si:</p>
+                    <p class="text-gray-700 mb-2 text-sm">Cada licitación nueva se revisa para verificar si:</p>
                     <ul class="space-y-1 ml-4">
-                        <li class="flex items-start gap-2 text-gray-700">
+                        <li class="flex items-start gap-2 text-gray-700 text-sm">
                             <span class="text-green-600 font-bold">✓</span>
                             <span>Contiene al menos 1 de tus palabras clave</span>
                         </li>
-                        <li class="flex items-start gap-2 text-gray-700">
+                        <li class="flex items-start gap-2 text-gray-700 text-sm">
                             <span class="text-green-600 font-bold">✓</span>
                             <span>NO tiene ninguna palabra excluida</span>
                         </li>
-                        <li class="flex items-start gap-2 text-gray-700">
+                        <li class="flex items-start gap-2 text-gray-700 text-sm">
                             <span class="text-green-600 font-bold">✓</span>
                             <span>Está abierta (fecha y estado válidos)</span>
                         </li>
@@ -372,17 +457,17 @@
                             <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Fase 2</span>
                             Análisis con IA 🤖
                         </h4>
-                        <p class="text-gray-700 mb-2">Las que pasan se analizan con IA (Claude), tomando en cuenta:</p>
+                        <p class="text-gray-700 mb-2 text-sm">Las que pasan se analizan con IA (Claude), tomando en cuenta:</p>
                         <ul class="space-y-1 ml-4">
-                            <li class="flex items-start gap-2 text-gray-700">
+                            <li class="flex items-start gap-2 text-gray-700 text-sm">
                                 <span class="text-green-600 font-bold">✓</span>
                                 <span>Tu perfil empresarial</span>
                             </li>
-                            <li class="flex items-start gap-2 text-gray-700">
+                            <li class="flex items-start gap-2 text-gray-700 text-sm">
                                 <span class="text-green-600 font-bold">✓</span>
                                 <span>La descripción completa de la licitación</span>
                             </li>
-                            <li class="flex items-start gap-2 text-gray-700">
+                            <li class="flex items-start gap-2 text-gray-700 text-sm">
                                 <span class="text-green-600 font-bold">✓</span>
                                 <span>El monto (puede reclasificar ALTA → MEDIA si es muy bajo)</span>
                             </li>
@@ -396,11 +481,11 @@
                         <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
                             📊 Resultado
                         </h4>
-                        <p class="text-gray-700 mb-2">
+                        <p class="text-gray-700 mb-2 text-sm">
                             Se clasifica como <strong class="text-green-700">ALTA</strong> o <strong class="text-yellow-700">MEDIA</strong>,
                             con descripción y explicación de por qué es relevante.
                         </p>
-                        <p class="text-gray-700">
+                        <p class="text-gray-700 text-sm">
                             <strong>Solo las ALTA y MEDIA te llegan por email.</strong>
                         </p>
                     </div>
@@ -444,15 +529,14 @@
         async function cargarDatosUsuario() {
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                // CAMBIO: Ahora usamos /api/perfil?type=usuario
                 const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    // CAMBIO: Ahora los datos de empresa vienen en data.empresa
                     document.getElementById('nombre-empresa').textContent = data.empresa.nombre;
+                    document.getElementById('nombre-empresa-mobile').textContent = data.empresa.nombre;
 
                     // Mostrar medidor si está en trial
                     if (data.empresa.plan === 'free_trial') {
@@ -467,17 +551,28 @@
         }
 
         function mostrarMedidorTrial(trialFin) {
+            // Mostrar en desktop
             const medidor = document.getElementById('medidor-trial');
             medidor.classList.remove('hidden');
+
+            // Mostrar en móvil
+            const medidorMobile = document.getElementById('medidor-trial-mobile');
+            medidorMobile.classList.remove('hidden');
 
             const ahora = new Date();
             const fin = new Date(trialFin);
             const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
             const porcentaje = (diasRestantes / 7) * 100;
 
-            document.getElementById('dias-restantes').textContent =
-                diasRestantes > 1 ? `${diasRestantes} días restantes` : `${diasRestantes} día restante`;
+            const textoD dias = diasRestantes > 1 ? `${diasRestantes} días restantes` : `${diasRestantes} día restante`;
+
+            // Actualizar desktop
+            document.getElementById('dias-restantes').textContent = textoDias;
             document.getElementById('barra-progreso').style.width = `${Math.max(0, porcentaje)}%`;
+
+            // Actualizar móvil
+            document.getElementById('dias-restantes-mobile').textContent = textoDias;
+            document.getElementById('barra-progreso-mobile').style.width = `${Math.max(0, porcentaje)}%`;
         }
 
         async function cargarOportunidades() {
@@ -546,10 +641,10 @@
             sinResultados.classList.add('hidden');
 
             const html = oportunidadesFiltradas.map(op => `
-                <div class="bg-white rounded-lg shadow-sm p-6 mb-4 hover:shadow-md transition">
-                    <div class="flex items-start justify-between mb-4">
+                <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 hover:shadow-md transition">
+                    <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-3">
                         <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-2">
+                            <div class="flex items-center gap-2 md:gap-3 mb-2 flex-wrap">
                                 <span class="px-3 py-1 rounded-full text-xs font-bold ${
                                     op.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
                                     op.relevancia === 'MEDIA' ? 'bg-yellow-100 text-yellow-800' :
@@ -559,14 +654,14 @@
                                 </span>
                                 ${op.es_nuevo ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">NUEVO</span>' : ''}
                             </div>
-                            <h3 class="text-lg font-bold text-gray-900 mb-2">${op.referencia}</h3>
+                            <h3 class="text-base md:text-lg font-bold text-gray-900 mb-2">${op.referencia}</h3>
                         </div>
-                        <span class="text-xl font-bold text-gray-900">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">
                             ${formatearMonto(op.monto_estimado)}
                         </span>
                     </div>
 
-                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4">
                         <div>
                             <p class="text-sm text-gray-600 font-semibold mb-1">¿Qué?</p>
                             <p class="text-sm text-gray-800">${op.que}</p>
@@ -577,18 +672,18 @@
                         </div>
                     </div>
 
-                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="bg-gray-50 rounded-lg p-3 md:p-4 mb-4">
                         <p class="text-sm text-gray-600 font-semibold mb-2">🎯 Por qué es relevante:</p>
                         <p class="text-sm text-gray-800">${op.razon}</p>
                     </div>
 
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-200">
-                        <div class="flex items-center gap-4 text-sm text-gray-600">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between pt-4 border-t border-gray-200 gap-3">
+                        <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 text-sm text-gray-600">
                             <span>📅 Cierre: ${formatearFecha(op.fecha_presentacion)}</span>
                             <span>🕐 ${calcularDiasRestantes(op.fecha_presentacion)}</span>
                         </div>
                         <a href="${op.url_detalle || '#'}" target="_blank" rel="noopener noreferrer"
-                           class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm font-semibold">
+                           class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm font-semibold text-center">
                             Ver en SECP →
                         </a>
                     </div>
@@ -655,68 +750,81 @@
 
         function cerrarSesion() {
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
             sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
             window.location.href = '/login.html';
         }
 
-		async function iniciarUpgrade(plan) {
-			try {
-				const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        async function iniciarUpgrade(plan) {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-				const response = await fetch(`${API_BASE}/api/stripe-portal`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
-					},
-					body: JSON.stringify({
-						action: 'create_checkout',
-						plan: plan
-					})
-				});
+                const response = await fetch(`${API_BASE}/api/stripe-portal`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'create_checkout',
+                        plan: plan
+                    })
+                });
 
-				if (response.ok) {
-					const data = await response.json();
-					// Redirigir a Stripe Checkout
-					window.location.href = data.checkout_url;
-				} else {
-					const error = await response.json();
-					alert('Error: ' + error.error);
-				}
-			} catch (error) {
-				console.error('Error:', error);
-				alert('Error al iniciar upgrade');
-			}
-		}
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data.checkout_url;
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al iniciar upgrade');
+            }
+        }
 
-    function abrirModalPlan(plan) {
-	    document.getElementById(`modal-${plan}`).classList.remove('hidden');
-	    document.body.style.overflow = 'hidden'; // Prevenir scroll del body
-	}
+        function abrirModalPlan(plan) {
+            document.getElementById(`modal-${plan}`).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
 
-	function cerrarModalPlan(plan) {
-	    document.getElementById(`modal-${plan}`).classList.add('hidden');
-	    document.body.style.overflow = 'auto'; // Restaurar scroll del body
-	}
+        function cerrarModalPlan(plan) {
+            document.getElementById(`modal-${plan}`).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
 
-	// Cerrar modal al hacer clic fuera de él
-	document.addEventListener('click', function(event) {
-	    if (event.target.id === 'modal-estandar' || event.target.id === 'modal-business') {
-	        const plan = event.target.id.replace('modal-', '');
-	        cerrarModalPlan(plan);
-	    }
-});
+        function abrirModalAnalisis() {
+            document.getElementById('modal-analisis').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
 
-function abrirModalAnalisis() {
-    document.getElementById('modal-analisis').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
+        function cerrarModalAnalisis() {
+            document.getElementById('modal-analisis').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
 
-function cerrarModalAnalisis() {
-    document.getElementById('modal-analisis').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
 
+            menu.classList.toggle('active');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        }
+
+        // Cerrar modales al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'modal-estandar' || event.target.id === 'modal-business') {
+                const plan = event.target.id.replace('modal-', '');
+                cerrarModalPlan(plan);
+            }
+            if (event.target.id === 'modal-analisis') {
+                cerrarModalAnalisis();
+            }
+        });
     </script>
 </body>
 </html>
