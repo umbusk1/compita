@@ -31,11 +31,20 @@
         <!-- Header con Banner integrado -->
         <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div class="flex items-start justify-between gap-6">
-                <!-- Título a la izquierda -->
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900">Oportunidades</h1>
-                    <p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
-                </div>
+
+			<!-- Título a la izquierda -->
+			<div>
+				<div class="flex items-center gap-3">
+					<h1 class="text-2xl font-bold text-gray-900">Oportunidades</h1>
+					<button
+						onclick="abrirModalAnalisis()"
+						class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline"
+					>
+						¿Cómo funciona el análisis?
+					</button>
+				</div>
+				<p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
+			</div>
 
 			<!-- Banner Trial a la derecha (solo visible en free_trial) -->
 			<div id="medidor-trial" class="hidden flex flex-col gap-4">
@@ -314,6 +323,102 @@
                 class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-lg shadow-lg hover:shadow-xl"
             >
                 Suscribirme Ahora
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Cómo funciona el análisis -->
+<div id="modal-analisis" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-2xl">
+            <div class="flex items-start justify-between">
+                <h3 class="text-2xl font-bold">¿Cómo es el análisis de Compita?</h3>
+                <button onclick="cerrarModalAnalisis()" class="text-white hover:text-gray-200 text-2xl">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <div class="space-y-5">
+                <!-- Fase 1 -->
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Fase 1</span>
+                        Filtro Rápido ⚡
+                    </h4>
+                    <p class="text-gray-700 mb-2">Cada licitación nueva se revisa para verificar si:</p>
+                    <ul class="space-y-1 ml-4">
+                        <li class="flex items-start gap-2 text-gray-700">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>Contiene al menos 1 de tus palabras clave</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-gray-700">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>NO tiene ninguna palabra excluida</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-gray-700">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>Está abierta (fecha y estado válidos)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="border-t border-gray-200 pt-4">
+                    <!-- Fase 2 -->
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Fase 2</span>
+                            Análisis con IA 🤖
+                        </h4>
+                        <p class="text-gray-700 mb-2">Las que pasan se analizan con IA (Claude), tomando en cuenta:</p>
+                        <ul class="space-y-1 ml-4">
+                            <li class="flex items-start gap-2 text-gray-700">
+                                <span class="text-green-600 font-bold">✓</span>
+                                <span>Tu perfil empresarial</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-gray-700">
+                                <span class="text-green-600 font-bold">✓</span>
+                                <span>La descripción completa de la licitación</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-gray-700">
+                                <span class="text-green-600 font-bold">✓</span>
+                                <span>El monto (puede reclasificar ALTA → MEDIA si es muy bajo)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 pt-4">
+                    <!-- Resultado -->
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                            📊 Resultado
+                        </h4>
+                        <p class="text-gray-700 mb-2">
+                            Se clasifica como <strong class="text-green-700">ALTA</strong> o <strong class="text-yellow-700">MEDIA</strong>,
+                            con descripción y explicación de por qué es relevante.
+                        </p>
+                        <p class="text-gray-700">
+                            <strong>Solo las ALTA y MEDIA te llegan por email.</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                    <p class="text-sm text-blue-800">
+                        <strong>💡 Tip:</strong> Mantén actualizado tu perfil para mejores resultados.
+                    </p>
+                </div>
+            </div>
+
+            <button
+                onclick="cerrarModalAnalisis()"
+                class="w-full mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
+            >
+                Entendido
             </button>
         </div>
     </div>
@@ -601,6 +706,16 @@
 	        cerrarModalPlan(plan);
 	    }
 });
+
+function abrirModalAnalisis() {
+    document.getElementById('modal-analisis').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function cerrarModalAnalisis() {
+    document.getElementById('modal-analisis').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
 
     </script>
 </body>
