@@ -564,7 +564,7 @@
             const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
             const porcentaje = (diasRestantes / 7) * 100;
 
-            const textoD dias = diasRestantes > 1 ? `${diasRestantes} días restantes` : `${diasRestantes} día restante`;
+            const textoDias = diasRestantes > 1 ? `${diasRestantes} días restantes` : `${diasRestantes} día restante`;
 
             // Actualizar desktop
             document.getElementById('dias-restantes').textContent = textoDias;
