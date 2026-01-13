@@ -1,8 +1,8 @@
 name: Scraping Diario de Licitaciones
-
 on:
   schedule:
-    - cron: "0 11 * * 1-6"  # 7 AM hora RD (11 UTC), lunes a sábado
+    - cron: "30 17 * * 1-5"  # 1:30 PM AST (5:30 PM UTC), Lunes a Viernes
+    - cron: "0 21 * * 1-5"   # 5:00 PM AST (9:00 PM UTC), Lunes a Viernes
   workflow_dispatch:  # Permite ejecución manual
 
 jobs:
@@ -23,7 +23,6 @@ jobs:
           pip install playwright psycopg2-binary python-dotenv
           playwright install chromium
           playwright install-deps
-          npm install @anthropic-ai/sdk pg resend
       
       - name: Ejecutar scraping
         env:
@@ -36,14 +35,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           python generar_stats.py
-      
-      - name: Analizar y notificar oportunidades
-        env:
-          CRON_SECRET: ${{ secrets.CRON_SECRET }}
-        run: |
-          curl -X POST https://compita.umbusk.com/api/analizar-notificar-v2 \
-            -H "Content-Type: application/json" \
-            -H "Authorization: Bearer $CRON_SECRET"
       
       - name: Configurar Git
         run: |

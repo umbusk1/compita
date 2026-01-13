@@ -1,8 +1,8 @@
 name: Análisis y Notificaciones Diarias
-
 on:
   schedule:
-    - cron: '30 11 * * 1-6'  # 7:30 AM RD, lunes a sábado
+    - cron: '0 18 * * 1-5'   # 2:00 PM AST (6:00 PM UTC), Lunes a Viernes
+    - cron: '30 21 * * 1-5'  # 5:30 PM AST (9:30 PM UTC), Lunes a Viernes
   workflow_dispatch:  # Permite ejecución manual
 
 jobs:
