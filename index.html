@@ -6,29 +6,70 @@
     <title>Compita - Análisis Inteligente de Licitaciones con IA</title>
     <meta name="description" content="Encuentra las licitaciones que importan. Claude AI analiza 400+ licitaciones en minutos y te muestra solo las relevantes para tu empresa.">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+	    /* Menú móvil */
+	    .mobile-menu {
+	        display: none;
+	    }
+	    .mobile-menu.active {
+	        display: block;
+	    }
+
+	    /* Mejorar gráficos en móvil */
+	    @media (max-width: 768px) {
+	        #grafico-diario {
+	            height: 300px !important;
+	        }
+	    }
+</style>
 </head>
 <body class="bg-white">
-    <!-- Navbar -->
-    <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <span class="text-3xl">🎯</span>
-                    <span class="text-2xl font-bold text-gray-800">Compita</span>
-                </div>
-                <div class="hidden md:flex gap-6 items-center">
-                    <a href="#como-funciona" class="text-gray-600 hover:text-indigo-600 transition">Cómo Funciona</a>
-                    <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition">Precios</a>
-                    <a href="#faq" class="text-gray-600 hover:text-indigo-600 transition">FAQ</a>
-                    <a href="/login.html" class="text-indigo-600 hover:text-indigo-800 font-semibold">Iniciar Sesión</a>
-                    <a href="/registro.html" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center gap-2">
-                        <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-                        Probar Gratis
-                    </a>
-                </div>
+<!-- Navbar -->
+<nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-2">
+                <span class="text-3xl">🎯</span>
+                <span class="text-2xl font-bold text-gray-800">Compita</span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-6 items-center">
+                <a href="#como-funciona" class="text-gray-600 hover:text-indigo-600 transition">Cómo Funciona</a>
+                <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition">Precios</a>
+                <a href="#faq" class="text-gray-600 hover:text-indigo-600 transition">FAQ</a>
+                <a href="/login.html" class="text-indigo-600 hover:text-indigo-800 font-semibold">Iniciar Sesión</a>
+                <a href="/registro.html" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center gap-2">
+                    <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+                    Probar Gratis
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
+            <div class="flex flex-col gap-4">
+                <a href="#como-funciona" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">Cómo Funciona</a>
+                <a href="#pricing" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">Precios</a>
+                <a href="#faq" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">FAQ</a>
+                <a href="/login.html" class="text-indigo-600 hover:text-indigo-800 font-semibold py-2">Iniciar Sesión</a>
+                <a href="/registro.html" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-center flex items-center justify-center gap-2">
+                    <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+                    Probar Gratis
+                </a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- Hero Section -->
     <section class="pt-32 pb-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
@@ -38,10 +79,10 @@
                     Cargando los datos del Portal de Compras de República Dominicana
                     <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="República Dominicana">
                 </p>
-                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
                     Encuentra las licitaciones que <span class="text-indigo-600">importan</span>
                 </h1>
-                <p class="text-xl text-gray-600 mb-8">
+                <p class="text-lg md:text-xl text-gray-600 mb-8">
                     Compita analiza cientos de licitaciones en minutos y extrae solo las relevantes para tu empresa.<br>
                     <span class="font-semibold text-gray-800">Por ejemplo, de 400+ solo 4 pueden ser verdaderas oportunidades.</span>
                 </p>
@@ -75,7 +116,7 @@
                 </div>
 
                 <!-- Stats Cards - Solo 2 tarjetas -->
-                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
                     <!-- Placeholder mientras carga -->
                     <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
                         <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
@@ -92,9 +133,9 @@
                     <h3 class="text-2xl font-bold text-gray-800 mb-6">Detalles de 2026 por Mes</h3>
 
                     <!-- Tabs -->
-                    <div class="flex gap-2 mb-6 border-b border-gray-200" id="month-tabs">
-                        <!-- Se generan dinámicamente -->
-                    </div>
+					<div class="flex gap-1 md:gap-2 mb-6 border-b border-gray-200 overflow-x-auto" id="month-tabs">
+					    <!-- Se generan dinámicamente -->
+					</div>
 
                     <!-- Tab Content -->
                     <div id="tab-content">
@@ -344,118 +385,203 @@
                     </div>
                 </div>
 
-                <!-- Tabla Comparativa -->
-                <div class="bg-gray-50 rounded-2xl p-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Comparación Detallada</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b-2 border-gray-300">
-                                    <th class="py-3 px-4 font-semibold text-gray-700">Funcionalidad</th>
-                                    <th class="py-3 px-4 text-center font-semibold text-indigo-600">Estándar</th>
-                                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Business</th>
-                                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Enterprise</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                <!-- Precio -->
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4 font-semibold text-gray-800">Precio</td>
-                                    <td class="py-3 px-4 text-center text-indigo-600 font-bold">$10/mes</td>
-                                    <td class="py-3 px-4 text-center text-gray-800 font-bold">$20/mes</td>
-                                    <td class="py-3 px-4 text-center text-gray-800 font-bold">Custom</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4 font-semibold text-gray-800">Prueba Gratuita</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓ 7 días</td>
-                                    <td class="py-3 px-4 text-center text-gray-400">—</td>
-                                    <td class="py-3 px-4 text-center text-gray-400">—</td>
-                                </tr>
+<!-- Tabla Comparativa -->
+<div class="bg-gray-50 rounded-2xl p-4 md:p-8">
+    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Comparación Detallada</h3>
 
-                                <!-- Funcionalidades Base -->
-                                <tr class="bg-gray-100">
-                                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Funcionalidades Base</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Perfil Empresarial</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Scraping Automático (L-S)</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Análisis con IA</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
+    <!-- Versión Desktop (tabla) -->
+    <div class="hidden lg:block overflow-x-auto">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="border-b-2 border-gray-300">
+                    <th class="py-3 px-4 font-semibold text-gray-700">Funcionalidad</th>
+                    <th class="py-3 px-4 text-center font-semibold text-indigo-600">Estándar</th>
+                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Business</th>
+                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Enterprise</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm">
+                <!-- Precio -->
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4 font-semibold text-gray-800">Precio</td>
+                    <td class="py-3 px-4 text-center text-indigo-600 font-bold">$10/mes</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-bold">$20/mes</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-bold">Custom</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4 font-semibold text-gray-800">Prueba Gratuita</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓ 7 días</td>
+                    <td class="py-3 px-4 text-center text-gray-400">—</td>
+                    <td class="py-3 px-4 text-center text-gray-400">—</td>
+                </tr>
 
-                                <!-- Notificaciones -->
-                                <tr class="bg-gray-100">
-                                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Notificaciones</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Notificaciones por Email</td>
-                                    <td class="py-3 px-4 text-center text-gray-600">Resumen básico</td>
-                                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
-                                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Enlaces a Documentos</td>
-                                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
+                <!-- Funcionalidades Base -->
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Funcionalidades Base</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Perfil Empresarial</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Scraping Automático (L-S)</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Análisis con IA</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
 
-                                <!-- Dashboard -->
-                                <tr class="bg-gray-100">
-                                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Dashboard</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Dashboard de Oportunidades</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Historial Disponible</td>
-                                    <td class="py-3 px-4 text-center text-gray-600">1 mes</td>
-                                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
-                                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Filtros y Búsqueda</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
+                <!-- Notificaciones -->
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Notificaciones</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Notificaciones por Email</td>
+                    <td class="py-3 px-4 text-center text-gray-600">Resumen básico</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Enlaces a Documentos</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
 
-                                <!-- Servicios Premium -->
-                                <tr class="bg-gray-100">
-                                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Servicios Premium</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Recomendaciones IA para Ofertas</td>
-                                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
-                                <tr class="border-b border-gray-200">
-                                    <td class="py-3 px-4">Acompañamiento Consultor</td>
-                                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- Dashboard -->
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Dashboard</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Dashboard de Oportunidades</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Historial Disponible</td>
+                    <td class="py-3 px-4 text-center text-gray-600">1 mes</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Filtros y Búsqueda</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+
+                <!-- Servicios Premium -->
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Servicios Premium</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Recomendaciones IA para Ofertas</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Acompañamiento Consultor</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Versión Mobile (cards) -->
+    <div class="lg:hidden space-y-6">
+        <!-- Estándar -->
+        <div class="bg-white rounded-lg p-4 shadow">
+            <h4 class="text-lg font-bold text-indigo-600 mb-3">Plan Estándar - $10/mes</h4>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between py-1 border-b">
+                    <span>Prueba Gratuita</span>
+                    <span class="text-green-600 font-semibold">✓ 7 días</span>
                 </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Perfil Empresarial</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Scraping Automático</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Análisis con IA</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Notificaciones Email</span>
+                    <span class="text-gray-600">Resumen</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Dashboard</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span>Historial</span>
+                    <span class="text-gray-600">1 mes</span>
+                </div>
+            </div>
+        </div>
 
+        <!-- Business -->
+        <div class="bg-white rounded-lg p-4 shadow">
+            <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Business - $20/mes</h4>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between py-1 border-b">
+                    <span>Todo lo de Estándar</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Notificaciones Email</span>
+                    <span class="text-gray-800 font-semibold">Completas</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Enlaces Documentos</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span>Historial</span>
+                    <span class="text-gray-800 font-semibold">3 meses</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="bg-white rounded-lg p-4 shadow">
+            <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Enterprise - Custom</h4>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between py-1 border-b">
+                    <span>Todo lo de Business</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Recomendaciones IA</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Acompañamiento</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span>Revisión documentos</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                 <p class="text-center text-gray-600 mt-8">
                     💬 ¿Dudas sobre qué plan elegir? <a href="mailto:sales@umbusk.com" class="text-indigo-600 font-semibold hover:text-indigo-800">Escríbenos</a>
                 </p>
@@ -687,7 +813,7 @@
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true,
+                maintainAspectRatio: window.innerWidth > 768, // Solo mantener aspecto en desktop
                 plugins: {
                     legend: {
                         display: true,
@@ -762,6 +888,17 @@
     }
 
     document.addEventListener('DOMContentLoaded', cargarEstadisticas);
+
+    function toggleMobileMenu() {
+	    const menu = document.getElementById('mobile-menu');
+	    const menuIcon = document.getElementById('menu-icon');
+	    const closeIcon = document.getElementById('close-icon');
+
+	    menu.classList.toggle('active');
+	    menuIcon.classList.toggle('hidden');
+	    closeIcon.classList.toggle('hidden');
+		}
+
     </script>
 </body>
 </html>
