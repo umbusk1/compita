@@ -75,7 +75,7 @@ export default async function handler(req, res) {
     // ========== OBTENER OPORTUNIDADES ==========
     // JOIN entre resultados y licitaciones
     // Solo traer ALTA y MEDIA
-    // USAR NOMBRES CORRECTOS DE COLUMNAS
+    // ⭐ NUEVO: Solo licitaciones con fecha_presentacion >= HOY
     const oportunidades = await sql`
       SELECT
         r.id as resultado_id,
@@ -97,6 +97,7 @@ export default async function handler(req, res) {
       WHERE r.empresa_id = ${empresa_id}
         AND r.relevancia IN ('ALTA', 'MEDIA')
         AND r.fecha_analisis >= ${fechaLimite.toISOString()}
+        AND l.fecha_presentacion >= CURRENT_DATE
       ORDER BY
         CASE r.relevancia
           WHEN 'ALTA' THEN 1
