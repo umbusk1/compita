@@ -932,7 +932,7 @@
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-                const response = await fetch(`${API_BASE}/api/stripe-portal`, {
+                const response = await fetch(`${API_BASE}/api/stripe`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

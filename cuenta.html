@@ -522,117 +522,122 @@
             }
         }
 
-        // ============ FACTURACIÓN ============
-        async function cargarInfoFacturacion() {
-            try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+// ============ FACTURACIÓN ============
+async function cargarInfoFacturacion() {
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-                if (response.ok) {
-                    const data = await response.json();
+        if (response.ok) {
+            const data = await response.json();
 
-                    // Mostrar plan
-                    const planNombres = {
-                        'free_trial': 'Prueba Gratuita',
-                        'estandar': 'Estándar ($10/mes)',
-                        'business': 'Business ($20/mes)',
-                        'cancelado': 'Cancelado'
-                    };
+            // Mostrar plan
+            const planNombres = {
+                'free_trial': 'Prueba Gratuita',
+                'estandar': 'Estándar ($10/mes)',
+                'business': 'Business ($20/mes)',
+                'cancelado': 'Cancelado'
+            };
 
-                    document.getElementById('plan-actual').textContent =
-                        planNombres[data.empresa.plan] || data.empresa.plan;
+            document.getElementById('plan-actual').textContent =
+                planNombres[data.empresa.plan] || data.empresa.plan;
 
-                    // Estado del plan
-                    if (data.empresa.plan === 'free_trial') {
-                        const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
-                        document.getElementById('estado-plan').textContent =
-                            `${diasRestantes} días restantes de prueba`;
-                    } else if (data.empresa.plan === 'cancelado') {
-                        document.getElementById('estado-plan').textContent = 'Suscripción cancelada';
-                    } else {
-                        document.getElementById('estado-plan').textContent = 'Renovación automática mensual';
-                    }
+            // Estado del plan
+            if (data.empresa.plan === 'free_trial') {
+                const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
+                document.getElementById('estado-plan').textContent =
+                    `${diasRestantes} días restantes de prueba`;
+            } else if (data.empresa.plan === 'cancelado') {
+                document.getElementById('estado-plan').textContent = 'Suscripción cancelada';
+            } else {
+                document.getElementById('estado-plan').textContent = 'Renovación automática mensual';
+            }
 
-                    // Badge de estado
-                    const badge = document.getElementById('badge-estado');
-                    if (data.empresa.activo) {
-                        badge.textContent = 'Activo';
-                        badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';
-                    } else {
-                        badge.textContent = 'Inactivo';
-                        badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';
-                    }
+            // Badge de estado
+            const badge = document.getElementById('badge-estado');
+            if (data.empresa.activo) {
+                badge.textContent = 'Activo';
+                badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';
+            } else {
+                badge.textContent = 'Inactivo';
+                badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';
+            }
 
-                    // Mostrar/ocultar secciones según el plan
-                    if (data.empresa.plan === 'free_trial') {
-                        document.getElementById('upgrade-section').classList.remove('hidden');
-                        document.getElementById('portal-section').classList.add('hidden');
-                    } else {
-                        document.getElementById('upgrade-section').classList.add('hidden');
-                        document.getElementById('portal-section').classList.remove('hidden');
-                    }
-                }
-            } catch (error) {
-                console.error('Error cargando info de facturación:', error);
+            // Mostrar/ocultar secciones según el plan
+            if (data.empresa.plan === 'free_trial') {
+                document.getElementById('upgrade-section').classList.remove('hidden');
+                document.getElementById('portal-section').classList.add('hidden');
+            } else {
+                document.getElementById('upgrade-section').classList.add('hidden');
+                document.getElementById('portal-section').classList.remove('hidden');
             }
         }
+    } catch (error) {
+        console.error('Error cargando info de facturación:', error);
+    }
+}
 
-        async function abrirPortalFacturacion() {
-            try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/stripe-portal`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+// ⭐ ACTUALIZADO: Usar endpoint consolidado /api/stripe
+async function abrirPortalFacturacion() {
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/stripe`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                action: 'create_portal'
+            })
+        });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    // Redirigir al portal de Stripe
-                    window.location.href = data.portal_url;
-                } else {
-                    const error = await response.json();
-                    alert('Error: ' + error.error);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al abrir portal de facturación');
-            }
+        if (response.ok) {
+            const data = await response.json();
+            // Redirigir al portal de Stripe
+            window.location.href = data.portal_url;
+        } else {
+            const error = await response.json();
+            alert('Error: ' + error.error);
         }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al abrir portal de facturación');
+    }
+}
 
-        async function iniciarUpgrade(plan) {
-            try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+// ⭐ ACTUALIZADO: Usar endpoint consolidado /api/stripe
+async function iniciarUpgrade(plan) {
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-                const response = await fetch(`${API_BASE}/api/stripe-portal`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        action: 'create_checkout',
-                        plan: plan
-                    })
-                });
+        const response = await fetch(`${API_BASE}/api/stripe`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                action: 'create_checkout',
+                plan: plan
+            })
+        });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    // Redirigir a Stripe Checkout
-                    window.location.href = data.checkout_url;
-                } else {
-                    const error = await response.json();
-                    alert('Error: ' + error.error);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al iniciar upgrade');
-            }
+        if (response.ok) {
+            const data = await response.json();
+            // Redirigir a Stripe Checkout
+            window.location.href = data.checkout_url;
+        } else {
+            const error = await response.json();
+            alert('Error: ' + error.error);
         }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al iniciar upgrade');
+    }
+}
 
     </script>
 </body>
