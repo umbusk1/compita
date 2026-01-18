@@ -10,6 +10,7 @@
     "api/password.js": { "maxDuration": 10 },
     "api/admin.js": { "maxDuration": 10 },
     "api/stripe.js": { "maxDuration": 10 },
-    "api/stripe-webhook.js": { "maxDuration": 10 }
+    "api/stripe-webhook.js": { "maxDuration": 10 },
+    "api/business-features.js": { "maxDuration": 10 }
   }
 }

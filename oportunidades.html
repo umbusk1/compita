@@ -90,6 +90,25 @@
                     <p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
                 </div>
 
+                <!-- Cupos Business (NUEVO - solo visible para Business) -->
+                <div id="cupos-business" class="hidden bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4 min-w-[280px]">
+                    <p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                        <span>⭐</span>
+                        <span>Recursos Business</span>
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-700">📄 Descargas ZIP:</span>
+                            <span class="text-sm font-bold text-gray-900" id="cupo-zip">-/-</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-gray-700">🤖 Análisis IA:</span>
+                            <span class="text-sm font-bold text-gray-900" id="cupo-analisis">-/-</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Reinicia: <span id="fecha-reinicio">1 Feb</span></p>
+                </div>
+
                 <!-- Banner Trial a la derecha (solo visible en free_trial) -->
                 <div id="medidor-trial" class="hidden flex flex-col gap-4">
                     <!-- Medidor de días restantes -->
@@ -555,6 +574,7 @@
         let todasOportunidades = [];
         let oportunidadesFiltradas = [];
         let planActual = 'free_trial'; // Se actualiza cuando cargamos datos del usuario
+        let cuposDisponibles = null; // Para guardar info de cupos Business
 
         // Verificar autenticación
         window.addEventListener('DOMContentLoaded', async function() {
@@ -583,6 +603,11 @@
                     // ⭐ GUARDAR PLAN ACTUAL
                     planActual = data.empresa.plan;
 
+                    // ⭐ CARGAR CUPOS SI ES BUSINESS O ENTERPRISE
+                    if (planActual === 'business' || planActual === 'enterprise') {
+                        await cargarCuposBusiness();
+                    }
+
                     // Mostrar medidor si está en trial
                     if (data.empresa.plan === 'free_trial') {
                         mostrarMedidorTrial(data.empresa.trial_fin);
@@ -592,6 +617,41 @@
                 }
             } catch (error) {
                 console.error('Error cargando usuario:', error);
+            }
+        }
+
+        // ⭐ NUEVA FUNCIÓN: Cargar cupos Business
+        async function cargarCuposBusiness() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/business-features?action=verificar-cupos`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    cuposDisponibles = data.cupos;
+
+                    // Mostrar widget de cupos
+                    document.getElementById('cupos-business').classList.remove('hidden');
+
+                    // Actualizar contadores
+                    document.getElementById('cupo-zip').textContent =
+                        `${data.cupos.zip.disponibles}/${data.cupos.zip.limite}`;
+                    document.getElementById('cupo-analisis').textContent =
+                        `${data.cupos.analisis_ia.disponibles}/${data.cupos.analisis_ia.limite}`;
+
+                    // Calcular fecha de reinicio (próximo mes)
+                    const hoy = new Date();
+                    const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1);
+                    const opciones = { day: 'numeric', month: 'short' };
+                    document.getElementById('fecha-reinicio').textContent =
+                        proximoMes.toLocaleDateString('es-ES', opciones);
+                } else {
+                    console.error('Error cargando cupos Business');
+                }
+            } catch (error) {
+                console.error('Error:', error);
             }
         }
 
@@ -763,17 +823,73 @@
             container.innerHTML = html;
         }
 
-        // ⭐ NUEVA FUNCIÓN: Descargar documentos
+        // ⭐ FUNCIÓN MEJORADA: Descargar documentos con validación de cupo
         async function descargarDocumentos(referencia) {
-            alert(`🚧 Función en desarrollo\n\nSe descargará el ZIP completo de la licitación ${referencia} desde el portal de SECP.\n\nEsto incluirá:\n- Pliego de condiciones\n- Documentos técnicos\n- Formularios\n- Términos de referencia`);
+            // Verificar cupos disponibles
+            if (!cuposDisponibles || cuposDisponibles.zip.disponibles <= 0) {
+                mostrarModalLimite('zip');
+                return;
+            }
 
-            // TODO: Implementar descarga real
-            // const url = `${API_BASE}/api/descargar-documentos?referencia=${referencia}`;
-            // window.open(url, '_blank');
+            const confirmacion = confirm(
+                `¿Descargar documentos de ${referencia}?\n\n` +
+                `Descargas restantes: ${cuposDisponibles.zip.disponibles}/${cuposDisponibles.zip.limite}`
+            );
+
+            if (!confirmacion) return;
+
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+                // Registrar uso del cupo
+                const response = await fetch(`${API_BASE}/api/business-features`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'usar-zip',
+                        referencia: referencia
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Actualizar cupos localmente
+                    await cargarCuposBusiness();
+
+                    // Aquí iría la lógica real de descarga
+                    alert(
+                        `✅ Descarga autorizada\n\n` +
+                        `Referencia: ${referencia}\n` +
+                        `Descargas restantes: ${data.cupos_restantes}\n\n` +
+                        `🚧 La descarga automática estará disponible próximamente.\n` +
+                        `Por ahora, visita el portal SECP para descargar los documentos.`
+                    );
+                } else {
+                    const error = await response.json();
+                    if (error.error.includes('límite')) {
+                        mostrarModalLimite('zip');
+                    } else {
+                        alert('Error: ' + error.error);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al procesar descarga');
+            }
         }
 
-        // ⭐ NUEVA FUNCIÓN: Analizar con IA
+        // ⭐ FUNCIÓN MEJORADA: Analizar con IA con validación de cupo
         async function analizarConIA(referencia, licitacionId) {
+            // Verificar cupos disponibles
+            if (!cuposDisponibles || cuposDisponibles.analisis_ia.disponibles <= 0) {
+                mostrarModalLimite('analisis');
+                return;
+            }
+
             // Abrir modal
             document.getElementById('modal-analisis-ia').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -783,12 +899,54 @@
             document.getElementById('modal-analisis-contenido').innerHTML = `
                 <div class="text-center py-8">
                     <div class="spinner mx-auto mb-4"></div>
-                    <p class="text-gray-600">Analizando pliego con IA...</p>
-                    <p class="text-sm text-gray-500 mt-2">Esto puede tomar 30-60 segundos</p>
+                    <p class="text-gray-600">Validando cupo disponible...</p>
                 </div>
             `;
 
             try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+                // Registrar uso del cupo
+                const response = await fetch(`${API_BASE}/api/business-features`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'usar-analisis',
+                        referencia: referencia,
+                        licitacion_id: licitacionId
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    if (error.error.includes('límite')) {
+                        cerrarModalAnalisisIA();
+                        mostrarModalLimite('analisis');
+                    } else {
+                        throw new Error(error.error);
+                    }
+                    return;
+                }
+
+                // Cupo validado, proceder con análisis
+                const data = await response.json();
+
+                // Actualizar cupos localmente
+                await cargarCuposBusiness();
+
+                // Mostrar análisis en progreso
+                document.getElementById('modal-analisis-contenido').innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="spinner mx-auto mb-4"></div>
+                        <p class="text-gray-600">Analizando pliego con IA...</p>
+                        <p class="text-sm text-gray-500 mt-2">Esto puede tomar 30-60 segundos</p>
+                        <p class="text-xs text-green-600 mt-4">✅ Análisis restantes: ${data.cupos_restantes}</p>
+                    </div>
+                `;
+
                 // TODO: Llamar a tu API de PythonAnywhere
                 // Por ahora simulamos con un timeout
                 await new Promise(resolve => setTimeout(resolve, 2000));
@@ -850,14 +1008,31 @@
                         <div class="text-4xl mb-4">⚠️</div>
                         <p class="text-red-800 font-semibold mb-4">Error al generar análisis</p>
                         <button
-                            onclick="analizarConIA('${referencia}', '${licitacionId}')"
+                            onclick="cerrarModalAnalisisIA()"
                             class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
                         >
-                            Reintentar
+                            Cerrar
                         </button>
                     </div>
                 `;
             }
+        }
+
+        // ⭐ NUEVA FUNCIÓN: Mostrar modal cuando se agota el límite
+        function mostrarModalLimite(tipo) {
+            const esZip = tipo === 'zip';
+            const titulo = esZip ? 'Límite de Descargas ZIP' : 'Límite de Análisis IA';
+            const limite = esZip ? cuposDisponibles?.zip.limite : cuposDisponibles?.analisis_ia.limite;
+            const usados = esZip ? cuposDisponibles?.zip.usados : cuposDisponibles?.analisis_ia.usados;
+
+            alert(
+                `⚠️ ${titulo} Alcanzado\n\n` +
+                `Has usado tus ${limite} ${esZip ? 'descargas' : 'análisis'} de este mes (${usados}/${limite}).\n\n` +
+                `Opciones:\n` +
+                `• Espera hasta el próximo mes\n` +
+                `• Upgrade a Plan Enterprise (límites mayores)\n` +
+                `• Compra créditos adicionales (próximamente)`
+            );
         }
 
         function cerrarModalAnalisisIA() {
