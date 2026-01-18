@@ -13,6 +13,22 @@
         .mobile-menu.active {
             display: block;
         }
+
+        /* Spinner de carga */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4F46E5;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -285,6 +301,31 @@
         </div>
     </div>
 
+<!-- Modal: Análisis con IA (NUEVO para Business) -->
+<div id="modal-analisis-ia" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-t-2xl sticky top-0 z-10">
+            <div class="flex items-start justify-between">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold">🤖 Análisis con IA</h3>
+                    <p class="text-sm opacity-90 mt-1" id="modal-analisis-referencia">Referencia...</p>
+                </div>
+                <button onclick="cerrarModalAnalisisIA()" class="text-white hover:text-gray-200 text-2xl flex-shrink-0 ml-2">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div id="modal-analisis-contenido" class="p-6">
+            <!-- Se llena dinámicamente -->
+            <div class="text-center py-8">
+                <div class="spinner mx-auto mb-4"></div>
+                <p class="text-gray-600">Cargando análisis...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modales de Planes -->
 <!-- Modal Plan Estándar -->
 <div id="modal-estandar" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -373,15 +414,19 @@
             <ul class="space-y-3 mb-6">
                 <li class="flex items-start gap-2">
                     <span class="text-green-600 font-bold">✓</span>
-                    <span class="text-gray-700"><strong>Emails detallados</strong> con análisis completo de cada oportunidad</span>
+                    <span class="text-gray-700"><strong>Acceso a documentos</strong> de cada licitación</span>
                 </li>
                 <li class="flex items-start gap-2">
                     <span class="text-green-600 font-bold">✓</span>
-                    <span class="text-gray-700"><strong>Análisis avanzado de relevancia</strong> con IA</span>
+                    <span class="text-gray-700"><strong>Análisis profundo con IA</strong> del pliego de condiciones</span>
                 </li>
                 <li class="flex items-start gap-2">
                     <span class="text-green-600 font-bold">✓</span>
-                    <span class="text-gray-700"><strong>Prioridad en notificaciones</strong> (las recibes primero)</span>
+                    <span class="text-gray-700"><strong>Reportes ejecutivos</strong> con recomendaciones estratégicas</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Emails detallados</strong> con análisis completo</span>
                 </li>
                 <li class="flex items-start gap-2">
                     <span class="text-green-600 font-bold">✓</span>
@@ -391,15 +436,11 @@
                     <span class="text-green-600 font-bold">✓</span>
                     <span class="text-gray-700"><strong>Soporte prioritario</strong> por email y chat</span>
                 </li>
-                <li class="flex items-start gap-2">
-                    <span class="text-green-600 font-bold">✓</span>
-                    <span class="text-gray-700"><strong>Acceso anticipado</strong> a nuevas funcionalidades</span>
-                </li>
             </ul>
 
             <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
                 <p class="text-sm text-orange-800">
-                    <strong>🚀 Ideal para:</strong> Empresas que compiten activamente por contratos públicos y necesitan información detallada y oportuna para preparar mejores propuestas.
+                    <strong>🚀 Ideal para:</strong> Empresas que compiten activamente por contratos públicos y necesitan información detallada para preparar mejores propuestas.
                 </p>
             </div>
 
@@ -513,6 +554,7 @@
         const API_BASE = window.location.origin;
         let todasOportunidades = [];
         let oportunidadesFiltradas = [];
+        let planActual = 'free_trial'; // Se actualiza cuando cargamos datos del usuario
 
         // Verificar autenticación
         window.addEventListener('DOMContentLoaded', async function() {
@@ -537,6 +579,9 @@
                     const data = await response.json();
                     document.getElementById('nombre-empresa').textContent = data.empresa.nombre;
                     document.getElementById('nombre-empresa-mobile').textContent = data.empresa.nombre;
+
+                    // ⭐ GUARDAR PLAN ACTUAL
+                    planActual = data.empresa.plan;
 
                     // Mostrar medidor si está en trial
                     if (data.empresa.plan === 'free_trial') {
@@ -640,7 +685,11 @@
 
             sinResultados.classList.add('hidden');
 
-            const html = oportunidadesFiltradas.map(op => `
+            const html = oportunidadesFiltradas.map(op => {
+                // ⭐ Determinar si mostrar botones Business
+                const esBusiness = planActual === 'business' || planActual === 'enterprise';
+
+                return `
                 <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 hover:shadow-md transition">
                     <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-4 gap-3">
                         <div class="flex-1">
@@ -653,6 +702,7 @@
                                     ${op.relevancia}
                                 </span>
                                 ${op.es_nuevo ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">NUEVO</span>' : ''}
+                                ${esBusiness ? '<span class="px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 rounded text-xs font-bold">⭐ BUSINESS</span>' : ''}
                             </div>
                             <h3 class="text-base md:text-lg font-bold text-gray-900 mb-2">${op.referencia}</h3>
                         </div>
@@ -677,6 +727,32 @@
                         <p class="text-sm text-gray-800">${op.razon}</p>
                     </div>
 
+                    ${esBusiness ? `
+                    <!-- ⭐ SECCIÓN EXCLUSIVA BUSINESS -->
+                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-lg p-4 mb-4">
+                        <p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                            <span>🚀</span>
+                            <span>Funciones Premium Business</span>
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button
+                                onclick="descargarDocumentos('${op.referencia}')"
+                                class="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
+                            >
+                                <span>📄</span>
+                                <span>Ver Documentos</span>
+                            </button>
+                            <button
+                                onclick="analizarConIA('${op.referencia}', '${op.licitacion_id}')"
+                                class="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
+                            >
+                                <span>🤖</span>
+                                <span>Analizar con IA</span>
+                            </button>
+                        </div>
+                    </div>
+                    ` : ''}
+
                     <div class="flex flex-col md:flex-row md:items-center md:justify-between pt-4 border-t border-gray-200 gap-3">
                         <div class="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 text-sm text-gray-600">
                             <span>📅 Cierre: ${formatearFecha(op.fecha_presentacion)}</span>
@@ -688,9 +764,111 @@
                         </a>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
 
             container.innerHTML = html;
+        }
+
+        // ⭐ NUEVA FUNCIÓN: Descargar documentos
+        async function descargarDocumentos(referencia) {
+            alert(`🚧 Función en desarrollo\n\nSe descargará el ZIP completo de la licitación ${referencia} desde el portal de SECP.\n\nEsto incluirá:\n- Pliego de condiciones\n- Documentos técnicos\n- Formularios\n- Términos de referencia`);
+
+            // TODO: Implementar descarga real
+            // const url = `${API_BASE}/api/descargar-documentos?referencia=${referencia}`;
+            // window.open(url, '_blank');
+        }
+
+        // ⭐ NUEVA FUNCIÓN: Analizar con IA
+        async function analizarConIA(referencia, licitacionId) {
+            // Abrir modal
+            document.getElementById('modal-analisis-ia').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('modal-analisis-referencia').textContent = `Referencia: ${referencia}`;
+
+            // Mostrar loading
+            document.getElementById('modal-analisis-contenido').innerHTML = `
+                <div class="text-center py-8">
+                    <div class="spinner mx-auto mb-4"></div>
+                    <p class="text-gray-600">Analizando pliego con IA...</p>
+                    <p class="text-sm text-gray-500 mt-2">Esto puede tomar 30-60 segundos</p>
+                </div>
+            `;
+
+            try {
+                // TODO: Llamar a tu API de PythonAnywhere
+                // Por ahora simulamos con un timeout
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Análisis simulado (reemplazar con respuesta real de la API)
+                const analisisEjemplo = `
+                    <div class="prose max-w-none">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">📊 Síntesis Ejecutiva</h2>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                            <p class="text-sm"><strong>Institución:</strong> Ministerio de Educación</p>
+                            <p class="text-sm"><strong>Objeto:</strong> Servicios de consultoría para diseño curricular</p>
+                            <p class="text-sm"><strong>Presupuesto:</strong> RD$ 2,500,000</p>
+                        </div>
+
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">🎯 Análisis y Recomendaciones</h2>
+
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                            <p class="font-bold text-green-800 mb-2">✅ Oportunidades</p>
+                            <ul class="text-sm space-y-1 ml-4">
+                                <li>• Alto alineamiento con perfil de tu empresa</li>
+                                <li>• Plazo de ejecución razonable (6 meses)</li>
+                                <li>• Posibilidad de trabajo remoto</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                            <p class="font-bold text-yellow-800 mb-2">⚠️ Riesgos y Desafíos</p>
+                            <ul class="text-sm space-y-1 ml-4">
+                                <li>• Requiere experiencia previa en sector educativo (3 proyectos)</li>
+                                <li>• Garantía de cumplimiento del 10%</li>
+                                <li>• Penalidades por retraso: 0.5% diario</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                            <p class="font-bold text-purple-800 mb-2">🎯 Factores Decisivos</p>
+                            <ul class="text-sm space-y-1 ml-4">
+                                <li>• Experiencia específica en diseño curricular</li>
+                                <li>• Equipo multidisciplinario (mínimo 5 profesionales)</li>
+                                <li>• Capacidad financiera demostrada</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-100 rounded-lg p-4 mt-6">
+                            <p class="text-sm text-gray-600">
+                                <strong>💡 Recomendación:</strong> Oportunidad ALTA. Tu perfil empresarial coincide bien con los requisitos.
+                                Se sugiere formar alianza estratégica si no tienes todo el equipo requerido.
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('modal-analisis-contenido').innerHTML = analisisEjemplo;
+
+            } catch (error) {
+                console.error('Error analizando con IA:', error);
+                document.getElementById('modal-analisis-contenido').innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                        <div class="text-4xl mb-4">⚠️</div>
+                        <p class="text-red-800 font-semibold mb-4">Error al generar análisis</p>
+                        <button
+                            onclick="analizarConIA('${referencia}', '${licitacionId}')"
+                            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+                        >
+                            Reintentar
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function cerrarModalAnalisisIA() {
+            document.getElementById('modal-analisis-ia').classList.add('hidden');
+            document.body.style.overflow = 'auto';
         }
 
         function actualizarEstadisticas() {
@@ -823,6 +1001,9 @@
             }
             if (event.target.id === 'modal-analisis') {
                 cerrarModalAnalisis();
+            }
+            if (event.target.id === 'modal-analisis-ia') {
+                cerrarModalAnalisisIA();
             }
         });
     </script>
