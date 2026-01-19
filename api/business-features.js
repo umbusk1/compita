@@ -69,6 +69,21 @@ export default async function handler(req, res) {
 
     const uso = usoMensual[0];
 
+	// ====================================================
+    // ACCIÓN: VERIFICAR LÍMITES (para widget)
+    // ====================================================
+    if (accion === 'verificar-limites') {
+      return res.status(200).json({
+        success: true,
+        zip_usados: uso.descargas_zip_usadas,
+        zip_limite: limite_zips_mes,
+        zip_disponibles: Math.max(0, limite_zips_mes - uso.descargas_zip_usadas),
+        analisis_usados: uso.analisis_ia_usados,
+        analisis_limite: limite_analisis_mes,
+        analisis_disponibles: Math.max(0, limite_analisis_mes - uso.analisis_ia_usados)
+      });
+    }
+
     // ====================================================
     // ACCIÓN: VALIDAR CUPO
     // ====================================================
