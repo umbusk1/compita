@@ -722,101 +722,106 @@
             actualizarEstadisticas();
         }
 
-        function renderizarOportunidades() {
-            const container = document.getElementById('lista-oportunidades');
-            const sinResultados = document.getElementById('sin-resultados');
+function renderizarOportunidades() {
+    const container = document.getElementById('lista-oportunidades');
+    const sinResultados = document.getElementById('sin-resultados');
 
-            if (oportunidadesFiltradas.length === 0) {
-                container.innerHTML = '';
-                sinResultados.classList.remove('hidden');
-                return;
-            }
+    if (oportunidadesFiltradas.length === 0) {
+        container.innerHTML = '';
+        sinResultados.classList.remove('hidden');
+        return;
+    }
 
-            sinResultados.classList.add('hidden');
+    sinResultados.classList.add('hidden');
 
-            const html = oportunidadesFiltradas.map(op => {
-                const esBusiness = planActual === 'business' || planActual === 'enterprise';
+    const html = oportunidadesFiltradas.map(op => {
+        const esBusiness = planActual === 'business' || planActual === 'enterprise';
 
-                return `
-                <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 hover:shadow-md transition">
-                    <!-- Referencia y monto arriba -->
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-600 mb-1">Referencia</p>
-                            <h3 class="text-lg font-bold text-gray-900">${op.referencia}</h3>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-sm font-semibold text-gray-600 mb-1">Total estimado</p>
-                            <p class="text-xl font-bold text-gray-900">${formatearMonto(op.monto_estimado)}</p>
-                        </div>
-                    </div>
+        return `
+        <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 hover:shadow-md transition">
+            <!-- Fila superior: Referencia | Fecha cierre | Badge relevancia -->
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                <!-- Referencia -->
+                <div class="flex-shrink-0">
+                    <p class="text-sm font-semibold text-gray-600 mb-1">Referencia</p>
+                    <h3 class="text-lg font-bold text-gray-900">${op.referencia}</h3>
+                </div>
 
-                    <!-- Badge de relevancia -->
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold ${
-                            op.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
-                            op.relevancia === 'MEDIA' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-gray-100 text-gray-800'
-                        }">
-                            ${op.relevancia} RELEVANCIA
-                        </span>
-                        ${op.es_nuevo ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold">NUEVO</span>' : ''}
-                    </div>
-
-                    <!-- Descripción y Unidad lado a lado -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-600 mb-1">Descripción</p>
-                            <p class="text-sm text-gray-800">${op.que}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm font-semibold text-gray-600 mb-1">Unidad de compras</p>
-                            <p class="text-sm text-gray-800">${op.quien}</p>
-                        </div>
-                    </div>
-
-                    <!-- Análisis preliminar de IA -->
-                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                        <p class="text-sm font-semibold text-gray-700 mb-2">Análisis preliminar de IA</p>
-                        <p class="text-sm text-gray-800">${op.razon}</p>
-                    </div>
-
-                    ${esBusiness ? `
-                    <!-- FUNCIONALIDAD PREMIUM -->
-                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4">
-                        <p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-                            <span>🚀</span>
-                            <span>FUNCIONALIDAD PREMIUM</span>
-                        </p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <button
-                                onclick="descargarDocumentos('${op.referencia}')"
-                                class="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
-                            >
-                                <span>📄</span>
-                                <span>Descargar Documentos (ZIP)</span>
-                            </button>
-                            <button
-                                onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0})"
-                                class="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
-                            >
-                                <span>🤖</span>
-                                <span>Analizar Pliego con IA</span>
-                            </button>
-                        </div>
-                    </div>
-                    ` : ''}
-
-                    <!-- Fecha de cierre -->
-                    <div class="flex items-center gap-4 pt-4 border-t border-gray-200 text-sm text-gray-600 mt-4">
+                <!-- Fecha de cierre -->
+                <div class="flex-shrink-0">
+                    <div class="flex items-center gap-3 text-sm text-gray-600">
                         <span>📅 Cierre: ${formatearFecha(op.fecha_presentacion)}</span>
                         <span>🕐 ${calcularDiasRestantes(op.fecha_presentacion)}</span>
                     </div>
                 </div>
-            `}).join('');
 
-            container.innerHTML = html;
-        }
+                <!-- Badge de relevancia -->
+                <div class="flex-shrink-0">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold ${
+                        op.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
+                        op.relevancia === 'MEDIA' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                    }">
+                        ${op.relevancia} RELEVANCIA
+                    </span>
+                    ${op.es_nuevo ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold ml-2">NUEVO</span>' : ''}
+                </div>
+            </div>
+
+            <!-- Total estimado -->
+            <div class="mb-4">
+                <p class="text-sm font-semibold text-gray-600 mb-1">Total estimado</p>
+                <p class="text-xl font-bold text-gray-900">${formatearMonto(op.monto_estimado)}</p>
+            </div>
+
+            <!-- Descripción y Unidad lado a lado -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <p class="text-sm font-bold text-gray-900 mb-1">Descripción</p>
+                    <p class="text-sm text-gray-800">${op.que}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-gray-900 mb-1">Unidad de compras</p>
+                    <p class="text-sm text-gray-800">${op.quien}</p>
+                </div>
+            </div>
+
+            <!-- Análisis preliminar de IA -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                <p class="text-sm font-bold text-gray-900 mb-2">Análisis preliminar de IA</p>
+                <p class="text-sm text-gray-800">${op.razon}</p>
+            </div>
+
+            ${esBusiness ? `
+            <!-- FUNCIONALIDAD PREMIUM -->
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4">
+                <p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span>🚀</span>
+                    <span>FUNCIONALIDAD PREMIUM</span>
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button
+                        onclick="descargarDocumentos('${op.referencia}')"
+                        class="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
+                    >
+                        <span>📄</span>
+                        <span>Descargar Documentos (ZIP)</span>
+                    </button>
+                    <button
+                        onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0})"
+                        class="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
+                    >
+                        <span>🤖</span>
+                        <span>Analizar Pliego con IA</span>
+                    </button>
+                </div>
+            </div>
+            ` : ''}
+        </div>
+    `}).join('');
+
+    container.innerHTML = html;
+}
 
         // Función helper para escapar HTML en atributos
         function escapeHtml(text) {
