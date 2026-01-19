@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oportunidades - Compita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Menú móvil */
+        .mobile-menu {
+            display: none;
+        }
+        .mobile-menu.active {
+            display: block;
+        }
+
+        /* Spinner de carga */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4F46E5;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🎯</span>
+                    <span class="text-xl font-bold text-gray-800">Compita</span>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/oportunidades.html" class="text-indigo-600 font-semibold">Oportunidades</a>
+                    <a href="/cuenta.html" class="text-gray-600 hover:text-gray-900">Mi Cuenta</a>
+                    <span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
+                    <button onclick="cerrarSesion()" class="text-sm text-gray-600 hover:text-red-600">Salir</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
+                <div class="flex flex-col gap-4">
+                    <a href="/oportunidades.html" onclick="toggleMobileMenu()" class="text-indigo-600 font-semibold py-2">Oportunidades</a>
+                    <a href="/cuenta.html" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-gray-900 py-2">Mi Cuenta</a>
+                    <span class="text-sm text-gray-600 py-2" id="nombre-empresa-mobile">Cargando...</span>
+                    <button onclick="cerrarSesion()" class="text-left text-sm text-red-600 hover:text-red-800 py-2">Salir</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Header con Banner integrado -->
+        <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-6">
+			 <div id="cupos-business" class="hidden bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4 mb-4">
+				<p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+					<span>⭐</span>
+					<span>Recursos Business</span>
+				</p>
+				<div class="space-y-2">
+					<div class="flex items-center justify-between">
+						<span class="text-xs text-gray-700">📄 Descargas ZIP:</span>
+						<span class="text-sm font-bold text-gray-900" id="cupo-zip">-/-</span>
+					</div>
+					<div class="flex items-center justify-between">
+						<span class="text-xs text-gray-700">🤖 Análisis IA:</span>
+						<span class="text-sm font-bold text-gray-900" id="cupo-analisis">-/-</span>
+					</div>
+				</div>
+				<p class="text-xs text-gray-500 mt-2">Reinicia: <span id="fecha-reinicio">1 Feb</span></p>
+			</div>
+            <!-- Desktop Layout -->
+            <div class="hidden md:flex items-start justify-between gap-6">
+                <!-- Título a la izquierda -->
+                <div>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-2xl font-bold text-gray-900">Oportunidades</h1>
+                        <button
+                            onclick="abrirModalAnalisis()"
+                            class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline"
+                        >
+                            ¿Cómo funciona el análisis?
+                        </button>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">Licitaciones relevantes para tu empresa</p>
+                </div>
+
+
+                <!-- Banner Trial a la derecha (solo visible en free_trial) -->
+                <div id="medidor-trial" class="hidden flex flex-col gap-4">
+                    <!-- Medidor de días restantes -->
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white min-w-[280px]">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-xl">⏰</span>
+                            <div>
+                                <p class="text-xs font-medium opacity-90">Prueba Gratuita (con las prestaciones del Plan Estándar)</p>
+                                <p class="text-sm font-bold" id="dias-restantes">7 días restantes</p>
+                            </div>
+                        </div>
+                        <div class="bg-white/20 rounded-full h-1.5 overflow-hidden">
+                            <div id="barra-progreso" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Llamado a la acción para suscribirse -->
+                    <div class="bg-white rounded-lg border-2 border-indigo-200 p-4 min-w-[320px]">
+                        <p class="text-sm font-semibold text-gray-800 mb-3 text-center">
+                            ¡Suscríbete a uno de nuestros planes para que continues recibiendo las oportunidades que importan!
+                        </p>
+
+                        <div class="flex gap-3">
+                            <!-- Plan Estándar -->
+                            <div class="flex-1">
+                                <button
+                                    onclick="iniciarUpgrade('estandar')"
+                                    class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-bold text-center shadow-md hover:shadow-lg"
+                                >
+                                    <div class="text-xs opacity-90 mb-1">Plan Estándar</div>
+                                    <div class="text-lg">$10/mes</div>
+                                </button>
+                                <button
+                                    onclick="abrirModalPlan('estandar')"
+                                    class="block w-full text-center text-xs text-indigo-600 hover:text-indigo-800 mt-2 underline"
+                                >
+                                    Ver detalles →
+                                </button>
+                            </div>
+
+                            <!-- Plan Business -->
+                            <div class="flex-1">
+                                <button
+                                    onclick="iniciarUpgrade('business')"
+                                    class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-4 py-3 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center shadow-md hover:shadow-lg"
+                                >
+                                    <div class="text-xs opacity-90 mb-1">Plan Business</div>
+                                    <div class="text-lg">$20/mes</div>
+                                </button>
+                                <button
+                                    onclick="abrirModalPlan('business')"
+                                    class="block w-full text-center text-xs text-orange-600 hover:text-orange-800 mt-2 underline"
+                                >
+                                    Ver detalles →
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones a la derecha -->
+                <div class="flex gap-3">
+                    <button onclick="exportarExcel()" class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium">
+                        <span>📥</span>
+                        <span>Exportar Excel</span>
+                    </button>
+                    <button onclick="cargarOportunidades()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
+                        <span>🔄</span>
+                        <span>Actualizar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Layout -->
+            <div class="md:hidden space-y-4">
+                <!-- Título -->
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900">Oportunidades</h1>
+                    <button
+                        onclick="abrirModalAnalisis()"
+                        class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold underline mt-1"
+                    >
+                        ¿Cómo funciona el análisis?
+                    </button>
+                </div>
+
+                <!-- Banner Trial móvil -->
+                <div id="medidor-trial-mobile" class="hidden">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-3 text-white">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-lg">⏰</span>
+                            <div class="flex-1">
+                                <p class="text-xs font-medium opacity-90">Prueba Gratuita</p>
+                                <p class="text-sm font-bold" id="dias-restantes-mobile">7 días restantes</p>
+                            </div>
+                        </div>
+                        <div class="bg-white/20 rounded-full h-1.5 overflow-hidden">
+                            <div id="barra-progreso-mobile" class="bg-white h-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <button
+                            onclick="iniciarUpgrade('estandar')"
+                            class="bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition font-bold text-center text-sm"
+                        >
+                            Estándar<br>$10/mes
+                        </button>
+                        <button
+                            onclick="iniciarUpgrade('business')"
+                            class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-3 py-2 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center text-sm"
+                        >
+                            Business<br>$20/mes
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botones móvil -->
+                <div class="flex gap-2">
+                    <button onclick="exportarExcel()" class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition font-medium text-sm">
+                        <span>📥</span>
+                        <span>Excel</span>
+                    </button>
+                    <button onclick="cargarOportunidades()" class="flex-1 flex items-center justify-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition font-medium text-sm">
+                        <span>🔄</span>
+                        <span>Actualizar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contadores y Filtros -->
+        <div class="space-y-4 mb-6">
+            <!-- Contadores -->
+            <div class="flex gap-4">
+                <div class="flex-1 bg-gradient-to-br from-green-50 to-green-100 rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-sm border border-green-200">
+                    <p class="text-2xl md:text-3xl font-bold text-green-700 text-center" id="count-alta">0</p>
+                    <p class="text-xs font-medium text-green-800 text-center mt-1">ALTA</p>
+                </div>
+                <div class="flex-1 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-sm border border-yellow-200">
+                    <p class="text-2xl md:text-3xl font-bold text-yellow-700 text-center" id="count-media">0</p>
+                    <p class="text-xs font-medium text-yellow-800 text-center mt-1">MEDIA</p>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Búsqueda -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                    <input
+                        type="text"
+                        id="busqueda"
+                        placeholder="Palabra clave..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                        onkeyup="filtrarOportunidades()"
+                    >
+                </div>
+
+                <!-- Filtro Relevancia -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Relevancia</label>
+                    <select
+                        id="filtro-relevancia"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                        onchange="filtrarOportunidades()"
+                    >
+                        <option value="todas">Todas</option>
+                        <option value="ALTA">Solo ALTA</option>
+                        <option value="MEDIA">Solo MEDIA</option>
+                        <option value="BAJA">Solo BAJA</option>
+                    </select>
+                </div>
+
+                <!-- Ordenar -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Ordenar por</label>
+                    <select
+                        id="ordenar"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                        onchange="filtrarOportunidades()"
+                    >
+                        <option value="relevancia">Relevancia</option>
+                        <option value="fecha">Fecha cierre</option>
+                        <option value="monto">Monto</option>
+                        <option value="reciente">Más recientes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Oportunidades -->
+        <div id="lista-oportunidades">
+            <!-- Se llena dinámicamente -->
+            <div class="text-center py-12">
+                <div class="text-4xl mb-4">🔍</div>
+                <p class="text-gray-600">Cargando oportunidades...</p>
+            </div>
+        </div>
+
+        <!-- Sin resultados -->
+        <div id="sin-resultados" class="hidden bg-white rounded-lg shadow-sm p-8 md:p-12 text-center">
+            <div class="text-6xl mb-4">📭</div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">No hay oportunidades por ahora</h3>
+            <p class="text-gray-600 mb-6">El sistema analiza nuevas licitaciones diariamente de lunes a sábado.</p>
+            <a href="/cuenta.html" class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
+                Verificar tu perfil empresarial
+            </a>
+        </div>
+    </div>
+
+<!-- Modal: Análisis con IA (NUEVO para Business) -->
+<div id="modal-analisis-ia" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-t-2xl sticky top-0 z-10">
+            <div class="flex items-start justify-between">
+                <div>
+                    <h3 class="text-xl md:text-2xl font-bold">🤖 Análisis con IA</h3>
+                    <p class="text-sm opacity-90 mt-1" id="modal-analisis-referencia">Referencia...</p>
+                </div>
+                <button onclick="cerrarModalAnalisisIA()" class="text-white hover:text-gray-200 text-2xl flex-shrink-0 ml-2">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div id="modal-analisis-contenido" class="p-6">
+            <!-- Se llena dinámicamente -->
+            <div class="text-center py-8">
+                <div class="spinner mx-auto mb-4"></div>
+                <p class="text-gray-600">Cargando análisis...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modales de Planes -->
+<!-- Modal Plan Estándar -->
+<div id="modal-estandar" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-t-2xl">
+            <div class="flex items-start justify-between">
+                <div>
+                    <h3 class="text-2xl font-bold mb-2">Plan Estándar</h3>
+                    <p class="text-3xl font-bold">$10<span class="text-lg font-normal">/mes</span></p>
+                </div>
+                <button onclick="cerrarModalPlan('estandar')" class="text-white hover:text-gray-200 text-2xl">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <p class="text-gray-600 mb-6">Perfecto para empresas que buscan oportunidades de manera constante.</p>
+
+            <h4 class="font-bold text-gray-900 mb-3">✨ Incluye:</h4>
+            <ul class="space-y-3 mb-6">
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Análisis diario automático de licitaciones</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Notificaciones por email de oportunidades ALTA y MEDIA</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Dashboard con todas tus oportunidades</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Filtros por relevancia, fecha y monto</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Perfil empresarial personalizable</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700">Soporte por email</span>
+                </li>
+            </ul>
+
+            <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-indigo-800">
+                    <strong>💡 Ideal para:</strong> Empresas que participan regularmente en licitaciones públicas y quieren mantenerse al día con las oportunidades relevantes.
+                </p>
+            </div>
+
+            <button
+                onclick="iniciarUpgrade('estandar'); cerrarModalPlan('estandar');"
+                class="w-full bg-indigo-600 text-white px-6 py-4 rounded-lg hover:bg-indigo-700 transition font-bold text-lg shadow-lg hover:shadow-xl"
+            >
+                Suscribirme Ahora
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Plan Business -->
+<div id="modal-business" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 p-6 rounded-t-2xl">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="inline-block bg-gray-900 text-yellow-400 text-xs font-bold px-2 py-1 rounded mb-2">
+                        MÁS POPULAR
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Plan Business</h3>
+                    <p class="text-3xl font-bold">$20<span class="text-lg font-normal">/mes</span></p>
+                </div>
+                <button onclick="cerrarModalPlan('business')" class="text-gray-900 hover:text-gray-700 text-2xl">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <p class="text-gray-600 mb-6">La solución premium para empresas que quieren maximizar sus oportunidades.</p>
+
+            <h4 class="font-bold text-gray-900 mb-3">✨ Todo lo del Plan Estándar, más:</h4>
+            <ul class="space-y-3 mb-6">
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Acceso a documentos</strong> de cada licitación</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Análisis profundo con IA</strong> del pliego de condiciones</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Reportes ejecutivos</strong> con recomendaciones estratégicas</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Emails detallados</strong> con análisis completo</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Exportación a Excel</strong> de todas tus oportunidades</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-green-600 font-bold">✓</span>
+                    <span class="text-gray-700"><strong>Soporte prioritario</strong> por email y chat</span>
+                </li>
+            </ul>
+
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-orange-800">
+                    <strong>🚀 Ideal para:</strong> Empresas que compiten activamente por contratos públicos y necesitan información detallada para preparar mejores propuestas.
+                </p>
+            </div>
+
+            <button
+                onclick="iniciarUpgrade('business'); cerrarModalPlan('business');"
+                class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-lg shadow-lg hover:shadow-xl"
+            >
+                Suscribirme Ahora
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Cómo funciona el análisis -->
+<div id="modal-analisis" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6 rounded-t-2xl">
+            <div class="flex items-start justify-between">
+                <h3 class="text-xl md:text-2xl font-bold">¿Cómo es el análisis de Compita?</h3>
+                <button onclick="cerrarModalAnalisis()" class="text-white hover:text-gray-200 text-2xl flex-shrink-0 ml-2">
+                    ✕
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <div class="space-y-5">
+                <!-- Fase 1 -->
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Fase 1</span>
+                        Filtro Rápido ⚡
+                    </h4>
+                    <p class="text-gray-700 mb-2 text-sm">Cada licitación nueva se revisa para verificar si:</p>
+                    <ul class="space-y-1 ml-4">
+                        <li class="flex items-start gap-2 text-gray-700 text-sm">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>Contiene al menos 1 de tus palabras clave</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-gray-700 text-sm">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>NO tiene ninguna palabra excluida</span>
+                        </li>
+                        <li class="flex items-start gap-2 text-gray-700 text-sm">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span>Está abierta (fecha y estado válidos)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="border-t border-gray-200 pt-4">
+                    <!-- Fase 2 -->
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                            <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Fase 2</span>
+                            Análisis con IA 🤖
+                        </h4>
+                        <p class="text-gray-700 mb-2 text-sm">Las que pasan se analizan con IA (Claude), tomando en cuenta:</p>
+                        <ul class="space-y-1 ml-4">
+                            <li class="flex items-start gap-2 text-gray-700 text-sm">
+                                <span class="text-green-600 font-bold">✓</span>
+                                <span>Tu perfil empresarial</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-gray-700 text-sm">
+                                <span class="text-green-600 font-bold">✓</span>
+                                <span>La descripción completa de la licitación</span>
+                            </li>
+                            <li class="flex items-start gap-2 text-gray-700 text-sm">
+                                <span class="text-green-600 font-bold">✓</span>
+                                <span>El monto (puede reclasificar ALTA → MEDIA si es muy bajo)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 pt-4">
+                    <!-- Resultado -->
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                            📊 Resultado
+                        </h4>
+                        <p class="text-gray-700 mb-2 text-sm">
+                            Se clasifica como <strong class="text-green-700">ALTA</strong> o <strong class="text-yellow-700">MEDIA</strong>,
+                            con descripción y explicación de por qué es relevante.
+                        </p>
+                        <p class="text-gray-700 text-sm">
+                            <strong>Solo las ALTA y MEDIA te llegan por email.</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tip -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                    <p class="text-sm text-blue-800">
+                        <strong>💡 Tip:</strong> Mantén actualizado tu perfil para mejores resultados.
+                    </p>
+                </div>
+            </div>
+
+            <button
+                onclick="cerrarModalAnalisis()"
+                class="w-full mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
+            >
+                Entendido
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+        const API_BASE = window.location.origin;
+        const PYTHONANYWHERE_API = 'https://moisesprf.pythonanywhere.com';
+        let todasOportunidades = [];
+        let oportunidadesFiltradas = [];
+        let planActual = 'free_trial';
+        let cuposDisponibles = null;
+
+        // Verificar autenticación
+        window.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            await cargarDatosUsuario();
+            await cargarOportunidades();
+        });
+
+        async function cargarDatosUsuario() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('nombre-empresa').textContent = data.empresa.nombre;
+                    document.getElementById('nombre-empresa-mobile').textContent = data.empresa.nombre;
+
+                    planActual = data.empresa.plan;
+
+                    if (planActual === 'business' || planActual === 'enterprise') {
+                        await cargarCuposBusiness();
+                    }
+
+                    if (data.empresa.plan === 'free_trial') {
+                        mostrarMedidorTrial(data.empresa.trial_fin);
+                    }
+                } else {
+                    cerrarSesion();
+                }
+            } catch (error) {
+                console.error('Error cargando usuario:', error);
+            }
+        }
+
+        async function cargarCuposBusiness() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/business-features?action=verificar-cupos`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    cuposDisponibles = data.cupos;
+
+                    document.getElementById('cupos-business').classList.remove('hidden');
+                    document.getElementById('cupo-zip').textContent =
+                        `${data.cupos.zip.disponibles}/${data.cupos.zip.limite}`;
+                    document.getElementById('cupo-analisis').textContent =
+                        `${data.cupos.analisis_ia.disponibles}/${data.cupos.analisis_ia.limite}`;
+
+                    const hoy = new Date();
+                    const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1);
+                    const opciones = { day: 'numeric', month: 'short' };
+                    document.getElementById('fecha-reinicio').textContent =
+                        proximoMes.toLocaleDateString('es-ES', opciones);
+                }
+            } catch (error) {
+                console.error('Error cargando cupos:', error);
+            }
+        }
+
+        async function actualizarContadorCupos() {
+            await cargarCuposBusiness();
+        }
+
+        function mostrarMedidorTrial(trialFin) {
+            const medidor = document.getElementById('medidor-trial');
+            medidor.classList.remove('hidden');
+
+            const medidorMobile = document.getElementById('medidor-trial-mobile');
+            medidorMobile.classList.remove('hidden');
+
+            const ahora = new Date();
+            const fin = new Date(trialFin);
+            const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
+            const porcentaje = (diasRestantes / 7) * 100;
+
+            const textoDias = diasRestantes > 1 ? `${diasRestantes} días restantes` : `${diasRestantes} día restante`;
+
+            document.getElementById('dias-restantes').textContent = textoDias;
+            document.getElementById('barra-progreso').style.width = `${Math.max(0, porcentaje)}%`;
+
+            document.getElementById('dias-restantes-mobile').textContent = textoDias;
+            document.getElementById('barra-progreso-mobile').style.width = `${Math.max(0, porcentaje)}%`;
+        }
+
+        async function cargarOportunidades() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch(`${API_BASE}/api/obtener-oportunidades`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    todasOportunidades = data.oportunidades || [];
+                    filtrarOportunidades();
+                } else {
+                    mostrarError();
+                }
+            } catch (error) {
+                console.error('Error cargando oportunidades:', error);
+                mostrarError();
+            }
+        }
+
+        function filtrarOportunidades() {
+            const busqueda = document.getElementById('busqueda').value.toLowerCase();
+            const relevancia = document.getElementById('filtro-relevancia').value;
+            const ordenar = document.getElementById('ordenar').value;
+
+            oportunidadesFiltradas = todasOportunidades.filter(op => {
+                const matchBusqueda = !busqueda ||
+                    op.referencia.toLowerCase().includes(busqueda) ||
+                    op.que.toLowerCase().includes(busqueda) ||
+                    op.quien.toLowerCase().includes(busqueda);
+
+                const matchRelevancia = relevancia === 'todas' || op.relevancia === relevancia;
+
+                return matchBusqueda && matchRelevancia;
+            });
+
+            if (ordenar === 'relevancia') {
+                const orden = { 'ALTA': 1, 'MEDIA': 2, 'BAJA': 3 };
+                oportunidadesFiltradas.sort((a, b) => orden[a.relevancia] - orden[b.relevancia]);
+            } else if (ordenar === 'fecha') {
+                oportunidadesFiltradas.sort((a, b) => new Date(a.fecha_presentacion) - new Date(b.fecha_presentacion));
+            } else if (ordenar === 'monto') {
+                oportunidadesFiltradas.sort((a, b) => (b.monto_estimado || 0) - (a.monto_estimado || 0));
+            } else if (ordenar === 'reciente') {
+                oportunidadesFiltradas.sort((a, b) => new Date(b.fecha_analisis) - new Date(a.fecha_analisis));
+            }
+
+            renderizarOportunidades();
+            actualizarEstadisticas();
+        }
+
+function renderizarOportunidades() {
+    const container = document.getElementById('lista-oportunidades');
+    const sinResultados = document.getElementById('sin-resultados');
+
+    if (oportunidadesFiltradas.length === 0) {
+        container.innerHTML = '';
+        sinResultados.classList.remove('hidden');
+        return;
+    }
+
+    sinResultados.classList.add('hidden');
+
+    const html = oportunidadesFiltradas.map(op => {
+        const esBusiness = planActual === 'business' || planActual === 'enterprise';
+
+        return `
+        <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 hover:shadow-md transition">
+            <!-- Fila superior: Referencia | Fecha cierre | Badge relevancia -->
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
+                <!-- Referencia -->
+                <div class="flex-shrink-0">
+                    <p class="text-sm font-semibold text-gray-600 mb-1">Referencia</p>
+                    <h3 class="text-lg font-bold text-gray-900">${op.referencia}</h3>
+                </div>
+
+                <!-- Fecha de cierre -->
+                <div class="flex-shrink-0">
+                    <div class="flex items-center gap-3 text-sm text-gray-600">
+                        <span>📅 Cierre: ${formatearFecha(op.fecha_presentacion)}</span>
+                        <span>🕐 ${calcularDiasRestantes(op.fecha_presentacion)}</span>
+                    </div>
+                </div>
+
+                <!-- Badge de relevancia -->
+                <div class="flex-shrink-0">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold ${
+                        op.relevancia === 'ALTA' ? 'bg-green-100 text-green-800' :
+                        op.relevancia === 'MEDIA' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                    }">
+                        ${op.relevancia} RELEVANCIA
+                    </span>
+                    ${op.es_nuevo ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold ml-2">NUEVO</span>' : ''}
+                </div>
+            </div>
+
+            <!-- Total estimado -->
+            <div class="mb-4">
+                <p class="text-sm font-semibold text-gray-600 mb-1">Total estimado</p>
+                <p class="text-xl font-bold text-gray-900">${formatearMonto(op.monto_estimado)}</p>
+            </div>
+
+            <!-- Descripción y Unidad lado a lado -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <p class="text-sm font-bold text-gray-900 mb-1">Descripción</p>
+                    <p class="text-sm text-gray-800">${op.que}</p>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-gray-900 mb-1">Unidad de compras</p>
+                    <p class="text-sm text-gray-800">${op.quien}</p>
+                </div>
+            </div>
+
+            <!-- Análisis preliminar de IA -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                <p class="text-sm font-bold text-gray-900 mb-2">Análisis preliminar de IA</p>
+                <p class="text-sm text-gray-800">${op.razon}</p>
+            </div>
+
+            ${esBusiness ? `
+            <!-- FUNCIONALIDAD PREMIUM -->
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4">
+                <p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <span>🚀</span>
+                    <span>FUNCIONALIDAD PREMIUM</span>
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <button
+                        onclick="descargarDocumentos('${op.referencia}')"
+                        class="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
+                    >
+                        <span>📄</span>
+                        <span>Descargar Documentos (ZIP)</span>
+                    </button>
+                    <button
+                        onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0})"
+                        class="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
+                    >
+                        <span>🤖</span>
+                        <span>Analizar Pliego con IA</span>
+                    </button>
+                </div>
+            </div>
+            ` : ''}
+        </div>
+    `}).join('');
+
+    container.innerHTML = html;
+}
+
+        // Función helper para escapar HTML en atributos
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // ============================================
+        // BOTÓN 1: DESCARGAR DOCUMENTOS (ZIP)
+        // ============================================
+        async function descargarDocumentos(referencia) {
+            try {
+                const empresaId = 1;
+
+                const botonDescarga = event.target;
+                const textoOriginal = botonDescarga.innerHTML;
+                botonDescarga.disabled = true;
+                botonDescarga.innerHTML = `
+                    <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Validando cupo...
+                `;
+
+                const validacionResponse = await fetch(`${API_BASE}/api/business-features`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        empresa_id: empresaId,
+                        tipo: 'zip',
+                        accion: 'validar'
+                    })
+                });
+
+                const validacion = await validacionResponse.json();
+
+                if (!validacion.permitido) {
+                    botonDescarga.innerHTML = textoOriginal;
+                    botonDescarga.disabled = false;
+					// Mostrar modal de compra de cupos
+					const confirmar = confirm(
+						'⚠️ Has alcanzado el límite de descargas ZIP para este mes.\n\n' +
+						'¿Deseas comprar un paquete adicional?\n' +
+						'• 10 descargas ZIP adicionales\n' +
+						'• Precio: $5 USD\n' +
+						'• Válido hasta fin de mes'
+					);
+
+					if (confirmar) {
+						comprarCuposAdicionales('zip');
+					}
+					return;
+				}
+
+                botonDescarga.innerHTML = `
+                    <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Scrapeando SECP...
+                `;
+
+                const scraperResponse = await fetch(`${PYTHONANYWHERE_API}/descargar-zip`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        referencia: referencia,
+                        empresa_id: empresaId
+                    })
+                });
+
+                if (!scraperResponse.ok) {
+                    throw new Error('Error al descargar documentos del SECP');
+                }
+
+                const blob = await scraperResponse.blob();
+
+                await fetch(`${API_BASE}/api/business-features`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        empresa_id: empresaId,
+                        tipo: 'zip',
+                        accion: 'registrar'
+                    })
+                });
+
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `docs_${referencia}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                await actualizarContadorCupos();
+
+                botonDescarga.innerHTML = '✅ Descargado';
+                setTimeout(() => {
+                    botonDescarga.innerHTML = textoOriginal;
+                    botonDescarga.disabled = false;
+                }, 3000);
+
+            } catch (error) {
+                console.error('Error descargando documentos:', error);
+                alert('❌ Error al descargar documentos. Por favor intenta de nuevo.');
+
+                const botonDescarga = event.target;
+                botonDescarga.innerHTML = '<span>📄</span><span>Descargar Documentos (ZIP)</span>';
+                botonDescarga.disabled = false;
+            }
+        }
+
+        // ============================================
+        // BOTÓN 2: ANALIZAR PLIEGO CON IA
+        // ============================================
+        async function analizarConIA(referencia, titulo, descripcion, monto) {
+            try {
+                const empresaId = 1;
+
+                const botonAnalisis = event.target;
+                const textoOriginal = botonAnalisis.innerHTML;
+                botonAnalisis.disabled = true;
+                botonAnalisis.innerHTML = `
+                    <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Validando cupo...
+                `;
+
+                const validacionResponse = await fetch(`${API_BASE}/api/business-features`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        empresa_id: empresaId,
+                        tipo: 'analisis',
+                        accion: 'validar'
+                    })
+                });
+
+                const validacion = await validacionResponse.json();
+
+                if (!validacion.permitido) {
+                    botonAnalisis.innerHTML = textoOriginal;
+                    botonAnalisis.disabled = false;
+					// Mostrar modal de compra de cupos
+					const confirmar = confirm(
+						'⚠️ Has alcanzado el límite de análisis IA para este mes.\n\n' +
+						'¿Deseas comprar un paquete adicional?\n' +
+						'• 5 análisis IA adicionales\n' +
+						'• Precio: $5 USD\n' +
+						'• Válido hasta fin de mes'
+					);
+
+					if (confirmar) {
+						comprarCuposAdicionales('analisis');
+					}
+					return;
+				}
+
+                botonAnalisis.innerHTML = `
+                    <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Extrayendo pliego...
+                `;
+
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                botonAnalisis.innerHTML = `
+                    <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Claude está analizando...
+                `;
+
+                const analisisResponse = await fetch(`${PYTHONANYWHERE_API}/analizar-automatico`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        referencia: referencia,
+                        titulo: titulo,
+                        descripcion: descripcion,
+                        monto: monto,
+                        empresa_id: empresaId
+                    })
+                });
+
+                const resultado = await analisisResponse.json();
+
+                if (!resultado.success) {
+                    throw new Error(resultado.error || 'Error al analizar');
+                }
+
+                await fetch(`${API_BASE}/api/business-features`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        empresa_id: empresaId,
+                        tipo: 'analisis',
+                        accion: 'registrar'
+                    })
+                });
+
+                await actualizarContadorCupos();
+
+                mostrarAnalisisEnModal(resultado.analisis, resultado.pliego_analizado);
+
+                botonAnalisis.innerHTML = textoOriginal;
+                botonAnalisis.disabled = false;
+
+            } catch (error) {
+                console.error('Error analizando:', error);
+                alert('❌ Error al generar análisis. Por favor intenta de nuevo.');
+
+                const botonAnalisis = event.target;
+                botonAnalisis.innerHTML = '<span>🤖</span><span>Analizar Pliego con IA</span>';
+                botonAnalisis.disabled = false;
+            }
+        }
+
+        // ============================================
+        // FUNCIÓN AUXILIAR: MOSTRAR ANÁLISIS EN MODAL
+        // ============================================
+        function mostrarAnalisisEnModal(analisis, pliegoAnalizado) {
+            const htmlAnalisis = `
+                <div class="space-y-6">
+                    ${pliegoAnalizado ?
+                        '<div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">✓ Análisis basado en el pliego completo</div>' :
+                        '<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">⚠️ Análisis preliminar (pliego no disponible)</div>'
+                    }
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">📊 Síntesis Ejecutiva</h3>
+                        <p class="text-gray-700">${analisis.sintesis}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">✅ Oportunidades</h3>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            ${analisis.oportunidades.map(op => `<li>${op}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">⚠️ Riesgos y Desafíos</h3>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            ${analisis.riesgos.map(r => `<li>${r}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">🎯 Requisitos Clave</h3>
+                        <ul class="list-disc list-inside space-y-1 text-gray-700">
+                            ${analisis.requisitos.map(req => `<li>${req}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-blue-900 mb-2">💡 Recomendación</h3>
+                        <p class="text-blue-800">${analisis.recomendacion}</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full px-6 py-3">
+                            <span class="text-2xl font-bold">${analisis.puntuacion}/100</span>
+                            <span class="text-sm ml-2">Puntuación</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+                    <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+                        <h2 class="text-2xl font-bold text-gray-900">📊 Análisis Completo</h2>
+                        <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700 text-2xl leading-none">
+                            ×
+                        </button>
+                    </div>
+                    <div class="px-6 py-6">
+                        ${htmlAnalisis}
+                    </div>
+                    <div class="sticky bottom-0 bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end">
+                        <button onclick="this.closest('.fixed').remove()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        function actualizarEstadisticas() {
+            const alta = todasOportunidades.filter(op => op.relevancia === 'ALTA').length;
+            const media = todasOportunidades.filter(op => op.relevancia === 'MEDIA').length;
+
+            document.getElementById('count-alta').textContent = alta;
+            document.getElementById('count-media').textContent = media;
+        }
+
+        function formatearMonto(monto) {
+            if (!monto) return 'N/A';
+            return new Intl.NumberFormat('es-DO', {
+                style: 'currency',
+                currency: 'DOP',
+                minimumFractionDigits: 0
+            }).format(monto);
+        }
+
+        function formatearFecha(fecha) {
+            if (!fecha) return 'N/A';
+            return new Date(fecha).toLocaleDateString('es-DO', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function calcularDiasRestantes(fecha) {
+            if (!fecha) return '';
+            const ahora = new Date();
+            const cierre = new Date(fecha);
+            const dias = Math.ceil((cierre - ahora) / (1000 * 60 * 60 * 24));
+
+            if (dias < 0) return '❌ Cerrada';
+            if (dias === 0) return '⚠️ Cierra hoy';
+            if (dias === 1) return '⚠️ Cierra mañana';
+            if (dias <= 7) return `⚠️ ${dias} días`;
+            return `✅ ${dias} días`;
+        }
+
+        function exportarExcel() {
+            alert('🚧 Función de exportación próximamente');
+        }
+
+        function mostrarError() {
+            document.getElementById('lista-oportunidades').innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                    <div class="text-4xl mb-4">⚠️</div>
+                    <p class="text-red-800 font-semibold">Error cargando oportunidades</p>
+                    <button onclick="cargarOportunidades()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        Reintentar
+                    </button>
+                </div>
+            `;
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('user');
+            window.location.href = '/login.html';
+        }
+
+        async function iniciarUpgrade(plan) {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+                const response = await fetch(`${API_BASE}/api/stripe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        action: 'create_checkout',
+                        plan: plan
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data.checkout_url;
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al iniciar upgrade');
+            }
+        }
+
+        function abrirModalPlan(plan) {
+            document.getElementById(`modal-${plan}`).classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarModalPlan(plan) {
+            document.getElementById(`modal-${plan}`).classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function abrirModalAnalisis() {
+            document.getElementById('modal-analisis').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function cerrarModalAnalisis() {
+            document.getElementById('modal-analisis').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            menu.classList.toggle('active');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'modal-estandar' || event.target.id === 'modal-business') {
+                const plan = event.target.id.replace('modal-', '');
+                cerrarModalPlan(plan);
+            }
+            if (event.target.id === 'modal-analisis') {
+                cerrarModalAnalisis();
+            }
+        });
+
+async function comprarCuposAdicionales(tipo) {
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+        // Mostrar indicador de carga
+        const mensaje = tipo === 'zip' ? 'Comprando paquete de descargas...' : 'Comprando paquete de análisis...';
+        alert('🔄 ' + mensaje);
+
+        const response = await fetch(`${API_BASE}/api/stripe`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                action: 'comprar_cupos',
+                tipo: tipo, // 'zip' o 'analisis'
+                precio: 500 // $5 en centavos
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // Redirigir a Stripe Checkout
+            window.location.href = data.checkout_url;
+        } else {
+            const error = await response.json();
+            alert('❌ Error: ' + error.error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al procesar la compra');
+    }
+}
+
+    </script>
+
+</body>
+</html>
