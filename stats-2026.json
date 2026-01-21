@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-01-21 18:09:05",
+  "ultima_actualizacion": "2026-01-21 21:19:23",
   "stats": {
     "total": 1844,
     "por_estado": {
@@ -9,8 +9,8 @@
         "Proceso publicado": 395,
         "Canceled": 4,
         "Proceso cancelado": 3,
-        "Awarded": 468,
-        "ClosedForReplies": 332
+        "ClosedForReplies": 332,
+        "Awarded": 468
       }
     },
     "promedio_diario": 38.4
