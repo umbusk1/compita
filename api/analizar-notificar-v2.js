@@ -36,7 +36,6 @@ const DASHBOARD_URL = 'https://compita.umbusk.com/oportunidades.html';
 // ============================================================================
 
 export default async function handler(req, res) {
-  // Validar seguridad
   const authHeader = req.headers.authorization;
   const expectedToken = process.env.CRON_SECRET;
 
@@ -56,10 +55,8 @@ export default async function handler(req, res) {
   console.log('🔄 ╚══════════════════════════════════════════════════════════╝\n');
 
   try {
-    // 1. Analizar oportunidades
     const { resultados, empresasProcesadas } = await analizarDiario();
 
-    // 2. Enviar notificaciones
     let emailsEnviados = 0;
     if (resultados.length > 0) {
       emailsEnviados = await enviarNotificaciones(resultados);
@@ -67,7 +64,6 @@ export default async function handler(req, res) {
       console.log('⚠️  No hay resultados para notificar\n');
     }
 
-    // 3. Resumen final
     const duracionTotal = ((Date.now() - inicioTotal) / 1000).toFixed(1);
 
     console.log('\n╔══════════════════════════════════════════════════════════╗');
@@ -262,9 +258,9 @@ async function analizarDiario() {
   console.log('╚══════════════════════════════════════════════════════════╝\n');
 
   try {
-    // 1. Obtener empresas activas con usuario owner y familias UNSPSC
     console.log('🏢 Obteniendo empresas activas...');
-    const empresasRes = await pool.query(`
+
+    const queryText = `
       SELECT
         e.id,
         e.nombre,
@@ -279,9 +275,10 @@ async function analizarDiario() {
       JOIN usuarios u ON u.empresa_id = e.id
       WHERE u.activo = true
         AND e.palabras_clave IS NOT NULL
-    `);
+    `;
 
-    // Filtrar en JavaScript las empresas que tienen palabras clave válidas
+    const empresasRes = await pool.query(queryText);
+
     const empresas = empresasRes.rows.filter(emp => {
       let palabrasClave = emp.palabras_clave;
       if (Array.isArray(palabrasClave)) {
@@ -298,14 +295,12 @@ async function analizarDiario() {
       return { resultados: [], empresasProcesadas: 0 };
     }
 
-    // 2. Analizar para cada empresa
     const resultadosPorEmpresa = [];
 
     for (const empresa of empresas) {
       empresasProcesadas++;
       console.log(`\n📊 ${empresa.nombre} (${empresa.plan})`);
 
-      // 🆕 DETECTAR SI ES EMPRESA NUEVA
       const historialRes = await pool.query(`
         SELECT COUNT(*) as total
         FROM resultados
@@ -314,7 +309,6 @@ async function analizarDiario() {
 
       const esEmpresaNueva = parseInt(historialRes.rows[0].total) === 0;
 
-      // 🆕 OBTENER LICITACIONES SEGÚN SI ES NUEVA O NO
       let licitaciones;
       if (esEmpresaNueva) {
         console.log('   🆕 Empresa nueva - Analizando últimas 100 licitaciones abiertas');
@@ -338,15 +332,12 @@ async function analizarDiario() {
 
       console.log(`   📊 Total licitaciones a revisar: ${licitaciones.length}`);
 
-      // ✨ NUEVO: Filtrar por familias UNSPSC si la empresa las configuró
       let licitacionesFiltradas = licitaciones;
       if (empresa.familias_unspsc && empresa.familias_unspsc.length > 0) {
         licitacionesFiltradas = licitaciones.filter(lic => {
-          // Si la licitación tiene clasificación UNSPSC
           if (lic.codigo_unspsc && lic.codigo_unspsc !== '99-99') {
             return empresa.familias_unspsc.includes(lic.codigo_unspsc);
           }
-          // Si no tiene clasificación, la incluimos (para no perder oportunidades)
           return true;
         });
 
@@ -363,7 +354,6 @@ async function analizarDiario() {
         continue;
       }
 
-      // Verificar qué ya fue analizado
       const yaAnalizadasRes = await pool.query(`
         SELECT DISTINCT referencia
         FROM resultados
@@ -387,7 +377,6 @@ async function analizarDiario() {
         continue;
       }
 
-      // Etapa 1: Pre-filtrado
       const paraAnalizarIA = [];
       for (const licitacion of licitacionesPorAnalizar) {
         const resultado = await procesarEtapa1(licitacion, empresa);
@@ -402,7 +391,6 @@ async function analizarDiario() {
         continue;
       }
 
-      // Etapa 2: Análisis con IA
       console.log(`   🤖 Analizando con IA...`);
       const oportunidades = [];
 
@@ -412,7 +400,6 @@ async function analizarDiario() {
 
         const analisis = await analizarConIA(licitacion, empresa);
 
-        // Ajuste por monto mínimo
         const montoMinimo = empresa.monto_minimo_alta || 500000;
         const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
 
@@ -430,7 +417,6 @@ async function analizarDiario() {
 
       console.log(`\n   Resultados: ALTA=${alta.length}, MEDIA=${media.length}, BAJA=${baja.length}`);
 
-      // Guardar en BD
       if (oportunidades.length > 0) {
         await guardarAnalisisEnBD(empresa.id, licitacionesPorAnalizar, oportunidades);
       }
@@ -467,7 +453,6 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
     const media = oportunidades.filter(o => o.relevancia === 'MEDIA').length;
     const baja = oportunidades.filter(o => o.relevancia === 'BAJA').length;
 
-    // Crear registro de análisis
     const analisisRes = await pool.query(`
       INSERT INTO analisis (
         empresa_id,
@@ -490,7 +475,6 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
 
     const analisisId = analisisRes.rows[0].id;
 
-    // Guardar cada resultado
     for (const oportunidad of oportunidades) {
       const licitacionRes = await pool.query(
         'SELECT id FROM licitaciones WHERE referencia = $1 LIMIT 1',
@@ -581,7 +565,6 @@ async function enviarNotificaciones(resultados) {
         html: emailHTML
       });
 
-      // Marcar como notificadas
       await pool.query(`
         UPDATE resultados
         SET notificada = true
@@ -605,7 +588,6 @@ async function enviarNotificaciones(resultados) {
 function generarEmailSegunPlan(resultado) {
   const { plan, nombre, alta, media, oportunidades_alta, oportunidades_media } = resultado;
 
-  // Plan Gratuito / Trial
   if (plan === 'trial_gratuito' || plan === 'free_trial') {
     return `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -626,7 +608,6 @@ function generarEmailSegunPlan(resultado) {
     `;
   }
 
-  // Plan Estándar
   if (plan === 'estandar') {
     const todasOportunidades = [...oportunidades_alta, ...oportunidades_media];
 
@@ -663,7 +644,6 @@ function generarEmailSegunPlan(resultado) {
     `;
   }
 
-  // Plan Business
   if (plan === 'business') {
     const todasOportunidades = [...oportunidades_alta, ...oportunidades_media];
 
@@ -711,28 +691,5 @@ function generarEmailSegunPlan(resultado) {
 }
 
 export const config = {
-  maxDuration: 300,  // 5 minutos máximo
+  maxDuration: 300,
 };
-```
-
----
-
-## ✅ Cambios realizados:
-
-1. **Línea 295:** Agregada columna `familias_unspsc` en SELECT
-2. **Líneas 347-368:** Filtro por familias UNSPSC con logs informativos
-3. **Línea 331:** Mensaje mejorado para empresas nuevas
-
----
-
-## 🧪 Para probar:
-
-Una vez subido a GitHub, ejecuta manualmente el workflow:
-```
-Actions → Análisis y Notificaciones Diarias → Run workflow
-```
-
-Deberías ver en los logs:
-```
-🏷️  Familias UNSPSC seleccionadas: 72-10, 43-21, 50-20
-✂️  Filtradas por UNSPSC: 100 → 23
