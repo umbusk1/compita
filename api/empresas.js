@@ -3,10 +3,10 @@ import { neon } from '@neondatabase/serverless';
 
 // Límites de familias UNSPSC por plan
 const LIMITES_FAMILIAS = {
-  'free_trial': 5,
-  'free': 5,
-  'pro': 20,
-  'enterprise': 999  // Ilimitadas
+  'free_trial': 2,      // Prueba gratuita
+  'estandar': 2,        // Plan Estándar
+  'business': 5,        // Plan Business
+  'enterprise': 999     // Plan Enterprise (ilimitado)
 };
 
 export default async function handler(req, res) {
