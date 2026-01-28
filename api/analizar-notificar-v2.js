@@ -3,9 +3,10 @@ COMPITA - Análisis Diario y Notificaciones (Endpoint Vercel)
 =============================================================
 Analiza licitaciones nuevas para cada empresa activa y envía emails personalizados.
 
-Fecha: 09 de enero 2026
+✨ ACTUALIZACIÓN: Filtro por familias UNSPSC para optimizar costos de Claude AI
+
+Fecha: 28 de enero 2026
 Autor: Desarrollo para Moisesp/Compita
-CAMBIO: Detecta empresas nuevas y analiza TODAS las licitaciones abiertas para ellas
 */
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -50,9 +51,9 @@ export default async function handler(req, res) {
 
   const inicioTotal = Date.now();
 
-  console.log('\n🔄 ═══════════════════════════════════════════════════════════');
+  console.log('\n🔄 ╔══════════════════════════════════════════════════════════╗');
   console.log('   COMPITA - ANÁLISIS Y NOTIFICACIONES DIARIAS');
-  console.log('🔄 ═══════════════════════════════════════════════════════════\n');
+  console.log('🔄 ╚══════════════════════════════════════════════════════════╝\n');
 
   try {
     // 1. Analizar oportunidades
@@ -69,13 +70,13 @@ export default async function handler(req, res) {
     // 3. Resumen final
     const duracionTotal = ((Date.now() - inicioTotal) / 1000).toFixed(1);
 
-    console.log('\n════════════════════════════════════════════════════════════');
+    console.log('\n╔══════════════════════════════════════════════════════════╗');
     console.log('📊 RESUMEN FINAL');
-    console.log('════════════════════════════════════════════════════════════');
+    console.log('╚══════════════════════════════════════════════════════════╝');
     console.log(`✅ Empresas procesadas: ${empresasProcesadas}`);
     console.log(`📧 Notificaciones enviadas: ${emailsEnviados}`);
     console.log(`⏱️  Duración: ${duracionTotal} segundos`);
-    console.log('════════════════════════════════════════════════════════════\n');
+    console.log('╚══════════════════════════════════════════════════════════╝\n');
 
     return res.status(200).json({
       success: true,
@@ -258,10 +259,10 @@ RAZÓN: [tu justificación aquí]`;
 
 async function analizarDiario() {
   console.log('\n📊 PASO 1: ANÁLISIS DE OPORTUNIDADES');
-  console.log('════════════════════════════════════════════════════════════\n');
+  console.log('╚══════════════════════════════════════════════════════════╝\n');
 
   try {
-    // 1. Obtener empresas activas con usuario owner
+    // 1. Obtener empresas activas con usuario owner y familias UNSPSC
     console.log('🏢 Obteniendo empresas activas...');
     const empresasRes = await pool.query(`
       SELECT
@@ -272,6 +273,7 @@ async function analizarDiario() {
         e.exclusiones,
         e.monto_minimo_alta,
         e.plan,
+        e.familias_unspsc,
         u.email as owner_email
       FROM empresas e
       JOIN usuarios u ON u.empresa_id = e.id
@@ -314,15 +316,16 @@ async function analizarDiario() {
 
       // 🆕 OBTENER LICITACIONES SEGÚN SI ES NUEVA O NO
       let licitaciones;
-		if (esEmpresaNueva) {
-		  console.log('   🆕 Empresa nueva - Analizando últimas 100 licitaciones abiertas');
-		  const licitacionesRes = await pool.query(`
-			SELECT * FROM licitaciones
-			WHERE fecha_presentacion > NOW()
-			ORDER BY scrapeado_en DESC
-			LIMIT 100
-		  `);
-		  licitaciones = licitacionesRes.rows;
+      if (esEmpresaNueva) {
+        console.log('   🆕 Empresa nueva - Analizando últimas 100 licitaciones abiertas');
+        console.log('   💡 Tip: Configure familias UNSPSC para filtrar automáticamente');
+        const licitacionesRes = await pool.query(`
+          SELECT * FROM licitaciones
+          WHERE fecha_presentacion > NOW()
+          ORDER BY scrapeado_en DESC
+          LIMIT 100
+        `);
+        licitaciones = licitacionesRes.rows;
       } else {
         console.log('   📅 Empresa existente - Analizando solo licitaciones de hoy');
         const licitacionesRes = await pool.query(`
@@ -335,8 +338,28 @@ async function analizarDiario() {
 
       console.log(`   📊 Total licitaciones a revisar: ${licitaciones.length}`);
 
+      // ✨ NUEVO: Filtrar por familias UNSPSC si la empresa las configuró
+      let licitacionesFiltradas = licitaciones;
+      if (empresa.familias_unspsc && empresa.familias_unspsc.length > 0) {
+        licitacionesFiltradas = licitaciones.filter(lic => {
+          // Si la licitación tiene clasificación UNSPSC
+          if (lic.codigo_unspsc && lic.codigo_unspsc !== '99-99') {
+            return empresa.familias_unspsc.includes(lic.codigo_unspsc);
+          }
+          // Si no tiene clasificación, la incluimos (para no perder oportunidades)
+          return true;
+        });
+
+        console.log(`   🏷️  Familias UNSPSC seleccionadas: ${empresa.familias_unspsc.join(', ')}`);
+        console.log(`   ✂️  Filtradas por UNSPSC: ${licitaciones.length} → ${licitacionesFiltradas.length}`);
+
+        licitaciones = licitacionesFiltradas;
+      } else {
+        console.log(`   ⚠️  Sin familias UNSPSC configuradas - analizando todas`);
+      }
+
       if (licitaciones.length === 0) {
-        console.log('   ⚠️  No hay licitaciones para revisar');
+        console.log('   ⚠️  No hay licitaciones después del filtro UNSPSC');
         continue;
       }
 
@@ -534,7 +557,7 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
 
 async function enviarNotificaciones(resultados) {
   console.log('\n📧 PASO 2: ENVÍO DE NOTIFICACIONES');
-  console.log('════════════════════════════════════════════════════════════\n');
+  console.log('╚══════════════════════════════════════════════════════════╝\n');
 
   let emailsEnviados = 0;
 
@@ -690,3 +713,26 @@ function generarEmailSegunPlan(resultado) {
 export const config = {
   maxDuration: 300,  // 5 minutos máximo
 };
+```
+
+---
+
+## ✅ Cambios realizados:
+
+1. **Línea 295:** Agregada columna `familias_unspsc` en SELECT
+2. **Líneas 347-368:** Filtro por familias UNSPSC con logs informativos
+3. **Línea 331:** Mensaje mejorado para empresas nuevas
+
+---
+
+## 🧪 Para probar:
+
+Una vez subido a GitHub, ejecuta manualmente el workflow:
+```
+Actions → Análisis y Notificaciones Diarias → Run workflow
+```
+
+Deberías ver en los logs:
+```
+🏷️  Familias UNSPSC seleccionadas: 72-10, 43-21, 50-20
+✂️  Filtradas por UNSPSC: 100 → 23
