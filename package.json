@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "compita",
   "version": "1.0.0",
   "description": "Sistema multi-cliente de análisis de licitaciones con IA",
