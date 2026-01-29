@@ -7,15 +7,12 @@
     <meta name="description" content="Encuentra las licitaciones que importan. Claude AI analiza 400+ licitaciones en minutos y te muestra solo las relevantes para tu empresa.">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-	    /* Menú móvil */
 	    .mobile-menu {
 	        display: none;
 	    }
 	    .mobile-menu.active {
 	        display: block;
 	    }
-
-	    /* Mejorar gráficos en móvil */
 	    @media (max-width: 768px) {
 	        #grafico-diario {
 	            height: 300px !important;
@@ -24,17 +21,13 @@
 </style>
 </head>
 <body class="bg-white">
-<!-- Navbar -->
 <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
-            <!-- Logo -->
             <div class="flex items-center gap-2">
                 <span class="text-3xl">🎯</span>
                 <span class="text-2xl font-bold text-gray-800">Compita</span>
             </div>
-
-            <!-- Desktop Menu -->
             <div class="hidden md:flex gap-6 items-center">
                 <a href="#como-funciona" class="text-gray-600 hover:text-indigo-600 transition">Cómo Funciona</a>
                 <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition">Precios</a>
@@ -45,8 +38,6 @@
                     Probar Gratis
                 </a>
             </div>
-
-            <!-- Mobile Menu Button -->
             <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -54,8 +45,6 @@
                 </svg>
             </button>
         </div>
-
-        <!-- Mobile Menu -->
         <div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
             <div class="flex flex-col gap-4">
                 <a href="#como-funciona" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">Cómo Funciona</a>
@@ -71,325 +60,329 @@
     </div>
 </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto text-center">
-                <p class="text-xl text-gray-600 mb-6 flex items-center justify-center gap-2">
-                    Cargando los datos del Portal de Compras de República Dominicana
-                    <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="República Dominicana">
+<section class="pt-32 pb-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <p class="text-xl text-gray-600 mb-6 flex items-center justify-center gap-2">
+                Cargando los datos del Portal de Compras de República Dominicana
+                <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="República Dominicana">
+            </p>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                Encuentra las licitaciones que <span class="text-indigo-600">importan</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-8">
+                Compita analiza cientos de licitaciones en minutos y extrae solo las relevantes para tu empresa.<br>
+                <span class="font-semibold text-gray-800">Por ejemplo, de 100+ solo 3 o 4 pueden ser verdaderas oportunidades.</span>
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <a href="/registro.html" class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+                    <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
+                    ¡Pruébalo gratis ya!
+                </a>
+                <a href="#demo" class="bg-white text-indigo-600 border-2 border-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition font-semibold text-lg">
+                    ▶️ Ver Demo
+                </a>
+            </div>
+            <p class="text-sm text-gray-500">
+                ✓ Sin tarjeta de crédito &nbsp;•&nbsp; ✓ 7 días de prueba gratis
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    📊 Licitaciones en Tiempo Real
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Datos de licitaciones que tienen fechas de cierre para presentar ofertas, actualizados diariamente desde el portal oficial SECP
                 </p>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                    Encuentra las licitaciones que <span class="text-indigo-600">importan</span>
-                </h1>
-                <p class="text-lg md:text-xl text-gray-600 mb-8">
-                    Compita analiza cientos de licitaciones en minutos y extrae solo las relevantes para tu empresa.<br>
-                    <span class="font-semibold text-gray-800">Por ejemplo, de 400+ solo 4 pueden ser verdaderas oportunidades.</span>
+            </div>
+
+            <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
+                    <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+                    <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                </div>
+                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
+                    <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
+                    <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Licitaciones Abiertas por Mes/Día</h3>
+                <div class="flex gap-1 md:gap-2 mb-6 border-b border-gray-200 overflow-x-auto" id="month-tabs"></div>
+                <div id="tab-content">
+                    <canvas id="grafico-diario" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-gray-900 mb-6">
+                ¿Revisas cientos de licitaciones repitiendo manualmente tu búsqueda?
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6 mt-12">
+                <div class="p-6 bg-red-50 rounded-lg border border-red-100">
+                    <div class="text-4xl mb-4">⏰</div>
+                    <h3 class="font-bold text-gray-800 mb-2">Horas perdidas</h3>
+                    <p class="text-gray-600 text-sm">Revisar licitaciones manualmente toma horas de trabajo rutinario</p>
+                </div>
+                <div class="p-6 bg-red-50 rounded-lg border border-red-100">
+                    <div class="text-4xl mb-4">😓</div>
+                    <h3 class="font-bold text-gray-800 mb-2">Oportunidades perdidas</h3>
+                    <p class="text-gray-600 text-sm">Las mejores oportunidades se esconden entre montañas de información</p>
+                </div>
+                <div class="p-6 bg-red-50 rounded-lg border border-red-100">
+                    <div class="text-4xl mb-4">💸</div>
+                    <h3 class="font-bold text-gray-800 mb-2">Recursos desperdiciados</h3>
+                    <p class="text-gray-600 text-sm">Tu empresa incurre en costos de oportunidad de tu equipo humano</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="demo" class="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                    Compita + Claude AI hacen el trabajo por ti
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Descubre las licitaciones que te importan en minutos
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <a href="/registro.html" class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
-                        <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
-                        ¡Pruébalo gratis ya!
+            </div>
+            <div class="bg-gray-900 rounded-2xl shadow-2xl aspect-video flex items-center justify-center">
+                <div class="text-center">
+                    <div class="text-6xl mb-4">▶️</div>
+                    <p class="text-white text-xl">Video Demo (60 segundos)</p>
+                    <p class="text-gray-400 text-sm mt-2">Próximamente</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="como-funciona" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-gray-900 text-center mb-16">
+                Tres pasos simples
+            </h2>
+
+            <div class="space-y-12">
+                <div class="flex gap-6 items-start">
+                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Crea tu perfil de empresa</h3>
+                        <p class="text-gray-600 mb-4">Define tu perfil con tres capas de filtrado inteligente:</p>
+                        <div class="bg-indigo-50 rounded-lg p-4 space-y-3">
+                            <div class="flex gap-3 items-start">
+                                <span class="text-indigo-600 font-bold">1.</span>
+                                <div>
+                                    <strong class="text-gray-900">Categorías UNSPSC</strong>
+                                    <p class="text-gray-600 text-sm">Selecciona las familias de productos/servicios de tu interés (ej: Construcción, Tecnología, Consultoría)</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <span class="text-indigo-600 font-bold">2.</span>
+                                <div>
+                                    <strong class="text-gray-900">Palabras clave</strong>
+                                    <p class="text-gray-600 text-sm">Define términos específicos dentro de esas categorías (ej: "capacitación", "software", "mantenimiento")</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <span class="text-indigo-600 font-bold">3.</span>
+                                <div>
+                                    <strong class="text-gray-900">Exclusiones</strong>
+                                    <p class="text-gray-600 text-sm">Descarta automáticamente lo que NO te interesa (ej: "alimentos", "construcción de carreteras")</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mt-4">Este triple filtrado asegura que solo lleguen oportunidades verdaderamente relevantes.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 items-start">
+                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">El sistema analiza automáticamente las licitaciones</h3>
+                        <p class="text-gray-600">Nuestro scraper carga <strong>2 veces al día (L-V)</strong> todas las nuevas licitaciones del <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">portal SECP</a>. Claude AI las analiza en tres etapas: primero filtra por categorías UNSPSC, luego por palabras clave, y finalmente evalúa la relevancia según el perfil de tu empresa.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 items-start">
+                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Recibe solo las oportunidades de ALTA y MEDIA relevancia</h3>
+                        <p class="text-gray-600">Un dashboard limpio muestra las licitaciones que realmente importan, con alertas por email opcionales. Ve el nivel de relevancia, monto y detalles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-20 bg-indigo-600 text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-12">Resultados reales</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <div class="text-5xl font-bold mb-2">99%</div>
+                    <p class="text-indigo-100">Ahorro de tiempo</p>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">"100→3 o 4"</div>
+                    <p class="text-indigo-100">Licitaciones filtradas</p>
+                </div>
+                <div>
+                    <div class="text-5xl font-bold mb-2">+Tiempo</div>
+                    <p class="text-indigo-100">Para análisis que importa</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-gray-900 text-center mb-4">Planes transparentes</h2>
+            <p class="text-center text-gray-600 mb-12">Comienza gratis, escala cuando necesites</p>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="border-2 border-indigo-600 rounded-2xl p-8 relative shadow-lg">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold">Más Popular</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Estándar</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">$10</span>
+                        <span class="text-gray-600">/mes</span>
+                    </div>
+                    <p class="text-sm text-green-600 font-semibold mb-4">✨ Prueba gratis 7 días</p>
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Perfil empresarial completo</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>2 categorías UNSPSC</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Scraping automático 2x/día (L-V)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Análisis inteligente con IA</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Notificaciones por email (resumen)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Dashboard de oportunidades</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Historial de 1 mes</span>
+                        </li>
+                    </ul>
+                    <a href="/registro.html" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center justify-center gap-2">
+                        <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+                        Comenzar Gratis
                     </a>
-                    <a href="#demo" class="bg-white text-indigo-600 border-2 border-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition font-semibold text-lg">
-                        ▶️ Ver Demo
+                </div>
+
+                <div class="border-2 border-gray-200 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Business</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">$20</span>
+                        <span class="text-gray-600">/mes</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4 h-6">Todo en Estándar, más:</p>
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>5 categorías UNSPSC</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Notificaciones detalladas</strong> con análisis completo</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Enlaces directos</strong> a documentos y procedimientos</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Profundizar análisis con IA</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Documentación detallada</strong> de licitaciones</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Historial de 3 meses</strong></span>
+                        </li>
+                    </ul>
+                    <a href="/registro.html?plan=business" class="block text-center bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition font-semibold flex items-center justify-center gap-2">
+                        <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+                        Comenzar Prueba
                     </a>
                 </div>
-                <p class="text-sm text-gray-500">
-                    ✓ Sin tarjeta de crédito &nbsp;•&nbsp; ✓ 7 días de prueba gratis
-                </p>
-            </div>
-        </div>
-    </section>
 
-    <!-- Estadísticas en Tiempo Real -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                        📊 Licitaciones en Tiempo Real
-                    </h2>
-                    <p class="text-xl text-gray-600">
-                        Datos de licitaciones que tienen fechas de cierre para presentar ofertas, actualizados diariamente desde el portal oficial SECP
-                    </p>
-                </div>
-
-                <!-- Stats Cards - Solo 2 tarjetas -->
-                <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
-                    <!-- Placeholder mientras carga -->
-                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
-                        <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
-                        <div class="h-10 bg-gray-300 rounded w-1/2"></div>
+                <div class="border-2 border-gray-200 rounded-2xl p-8 bg-gradient-to-br from-gray-50 to-white">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">Custom</span>
+                        <span class="text-gray-600 text-base">/año</span>
                     </div>
-                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
-                        <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
-                        <div class="h-10 bg-gray-300 rounded w-1/2"></div>
-                    </div>
-                </div>
-
-                <!-- Pestañas Mensuales -->
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Detalles de 2026 por Mes</h3>
-
-                    <!-- Tabs -->
-					<div class="flex gap-1 md:gap-2 mb-6 border-b border-gray-200 overflow-x-auto" id="month-tabs">
-					    <!-- Se generan dinámicamente -->
-					</div>
-
-                    <!-- Tab Content -->
-                    <div id="tab-content">
-                        <canvas id="grafico-diario" height="80"></canvas>
-                    </div>
+                    <p class="text-sm text-gray-500 mb-4 h-6">Todo en Business, más:</p>
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Categorías UNSPSC ilimitadas</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Recomendaciones IA</strong> para preparar ofertas</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Acompañamiento de consultor</strong> especializado</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Revisión de documentos</strong> antes de envío</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Soporte prioritario</span>
+                        </li>
+                    </ul>
+                    <a href="mailto:sales@umbusk.com?subject=Interés en Plan Enterprise - Compita" class="block text-center bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold flex items-center justify-center gap-2">
+                        📧 Contáctanos
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Problema -->
-    <section class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-4xl font-bold text-gray-900 mb-6">
-                    ¿Revisas cientos de licitaciones repitiendo manualmente tu búsqueda?
-                </h2>
-                <div class="grid md:grid-cols-3 gap-6 mt-12">
-                    <div class="p-6 bg-red-50 rounded-lg border border-red-100">
-                        <div class="text-4xl mb-4">⏰</div>
-                        <h3 class="font-bold text-gray-800 mb-2">Horas perdidas</h3>
-                        <p class="text-gray-600 text-sm">Revisar licitaciones manualmente toma horas de trabajo rutinario</p>
-                    </div>
-                    <div class="p-6 bg-red-50 rounded-lg border border-red-100">
-                        <div class="text-4xl mb-4">😓</div>
-                        <h3 class="font-bold text-gray-800 mb-2">Oportunidades perdidas</h3>
-                        <p class="text-gray-600 text-sm">Las mejores oportunidades se esconden entre montañas de información</p>
-                    </div>
-                    <div class="p-6 bg-red-50 rounded-lg border border-red-100">
-                        <div class="text-4xl mb-4">💸</div>
-                        <h3 class="font-bold text-gray-800 mb-2">Recursos desperdiciados</h3>
-                        <p class="text-gray-600 text-sm">Tu empresa incurre en costos de oportunidad de tu equipo humano</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Solución con Video -->
-    <section id="demo" class="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
-        <div class="container mx-auto px-4">
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center mb-12">
-                    <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                        Compita + Claude AI hacen el trabajo por ti
-                    </h2>
-                    <p class="text-xl text-gray-600">
-                        Descubre las licitaciones que te importan en minutos
-                    </p>
-                </div>
-
-                <!-- Video Placeholder -->
-                <div class="bg-gray-900 rounded-2xl shadow-2xl aspect-video flex items-center justify-center">
-                    <div class="text-center">
-                        <div class="text-6xl mb-4">▶️</div>
-                        <p class="text-white text-xl">Video Demo (60 segundos)</p>
-                        <p class="text-gray-400 text-sm mt-2">Próximamente</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Cómo Funciona -->
-    <section id="como-funciona" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold text-gray-900 text-center mb-16">
-                    Tres pasos simples
-                </h2>
-
-                <div class="space-y-12">
-                    <div class="flex gap-6 items-start">
-                        <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">
-                            1
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Crea tu perfil de empresa</h3>
-                            <p class="text-gray-600">Define las palabras clave de tu interés, exclusiones y una breve descripción de tu empresa. Compita aprende qué licitaciones son relevantes para ti.</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-6 items-start">
-                        <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">
-                            2
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">El sistema analiza automáticamente las licitaciones cada día</h3>
-                            <p class="text-gray-600">Nuestro scraper carga diariamente todas las nuevas licitaciones del <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">portal SECP</a>. Claude AI las analiza en dos etapas: primero filtra por palabras clave, luego evalúa la relevancia según el perfil de tu empresa.</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-6 items-start">
-                        <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">
-                            3
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-2">Recibe solo las oportunidades de ALTA y MEDIA relevancia</h3>
-                            <p class="text-gray-600">Un dashboard limpio muestra las licitaciones que realmente importan, con alertas por email opcionales. Ve el nivel de relevancia, monto y detalles.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Resultados -->
-    <section class="py-20 bg-indigo-600 text-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-4xl font-bold mb-12">Resultados reales</h2>
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div>
-                        <div class="text-5xl font-bold mb-2">99%</div>
-                        <p class="text-indigo-100">Ahorro de tiempo</p>
-                    </div>
-                    <div>
-                        <div class="text-5xl font-bold mb-2">"400→4"</div>
-                        <p class="text-indigo-100">Licitaciones filtradas</p>
-                    </div>
-                    <div>
-                        <div class="text-5xl font-bold mb-2">+Tiempo</div>
-                        <p class="text-indigo-100">Para análisis que importa</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing -->
-    <section id="pricing" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="text-4xl font-bold text-gray-900 text-center mb-4">
-                    Planes transparentes
-                </h2>
-                <p class="text-center text-gray-600 mb-12">
-                    Comienza gratis, escala cuando necesites
-                </p>
-
-                <!-- Tarjetas de Planes -->
-                <div class="grid md:grid-cols-3 gap-8 mb-16">
-                    <!-- Estándar (con prueba gratis) -->
-                    <div class="border-2 border-indigo-600 rounded-2xl p-8 relative shadow-lg">
-                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                            Más Popular
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Estándar</h3>
-                        <div class="mb-6">
-                            <span class="text-4xl font-bold">$10</span>
-                            <span class="text-gray-600">/mes</span>
-                        </div>
-                        <p class="text-sm text-green-600 font-semibold mb-4">✨ Prueba gratis 7 días</p>
-                        <ul class="space-y-3 mb-8 text-sm">
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700">Perfil empresarial completo</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700">Scraping automático diario (L-S)</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700">Análisis inteligente con IA</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700">Notificaciones por email (resumen)</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700">Dashboard de oportunidades</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700">Historial de 1 mes</span>
-                            </li>
-                        </ul>
-                        <a href="/registro.html" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center justify-center gap-2">
-                            <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-                            Comenzar Gratis
-                        </a>
-                    </div>
-
-                    <!-- Business -->
-                    <div class="border-2 border-gray-200 rounded-2xl p-8">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Business</h3>
-                        <div class="mb-6">
-                            <span class="text-4xl font-bold">$20</span>
-                            <span class="text-gray-600">/mes</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mb-4 h-6">Todo en Estándar, más:</p>
-                        <ul class="space-y-3 mb-8 text-sm">
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700"><strong>Notificaciones detalladas</strong> con análisis completo</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700"><strong>Enlaces directos</strong> a documentos y procedimientos</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700"><strong>Historial de 3 meses</strong></span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-gray-400 text-lg">○</span>
-                                <span class="text-gray-400">Ideal para empresas activas en licitaciones</span>
-                            </li>
-                        </ul>
-                        <a href="/registro.html?plan=business" class="block text-center bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition font-semibold flex items-center justify-center gap-2">
-                            <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-                            Comenzar Prueba
-                        </a>
-                    </div>
-
-                    <!-- Enterprise -->
-                    <div class="border-2 border-gray-200 rounded-2xl p-8 bg-gradient-to-br from-gray-50 to-white">
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
-                        <div class="mb-6">
-                            <span class="text-4xl font-bold">Custom</span>
-                            <span class="text-gray-600 text-base">/año</span>
-                        </div>
-                        <p class="text-sm text-gray-500 mb-4 h-6">Todo en Business, más:</p>
-                        <ul class="space-y-3 mb-8 text-sm">
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700"><strong>Recomendaciones IA</strong> para preparar ofertas</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700"><strong>Acompañamiento de consultor</strong> especializado</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700"><strong>Revisión de documentos</strong> antes de envío</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <span class="text-green-600 text-lg">✓</span>
-                                <span class="text-gray-700">Soporte prioritario</span>
-                            </li>
-                        </ul>
-                        <a href="mailto:sales@umbusk.com?subject=Interés en Plan Enterprise - Compita" class="block text-center bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold flex items-center justify-center gap-2">
-                            📧 Contáctanos
-                        </a>
-                    </div>
-                </div>
-
-<!-- Tabla Comparativa -->
 <div class="bg-gray-50 rounded-2xl p-4 md:p-8">
     <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Comparación Detallada</h3>
 
-    <!-- Versión Desktop (tabla) -->
     <div class="hidden lg:block overflow-x-auto">
         <table class="w-full text-left">
             <thead>
@@ -401,7 +394,6 @@
                 </tr>
             </thead>
             <tbody class="text-sm">
-                <!-- Precio -->
                 <tr class="border-b border-gray-200">
                     <td class="py-3 px-4 font-semibold text-gray-800">Precio</td>
                     <td class="py-3 px-4 text-center text-indigo-600 font-bold">$10/mes</td>
@@ -415,7 +407,6 @@
                     <td class="py-3 px-4 text-center text-gray-400">—</td>
                 </tr>
 
-                <!-- Funcionalidades Base -->
                 <tr class="bg-gray-100">
                     <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Funcionalidades Base</td>
                 </tr>
@@ -426,10 +417,16 @@
                     <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
                 </tr>
                 <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Scraping Automático (L-S)</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4">Categorías UNSPSC</td>
+                    <td class="py-3 px-4 text-center text-gray-600 font-semibold">2</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-bold">5</td>
+                    <td class="py-3 px-4 text-center text-green-600 font-bold">Ilimitado</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Scraping Automático</td>
+                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
                 </tr>
                 <tr class="border-b border-gray-200">
                     <td class="py-3 px-4">Análisis con IA</td>
@@ -438,7 +435,6 @@
                     <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
                 </tr>
 
-                <!-- Notificaciones -->
                 <tr class="bg-gray-100">
                     <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Notificaciones</td>
                 </tr>
@@ -455,13 +451,24 @@
                     <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
                 </tr>
 
-                <!-- Dashboard -->
                 <tr class="bg-gray-100">
                     <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Dashboard</td>
                 </tr>
                 <tr class="border-b border-gray-200">
                     <td class="py-3 px-4">Dashboard de Oportunidades</td>
                     <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Profundizar con IA</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Documentación Detallada</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
                     <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
                     <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
                 </tr>
@@ -478,7 +485,6 @@
                     <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
                 </tr>
 
-                <!-- Servicios Premium -->
                 <tr class="bg-gray-100">
                     <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Servicios Premium</td>
                 </tr>
@@ -498,9 +504,7 @@
         </table>
     </div>
 
-    <!-- Versión Mobile (cards) -->
     <div class="lg:hidden space-y-6">
-        <!-- Estándar -->
         <div class="bg-white rounded-lg p-4 shadow">
             <h4 class="text-lg font-bold text-indigo-600 mb-3">Plan Estándar - $10/mes</h4>
             <div class="space-y-2 text-sm">
@@ -509,12 +513,12 @@
                     <span class="text-green-600 font-semibold">✓ 7 días</span>
                 </div>
                 <div class="flex justify-between py-1 border-b">
-                    <span>Perfil Empresarial</span>
-                    <span class="text-green-600">✓</span>
+                    <span>Categorías UNSPSC</span>
+                    <span class="text-gray-600 font-semibold">2</span>
                 </div>
                 <div class="flex justify-between py-1 border-b">
                     <span>Scraping Automático</span>
-                    <span class="text-green-600">✓</span>
+                    <span class="text-gray-600">2x/día (L-V)</span>
                 </div>
                 <div class="flex justify-between py-1 border-b">
                     <span>Análisis con IA</span>
@@ -524,10 +528,6 @@
                     <span>Notificaciones Email</span>
                     <span class="text-gray-600">Resumen</span>
                 </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Dashboard</span>
-                    <span class="text-green-600">✓</span>
-                </div>
                 <div class="flex justify-between py-1">
                     <span>Historial</span>
                     <span class="text-gray-600">1 mes</span>
@@ -535,7 +535,6 @@
             </div>
         </div>
 
-        <!-- Business -->
         <div class="bg-white rounded-lg p-4 shadow">
             <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Business - $20/mes</h4>
             <div class="space-y-2 text-sm">
@@ -544,11 +543,19 @@
                     <span class="text-green-600">✓</span>
                 </div>
                 <div class="flex justify-between py-1 border-b">
+                    <span>Categorías UNSPSC</span>
+                    <span class="text-gray-800 font-bold">5</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
                     <span>Notificaciones Email</span>
                     <span class="text-gray-800 font-semibold">Completas</span>
                 </div>
                 <div class="flex justify-between py-1 border-b">
-                    <span>Enlaces Documentos</span>
+                    <span>Profundizar con IA</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Documentación Detallada</span>
                     <span class="text-green-600">✓</span>
                 </div>
                 <div class="flex justify-between py-1">
@@ -558,13 +565,16 @@
             </div>
         </div>
 
-        <!-- Enterprise -->
         <div class="bg-white rounded-lg p-4 shadow">
             <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Enterprise - Custom</h4>
             <div class="space-y-2 text-sm">
                 <div class="flex justify-between py-1 border-b">
                     <span>Todo lo de Business</span>
                     <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Categorías UNSPSC</span>
+                    <span class="text-green-600 font-bold">Ilimitado</span>
                 </div>
                 <div class="flex justify-between py-1 border-b">
                     <span>Recomendaciones IA</span>
@@ -582,323 +592,318 @@
         </div>
     </div>
 </div>
-                <p class="text-center text-gray-600 mt-8">
-                    💬 ¿Dudas sobre qué plan elegir? <a href="mailto:sales@umbusk.com" class="text-indigo-600 font-semibold hover:text-indigo-800">Escríbenos</a>
-                </p>
+            <p class="text-center text-gray-600 mt-8">
+                💬 ¿Dudas sobre qué plan elegir? <a href="mailto:sales@umbusk.com" class="text-indigo-600 font-semibold hover:text-indigo-800">Escríbenos</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="faq" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl font-bold text-gray-900 text-center mb-12">Preguntas Frecuentes</h2>
+            <div class="space-y-6">
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Necesito tarjeta de crédito para la prueba gratuita?</summary>
+                    <p class="text-gray-600 mt-4">No. La prueba de 7 días es completamente gratuita y no requiere tarjeta de crédito. Solo necesitas un email corporativo válido.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Funciona con cualquier portal de compras?</summary>
+                    <p class="text-gray-600 mt-4">Actualmente optimizado para el portal de República Dominicana. Próximamente soportaremos otros países de LATAM.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Cómo funciona la IA de análisis?</summary>
+                    <p class="text-gray-600 mt-4">Usamos Claude AI de Anthropic para leer cada licitación que puede ser relevante según las categorías UNSPSC y palabras clave, entender el contexto de las pre-seleccionadas y evaluar su nivel de relevancia de acuerdo con el perfil de tu empresa. No es búsqueda simple de palabras, es comprensión semántica real de las oportunidades que importan.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Puedo cancelar en cualquier momento?</summary>
+                    <p class="text-gray-600 mt-4">Sí. Sin contratos ni permanencia mínima. Cancelas cuando quieras desde tu cuenta.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Mis datos están seguros?</summary>
+                    <p class="text-gray-600 mt-4">Absolutamente. Usamos encriptación end-to-end, base de datos PostgreSQL en Neon con backups diarios, y cumplimos con mejores prácticas de seguridad.</p>
+                </details>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- FAQ -->
-    <section id="faq" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto">
-                <h2 class="text-4xl font-bold text-gray-900 text-center mb-12">
-                    Preguntas Frecuentes
-                </h2>
+<section id="registro" class="py-20 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6">Comienza a encontrar las mejores oportunidades que importan hoy</h2>
+            <p class="text-xl text-indigo-100 mb-8">7 días gratis. Sin tarjeta de crédito. Configura en 2 minutos.</p>
+            <a href="/registro.html" class="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition font-semibold text-lg shadow-xl">
+                <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
+                ¡Pruébalo gratis ya!
+            </a>
+            <p class="text-sm text-indigo-200 mt-6">¿Ya tienes cuenta? <a href="/login.html" class="underline hover:text-white">Iniciar sesión</a></p>
+        </div>
+    </div>
+</section>
 
-                <div class="space-y-6">
-                    <details class="bg-white rounded-lg p-6 shadow-sm">
-                        <summary class="font-semibold text-gray-900 cursor-pointer">¿Necesito tarjeta de crédito para la prueba gratuita?</summary>
-                        <p class="text-gray-600 mt-4">No. La prueba de 7 días es completamente gratuita y no requiere tarjeta de crédito. Solo necesitas un email corporativo válido.</p>
-                    </details>
-
-                    <details class="bg-white rounded-lg p-6 shadow-sm">
-                        <summary class="font-semibold text-gray-900 cursor-pointer">¿Funciona con cualquier portal de compras?</summary>
-                        <p class="text-gray-600 mt-4">Actualmente optimizado para el portal de República Dominicana. Próximamente soportaremos otros países de LATAM.</p>
-                    </details>
-
-                    <details class="bg-white rounded-lg p-6 shadow-sm">
-                        <summary class="font-semibold text-gray-900 cursor-pointer">¿Cómo funciona la IA de análisis?</summary>
-                        <p class="text-gray-600 mt-4">Usamos Claude AI de Anthropic para leer cada licitación que puede ser relevante según las palabras clave, entender el contexto de las pre-seleccionadas y evaluar su nivel de relevancia de acuerdo con el perfil de tu empresa. No es búsqueda simple de palabras, es comprensión semántica real de las oportunidades que importan.</p>
-                    </details>
-
-                    <details class="bg-white rounded-lg p-6 shadow-sm">
-                        <summary class="font-semibold text-gray-900 cursor-pointer">¿Puedo cancelar en cualquier momento?</summary>
-                        <p class="text-gray-600 mt-4">Sí. Sin contratos ni permanencia mínima. Cancelas cuando quieras desde tu cuenta.</p>
-                    </details>
-
-                    <details class="bg-white rounded-lg p-6 shadow-sm">
-                        <summary class="font-semibold text-gray-900 cursor-pointer">¿Mis datos están seguros?</summary>
-                        <p class="text-gray-600 mt-4">Absolutamente. Usamos encriptación end-to-end, base de datos PostgreSQL en Neon con backups diarios, y cumplimos con mejores prácticas de seguridad.</p>
-                    </details>
+<footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-2xl">🎯</span>
+                    <span class="text-xl font-bold text-white">Compita</span>
                 </div>
+                <p class="text-sm">Análisis inteligente de licitaciones con IA</p>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4">Producto</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#como-funciona" class="hover:text-white transition">Cómo Funciona</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition">Precios</a></li>
+                    <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4">Legal</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/terminos" class="hover:text-white transition">Términos y Condiciones</a></li>
+                    <li><a href="/privacidad" class="hover:text-white transition">Política de Privacidad</a></li>
+                    <li><a href="/cookies" class="hover:text-white transition">Política de Cookies</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4">Contacto</h3>
+                <ul class="space-y-2 text-sm">
+                    <li>
+                      <a href="https://compitaforms.netlify.app/index.html" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">
+                        <span class="lang-es">Llenar forma de contacto</span>
+                      </a>
+                    </li>
+                    <li><a href="https://umbusk.com" target="_blank" class="hover:text-white transition">umbusk.com</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    <!-- CTA Final -->
-    <section id="registro" class="py-20 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
-        <div class="container mx-auto px-4">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-4xl font-bold mb-6">
-                    Comienza a encontrar las mejores oportunidades que importan hoy
-                </h2>
-                <p class="text-xl text-indigo-100 mb-8">
-                    7 días gratis. Sin tarjeta de crédito. Configura en 2 minutos.
-                </p>
-                <a href="/registro.html" class="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition font-semibold text-lg shadow-xl">
-                    <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
-                    ¡Pruébalo gratis ya!
-                </a>
-                <p class="text-sm text-indigo-200 mt-6">
-                    ¿Ya tienes cuenta? <a href="/login.html" class="underline hover:text-white">Iniciar sesión</a>
-                </p>
-            </div>
+        <div class="border-t border-gray-800 pt-8 text-center text-sm">
+            <p>Vibe-coded by <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">UMBUSK</a> and Claude from Anthropic.</p>
+            <p class="mt-2">© 2026 Compita es un servicio de Umbusk, LLC. Todos los derechos reservados.</p>
         </div>
-    </section>
+    </div>
+</footer>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-4 gap-8 mb-8">
-                <div>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-2xl">🎯</span>
-                        <span class="text-xl font-bold text-white">Compita</span>
-                    </div>
-                    <p class="text-sm">
-                        Análisis inteligente de licitaciones con IA
-                    </p>
-                </div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let chartInstance = null;
+let datosCompletos = null;
+let maxGlobalCalculado = 50;
 
-                <div>
-                    <h3 class="text-white font-semibold mb-4">Producto</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#como-funciona" class="hover:text-white transition">Cómo Funciona</a></li>
-                        <li><a href="#pricing" class="hover:text-white transition">Precios</a></li>
-                        <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
-                    </ul>
-                </div>
+function obtenerTodosMeses() {
+    const meses = [];
+    const nombresCortos = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    const hoy = new Date();
+    const mesActual = hoy.getMonth();
 
-                <div>
-                    <h3 class="text-white font-semibold mb-4">Legal</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="/terminos" class="hover:text-white transition">Términos y Condiciones</a></li>
-                        <li><a href="/privacidad" class="hover:text-white transition">Política de Privacidad</a></li>
-                        <li><a href="/cookies" class="hover:text-white transition">Política de Cookies</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 class="text-white font-semibold mb-4">Contacto</h3>
-                    <ul class="space-y-2 text-sm">
-                        <li>
-						  <a href="https://compitaforms.netlify.app/index.html"
-						     target="_blank"
-						     rel="noopener noreferrer"
-						     class="hover:text-white transition">
-						    <span class="lang-es">Llenar forma de contacto</span>
-						  </a>
-						</li>
-                        <li><a href="https://umbusk.com" target="_blank" class="hover:text-white transition">umbusk.com</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-gray-800 pt-8 text-center text-sm">
-                <p>
-                    Vibe-coded by
-                    <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">UMBUSK</a>
-                    and Claude from Anthropic.
-                </p>
-                <p class="mt-2">© 2026 Compita es un servicio de Umbusk, LLC. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Script de visualización con pestañas -->
-    <script>
-    let chartInstance = null;
-    let datosCompletos = null;
-    let maxGlobalCalculado = 50;
-
-    function obtenerTresMeses() {
-        const hoy = new Date();
-        const meses = [];
-        const nombresCortos = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-
-        let mesInicio = hoy.getMonth();
-        let añoInicio = hoy.getFullYear();
-
-        if (añoInicio < 2026) {
-            mesInicio = 0;
-            añoInicio = 2026;
-        }
-
-        for (let i = 0; i < 3; i++) {
-            const mes = (mesInicio + i) % 12;
-            const año = añoInicio + Math.floor((mesInicio + i) / 12);
-            meses.push({
-                numero: mes + 1,
-                nombre: nombresCortos[mes],
-                nombreCompleto: new Date(año, mes).toLocaleDateString('es', { month: 'long' }),
-                año: año
-            });
-        }
-
-        return meses;
-    }
-
-    function crearPestanas(meses) {
-        const tabsContainer = document.getElementById('month-tabs');
-        tabsContainer.innerHTML = '';
-
-        meses.forEach((mes, index) => {
-            const button = document.createElement('button');
-            button.className = index === 0
-                ? 'px-6 py-3 font-semibold text-indigo-600 border-b-2 border-indigo-600 transition'
-                : 'px-6 py-3 font-semibold text-gray-600 border-b-2 border-transparent hover:text-indigo-600 hover:border-indigo-300 transition';
-            button.textContent = mes.nombreCompleto;
-            button.onclick = () => cambiarMes(mes, meses);
-            button.id = `tab-${mes.numero}`;
-            tabsContainer.appendChild(button);
+    for (let i = 0; i < 12; i++) {
+        meses.push({
+            numero: i + 1,
+            nombre: nombresCortos[i],
+            nombreCompleto: new Date(2026, i).toLocaleDateString('es', { month: 'long' }),
+            año: 2026,
+            esPasado: i < mesActual,
+            esActual: i === mesActual
         });
     }
 
-    function cambiarMes(mesSeleccionado, todosMeses) {
-        todosMeses.forEach(mes => {
-            const tab = document.getElementById(`tab-${mes.numero}`);
-            if (mes.numero === mesSeleccionado.numero) {
-                tab.className = 'px-6 py-3 font-semibold text-indigo-600 border-b-2 border-indigo-600 transition';
-            } else {
-                tab.className = 'px-6 py-3 font-semibold text-gray-600 border-b-2 border-transparent hover:text-indigo-600 hover:border-indigo-300 transition';
-            }
-        });
+    return meses;
+}
 
-        const datosMes = datosCompletos.por_dia.filter(d => {
-            const fecha = new Date(d.fecha);
-            return fecha.getMonth() === mesSeleccionado.numero - 1 && fecha.getFullYear() === mesSeleccionado.año;
-        });
+function crearPestanas(meses) {
+    const tabsContainer = document.getElementById('month-tabs');
+    tabsContainer.innerHTML = '';
+    const mesActual = new Date().getMonth();
 
-        actualizarGrafico(datosMes, mesSeleccionado);
+    meses.forEach((mes, index) => {
+        const button = document.createElement('button');
+        button.className = index === mesActual
+            ? 'px-4 py-2 font-semibold text-indigo-600 border-b-2 border-indigo-600 transition text-sm'
+            : 'px-4 py-2 font-semibold text-gray-600 border-b-2 border-transparent hover:text-indigo-600 hover:border-indigo-300 transition text-sm';
+        button.textContent = mes.nombre;
+        button.onclick = () => cambiarMes(mes, meses);
+        button.id = `tab-${mes.numero}`;
+        tabsContainer.appendChild(button);
+    });
+}
+
+function cambiarMes(mesSeleccionado, todosMeses) {
+    todosMeses.forEach(mes => {
+        const tab = document.getElementById(`tab-${mes.numero}`);
+        if (mes.numero === mesSeleccionado.numero) {
+            tab.className = 'px-4 py-2 font-semibold text-indigo-600 border-b-2 border-indigo-600 transition text-sm';
+        } else {
+            tab.className = 'px-4 py-2 font-semibold text-gray-600 border-b-2 border-transparent hover:text-indigo-600 hover:border-indigo-300 transition text-sm';
+        }
+    });
+
+    const datosMes = datosCompletos.por_dia.filter(d => {
+        const fecha = new Date(d.fecha);
+        return fecha.getMonth() === mesSeleccionado.numero - 1 && fecha.getFullYear() === mesSeleccionado.año;
+    });
+
+    actualizarGrafico(datosMes, mesSeleccionado);
+}
+
+function actualizarGrafico(datos, mesInfo) {
+    if (chartInstance) {
+        chartInstance.destroy();
     }
 
-    function actualizarGrafico(datos, mesInfo) {
-        if (chartInstance) {
-            chartInstance.destroy();
+    const diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
+    const hoy = new Date();
+    const diaActual = hoy.getDate();
+    const mesActual = hoy.getMonth() + 1;
+
+    const datosPorDia = {};
+    datos.forEach(d => {
+        const fecha = new Date(d.fecha);
+        const dia = fecha.getDate();
+        datosPorDia[dia] = d.cantidad;
+    });
+
+    const diasCompletos = [];
+    const cantidadesAbiertas = [];
+    const cantidadesCerradas = [];
+
+    for (let dia = 1; dia <= diasEnMes; dia++) {
+        diasCompletos.push(dia);
+        const cantidad = datosPorDia[dia] || 0;
+
+        if (mesInfo.numero < mesActual || (mesInfo.numero === mesActual && dia < diaActual)) {
+            cantidadesCerradas.push(cantidad);
+            cantidadesAbiertas.push(0);
+        } else {
+            cantidadesAbiertas.push(cantidad);
+            cantidadesCerradas.push(0);
         }
+    }
 
-        const diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
-
-        const datosPorDia = {};
-        datos.forEach(d => {
-            const fecha = new Date(d.fecha);
-            const dia = fecha.getDate();
-            datosPorDia[dia] = d.cantidad;
-        });
-
-        const diasCompletos = [];
-        const cantidades = [];
-        for (let dia = 1; dia <= diasEnMes; dia++) {
-            diasCompletos.push(dia);
-            cantidades.push(datosPorDia[dia] || 0);
-        }
-
-        const ctx = document.getElementById('grafico-diario').getContext('2d');
-        chartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: diasCompletos,
-                datasets: [{
-                    label: 'Licitaciones por Día',
-                    data: cantidades,
-                    backgroundColor: 'rgba(79, 70, 229, 0.6)',
+    const ctx = document.getElementById('grafico-diario').getContext('2d');
+    chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: diasCompletos,
+            datasets: [
+                {
+                    label: 'Abiertas',
+                    data: cantidadesAbiertas,
+                    backgroundColor: 'rgba(79, 70, 229, 0.8)',
                     borderColor: 'rgba(79, 70, 229, 1)',
-                    borderWidth: 2
-                }]
+                    borderWidth: 1
+                },
+                {
+                    label: 'Cerradas',
+                    data: cantidadesCerradas,
+                    backgroundColor: 'rgba(209, 213, 219, 0.5)',
+                    borderColor: 'rgba(156, 163, 175, 0.8)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: window.innerWidth > 768,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: `Licitaciones según fecha tope para presentar ofertas - ${mesInfo.nombreCompleto}`,
+                    font: { size: 16, weight: 'bold' }
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: window.innerWidth > 768, // Solo mantener aspecto en desktop
-                plugins: {
-                    legend: {
+            scales: {
+                x: {
+                    stacked: true,
+                    title: {
                         display: true,
-                        position: 'top'
+                        text: 'Día del Mes'
+                    }
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    max: maxGlobalCalculado,
+                    ticks: {
+                        stepSize: 5,
+                        precision: 0
                     },
                     title: {
                         display: true,
-                        text: `Licitaciones según fecha tope para presentar ofertas - ${mesInfo.nombreCompleto}`,
-                        font: { size: 18, weight: 'bold' }
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Día del Mes'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        max: maxGlobalCalculado,
-                        ticks: {
-                            stepSize: 5,
-                            precision: 0
-                        },
-                        title: {
-                            display: true,
-                            text: 'Cantidad de Licitaciones'
-                        }
+                        text: 'Cantidad de Licitaciones'
                     }
                 }
             }
-        });
-    }
-
-    async function cargarEstadisticas() {
-        try {
-            const response = await fetch('/stats-2026.json');
-            const data = await response.json();
-            datosCompletos = data;
-
-            const todasCantidades = data.por_dia.map(d => d.cantidad);
-            maxGlobalCalculado = Math.max(...todasCantidades, 50);
-            maxGlobalCalculado = Math.ceil(maxGlobalCalculado / 5) * 5;
-
-            document.getElementById('stats-cards').innerHTML = `
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6 text-center">
-                    <p class="text-gray-600 text-sm mb-2">Total Licitaciones</p>
-                    <p class="text-4xl font-bold text-blue-600">${data.stats.total}</p>
-                    <p class="text-xs text-gray-500 mt-2">${data.stats.por_estado.abiertas} abiertas</p>
-                </div>
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow p-6 text-center">
-                    <p class="text-gray-600 text-sm mb-2">Promedio Diario</p>
-                    <p class="text-4xl font-bold text-purple-600">${data.stats.promedio_diario}</p>
-                    <p class="text-xs text-gray-500 mt-2">licitaciones/día</p>
-                </div>
-            `;
-
-            const meses = obtenerTresMeses();
-            crearPestanas(meses);
-            cambiarMes(meses[0], meses);
-
-        } catch (error) {
-            console.error('Error cargando estadísticas:', error);
-            document.getElementById('stats-cards').innerHTML = `
-                <div class="col-span-2 text-center text-gray-600 p-6">
-                    <p class="text-lg mb-2">📊 Estadísticas próximamente</p>
-                    <p class="text-sm">Los datos se actualizarán diariamente</p>
-                </div>
-            `;
         }
+    });
+}
+
+async function cargarEstadisticas() {
+    try {
+        const response = await fetch('/stats-2026.json');
+        const data = await response.json();
+        datosCompletos = data;
+
+        const todasCantidades = data.por_dia.map(d => d.cantidad);
+        maxGlobalCalculado = Math.max(...todasCantidades, 50);
+        maxGlobalCalculado = Math.ceil(maxGlobalCalculado / 5) * 5;
+
+        // Calcular licitaciones abiertas a partir de hoy (sumar barras azules)
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        const abiertasDesdeHoy = data.por_dia
+            .filter(d => {
+                const fechaLicitacion = new Date(d.fecha);
+                return fechaLicitacion >= hoy;
+            })
+            .reduce((sum, d) => sum + d.cantidad, 0);
+
+        document.getElementById('stats-cards').innerHTML = `
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6 text-center">
+                <p class="text-gray-600 text-sm mb-2">Abiertas a Partir de Hoy</p>
+                <p class="text-4xl font-bold text-blue-600">${abiertasDesdeHoy.toLocaleString()}</p>
+                <p class="text-xs text-gray-500 mt-2">${data.stats.total.toLocaleString()} Total en BD</p>
+            </div>
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow p-6 text-center">
+                <p class="text-gray-600 text-sm mb-2">Promedio Diario</p>
+                <p class="text-4xl font-bold text-purple-600">${data.stats.promedio_diario}</p>
+                <p class="text-xs text-gray-500 mt-2">licitaciones/día</p>
+            </div>
+        `;
+
+        const meses = obtenerTodosMeses();
+        crearPestanas(meses);
+        cambiarMes(meses[new Date().getMonth()], meses);
+
+    } catch (error) {
+        console.error('Error cargando estadísticas:', error);
+        document.getElementById('stats-cards').innerHTML = `
+            <div class="col-span-2 text-center text-gray-600 p-6">
+                <p class="text-lg mb-2">📊 Estadísticas próximamente</p>
+                <p class="text-sm">Los datos se actualizarán diariamente</p>
+            </div>
+        `;
     }
+}
 
-    document.addEventListener('DOMContentLoaded', cargarEstadisticas);
+document.addEventListener('DOMContentLoaded', cargarEstadisticas);
 
-    function toggleMobileMenu() {
-	    const menu = document.getElementById('mobile-menu');
-	    const menuIcon = document.getElementById('menu-icon');
-	    const closeIcon = document.getElementById('close-icon');
-
-	    menu.classList.toggle('active');
-	    menuIcon.classList.toggle('hidden');
-	    closeIcon.classList.toggle('hidden');
-		}
-
-    </script>
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+    menu.classList.toggle('active');
+    menuIcon.classList.toggle('hidden');
+    closeIcon.classList.toggle('hidden');
+}
+</script>
 </body>
 </html>
