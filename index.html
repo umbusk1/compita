@@ -866,10 +866,22 @@ async function cargarEstadisticas() {
             })
             .reduce((sum, d) => sum + d.cantidad, 0);
 
-        // Calcular promedio real: total ÷ días con actividad (no todos los días del año)
-        const diasConActividad = data.por_dia.filter(d => d.cantidad > 0).length;
-        const promedioDiarioReal = diasConActividad > 0
-            ? Math.round(data.stats.total / diasConActividad)
+        // Calcular promedio REAL: solo licitaciones cerradas ÷ días laborables pasados
+        const licitacionesCerradas = data.por_dia
+            .filter(d => {
+                const fechaLicitacion = new Date(d.fecha);
+                return fechaLicitacion < hoy && d.cantidad > 0;
+            })
+            .reduce((sum, d) => sum + d.cantidad, 0);
+
+        const diasLaborablesPasados = data.por_dia
+            .filter(d => {
+                const fechaLicitacion = new Date(d.fecha);
+                return fechaLicitacion < hoy && d.cantidad > 0;
+            }).length;
+
+        const promedioDiarioReal = diasLaborablesPasados > 0
+            ? Math.round(licitacionesCerradas / diasLaborablesPasados)
             : 0;
 
         document.getElementById('stats-cards').innerHTML = `
@@ -881,7 +893,7 @@ async function cargarEstadisticas() {
             <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg shadow p-6 text-center">
                 <p class="text-gray-600 text-sm mb-2">Promedio Diario</p>
                 <p class="text-4xl font-bold text-purple-600">${promedioDiarioReal.toLocaleString()}</p>
-                <p class="text-xs text-gray-500 mt-2">en días laborales</p>
+                <p class="text-xs text-gray-500 mt-2">en días laborables cerrados</p>
             </div>
         `;
 
