@@ -804,7 +804,7 @@ function renderizarOportunidades() {
             </div>
 
             ${esBusiness ? `
-            <!-- FUNCIONALIDAD PREMIUM -->
+<!-- FUNCIONALIDAD PREMIUM -->
             <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4">
                 <p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
                     <span>🚀</span>
@@ -818,9 +818,6 @@ function renderizarOportunidades() {
                         <span>📄</span>
                         <span>Descargar Pliego o Especificaciones (PDF)</span>
                     </button>
-                    <div id="mensaje-descarga-${opp.referencia}" style="display:none; margin-top:10px; color:green; font-size:14px;">
-					    ✅ Documento descargado. Disponible en tu carpeta "Descargas".
-					</div>
                     <button
                         onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0})"
                         class="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
@@ -828,6 +825,11 @@ function renderizarOportunidades() {
                         <span>🤖</span>
                         <span>Analizar Pliego con IA</span>
                     </button>
+                </div>
+
+                <!-- Mensaje de éxito (aparece después de descargar) -->
+                <div id="mensaje-descarga-${op.referencia}" style="display:none; margin-top:10px; color:green; font-size:14px;">
+                    ✅ Documento descargado. Disponible en tu carpeta "Descargas".
                 </div>
             </div>
             ` : ''}
