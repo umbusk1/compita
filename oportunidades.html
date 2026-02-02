@@ -82,7 +82,7 @@
 			</p>
 			<div class="space-y-2">
 				<div class="flex items-center justify-between">
-					<span class="text-xs text-gray-700">📄 Descargas ZIP:</span>
+					<span class="text-xs text-gray-700">📄 Descargas PDF:</span>
 					<span class="text-sm font-bold text-gray-900" id="cupo-zip">-/-</span>
 				</div>
 				<div class="flex items-center justify-between">
@@ -966,7 +966,7 @@ async function descargarDocumentos(referencia) {
         alert('❌ Error: ' + error.message);
 
         const botonDescarga = event.target;
-        botonDescarga.innerHTML = '<span>📄</span><span>Descargar Documentos (ZIP)</span>';
+        botonDescarga.innerHTML = '<span>📄</span><span>Descargar Documento (PDF)</span>';
         botonDescarga.disabled = false;
     }
 }
