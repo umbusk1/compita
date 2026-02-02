@@ -175,10 +175,10 @@
                         <span>📥</span>
                         <span>Exportar Excel</span>
                     </button>
-                    <button onclick="cargarOportunidades()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
-                        <span>🔄</span>
-                        <span>Actualizar</span>
-                    </button>
+					<button onclick="reAnalizarOportunidades()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
+						<span>🔄</span>
+						<span>Actualizar</span>
+					</button>
                 </div>
             </div>
 
@@ -1530,6 +1530,63 @@ function exportarAExcel() {
     XLSX.writeFile(wb, nombreArchivo);
 
     alert(`✅ Exportadas ${licitacionesParaExportar.length} licitaciones a Excel`);
+}
+
+// Función para re-analizar oportunidades con perfil actualizado
+async function reAnalizarOportunidades() {
+    if (!datosEmpresa || !datosEmpresa.id) {
+        alert('Error: No se encontró información de la empresa');
+        return;
+    }
+
+    // Confirmar acción
+    if (!confirm('¿Deseas re-analizar todas las licitaciones abiertas con tu perfil actualizado?\n\nEsto puede tardar unos segundos.')) {
+        return;
+    }
+
+    // Mostrar loading en el botón
+    const botonActualizar = event.target;
+    const textoOriginal = botonActualizar.innerHTML;
+    botonActualizar.disabled = true;
+    botonActualizar.innerHTML = '<span>⏳</span><span>Analizando...</span>';
+
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+        const response = await fetch(`${API_BASE}/api/business-features`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                empresa_id: datosEmpresa.id,
+                accion: 're-analizar'
+            })
+        });
+
+        const resultado = await response.json();
+
+        if (response.ok && resultado.success) {
+            alert(`✅ ${resultado.message}\n\n` +
+                  `📊 Licitaciones analizadas: ${resultado.analizadas}\n` +
+                  `🟢 ALTA relevancia: ${resultado.alta}\n` +
+                  `🟡 MEDIA relevancia: ${resultado.media}\n` +
+                  `🔴 Descartadas: ${resultado.descartadas}`);
+
+            // Recargar oportunidades
+            await cargarOportunidades();
+        } else {
+            alert('❌ Error: ' + (resultado.error || 'No se pudo completar el análisis'));
+        }
+    } catch (error) {
+        console.error('Error re-analizando:', error);
+        alert('❌ Error al re-analizar oportunidades');
+    } finally {
+        // Restaurar botón
+        botonActualizar.disabled = false;
+        botonActualizar.innerHTML = textoOriginal;
+    }
 }
 
     </script>
