@@ -1038,7 +1038,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
             Claude está analizando...
         `;
 
-        const analisisResponse = await fetch(`${PYTHONANYWHERE_API}/analizar-automatico`, {
+		const analisisResponse = await fetch(`${RAILWAY_API}/analizar-pliego`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
