@@ -625,36 +625,53 @@ async function cargarCuposBusiness() {
         if (!datosEmpresa) return;
         const empresaId = datosEmpresa.id;
 
-        const response = await fetch(`${API_BASE}/api/business-features`, {
+        // Obtener uso actual
+        const responseZip = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 empresa_id: empresaId,
-                tipo: 'zip', // No importa, solo necesitamos los límites
-                accion: 'verificar-limites' // Nueva acción
+                tipo: 'zip',
+                accion: 'validar'
             })
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            cuposDisponibles = data;
+        const responseAnalisis = await fetch(`${API_BASE}/api/business-features`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                empresa_id: empresaId,
+                tipo: 'analisis',
+                accion: 'validar'
+            })
+        });
 
-            // Mostrar widget de cupos
-            document.getElementById('cupos-business').classList.remove('hidden');
+        const dataZip = await responseZip.json();
+        const dataAnalisis = await responseAnalisis.json();
 
-            // Actualizar contadores
-            document.getElementById('cupo-zip').textContent =
-                `${data.zip_disponibles}/${data.zip_limite}`;
-            document.getElementById('cupo-analisis').textContent =
-                `${data.analisis_disponibles}/${data.analisis_limite}`;
+        // Guardar en variable global
+        cuposDisponibles = {
+            zip_usados: dataZip.usados || 0,
+            zip_limite: datosEmpresa.limite_zips_mes || 10,
+            zip_disponibles: (datosEmpresa.limite_zips_mes || 10) - (dataZip.usados || 0),
+            analisis_usados: dataAnalisis.usados || 0,
+            analisis_limite: datosEmpresa.limite_analisis_mes || 5,
+            analisis_disponibles: (datosEmpresa.limite_analisis_mes || 5) - (dataAnalisis.usados || 0)
+        };
 
-            // Fecha de reinicio
-            const hoy = new Date();
-            const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1);
-            const opciones = { day: 'numeric', month: 'short' };
-            document.getElementById('fecha-reinicio').textContent =
-                proximoMes.toLocaleDateString('es-ES', opciones);
-        }
+        // Actualizar el widget (lo vamos a ocultar después)
+        document.getElementById('cupo-zip').textContent =
+            `${cuposDisponibles.zip_disponibles}/${cuposDisponibles.zip_limite}`;
+        document.getElementById('cupo-analisis').textContent =
+            `${cuposDisponibles.analisis_disponibles}/${cuposDisponibles.analisis_limite}`;
+
+        // Fecha de reinicio
+        const hoy = new Date();
+        const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1);
+        const opciones = { day: 'numeric', month: 'short' };
+        document.getElementById('fecha-reinicio').textContent =
+            proximoMes.toLocaleDateString('es-ES', opciones);
+
     } catch (error) {
         console.error('Error cargando cupos:', error);
     }
@@ -806,13 +823,17 @@ function renderizarOportunidades() {
                 <p class="text-sm text-gray-800">${op.razon}</p>
             </div>
 
-            ${esBusiness ? `
+${esBusiness ? `
 <!-- FUNCIONALIDAD PREMIUM -->
             <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4">
-                <p class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <span>🚀</span>
-                    <span>FUNCIONALIDAD PREMIUM</span>
-                </p>
+                <div class="mb-3">
+                    <p class="text-sm font-bold text-gray-900 mb-1">🚀 FUNCIONALIDAD PREMIUM DEL PLAN BUSINESS</p>
+                    <p class="text-xs text-gray-700">
+                        📄 Descargas PDF: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.zip_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.zip_limite : '?'}</span>
+                        &nbsp;•&nbsp;
+                        🤖 Análisis del Pliego con IA: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.analisis_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.analisis_limite : '?'}</span>
+                    </p>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <button
