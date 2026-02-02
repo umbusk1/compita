@@ -161,7 +161,175 @@ export default async function handler(req, res) {
         });
       }
     }
+// ====================================================
+    // ACCIÓN: RE-ANALIZAR OPORTUNIDADES
+    // ====================================================
+    if (accion === 're-analizar') {
+      // 1. Obtener perfil actualizado de la empresa
+      const perfilEmpresa = await sql`
+        SELECT
+          palabras_clave,
+          exclusiones,
+          familias_unspsc,
+          monto_minimo_alta
+        FROM empresas
+        WHERE id = ${empresa_id}
+        LIMIT 1
+      `;
 
+      if (perfilEmpresa.length === 0) {
+        return res.status(404).json({ success: false, error: 'Perfil de empresa no encontrado' });
+      }
+
+      const perfil = perfilEmpresa[0];
+      const palabrasClave = perfil.palabras_clave || [];
+      const exclusiones = perfil.exclusiones || [];
+      const familiasUNSPSC = perfil.familias_unspsc || [];
+      const montoMinimoAlta = perfil.monto_minimo_alta || 500000;
+
+      // 2. Obtener licitaciones ABIERTAS (fecha_presentacion en el futuro)
+      const hoy = new Date().toISOString();
+      const licitacionesAbiertas = await sql`
+        SELECT
+          l.id as licitacion_id,
+          l.referencia,
+          l.que,
+          l.monto_estimado,
+          l.categorias,
+          l.fecha_presentacion
+        FROM licitaciones l
+        WHERE l.fecha_presentacion > ${hoy}
+        ORDER BY l.fecha_presentacion ASC
+      `;
+
+      if (licitacionesAbiertas.length === 0) {
+        return res.status(200).json({
+          success: true,
+          message: 'No hay licitaciones abiertas para analizar',
+          analizadas: 0
+        });
+      }
+
+      // 3. Re-calcular relevancia para cada licitación
+      let contadorAlta = 0;
+      let contadorMedia = 0;
+      let contadorDescartadas = 0;
+
+      for (const licitacion of licitacionesAbiertas) {
+        const texto = `${licitacion.referencia} ${licitacion.que}`.toLowerCase();
+        const monto = parseFloat(licitacion.monto_estimado) || 0;
+        const categoriasLic = licitacion.categorias || [];
+
+        // A. Verificar exclusiones (descartada)
+        let esDescartada = false;
+        for (const excl of exclusiones) {
+          if (texto.includes(excl.toLowerCase())) {
+            esDescartada = true;
+            break;
+          }
+        }
+
+        if (esDescartada) {
+          // Eliminar de oportunidades_empresas si existe
+          await sql`
+            DELETE FROM oportunidades_empresas
+            WHERE empresa_id = ${empresa_id}
+            AND licitacion_id = ${licitacion.licitacion_id}
+          `;
+          contadorDescartadas++;
+          continue;
+        }
+
+        // B. Calcular relevancia
+        let relevancia = null;
+        let razon = '';
+
+        // B.1. Verificar familias UNSPSC (ALTA)
+        let coincideFamilia = false;
+        for (const familia of familiasUNSPSC) {
+          if (categoriasLic.includes(familia)) {
+            coincideFamilia = true;
+            razon = `Coincide con categoría UNSPSC ${familia}`;
+            break;
+          }
+        }
+
+        if (coincideFamilia) {
+          relevancia = 'ALTA';
+          contadorAlta++;
+        } else {
+          // B.2. Verificar palabras clave (MEDIA)
+          let coincidePalabra = false;
+          for (const palabra of palabrasClave) {
+            if (texto.includes(palabra.toLowerCase())) {
+              coincidePalabra = true;
+              razon = `Coincide con palabra clave "${palabra}"`;
+              break;
+            }
+          }
+
+          if (coincidePalabra) {
+            relevancia = 'MEDIA';
+
+            // B.3. Subir a ALTA si monto >= monto_minimo_alta
+            if (monto >= montoMinimoAlta) {
+              relevancia = 'ALTA';
+              razon += ` y monto supera RD$${montoMinimoAlta.toLocaleString()}`;
+              contadorAlta++;
+            } else {
+              contadorMedia++;
+            }
+          }
+        }
+
+        // C. Guardar o actualizar en oportunidades_empresas
+        if (relevancia) {
+          // Verificar si ya existe
+          const existe = await sql`
+            SELECT resultado_id FROM oportunidades_empresas
+            WHERE empresa_id = ${empresa_id}
+            AND licitacion_id = ${licitacion.licitacion_id}
+            LIMIT 1
+          `;
+
+          if (existe.length > 0) {
+            // Actualizar
+            await sql`
+              UPDATE oportunidades_empresas
+              SET relevancia = ${relevancia},
+                  razon = ${razon},
+                  fecha_analisis = CURRENT_TIMESTAMP
+              WHERE empresa_id = ${empresa_id}
+              AND licitacion_id = ${licitacion.licitacion_id}
+            `;
+          } else {
+            // Insertar nueva
+            await sql`
+              INSERT INTO oportunidades_empresas
+                (empresa_id, licitacion_id, relevancia, razon, fecha_analisis, notificada)
+              VALUES
+                (${empresa_id}, ${licitacion.licitacion_id}, ${relevancia}, ${razon}, CURRENT_TIMESTAMP, false)
+            `;
+          }
+        } else {
+          // No es relevante, eliminar si existe
+          await sql`
+            DELETE FROM oportunidades_empresas
+            WHERE empresa_id = ${empresa_id}
+            AND licitacion_id = ${licitacion.licitacion_id}
+          `;
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Re-análisis completado',
+        analizadas: licitacionesAbiertas.length,
+        alta: contadorAlta,
+        media: contadorMedia,
+        descartadas: contadorDescartadas
+      });
+    }
     // Si llegamos aquí, falta algún parámetro
     return res.status(400).json({
       success: false,
