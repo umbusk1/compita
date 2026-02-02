@@ -161,7 +161,7 @@ export default async function handler(req, res) {
         });
       }
     }
-// ====================================================
+	// ====================================================
     // ACCIÓN: RE-ANALIZAR OPORTUNIDADES
     // ====================================================
     if (accion === 're-analizar') {
@@ -193,9 +193,10 @@ export default async function handler(req, res) {
         SELECT
           l.id as licitacion_id,
           l.referencia,
-          l.que,
+          l.descripcion,
           l.monto_estimado,
-          l.categorias,
+          l.codigo_unspsc,
+          l.familia_unspsc,
           l.fecha_presentacion
         FROM licitaciones l
         WHERE l.fecha_presentacion > ${hoy}
@@ -206,7 +207,10 @@ export default async function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: 'No hay licitaciones abiertas para analizar',
-          analizadas: 0
+          analizadas: 0,
+          alta: 0,
+          media: 0,
+          descartadas: 0
         });
       }
 
@@ -216,9 +220,9 @@ export default async function handler(req, res) {
       let contadorDescartadas = 0;
 
       for (const licitacion of licitacionesAbiertas) {
-        const texto = `${licitacion.referencia} ${licitacion.que}`.toLowerCase();
+        const texto = `${licitacion.referencia} ${licitacion.descripcion}`.toLowerCase();
         const monto = parseFloat(licitacion.monto_estimado) || 0;
-        const categoriasLic = licitacion.categorias || [];
+        const codigoUNSPSC = licitacion.codigo_unspsc || '';
 
         // A. Verificar exclusiones (descartada)
         let esDescartada = false;
@@ -245,9 +249,10 @@ export default async function handler(req, res) {
         let razon = '';
 
         // B.1. Verificar familias UNSPSC (ALTA)
+        // Comparar código completo (ej: "10-10") o familia (primeros 2 dígitos "10")
         let coincideFamilia = false;
         for (const familia of familiasUNSPSC) {
-          if (categoriasLic.includes(familia)) {
+          if (codigoUNSPSC === familia || codigoUNSPSC.startsWith(familia)) {
             coincideFamilia = true;
             razon = `Coincide con categoría UNSPSC ${familia}`;
             break;
@@ -260,16 +265,18 @@ export default async function handler(req, res) {
         } else {
           // B.2. Verificar palabras clave (MEDIA)
           let coincidePalabra = false;
+          let palabraEncontrada = '';
           for (const palabra of palabrasClave) {
             if (texto.includes(palabra.toLowerCase())) {
               coincidePalabra = true;
-              razon = `Coincide con palabra clave "${palabra}"`;
+              palabraEncontrada = palabra;
               break;
             }
           }
 
           if (coincidePalabra) {
             relevancia = 'MEDIA';
+            razon = `Coincide con palabra clave "${palabraEncontrada}"`;
 
             // B.3. Subir a ALTA si monto >= monto_minimo_alta
             if (monto >= montoMinimoAlta) {
@@ -330,6 +337,7 @@ export default async function handler(req, res) {
         descartadas: contadorDescartadas
       });
     }
+
     // Si llegamos aquí, falta algún parámetro
     return res.status(400).json({
       success: false,
