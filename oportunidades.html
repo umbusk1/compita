@@ -1478,18 +1478,29 @@ function exportarAExcel() {
     }
 
     // 2. Preparar los datos para el Excel
-    const datosExcel = licitacionesParaExportar.map(lic => ({
-        'Referencia': lic.referencia || '',
-        'Descripción': lic.titulo || '',
-        'Monto': lic.monto ? `RD$${Number(lic.monto).toLocaleString()}` : '',
-        'Unidad de Compras': lic.unidad_compradora || '',
-        'Fecha Cierre': lic.fecha_cierre ? new Date(lic.fecha_cierre).toLocaleDateString('es-DO') : '',
-        'Días Restantes': lic.dias_restantes || '',
-        'Relevancia': lic.relevancia || '',
-        'Estado': lic.nuevo ? 'NUEVO' : '',
-        'Categorías': lic.categorias ? lic.categorias.join(', ') : '',
-        'Palabras Clave': lic.palabras_clave ? lic.palabras_clave.join(', ') : ''
-    }));
+    const datosExcel = licitacionesParaExportar.map(lic => {
+        // Calcular días restantes
+        let diasRestantes = '';
+        if (lic.fecha_presentacion) {
+            const hoy = new Date();
+            const fechaCierre = new Date(lic.fecha_presentacion);
+            const diferencia = Math.ceil((fechaCierre - hoy) / (1000 * 60 * 60 * 24));
+            diasRestantes = diferencia > 0 ? `${diferencia} días` : 'Cerrada';
+        }
+
+        return {
+            'Referencia': lic.referencia || '',
+            'Descripción': lic.que || '',
+            'Monto': lic.monto_estimado ? `RD$${Number(lic.monto_estimado).toLocaleString()}` : '',
+            'Unidad de Compras': lic.quien || '',
+            'Fecha Cierre': lic.fecha_presentacion ? new Date(lic.fecha_presentacion).toLocaleDateString('es-DO') : '',
+            'Días Restantes': diasRestantes,
+            'Relevancia': lic.relevancia || '',
+            'Estado': lic.es_nuevo ? 'NUEVO' : '',
+            'Análisis Preliminar': lic.razon || '',
+            'Fecha Publicación': lic.fecha_publicacion ? new Date(lic.fecha_publicacion).toLocaleDateString('es-DO') : ''
+        };
+    });
 
     // 3. Crear el libro de Excel
     const ws = XLSX.utils.json_to_sheet(datosExcel);
@@ -1498,16 +1509,16 @@ function exportarAExcel() {
 
     // 4. Ajustar anchos de columna
     const colWidths = [
-        {wch: 20}, // Referencia
-        {wch: 50}, // Descripción
-        {wch: 15}, // Monto
-        {wch: 30}, // Unidad
-        {wch: 12}, // Fecha
-        {wch: 10}, // Días
+        {wch: 25}, // Referencia
+        {wch: 60}, // Descripción
+        {wch: 18}, // Monto
+        {wch: 35}, // Unidad
+        {wch: 15}, // Fecha Cierre
+        {wch: 15}, // Días Restantes
         {wch: 12}, // Relevancia
         {wch: 10}, // Estado
-        {wch: 40}, // Categorías
-        {wch: 40}  // Palabras clave
+        {wch: 80}, // Análisis Preliminar
+        {wch: 15}  // Fecha Publicación
     ];
     ws['!cols'] = colWidths;
 
