@@ -571,8 +571,8 @@
 
 <script>
         const API_BASE = window.location.origin;
-        const PYTHONANYWHERE_API = 'https://moisesprf.pythonanywhere.com';
-        let todasOportunidades = [];
+		const RAILWAY_API = 'https://compita-descarga-pliegos-production.up.railway.app';
+		let todasOportunidades = [];
         let oportunidadesFiltradas = [];
         let planActual = 'free_trial';
         let cuposDisponibles = null;
@@ -863,6 +863,7 @@ async function descargarDocumentos(referencia) {
             Validando cupo...
         `;
 
+        // 1. Validar cupo disponible
         const validacionResponse = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -880,9 +881,9 @@ async function descargarDocumentos(referencia) {
             botonDescarga.disabled = false;
 
             const confirmar = confirm(
-                '⚠️ Has alcanzado el límite de descargas ZIP para este mes.\n\n' +
+                '⚠️ Has alcanzado el límite de descargas para este mes.\n\n' +
                 '¿Deseas comprar un paquete adicional?\n' +
-                '• 10 descargas ZIP adicionales\n' +
+                '• 10 descargas adicionales\n' +
                 '• Precio: $5 USD\n' +
                 '• Válido hasta fin de mes'
             );
@@ -893,30 +894,31 @@ async function descargarDocumentos(referencia) {
             return;
         }
 
+        // 2. Descargar documento desde Railway
         botonDescarga.innerHTML = `
             <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Scrapeando SECP...
+            Descargando desde SECP... (30-40s)
         `;
 
-        const scraperResponse = await fetch(`${PYTHONANYWHERE_API}/descargar-zip`, {
+        const scraperResponse = await fetch(`${RAILWAY_API}/descargar-pliego`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                referencia: referencia,
-                empresa_id: empresaId
+                referencia: referencia
             })
         });
 
         if (!scraperResponse.ok) {
-            throw new Error('Error al descargar documentos del SECP');
+            const errorData = await scraperResponse.json();
+            throw new Error(errorData.error || 'Error al descargar documento');
         }
 
         const blob = await scraperResponse.blob();
 
-        // Registrar uso del cupo
+        // 3. Registrar uso del cupo
         await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -927,29 +929,21 @@ async function descargarDocumentos(referencia) {
             })
         });
 
-        // Crear link de descarga directo
+        // 4. Descargar archivo al navegador del usuario
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `docs_${referencia}.zip`;
+        a.download = `pliego_${referencia}.pdf`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
 
+        // 5. Actualizar contador de cupos
         await actualizarContadorCupos();
 
-        // Mostrar link permanente debajo del botón
+        // 6. Cambiar estado del botón
         botonDescarga.innerHTML = '✅ Descargado';
-
-        // Crear link permanente
-        const linkDescarga = document.createElement('a');
-        linkDescarga.href = `${PYTHONANYWHERE_API}/download/${empresaId}/${referencia}.zip`;
-        linkDescarga.className = 'block text-center text-sm text-blue-600 hover:text-blue-800 underline mt-2';
-        linkDescarga.textContent = '📥 Volver a descargar ZIP';
-        linkDescarga.target = '_blank';
-
-        botonDescarga.parentElement.appendChild(linkDescarga);
 
         setTimeout(() => {
             botonDescarga.innerHTML = textoOriginal;
@@ -957,8 +951,8 @@ async function descargarDocumentos(referencia) {
         }, 3000);
 
     } catch (error) {
-        console.error('Error descargando documentos:', error);
-        alert('❌ Error al descargar documentos. Por favor intenta de nuevo.');
+        console.error('Error descargando documento:', error);
+        alert('❌ Error: ' + error.message);
 
         const botonDescarga = event.target;
         botonDescarga.innerHTML = '<span>📄</span><span>Descargar Documentos (ZIP)</span>';
