@@ -811,25 +811,35 @@ function renderizarOportunidades() {
                     <span>FUNCIONALIDAD PREMIUM</span>
                 </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <button
-                        onclick="descargarDocumentos('${op.referencia}')"
-                        class="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
-                    >
-                        <span>📄</span>
-                        <span>Descargar Pliego o Especificaciones (PDF)</span>
-                    </button>
-                    <button
-                        onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0})"
-                        class="flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
-                    >
-                        <span>🤖</span>
-                        <span>Analizar Pliego con IA</span>
-                    </button>
-                </div>
+                    <div>
+                        <button
+                            onclick="descargarDocumentos('${op.referencia}')"
+                            class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
+                        >
+                            <span>📄</span>
+                            <span>Descargar Pliego o Especificaciones (PDF)</span>
+                        </button>
+                        <!-- Mensaje de éxito (aparece después de descargar) -->
+                        <div id="mensaje-descarga-${op.referencia}" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">
+                            ✅ Documento descargado. Disponible en tu carpeta "Descargas".
+                        </div>
+                    </div>
 
-                <!-- Mensaje de éxito (aparece después de descargar) -->
-                <div id="mensaje-descarga-${op.referencia}" style="display:none; margin-top:10px; color:green; font-size:14px;">
-                    ✅ Documento descargado. Disponible en tu carpeta "Descargas".
+                    <div>
+                        <button
+                            onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0})"
+                            class="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
+                        >
+                            <span>🤖</span>
+                            <span>Analizar Pliego con IA</span>
+                        </button>
+                        <!-- Link para ver análisis (aparece después de analizar) -->
+                        <div id="mensaje-analisis-${op.referencia}" style="display:none; margin-top:8px; text-align:center;">
+                            <a href="#" onclick="verAnalisisGuardado('${op.referencia}'); return false;" class="text-sm text-purple-600 hover:text-purple-800 underline font-semibold">
+                                📊 Ver análisis del pliego
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             ` : ''}
@@ -837,6 +847,9 @@ function renderizarOportunidades() {
     `}).join('');
 
     container.innerHTML = html;
+
+    // Cargar estados guardados (descargas y análisis previos)
+    cargarEstadosGuardados();
 }
 
         // Función helper para escapar HTML en atributos
@@ -947,7 +960,7 @@ async function descargarDocumentos(referencia) {
         // 5. Actualizar contador de cupos
         await actualizarContadorCupos();
 
-        // 6. Cambiar estado del botón y mostrar mensaje
+		// 6. Cambiar estado del botón y guardar en localStorage
         botonDescarga.innerHTML = '✅ Descargado';
 
         // Mostrar mensaje de éxito debajo del botón
@@ -955,6 +968,11 @@ async function descargarDocumentos(referencia) {
         if (mensajeDiv) {
             mensajeDiv.style.display = 'block';
         }
+
+        // Guardar en localStorage que este documento fue descargado
+        const descargasGuardadas = JSON.parse(localStorage.getItem('compita_descargas') || '{}');
+        descargasGuardadas[referencia] = true;
+        localStorage.setItem('compita_descargas', JSON.stringify(descargasGuardadas));
 
         setTimeout(() => {
             botonDescarga.innerHTML = textoOriginal;
@@ -1038,7 +1056,6 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
             Claude está analizando... (puede tomar 2-3 minutos)
         `;
 
-        // ← AQUÍ ESTÁ EL CAMBIO: Agregado signal con timeout de 3 minutos
         const analisisResponse = await fetch(`${RAILWAY_API}/analizar-pliego`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1049,7 +1066,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
                 monto: monto,
                 empresa_id: empresaId
             }),
-            signal: AbortSignal.timeout(180000)  // 3 minutos = 180,000 milisegundos
+            signal: AbortSignal.timeout(180000)
         });
 
         const resultado = await analisisResponse.json();
@@ -1060,11 +1077,9 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
 
         // Verificar si el análisis falló
         if (!resultado.pliego_analizado || resultado.analisis.puntuacion === 0) {
-            // Mostrar error
             botonAnalisis.innerHTML = textoOriginal;
             botonAnalisis.disabled = false;
 
-            // Crear link de reporte
             const linkReporte = document.createElement('a');
             linkReporte.href = `mailto:soporte@umbusk.com?subject=Error análisis ${referencia}&body=No se pudo analizar el pliego de la licitación ${referencia}`;
             linkReporte.className = 'block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
@@ -1088,23 +1103,19 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
 
         await actualizarContadorCupos();
 
-        // Guardar análisis para mostrarlo después
-        window[`analisis_${referencia}`] = resultado.analisis;
+        // Guardar análisis en localStorage
+        const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
+        analisisGuardados[referencia] = resultado.analisis;
+        localStorage.setItem('compita_analisis', JSON.stringify(analisisGuardados));
 
-        // Cambiar botón por link
+        // Cambiar estado del botón
         botonAnalisis.innerHTML = '✅ Análisis completado';
 
-        // Crear link para ver análisis
-        const linkAnalisis = document.createElement('a');
-        linkAnalisis.href = '#';
-        linkAnalisis.className = 'block text-center text-sm text-purple-600 hover:text-purple-800 underline mt-2 font-semibold';
-        linkAnalisis.textContent = '📊 Ver análisis del pliego';
-        linkAnalisis.onclick = (e) => {
-            e.preventDefault();
-            mostrarAnalisisEnModal(window[`analisis_${referencia}`], true);
-        };
-
-        contenedorBoton.appendChild(linkAnalisis);
+        // Mostrar link debajo del botón
+        const mensajeDiv = document.getElementById(`mensaje-analisis-${referencia}`);
+        if (mensajeDiv) {
+            mensajeDiv.style.display = 'block';
+        }
 
         setTimeout(() => {
             botonAnalisis.innerHTML = textoOriginal;
@@ -1119,7 +1130,6 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
         botonAnalisis.innerHTML = '<span>🤖</span><span>Analizar Pliego con IA</span>';
         botonAnalisis.disabled = false;
 
-        // Crear link de reporte
         const linkReporte = document.createElement('a');
         linkReporte.href = `mailto:soporte@umbusk.com?subject=Error análisis&body=Error: ${error.message}`;
         linkReporte.className = 'block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
@@ -1376,6 +1386,43 @@ async function comprarCuposAdicionales(tipo) {
         alert('❌ Error al procesar la compra');
     }
 }
+
+// ============================================
+        // FUNCIÓN: CARGAR ESTADOS GUARDADOS
+        // ============================================
+        function cargarEstadosGuardados() {
+            // Cargar descargas guardadas
+            const descargasGuardadas = JSON.parse(localStorage.getItem('compita_descargas') || '{}');
+            for (const referencia in descargasGuardadas) {
+                const mensajeDiv = document.getElementById(`mensaje-descarga-${referencia}`);
+                if (mensajeDiv) {
+                    mensajeDiv.style.display = 'block';
+                }
+            }
+
+            // Cargar análisis guardados
+            const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
+            for (const referencia in analisisGuardados) {
+                const mensajeDiv = document.getElementById(`mensaje-analisis-${referencia}`);
+                if (mensajeDiv) {
+                    mensajeDiv.style.display = 'block';
+                }
+            }
+        }
+
+        // ============================================
+        // FUNCIÓN: VER ANÁLISIS GUARDADO
+        // ============================================
+        function verAnalisisGuardado(referencia) {
+            const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
+            const analisis = analisisGuardados[referencia];
+
+            if (analisis) {
+                mostrarAnalisisEnModal(analisis, true);
+            } else {
+                alert('⚠️ No se encontró el análisis guardado');
+            }
+        }
 
     </script>
 
