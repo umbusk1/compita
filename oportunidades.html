@@ -826,13 +826,21 @@ function renderizarOportunidades() {
 ${esBusiness ? `
 <!-- FUNCIONALIDAD PREMIUM -->
             <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4">
-                <div class="mb-3">
-                    <p class="text-sm font-bold text-gray-900 mb-1">🚀 FUNCIONALIDAD PREMIUM DEL PLAN BUSINESS</p>
-                    <p class="text-xs text-gray-700">
+                <p class="text-sm font-bold text-gray-900 mb-3">
+                    🚀 FUNCIONALIDAD PREMIUM DEL PLAN BUSINESS:
+                    <span class="font-normal text-xs">
                         📄 Descargas PDF: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.zip_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.zip_limite : '?'}</span>
                         &nbsp;•&nbsp;
                         🤖 Análisis del Pliego con IA: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.analisis_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.analisis_limite : '?'}</span>
-                    </p>
+                        &nbsp;•&nbsp;
+                        Reinicia: <span class="font-semibold">${(() => {
+                            const hoy = new Date();
+                            const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1);
+                            const opciones = { day: 'numeric', month: 'short' };
+                            return proximoMes.toLocaleDateString('es-ES', opciones);
+                        })()}</span>
+                    </span>
+                </p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
