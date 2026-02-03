@@ -320,16 +320,16 @@ export default async function handler(req, res) {
             // INSERTAR nuevo registro
             await sql`
               INSERT INTO resultados
-                (empresa_id, licitacion_id, referencia, que, quien,
-                 relevancia, razon, razon_inclusion,
+                (empresa_id, licitacion_id, referencia, descripcion, que, quien,
+                 relevancia, razon, razon_inclusion, estado,
                  monto_estimado, fecha_cierre, fecha_presentacion, unidad_compras,
-                 fecha_analisis, notificada, compatible, vista, origen, seleccionado)
+                 created_at, fecha_analisis, notificada, compatible, vista, origen, seleccionado)
               VALUES
                 (${empresa_id}, ${lic.licitacion_id}, ${refVal},
-                 ${queVal}, ${quienVal},
-                 ${relevancia}, ${razon}, ${razon},
+                 ${lic.descripcion || ''}, ${queVal}, ${quienVal},
+                 ${relevancia}, ${razon}, ${razon}, 'pendiente',
                  ${lic.monto_estimado}, ${lic.fecha_presentacion}::date, ${lic.fecha_presentacion}::date, ${lic.unidad_compras || ''},
-                 CURRENT_TIMESTAMP, false, true, false, 're-analisis', false)
+                 CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, true, false, 're-analisis', false)
             `;
           }
         } else {
