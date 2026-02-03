@@ -756,7 +756,7 @@
 
                     planActual = data.empresa.plan;
 
-                    if (planActual === 'business' || planActual === 'enterprise') {
+                    if (planActual === 'business' || planActual === 'enterprise' || planActual === 'free_trial') {
                         await cargarCuposBusiness();
                     }
 
@@ -822,6 +822,7 @@ async function cargarCuposBusiness() {
         const opciones = { day: 'numeric', month: 'short' };
         document.getElementById('fecha-reinicio').textContent =
             proximoMes.toLocaleDateString('es-ES', opciones);
+        document.getElementById('cupos-business').classList.remove('hidden');
 
     } catch (error) {
         console.error('Error cargando cupos:', error);
@@ -917,7 +918,7 @@ function renderizarOportunidades() {
     sinResultados.classList.add('hidden');
 
     const html = oportunidadesFiltradas.map(op => {
-        const esBusiness = planActual === 'business' || planActual === 'enterprise';
+        const esBusiness = planActual === 'business' || planActual === 'enterprise' || planActual === 'free_trial';
 
         return `
         <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 hover:shadow-md transition">
