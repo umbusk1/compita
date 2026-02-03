@@ -1132,10 +1132,9 @@ async function descargarDocumentos(referencia) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                empresa_id: empresaId,
-                tipo: 'zip',
-                accion: 'registrar'
-            })
+                referencia: referencia
+            }),
+            signal: AbortSignal.timeout(90000)
         });
 
         // 4. Descargar archivo al navegador del usuario
@@ -1172,11 +1171,20 @@ async function descargarDocumentos(referencia) {
 
     } catch (error) {
         console.error('Error descargando documento:', error);
-        mostrarMensaje('Error al descargar: ' + error.message, 'error');
 
         const botonDescarga = event.target;
-        botonDescarga.innerHTML = '<span>📄</span><span>Descargar Documento (PDF)</span>';
+        botonDescarga.innerHTML = '<span>📄</span><span>Descargar Pliego o Especificaciones (PDF)</span>';
         botonDescarga.disabled = false;
+
+        if (error.name === 'AbortError') {
+            mostrarMensaje('La descarga tardó más de 90 segundos.<br>El portal SECP puede estar lento. Vuelve a intentar en unos minutos.', 'warning', 7000);
+        } else if (error.name === 'TypeError') {
+            mostrarMensaje('Problema de conexión.<br>Revisa tu internet y vuelve a intentar.', 'error');
+        } else if (error.message && (error.message.toLowerCase().includes('portal') || error.message.toLowerCase().includes('secp') || error.message.toLowerCase().includes('no se encontr') || error.message.toLowerCase().includes('timeout'))) {
+            mostrarMensaje('El portal de compras está temporalmente no disponible.<br>Vuelve a intentar en unos minutos.', 'warning', 7000);
+        } else {
+            mostrarMensaje('Error al descargar: ' + error.message, 'error');
+        }
     }
 }
 
@@ -1279,11 +1287,15 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
             botonAnalisis.innerHTML = textoOriginal;
             botonAnalisis.disabled = false;
 
+            mostrarMensaje('No se pudo procesar el documento.<br>Puede ser demasiado grande o estar en un formato no soportado.', 'warning', 7000);
+
+            const previo = contenedorBoton.querySelector('.link-reporte');
+            if (previo) previo.remove();
+
             const linkReporte = document.createElement('a');
             linkReporte.href = `mailto:soporte@umbusk.com?subject=Error análisis ${referencia}&body=No se pudo analizar el pliego de la licitación ${referencia}`;
-            linkReporte.className = 'block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
-            linkReporte.textContent = '⚠️ No se pudo realizar el análisis. Reportar falla a Compita';
-
+            linkReporte.className = 'link-reporte block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
+            linkReporte.textContent = 'Reportar falla a Compita';
             contenedorBoton.appendChild(linkReporte);
             return;
         }
@@ -1329,11 +1341,23 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
         botonAnalisis.innerHTML = '<span>🤖</span><span>Analizar Pliego con IA</span>';
         botonAnalisis.disabled = false;
 
-        const linkReporte = document.createElement('a');
-        linkReporte.href = `mailto:soporte@umbusk.com?subject=Error análisis&body=Error: ${error.message}`;
-        linkReporte.className = 'block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
-        linkReporte.textContent = '⚠️ No se pudo realizar el análisis. Reportar falla a Compita';
+        // Mensaje específico según el tipo de error
+        if (error.name === 'AbortError') {
+            mostrarMensaje('El análisis tardó más de 3 minutos.<br>Esto suele pasar con documentos grandes. Puede intentarlo de nuevo más tarde.', 'warning', 8000);
+        } else if (error.name === 'TypeError') {
+            mostrarMensaje('Problema de conexión.<br>Revisa tu internet y vuelve a intentar.', 'error');
+        } else {
+            mostrarMensaje('Error al analizar: ' + error.message, 'error');
+        }
 
+        // Evita que se duplique el link si hay varios errores seguidos
+        const previo = contenedorBoton.querySelector('.link-reporte');
+        if (previo) previo.remove();
+
+        const linkReporte = document.createElement('a');
+        linkReporte.href = `mailto:soporte@umbusk.com?subject=Error análisis ${referencia}&body=Error: ${error.message}`;
+        linkReporte.className = 'link-reporte block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
+        linkReporte.textContent = 'Reportar falla a Compita';
         contenedorBoton.appendChild(linkReporte);
     }
 }
