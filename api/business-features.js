@@ -311,7 +311,12 @@ export default async function handler(req, res) {
               WHERE empresa_id = ${empresa_id}
               AND licitacion_id = ${lic.licitacion_id}
             `;
-          } else {
+			} else {
+            // Truncar valores para columnas varchar(100)
+            const queVal = (lic.descripcion || '').substring(0, 99);
+            const quienVal = (lic.unidad_compras || '').substring(0, 99);
+            const refVal = (lic.referencia || '').substring(0, 254);
+
             // INSERTAR nuevo registro
             await sql`
               INSERT INTO resultados
@@ -320,10 +325,10 @@ export default async function handler(req, res) {
                  monto_estimado, fecha_cierre, fecha_presentacion, unidad_compras,
                  fecha_analisis, notificada, compatible, vista, origen, seleccionado)
               VALUES
-                (${empresa_id}, ${lic.licitacion_id}, ${lic.referencia},
-                 ${lic.descripcion}, ${lic.unidad_compras},
+                (${empresa_id}, ${lic.licitacion_id}, ${refVal},
+                 ${queVal}, ${quienVal},
                  ${relevancia}, ${razon}, ${razon},
-                 ${lic.monto_estimado}, ${lic.fecha_presentacion}::date, ${lic.fecha_presentacion}::date, ${lic.unidad_compras},
+                 ${lic.monto_estimado}, ${lic.fecha_presentacion}::date, ${lic.fecha_presentacion}::date, ${lic.unidad_compras || ''},
                  CURRENT_TIMESTAMP, false, true, false, 're-analisis', false)
             `;
           }
