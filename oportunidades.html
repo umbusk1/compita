@@ -1085,12 +1085,16 @@ async function descargarDocumentos(referencia) {
             botonDescarga.innerHTML = textoOriginal;
             botonDescarga.disabled = false;
 
-            const confirmar = confirm(
-                '⚠️ Has alcanzado el límite de descargas para este mes.\n\n' +
-                '¿Deseas comprar un paquete adicional?\n' +
-                '• 10 descargas adicionales\n' +
-                '• Precio: $5 USD\n' +
-                '• Válido hasta fin de mes'
+            const confirmar = await mostrarConfirmacion(
+                '⚠️ Límite de descargas alcanzado',
+                'Has usado todas las descargas de este mes.<br><br>' +
+                '<strong>Paquete adicional:</strong><br>' +
+                '• 10 descargas adicionales<br>' +
+                '• Precio: $5 USD<br>' +
+                '• Válido hasta fin de mes',
+                'Comprar paquete',
+                'Cancelar',
+                'bg-orange-500 hover:bg-orange-600'
             );
 
             if (confirmar) {
@@ -1215,12 +1219,16 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
             botonAnalisis.innerHTML = textoOriginal;
             botonAnalisis.disabled = false;
 
-            const confirmar = confirm(
-                '⚠️ Has alcanzado el límite de análisis IA para este mes.\n\n' +
-                '¿Deseas comprar un paquete adicional?\n' +
-                '• 5 análisis IA adicionales\n' +
-                '• Precio: $5 USD\n' +
-                '• Válido hasta fin de mes'
+            const confirmar = await mostrarConfirmacion(
+                '⚠️ Límite de análisis alcanzado',
+                'Has usado todos los análisis IA de este mes.<br><br>' +
+                '<strong>Paquete adicional:</strong><br>' +
+                '• 5 análisis IA adicionales<br>' +
+                '• Precio: $5 USD<br>' +
+                '• Válido hasta fin de mes',
+                'Comprar paquete',
+                'Cancelar',
+                'bg-orange-500 hover:bg-orange-600'
             );
 
             if (confirmar) {
@@ -1691,7 +1699,16 @@ async function reAnalizarOportunidades() {
     }
 
     // Confirmar acción
-    if (!confirm('¿Deseas re-analizar todas las licitaciones abiertas con tu perfil actualizado?\n\nEsto puede tardar unos segundos.')) {
+    const confirmar = await mostrarConfirmacion(
+        '🔄 Re-analizar oportunidades',
+        'Se van a revisar todas las licitaciones abiertas contra tu perfil actualizado ' +
+        '(palabras clave y categorías UNSPSC).<br><br>' +
+        'Esto puede tardar un par de minutos.',
+        'Sí, re-analizar',
+        'Cancelar'
+    );
+
+    if (!confirmar) {
         return;
     }
 
