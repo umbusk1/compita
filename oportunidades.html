@@ -1632,7 +1632,7 @@ function exportarAExcel() {
 // Función para re-analizar oportunidades con perfil actualizado
 async function reAnalizarOportunidades() {
     if (!datosEmpresa || !datosEmpresa.id) {
-        alert('Error: No se encontró información de la empresa');
+        mostrarMensaje('No se encontró información de la empresa. Recarga la página.', 'error');
         return;
     }
 
@@ -1665,20 +1665,24 @@ async function reAnalizarOportunidades() {
         const resultado = await response.json();
 
         if (response.ok && resultado.success) {
-            alert(`✅ ${resultado.message}\n\n` +
-                  `📊 Licitaciones analizadas: ${resultado.analizadas}\n` +
-                  `🟢 ALTA relevancia: ${resultado.alta}\n` +
-                  `🟡 MEDIA relevancia: ${resultado.media}\n` +
-                  `🔴 Descartadas: ${resultado.descartadas}`);
+                mostrarMensaje(
+			        `<strong>Re-análisis completado</strong><br><br>` +
+			        `📊 Analizadas: ${resultado.analizadas} &nbsp;` +
+			        `🟢 ALTA: ${resultado.alta} &nbsp;` +
+			        `🟡 MEDIA: ${resultado.media} &nbsp;` +
+			        `⚪ Descartadas: ${resultado.descartadas}`,
+			        'success',
+			        8000
+    );
 
             // Recargar oportunidades
             await cargarOportunidades();
         } else {
-            alert('❌ Error: ' + (resultado.error || 'No se pudo completar el análisis'));
+            mostrarMensaje(resultado.error || 'No se pudo completar el análisis', 'error');
         }
     } catch (error) {
         console.error('Error re-analizando:', error);
-        alert('❌ Error al re-analizar oportunidades');
+        mostrarMensaje('Error al re-analizar. Verifica tu conexión y vuelve a intentar.', 'error');
     } finally {
         // Restaurar botón
         botonActualizar.disabled = false;
