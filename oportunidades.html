@@ -1570,7 +1570,7 @@ function exportarAExcel() {
     const licitacionesParaExportar = oportunidadesFiltradas.length > 0 ? oportunidadesFiltradas : todasOportunidades;
 
     if (!licitacionesParaExportar || licitacionesParaExportar.length === 0) {
-        alert('No hay licitaciones para exportar');
+        mostrarMensaje('No hay licitaciones para exportar', 'warning');
         return;
     }
 
@@ -1626,7 +1626,7 @@ function exportarAExcel() {
     // 6. Descargar el archivo
     XLSX.writeFile(wb, nombreArchivo);
 
-    alert(`✅ Exportadas ${licitacionesParaExportar.length} licitaciones a Excel`);
+    mostrarMensaje(`Exportadas ${licitacionesParaExportar.length} licitaciones a Excel`, 'success');
 }
 
 // Función para re-analizar oportunidades con perfil actualizado
