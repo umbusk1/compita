@@ -34,13 +34,15 @@ export default async function handler(req, res) {
       return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
     }
 
-    const { plan, limite_zips_mes, limite_analisis_mes } = empresa[0];
+        const { plan } = empresa[0];
+	    const limite_zips_mes = empresa[0].limite_zips_mes || 10;
+    	const limite_analisis_mes = empresa[0].limite_analisis_mes || 5;
 
     // ========== VERIFICAR QUE SEA PLAN BUSINESS O ENTERPRISE ==========
-    if (!['business', 'enterprise'].includes(plan)) {
+    if (!['business', 'enterprise', 'free_trial'].includes(plan)) {
       return res.status(403).json({
         success: false,
-        error: 'Esta funcionalidad está disponible solo para planes Business y Enterprise',
+        error: 'Esta funcionalidad está disponible permanentemente solo para planes Business y Enterprise',
         upgrade_required: true
       });
     }
