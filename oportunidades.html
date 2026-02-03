@@ -29,9 +29,73 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* ============================
+		   TOAST - Sistema de notificaciones
+		   ============================ */
+		.toast-container {
+		    position: fixed;
+		    top: 20px;
+		    right: 20px;
+		    z-index: 9999;
+		    display: flex;
+		    flex-direction: column;
+		    gap: 10px;
+		    max-width: 360px;
+		    width: 90%;
+		}
+
+		.toast {
+		    display: flex;
+		    align-items: flex-start;
+		    gap: 10px;
+		    padding: 14px 18px;
+		    border-radius: 10px;
+		    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+		    animation: toast-entra 0.35s ease forwards;
+		    font-size: 14px;
+		    line-height: 1.4;
+		    color: #fff;
+		}
+
+		.toast.saliendo {
+		    animation: toast-sale 0.35s ease forwards;
+		}
+
+		.toast-success { background-color: #16a34a; } /* verde */
+		.toast-error   { background-color: #dc2626; } /* rojo */
+		.toast-warning { background-color: #ea580c; } /* naranja */
+		.toast-info    { background-color: #4f46e5; } /* indigo */
+
+		.toast-icono   { font-size: 18px; flex-shrink: 0; }
+		.toast-texto   { flex: 1; }
+
+		.toast-cerrar {
+		    background: none;
+		    border: none;
+		    color: rgba(255,255,255,0.7);
+		    cursor: pointer;
+		    font-size: 18px;
+		    line-height: 1;
+		    flex-shrink: 0;
+		}
+		.toast-cerrar:hover { color: #fff; }
+
+		@keyframes toast-entra {
+		    from { transform: translateX(110%); opacity: 0; }
+		    to   { transform: translateX(0);    opacity: 1; }
+		}
+
+		@keyframes toast-sale {
+		    from { transform: translateX(0);    opacity: 1; }
+		    to   { transform: translateX(110%); opacity: 0; }
+}
+
     </style>
 </head>
 <body class="bg-gray-50">
+<!-- Contenedor de toasts (notificaciones) -->
+    <div class="toast-container" id="toast-container"></div>
     <!-- Navbar -->
     <nav class="bg-white shadow-sm border-b border-gray-200">
         <div class="container mx-auto px-4 py-3">
@@ -577,6 +641,39 @@
         let planActual = 'free_trial';
         let cuposDisponibles = null;
         let datosEmpresa = null;
+
+        // ============================
+		        // TOAST - Función mostrarMensaje
+		        // ============================
+		        // Tipos disponibles: 'success' (verde), 'error' (rojo), 'warning' (naranja), 'info' (indigo)
+		        // Ejemplo: mostrarMensaje('Texto aquí', 'success')
+		        // El tercer parámetro es la duración en milisegundos (por defecto 4 segundos)
+		        function mostrarMensaje(texto, tipo = 'info', duracion = 4000) {
+		            const container = document.getElementById('toast-container');
+
+		            const iconos = {
+		                success: '✅',
+		                error:   '❌',
+		                warning: '⚠️',
+		                info:    'ℹ️'
+		            };
+
+		            const toast = document.createElement('div');
+		            toast.className = `toast toast-${tipo}`;
+		            toast.innerHTML = `
+		                <span class="toast-icono">${iconos[tipo] || iconos.info}</span>
+		                <span class="toast-texto">${texto}</span>
+		                <button class="toast-cerrar" onclick="this.parentElement.remove()">×</button>
+		            `;
+
+		            container.appendChild(toast);
+
+		            // Desaparece solo después de la duración indicada
+		            setTimeout(() => {
+		                toast.classList.add('saliendo');
+		                setTimeout(() => toast.remove(), 350);
+		            }, duracion);
+        }
 
         // Verificar autenticación
         window.addEventListener('DOMContentLoaded', async function() {
