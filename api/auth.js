@@ -5,8 +5,6 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -104,7 +102,11 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
 
     // Enviar email de confirmación
     console.log('🔵 [REGISTRO] Intentando enviar email a:', email);
-    console.log('🔵 [REGISTRO] RESEND_API_KEY existe:', !!process.env.RESEND_API_KEY);
+    console.log('🔵 [REGISTRO] RESEND_API_KEY:', process.env.RESEND_API_KEY ? 're_***' + process.env.RESEND_API_KEY.slice(-4) : 'NO EXISTE');
+
+    // Inicializar Resend aquí, dentro de la función
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    console.log('🔵 [REGISTRO] Resend inicializado');
 
     try {
       const emailResult = await resend.emails.send({
