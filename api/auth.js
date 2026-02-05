@@ -56,54 +56,66 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
       return res.status(400).json({ error: 'Este email ya está registrado' });
     }
 
-	// Extraer el dominio del email
-	const dominio = email.split('@')[1];
+    // Extraer el dominio del email
+    const dominio = email.split('@')[1];
 
-	// Crear la empresa nueva con valores por defecto
-	const empresaResult = await pool.query(
-	  `INSERT INTO empresas (nombre, dominio, descripcion, palabras_clave, exclusiones, monto_minimo_alta, plan, activo, trial_inicio, trial_fin)
-	   VALUES ($1, $2, '', ARRAY[]::text[], ARRAY[]::text[], 500000, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
-	   RETURNING id, nombre, plan, trial_inicio, trial_fin`,
-	  [empresa, dominio]
-	);
+    // Crear la empresa nueva con valores por defecto
+    const empresaResult = await pool.query(
+      `INSERT INTO empresas (nombre, dominio, descripcion, palabras_clave, exclusiones, monto_minimo_alta, plan, activo, trial_inicio, trial_fin)
+       VALUES ($1, $2, '', ARRAY[]::text[], ARRAY[]::text[], 500000, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
+       RETURNING id, nombre, plan, trial_inicio, trial_fin`,
+      [empresa, dominio]
+    );
 
     const empresaId = empresaResult.rows[0].id;
 
     // Encriptar la contraseña
     const passwordHash = await bcrypt.hash(password, 10);
 
-	// Crear el usuario
-	const userResult = await pool.query(
-	  `INSERT INTO usuarios (email, password_hash, empresa_id, empresa, rol, activo, email_confirmado, trial_fin)
-	   VALUES ($1, $2, $3, $4, 'admin', true, false, $5)
-	   RETURNING id, email, empresa_id, rol, trial_fin`,
-	  [email, passwordHash, empresaId, empresa, empresaResult.rows[0].trial_fin]
-	);
-
-    const usuario = userResult.rows[0];
-
-    // Generar token de confirmación
+    // Generar token de confirmación ANTES de crear el usuario
     const tokenConfirmacion = jwt.sign(
-      { userId: usuario.id, email: usuario.email },
-      process.env.JWT_SECRET,
+      { email: email },
+      process.env.JWT_SECRET || 'compita-secret-2024',
       { expiresIn: '24h' }
     );
+
+    // Crear el usuario CON email_confirmado = false y token guardado
+    const userResult = await pool.query(
+      `INSERT INTO usuarios (email, password_hash, empresa_id, empresa, rol, activo, email_confirmado, trial_fin, token_confirmacion)
+       VALUES ($1, $2, $3, $4, 'admin', true, false, $5, $6)
+       RETURNING id, email, empresa_id, rol, trial_fin`,
+      [email, passwordHash, empresaId, empresa, empresaResult.rows[0].trial_fin, tokenConfirmacion]
+    );
+
+    const usuario = userResult.rows[0];
 
     // Enviar email de confirmación
     await resend.emails.send({
       from: 'Compita <noreply@umbusk.com>',
       to: email,
-      subject: 'Confirma tu cuenta en Compita',
+      subject: 'Confirma tu email para activar tu cuenta en Compita',
       html: `
         <h2>¡Bienvenido a Compita!</h2>
-        <p>Hola ${nombre},</p>
+        <p>Hola,</p>
         <p>Tu empresa <strong>${empresa}</strong> ha sido registrada exitosamente.</p>
-        <p>Tienes <strong>7 días de prueba gratuita</strong> para explorar todas las funcionalidades.</p>
-        <p>Por favor confirma tu email haciendo clic en el siguiente enlace:</p>
-        <a href="https://compita.umbusk.com/confirmar-email.html?token=${tokenConfirmacion}">
-          Confirmar mi cuenta
-        </a>
-        <p>Si no solicitaste esta cuenta, puedes ignorar este email.</p>
+        <p><strong>Tienes 7 días de prueba gratuita con todas las funciones del Plan Business:</strong></p>
+        <ul>
+          <li>✓ Análisis diario automático de licitaciones</li>
+          <li>✓ Notificaciones por email de oportunidades ALTA y MEDIA</li>
+          <li>✓ Descarga de documentos (10/mes)</li>
+          <li>✓ Análisis profundo con IA (5/mes)</li>
+        </ul>
+        <p><strong>Para activar tu cuenta, confirma tu email haciendo clic aquí:</strong></p>
+        <p style="text-align: center; margin: 30px 0;">
+          <a href="https://compita.umbusk.com/confirmar-email.html?token=${tokenConfirmacion}"
+             style="background-color: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+            Confirmar mi Email
+          </a>
+        </p>
+        <p style="color: #666; font-size: 14px;">
+          Si no solicitaste esta cuenta, puedes ignorar este email.<br>
+          Este enlace expira en 24 horas.
+        </p>
       `
     });
 
@@ -159,7 +171,7 @@ async function handleLogin(req, res, email, password) {
 
     // Verificar si el email está confirmado
     if (!user.email_confirmado) {
-      return res.status(403).json({ error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu //bandeja de entrada.' });
+      return res.status(403).json({ error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.' });
     }
 
     // Generar JWT token
@@ -170,7 +182,7 @@ async function handleLogin(req, res, email, password) {
         empresaId: user.empresa_id,
         rol: user.rol
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || 'compita-secret-2024',
       { expiresIn: '7d' }
     );
 
