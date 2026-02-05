@@ -110,7 +110,7 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
 
     try {
       const emailResult = await resend.emails.send({
-        from: 'Compita <noreply@umbusk.com>',
+        from: 'Compita <noreply@compita.umbusk.com>',
         to: email,
         subject: 'Confirma tu email para activar tu cuenta en Compita',
         html: `
