@@ -8,19 +8,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-4xl">
         <!-- Logo y título -->
         <div class="text-center mb-8">
             <div class="flex items-center justify-center gap-2 mb-4">
                 <span class="text-4xl">🎯</span>
                 <span class="text-3xl font-bold text-gray-800">Compita</span>
             </div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-2" id="titulo-plan">Registro - Plan Estándar</h1>
-            <p class="text-gray-600" id="subtitulo-plan">7 días gratis, luego $10/mes</p>
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Registro</h1>
+            <p class="text-gray-600">7 días gratis sin TDC, luego pagas</p>
         </div>
 
         <!-- Formulario de Registro -->
-        <div id="formulario-registro" class="bg-white rounded-2xl shadow-xl p-8">
+        <div id="formulario-registro" class="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-auto">
             <form id="form-registro" onsubmit="mostrarOpciones(event)">
                 <div class="space-y-4">
                     <!-- Email -->
@@ -101,136 +101,104 @@
             <div class="text-center mb-6">
                 <div class="text-4xl mb-4">🎉</div>
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Casi listo!</h2>
-                <p class="text-gray-600">Elige cómo continuar</p>
+                <p class="text-gray-600">Suscríbete a uno de los planes ya, o</p>
             </div>
 
-            <!-- Opción 1: Suscripción -->
-            <div class="border-2 border-indigo-600 rounded-xl p-6 mb-4" id="opcion-suscripcion">
-                <div class="flex items-start justify-between mb-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-gray-900" id="nombre-plan">Plan Estándar</h3>
-                        <p class="text-3xl font-bold text-indigo-600 mt-1">
-                            <span id="precio-plan">$10</span>
-                            <span class="text-sm text-gray-600 font-normal">/mes</span>
+            <!-- Dos planes lado a lado -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Plan Estándar -->
+                <div class="border-2 border-indigo-200 rounded-xl p-6">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">Plan Estándar</h3>
+                        <p class="text-3xl font-bold text-indigo-600 mt-2">
+                            $10<span class="text-sm text-gray-600 font-normal">/mes</span>
                         </p>
                     </div>
-                    <div class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-semibold">
-                        Recomendado
-                    </div>
+                    <ul class="space-y-2 mb-4 text-sm">
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Scraping automático diario</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Análisis inteligente con IA</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Notificaciones por email</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Dashboard de oportunidades</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Historial de 1 mes</span>
+                        </li>
+                    </ul>
+                    <button
+                        onclick="procesarSuscripcion('estandar')"
+                        class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
+                    >
+                        💳 Suscribirse
+                    </button>
                 </div>
-                <ul class="space-y-2 mb-4 text-sm" id="features-plan">
-                    <li class="flex items-center gap-2">
-                        <span class="text-green-600">✓</span>
-                        <span>Análisis ilimitados</span>
-                    </li>
-                </ul>
-                <button
-                    onclick="procesarSuscripcion()"
-                    class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
-                >
-                    💳 Continuar con Suscripción
-                </button>
+
+                <!-- Plan Business -->
+                <div class="border-2 border-orange-300 rounded-xl p-6 bg-gradient-to-br from-orange-50 to-yellow-50">
+                    <div class="mb-4">
+                        <div class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">
+                            MÁS POPULAR
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900">Plan Business</h3>
+                        <p class="text-3xl font-bold text-orange-600 mt-2">
+                            $20<span class="text-sm text-gray-600 font-normal">/mes</span>
+                        </p>
+                    </div>
+                    <ul class="space-y-2 mb-4 text-sm">
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Todo en Estándar</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span><strong>Descarga de documentos</strong> (10/mes)</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span><strong>Análisis profundo con IA</strong> (5/mes)</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Notificaciones detalladas</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-green-600">✓</span>
+                            <span>Historial de 3 meses</span>
+                        </li>
+                    </ul>
+                    <button
+                        onclick="procesarSuscripcion('business')"
+                        class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold"
+                    >
+                        💳 Suscribirse
+                    </button>
+                </div>
             </div>
 
-            <!-- Opción 2: Trial Gratuito -->
-            <div class="border-2 border-gray-200 rounded-xl p-6">
-                <h3 class="text-sm font-semibold text-gray-700 mb-2">O prueba gratis primero</h3>
-                <p class="text-gray-600 text-sm mb-4">
-                    <strong>7 días gratis con funciones del Plan Business</strong><br>
-                    Sin tarjeta de crédito
-                </p>
-                <button
-                    onclick="procesarTrialGratuito()"
-                    class="w-full bg-gray-100 text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-200 transition font-semibold"
-                >
-                    Continuar con Prueba Gratuita
-                </button>
-            </div>
+            <!-- Botón de Trial Gratuito -->
+            <button
+                onclick="procesarTrialGratuito()"
+                class="w-full bg-gray-800 text-white px-6 py-4 rounded-lg hover:bg-gray-900 transition font-bold text-lg shadow-lg"
+            >
+                Continuar con Prueba Gratuita del Plan Business
+            </button>
         </div>
     </div>
 
     <script>
         const API_BASE = window.location.origin;
         let datosRegistro = {};
-        let planSeleccionado = 'estandar';
-
-        // Obtener plan de la URL
-        window.addEventListener('DOMContentLoaded', function() {
-            const params = new URLSearchParams(window.location.search);
-            planSeleccionado = params.get('plan') || 'estandar';
-
-            configurarPlan(planSeleccionado);
-        });
-
-        function configurarPlan(plan) {
-            const planes = {
-                estandar: {
-                    nombre: 'Estándar',
-                    precio: '$10',
-                    subtitulo: '7 días gratis, luego $10/mes',
-                    features: [
-                        'Scraping automático diario',
-                        'Análisis inteligente con IA',
-                        'Notificaciones por email',
-                        'Dashboard de oportunidades',
-                        'Historial de 1 mes'
-                    ]
-                },
-                business: {
-                    nombre: 'Business',
-                    precio: '$20',
-                    subtitulo: '7 días gratis, luego $20/mes',
-                    features: [
-                        'Todo en Estándar',
-                        'Notificaciones detalladas',
-                        'Enlaces a documentos',
-                        'Historial de 3 meses'
-                    ]
-                },
-                enterprise: {
-                    nombre: 'Enterprise',
-                    precio: 'Custom',
-                    subtitulo: 'Precio personalizado anual',
-                    features: [
-                        'Todo en Business',
-                        'Recomendaciones IA',
-                        'Acompañamiento consultor',
-                        'Soporte prioritario'
-                    ]
-                }
-            };
-
-            const config = planes[plan] || planes['estandar'];
-
-            // Actualizar títulos
-            document.getElementById('titulo-plan').textContent = `Registro - Plan ${config.nombre}`;
-            document.getElementById('subtitulo-plan').textContent = config.subtitulo;
-            document.getElementById('nombre-plan').textContent = `Plan ${config.nombre}`;
-            document.getElementById('precio-plan').textContent = config.precio;
-
-            // Actualizar features
-            const featuresHtml = config.features.map(f => `
-                <li class="flex items-center gap-2">
-                    <span class="text-green-600">✓</span>
-                    <span>${f}</span>
-                </li>
-            `).join('');
-            document.getElementById('features-plan').innerHTML = featuresHtml;
-
-            // Si es Enterprise, ocultar opción de suscripción y solo mostrar contacto
-            if (plan === 'enterprise') {
-                document.getElementById('opcion-suscripcion').innerHTML = `
-                    <div class="text-center p-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Plan Enterprise</h3>
-                        <p class="text-gray-600 mb-4">Para el plan Enterprise, contáctanos directamente:</p>
-                        <a href="mailto:sales@umbusk.com?subject=Interés en Plan Enterprise - Compita"
-                           class="inline-block bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold">
-                            📧 Contactar Ventas
-                        </a>
-                    </div>
-                `;
-            }
-        }
 
         function mostrarOpciones(event) {
             event.preventDefault();
@@ -253,8 +221,7 @@
             datosRegistro = {
                 email: email,
                 empresa: document.getElementById('empresa').value.trim(),
-                password: document.getElementById('password').value,
-                plan: planSeleccionado
+                password: document.getElementById('password').value
             };
 
             // Mostrar opciones de pago
@@ -262,83 +229,82 @@
             document.getElementById('opciones-pago').classList.remove('hidden');
         }
 
-		async function procesarSuscripcion() {
-			try {
-				// Primero crear la cuenta
-				const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						action: 'registro',
-						email: datosRegistro.email,
-						password: datosRegistro.password,
-						nombre: datosRegistro.email.split('@')[0],
-						empresa: datosRegistro.empresa
-					})
-				});
+        async function procesarSuscripcion(plan) {
+            try {
+                // Primero crear la cuenta
+                const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'registro',
+                        email: datosRegistro.email,
+                        password: datosRegistro.password,
+                        nombre: datosRegistro.email.split('@')[0],
+                        empresa: datosRegistro.empresa
+                    })
+                });
 
-				if (!responseRegistro.ok) {
-					const error = await responseRegistro.json();
-					alert('❌ Error: ' + error.error);
-					return;
-				}
+                if (!responseRegistro.ok) {
+                    const error = await responseRegistro.json();
+                    alert('❌ Error: ' + error.error);
+                    return;
+                }
 
-				// Hacer login automático para obtener el token
-				const responseLogin = await fetch(`${API_BASE}/api/auth`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						action: 'login',
-						email: datosRegistro.email,
-						password: datosRegistro.password
-					})
-				});
+                // Hacer login automático para obtener el token
+                const responseLogin = await fetch(`${API_BASE}/api/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'login',
+                        email: datosRegistro.email,
+                        password: datosRegistro.password
+                    })
+                });
 
-				if (!responseLogin.ok) {
-					alert('❌ Cuenta creada pero error al iniciar sesión. Por favor inicia sesión manualmente.');
-					window.location.href = '/login.html';
-					return;
-				}
+                if (!responseLogin.ok) {
+                    alert('❌ Cuenta creada pero error al iniciar sesión. Por favor inicia sesión manualmente.');
+                    window.location.href = '/login.html';
+                    return;
+                }
 
-				const loginData = await responseLogin.json();
-				const token = loginData.token;
+                const loginData = await responseLogin.json();
+                const token = loginData.token;
 
-				// Guardar token temporalmente
-				sessionStorage.setItem('token', token);
-				sessionStorage.setItem('user', JSON.stringify(loginData.user));
+                // Guardar token temporalmente
+                sessionStorage.setItem('token', token);
+                sessionStorage.setItem('user', JSON.stringify(loginData.user));
 
-				// Crear sesión de checkout en Stripe
-				const responseCheckout = await fetch(`${API_BASE}/api/stripe-checkout`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
-					},
-					body: JSON.stringify({
-						plan: planSeleccionado
-					})
-				});
+                // Crear sesión de checkout en Stripe
+                const responseCheckout = await fetch(`${API_BASE}/api/stripe-checkout`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        plan: plan
+                    })
+                });
 
-				if (!responseCheckout.ok) {
-					const error = await responseCheckout.json();
-					alert('❌ Error creando sesión de pago: ' + error.error);
-					return;
-				}
+                if (!responseCheckout.ok) {
+                    const error = await responseCheckout.json();
+                    alert('❌ Error creando sesión de pago: ' + error.error);
+                    return;
+                }
 
-				const checkoutData = await responseCheckout.json();
+                const checkoutData = await responseCheckout.json();
 
-				// Redirigir a Stripe Checkout
-				window.location.href = checkoutData.checkout_url;
+                // Redirigir a Stripe Checkout
+                window.location.href = checkoutData.checkout_url;
 
-			} catch (error) {
-				console.error('Error:', error);
-				alert('❌ Error al procesar suscripción. Por favor intenta nuevamente.');
-			}
-		}
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Error al procesar suscripción. Por favor intenta nuevamente.');
+            }
+        }
 
         async function procesarTrialGratuito() {
             try {
-                // CAMBIO IMPORTANTE: Ahora usamos /api/auth con action: 'registro'
                 const response = await fetch(`${API_BASE}/api/auth`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -346,20 +312,18 @@
                         action: 'registro',
                         email: datosRegistro.email,
                         password: datosRegistro.password,
-                        nombre: datosRegistro.email.split('@')[0], // Usamos la parte antes del @ como nombre
+                        nombre: datosRegistro.email.split('@')[0],
                         empresa: datosRegistro.empresa
                     })
                 });
 
                 const result = await response.json();
 
-                // CAMBIO: Verificamos si la respuesta fue exitosa (status 201)
                 if (response.ok) {
                     alert('✅ ' + result.message);
                     window.location.href = '/login.html';
                 } else {
                     alert('❌ Error: ' + result.error);
-                    // Volver al formulario
                     document.getElementById('opciones-pago').classList.add('hidden');
                     document.getElementById('formulario-registro').classList.remove('hidden');
                 }
