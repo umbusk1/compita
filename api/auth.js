@@ -138,7 +138,8 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
         `
       });
 
-      console.log('✅ [REGISTRO] Email enviado exitosamente. ID:', emailResult.id);
+      console.log('🔵 [REGISTRO] Respuesta completa de Resend:', JSON.stringify(emailResult, null, 2));
+      console.log('✅ [REGISTRO] Email enviado. ID:', emailResult?.id || emailResult?.data?.id || 'NO ENCONTRADO');
     } catch (emailError) {
       console.error('❌ [REGISTRO] ERROR AL ENVIAR EMAIL:', emailError);
       console.error('❌ [REGISTRO] Detalles del error:', JSON.stringify(emailError, null, 2));
