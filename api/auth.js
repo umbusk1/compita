@@ -38,11 +38,15 @@ export default async function handler(req, res) {
   }
 }
 
-// FUNCIÓN PARA REGISTRO
+// REEMPLAZA solo la función handleRegistro en auth.js con esta versión que tiene logging
+
 async function handleRegistro(req, res, email, password, nombre, empresa) {
   try {
+    console.log('🔵 [REGISTRO] Iniciando registro para:', email);
+
     // Validar que todos los campos estén presentes
     if (!email || !password || !nombre || !empresa) {
+      console.log('❌ [REGISTRO] Faltan campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
 
@@ -53,13 +57,17 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     );
 
     if (checkEmail.rows.length > 0) {
+      console.log('❌ [REGISTRO] Email ya existe:', email);
       return res.status(400).json({ error: 'Este email ya está registrado' });
     }
+
+    console.log('✅ [REGISTRO] Email disponible');
 
     // Extraer el dominio del email
     const dominio = email.split('@')[1];
 
     // Crear la empresa nueva con valores por defecto
+    console.log('🔵 [REGISTRO] Creando empresa:', empresa);
     const empresaResult = await pool.query(
       `INSERT INTO empresas (nombre, dominio, descripcion, palabras_clave, exclusiones, monto_minimo_alta, plan, activo, trial_inicio, trial_fin)
        VALUES ($1, $2, '', ARRAY[]::text[], ARRAY[]::text[], 500000, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
@@ -68,9 +76,11 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     );
 
     const empresaId = empresaResult.rows[0].id;
+    console.log('✅ [REGISTRO] Empresa creada con ID:', empresaId);
 
     // Encriptar la contraseña
     const passwordHash = await bcrypt.hash(password, 10);
+    console.log('✅ [REGISTRO] Password hasheado');
 
     // Generar token de confirmación ANTES de crear el usuario
     const tokenConfirmacion = jwt.sign(
@@ -78,8 +88,10 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
       process.env.JWT_SECRET || 'compita-secret-2024',
       { expiresIn: '24h' }
     );
+    console.log('✅ [REGISTRO] Token generado:', tokenConfirmacion.substring(0, 20) + '...');
 
     // Crear el usuario CON email_confirmado = false y token guardado
+    console.log('🔵 [REGISTRO] Creando usuario...');
     const userResult = await pool.query(
       `INSERT INTO usuarios (email, password_hash, empresa_id, empresa, rol, activo, email_confirmado, trial_fin, token_confirmacion)
        VALUES ($1, $2, $3, $4, 'admin', true, false, $5, $6)
@@ -88,36 +100,50 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     );
 
     const usuario = userResult.rows[0];
+    console.log('✅ [REGISTRO] Usuario creado con ID:', usuario.id);
 
     // Enviar email de confirmación
-    await resend.emails.send({
-      from: 'Compita <noreply@umbusk.com>',
-      to: email,
-      subject: 'Confirma tu email para activar tu cuenta en Compita',
-      html: `
-        <h2>¡Bienvenido a Compita!</h2>
-        <p>Hola,</p>
-        <p>Tu empresa <strong>${empresa}</strong> ha sido registrada exitosamente.</p>
-        <p><strong>Tienes 7 días de prueba gratuita con todas las funciones del Plan Business:</strong></p>
-        <ul>
-          <li>✓ Análisis diario automático de licitaciones</li>
-          <li>✓ Notificaciones por email de oportunidades ALTA y MEDIA</li>
-          <li>✓ Descarga de documentos (10/mes)</li>
-          <li>✓ Análisis profundo con IA (5/mes)</li>
-        </ul>
-        <p><strong>Para activar tu cuenta, confirma tu email haciendo clic aquí:</strong></p>
-        <p style="text-align: center; margin: 30px 0;">
-          <a href="https://compita.umbusk.com/confirmar-email.html?token=${tokenConfirmacion}"
-             style="background-color: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
-            Confirmar mi Email
-          </a>
-        </p>
-        <p style="color: #666; font-size: 14px;">
-          Si no solicitaste esta cuenta, puedes ignorar este email.<br>
-          Este enlace expira en 24 horas.
-        </p>
-      `
-    });
+    console.log('🔵 [REGISTRO] Intentando enviar email a:', email);
+    console.log('🔵 [REGISTRO] RESEND_API_KEY existe:', !!process.env.RESEND_API_KEY);
+
+    try {
+      const emailResult = await resend.emails.send({
+        from: 'Compita <noreply@umbusk.com>',
+        to: email,
+        subject: 'Confirma tu email para activar tu cuenta en Compita',
+        html: `
+          <h2>¡Bienvenido a Compita!</h2>
+          <p>Hola,</p>
+          <p>Tu empresa <strong>${empresa}</strong> ha sido registrada exitosamente.</p>
+          <p><strong>Tienes 7 días de prueba gratuita con todas las funciones del Plan Business:</strong></p>
+          <ul>
+            <li>✓ Análisis diario automático de licitaciones</li>
+            <li>✓ Notificaciones por email de oportunidades ALTA y MEDIA</li>
+            <li>✓ Descarga de documentos (10/mes)</li>
+            <li>✓ Análisis profundo con IA (5/mes)</li>
+          </ul>
+          <p><strong>Para activar tu cuenta, confirma tu email haciendo clic aquí:</strong></p>
+          <p style="text-align: center; margin: 30px 0;">
+            <a href="https://compita.umbusk.com/confirmar-email.html?token=${tokenConfirmacion}"
+               style="background-color: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+              Confirmar mi Email
+            </a>
+          </p>
+          <p style="color: #666; font-size: 14px;">
+            Si no solicitaste esta cuenta, puedes ignorar este email.<br>
+            Este enlace expira en 24 horas.
+          </p>
+        `
+      });
+
+      console.log('✅ [REGISTRO] Email enviado exitosamente. ID:', emailResult.id);
+    } catch (emailError) {
+      console.error('❌ [REGISTRO] ERROR AL ENVIAR EMAIL:', emailError);
+      console.error('❌ [REGISTRO] Detalles del error:', JSON.stringify(emailError, null, 2));
+      // No detenemos el registro, solo logueamos el error
+    }
+
+    console.log('✅ [REGISTRO] Proceso completado para:', email);
 
     return res.status(201).json({
       message: 'Cuenta creada exitosamente. Revisa tu email para confirmar tu cuenta.',
@@ -130,7 +156,8 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     });
 
   } catch (error) {
-    console.error('Error en registro:', error);
+    console.error('❌ [REGISTRO] ERROR GENERAL:', error);
+    console.error('❌ [REGISTRO] Stack:', error.stack);
     return res.status(500).json({ error: 'Error al crear la cuenta' });
   }
 }
