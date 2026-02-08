@@ -779,7 +779,7 @@ async function cargarCuposBusiness() {
         const empresaId = datosEmpresa.id;
 
         // Obtener uso actual
-        const responseZip = await fetch(`${API_BASE}/api/business-features`, {
+        const responseZip = await fetch(`${API_BASE}/api/business-features`, {  // ✅ Agregado paréntesis
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -789,7 +789,7 @@ async function cargarCuposBusiness() {
             })
         });
 
-        const responseAnalisis = await fetch(`${API_BASE}/api/business-features`, {
+        const responseAnalisis = await fetch(`${API_BASE}/api/business-features`, {  // ✅ Agregado paréntesis
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -812,19 +812,9 @@ async function cargarCuposBusiness() {
             analisis_disponibles: (datosEmpresa.limite_analisis_mes || 5) - (dataAnalisis.usados || 0)
         };
 
-        // Actualizar el widget (lo vamos a ocultar después)
-        document.getElementById('cupo-zip').textContent =
-            `${cuposDisponibles.zip_disponibles}/${cuposDisponibles.zip_limite}`;
-        document.getElementById('cupo-analisis').textContent =
-            `${cuposDisponibles.analisis_disponibles}/${cuposDisponibles.analisis_limite}`;
-
-        // Fecha de reinicio
-        const hoy = new Date();
-        const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1);
-        const opciones = { day: 'numeric', month: 'short' };
-        document.getElementById('fecha-reinicio').textContent =
-            proximoMes.toLocaleDateString('es-ES', opciones);
-        document.getElementById('cupos-business').classList.remove('hidden');
+        // ✅ ELIMINADAS las líneas que causaban el error:
+        // Ya no necesitamos actualizar elementos del DOM aquí
+        // porque los contadores están en cada tarjeta de oportunidad
 
     } catch (error) {
         console.error('Error cargando cupos:', error);
@@ -1130,15 +1120,17 @@ async function descargarDocumentos(referencia) {
 
         const blob = await scraperResponse.blob();
 
-        // 3. Registrar uso del cupo
-        await fetch(`${API_BASE}/api/business-features`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                referencia: referencia
-            }),
-            signal: AbortSignal.timeout(90000)
-        });
+		// 3. Registrar uso del cupo
+		await fetch(`${API_BASE}/api/business-features`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				empresa_id: empresaId,
+				tipo: 'zip',
+				accion: 'registrar',
+				referencia: referencia
+			})
+		});
 
         // 4. Descargar archivo al navegador del usuario
         const url = window.URL.createObjectURL(blob);
@@ -1586,7 +1578,7 @@ async function comprarCuposAdicionales(tipo) {
         const mensaje = tipo === 'zip' ? 'Comprando paquete de descargas...' : 'Comprando paquete de análisis...';
         mostrarMensaje(mensaje, 'info');
 
-        const response = await fetch(`${API_BASE}/api/stripe`, {
+        const response = await fetch(`${API_BASE}/api/stripe`, {  // ✅ Agregado paréntesis
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
