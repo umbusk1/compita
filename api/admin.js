@@ -1,6 +1,8 @@
-const { Pool } = require('pg');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import pg from 'pg';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+const { Pool } = pg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -23,7 +25,7 @@ function verificarToken(authHeader) {
 }
 
 // Handler principal
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   const { action } = req.query;
 
   try {
@@ -41,7 +43,7 @@ module.exports = async (req, res) => {
     console.error('Error en admin API:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
   }
-};
+}
 
 // LOGIN
 async function handleLogin(req, res) {
@@ -115,17 +117,17 @@ async function handleStats(req, res) {
      WHERE DATE(fecha_analisis) = CURRENT_DATE`
   );
 
-const empresas = await pool.query(`
-  SELECT
-    e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin,
-    u.email as usuario_email,
-    COUNT(r.id) as oportunidades_count
-  FROM empresas e
-  LEFT JOIN usuarios u ON u.empresa_id = e.id
-  LEFT JOIN resultados r ON r.empresa_id = e.id
-  GROUP BY e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin, u.email
-  ORDER BY e.id
-`);
+  const empresas = await pool.query(`
+    SELECT
+      e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin,
+      u.email as usuario_email,
+      COUNT(r.id) as oportunidades_count
+    FROM empresas e
+    LEFT JOIN usuarios u ON u.empresa_id = e.id
+    LEFT JOIN resultados r ON r.empresa_id = e.id
+    GROUP BY e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin, u.email
+    ORDER BY e.id
+  `);
 
   const administradores = await pool.query(`
     SELECT id, nombre, email, rol, activo, creado_en, ultimo_acceso
