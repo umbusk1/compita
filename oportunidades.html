@@ -778,8 +778,7 @@ async function cargarCuposBusiness() {
         if (!datosEmpresa) return;
         const empresaId = datosEmpresa.id;
 
-        // Obtener uso actual
-        const responseZip = await fetch(`${API_BASE}/api/business-features`, {  // ✅ Agregado paréntesis
+        const responseZip = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -789,7 +788,7 @@ async function cargarCuposBusiness() {
             })
         });
 
-        const responseAnalisis = await fetch(`${API_BASE}/api/business-features`, {  // ✅ Agregado paréntesis
+        const responseAnalisis = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -805,16 +804,12 @@ async function cargarCuposBusiness() {
         // Guardar en variable global
         cuposDisponibles = {
             zip_usados: dataZip.usados || 0,
-            zip_limite: datosEmpresa.limite_zips_mes || 10,
-            zip_disponibles: (datosEmpresa.limite_zips_mes || 10) - (dataZip.usados || 0),
+            zip_limite: dataZip.limite || 10,
+            zip_disponibles: dataZip.cupos_restantes || 0,
             analisis_usados: dataAnalisis.usados || 0,
-            analisis_limite: datosEmpresa.limite_analisis_mes || 5,
-            analisis_disponibles: (datosEmpresa.limite_analisis_mes || 5) - (dataAnalisis.usados || 0)
+            analisis_limite: dataAnalisis.limite || 5,
+            analisis_disponibles: dataAnalisis.cupos_restantes || 0
         };
-
-        // ✅ ELIMINADAS las líneas que causaban el error:
-        // Ya no necesitamos actualizar elementos del DOM aquí
-        // porque los contadores están en cada tarjeta de oportunidad
 
     } catch (error) {
         console.error('Error cargando cupos:', error);
