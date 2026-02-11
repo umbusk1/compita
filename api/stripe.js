@@ -1,4 +1,4 @@
-// api/stripe.js - Endpoint consolidado para Stripe (Checkout + Portal)
+// api/stripe.js - Endpoint consolidado para Stripe (Checkout + Portal + Cupos)
 import Stripe from 'stripe';
 import jwt from 'jsonwebtoken';
 import pkg from 'pg';
@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   const token = authHeader.split(' ')[1];
   let decoded;
-  
+
   try {
     decoded = jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
   const empresaId = decoded.empresaId;
 
   try {
-    const { action, plan } = req.body;
+    const { action, plan, tipo } = req.body;
 
     // Validar que venga el action
     if (!action) {
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 
     // Obtener datos del usuario y empresa
     const userResult = await pool.query(
-      `SELECT u.email, u.empresa_id, e.nombre as empresa_nombre, 
+      `SELECT u.email, u.empresa_id, e.nombre as empresa_nombre,
               e.stripe_customer_id, e.stripe_subscription_id
        FROM usuarios u
        JOIN empresas e ON u.empresa_id = e.id
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
     let customerId = user.stripe_customer_id;
 
     // ====================================================
-    // ACCIÓN 1: Crear sesión de Checkout
+    // ACCIÓN 1: Crear sesión de Checkout (planes)
     // ====================================================
     if (action === 'create_checkout') {
       // Validar plan
@@ -174,16 +174,91 @@ export default async function handler(req, res) {
       });
     }
 
+    // ====================================================
+    // ACCIÓN 3: Comprar cupos adicionales
+    // ====================================================
+    if (action === 'comprar_cupos') {
+      // Validar tipo de cupo
+      if (!tipo || !['zip', 'analisis'].includes(tipo)) {
+        return res.status(400).json({ error: 'Tipo inválido. Use: zip o analisis' });
+      }
+
+      // Determinar el Price ID según el tipo
+      const priceId = tipo === 'zip'
+        ? process.env.STRIPE_PRICE_CUPOS_ZIP
+        : process.env.STRIPE_PRICE_CUPOS_ANALISIS;
+
+      if (!priceId) {
+        return res.status(500).json({
+          error: 'Configuración incompleta. Contacta a soporte.'
+        });
+      }
+
+      // Crear o recuperar Customer en Stripe
+      if (!customerId) {
+        const existingCustomers = await stripe.customers.list({
+          email: user.email,
+          limit: 1
+        });
+
+        if (existingCustomers.data.length > 0) {
+          customerId = existingCustomers.data[0].id;
+        } else {
+          const customer = await stripe.customers.create({
+            email: user.email,
+            metadata: {
+              empresa_id: empresaId.toString(),
+              user_id: userId.toString(),
+              empresa_nombre: user.empresa_nombre
+            }
+          });
+          customerId = customer.id;
+        }
+
+        // Guardar customer_id en BD
+        await pool.query(
+          'UPDATE empresas SET stripe_customer_id = $1 WHERE id = $2',
+          [customerId, empresaId]
+        );
+      }
+
+      // Crear sesión de Checkout para cupos
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        mode: 'payment', // ✅ Pago único, no suscripción
+        success_url: `${req.headers.origin}/oportunidades.html?cupos=success&tipo=${tipo}`,
+        cancel_url: `${req.headers.origin}/oportunidades.html?cupos=cancelled`,
+        metadata: {
+          empresa_id: empresaId.toString(),
+          user_id: userId.toString(),
+          tipo_cupo: tipo, // 'zip' o 'analisis'
+          accion: 'comprar_cupos'
+        }
+      });
+
+      return res.status(200).json({
+        success: true,
+        checkout_url: session.url
+      });
+    }
+
     // Si llegamos aquí, el action no es válido
-    return res.status(400).json({ 
-      error: 'Acción inválida. Use: create_checkout o create_portal' 
+    return res.status(400).json({
+      error: 'Acción inválida. Use: create_checkout, create_portal o comprar_cupos'
     });
 
   } catch (error) {
     console.error('Error en endpoint Stripe:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Error al procesar solicitud',
-      detalles: error.message 
+      detalles: error.message
     });
   }
 }
