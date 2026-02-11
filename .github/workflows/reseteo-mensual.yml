@@ -1,0 +1,26 @@
+name: Reseteo Mensual de Cupos
+
+on:
+  schedule:
+    # Se ejecuta el día 1 de cada mes a las 00:00 UTC
+    - cron: '0 0 1 * *'
+  
+  # Permite ejecución manual desde GitHub
+  workflow_dispatch:
+
+jobs:
+  resetear-cupos:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Llamar endpoint de reseteo
+        run: |
+          curl -X POST https://compita.umbusk.com/api/business-features \
+            -H "Content-Type: application/json" \
+            -d '{
+              "accion": "resetear-mensual",
+              "clave_secreta": "${{ secrets.CRON_SECRET_KEY }}"
+            }'
+      
+      - name: Confirmar ejecución
+        run: echo "✅ Reseteo mensual ejecutado el $(date)"
