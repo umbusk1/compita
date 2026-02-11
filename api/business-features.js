@@ -16,20 +16,79 @@ export default async function handler(req, res) {
 
   try {
 	// ========== OBTENER EMPRESA_ID Y ACCIÓN ==========
-	const { empresa_id, tipo, accion, referencia, clave_secreta } = req.body;
+const { empresa_id, tipo, accion, referencia, clave_secreta } = req.body;
 
-	// La acción resetear-mensual NO requiere empresa_id
-	if (accion !== 'resetear-mensual' && !empresa_id) {
-	  return res.status(400).json({ success: false, error: 'Falta empresa_id' });
-	}
+// ====================================================
+// ACCIÓN ESPECIAL: RESETEAR CUPOS MENSUAL (para cron job)
+// Se maneja ANTES de validar empresa_id
+// ====================================================
+if (accion === 'resetear-mensual') {
+  // Verificar clave secreta de autorización
+  if (clave_secreta !== process.env.CRON_SECRET_KEY) {
+    return res.status(401).json({
+      success: false,
+      error: 'No autorizado'
+    });
+  }
 
-    // ========== OBTENER DATOS DE LA EMPRESA ==========
-    const empresa = await sql`
-      SELECT plan, limite_zips_mes, limite_analisis_mes
-      FROM empresas
-      WHERE id = ${empresa_id}
-      LIMIT 1
+  // Obtener mes actual
+  const primerDiaMes = new Date();
+  primerDiaMes.setDate(1);
+  primerDiaMes.setHours(0, 0, 0, 0);
+  const mesActual = primerDiaMes.toISOString().split('T')[0];
+
+  // Resetear cupos de TODAS las empresas
+  const empresas = await sql`
+    SELECT id, limite_zips_mes, limite_analisis_mes
+    FROM empresas
+    WHERE activo = true
+  `;
+
+  let reseteadas = 0;
+
+  for (const empresa of empresas) {
+    // Verificar si ya existe registro para este mes
+    const existe = await sql`
+      SELECT id FROM uso_mensual
+      WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
     `;
+
+    if (existe.length === 0) {
+      // Crear nuevo registro para el mes
+      await sql`
+        INSERT INTO uso_mensual
+        (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados,
+         zip_adicionales, analisis_adicionales, zip_limite_mes, analisis_limite_mes)
+        VALUES
+        (${empresa.id}, ${mesActual}, 0, 0, 0, 0,
+         ${empresa.limite_zips_mes || 10}, ${empresa.limite_analisis_mes || 5})
+      `;
+      reseteadas++;
+    }
+  }
+
+  console.log(`✅ Reseteo mensual completado. ${reseteadas} empresas procesadas para ${mesActual}`);
+
+  return res.status(200).json({
+    success: true,
+    message: 'Reseteo mensual completado',
+    empresas_procesadas: reseteadas,
+    mes: mesActual
+  });
+}
+
+// ========== VALIDAR EMPRESA_ID (para otras acciones) ==========
+if (!empresa_id) {
+  return res.status(400).json({ success: false, error: 'Falta empresa_id' });
+}
+
+// ========== OBTENER DATOS DE LA EMPRESA ==========
+const empresa = await sql`
+  SELECT plan, limite_zips_mes, limite_analisis_mes
+  FROM empresas
+  WHERE id = ${empresa_id}
+  LIMIT 1
+`;
 
     if (empresa.length === 0) {
       return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
@@ -371,66 +430,6 @@ if (tipo === 'analisis') {
       success: false,
       error: 'Parámetros inválidos. Se requiere: empresa_id, tipo (zip/analisis), accion (validar/registrar)'
     });
-
-    // ====================================================
-    // ACCIÓN: RESETEAR CUPOS MENSUAL (para cron job)
-    // ====================================================
-    if (accion === 'resetear-mensual') {
-      // Verificar clave secreta de autorización
-      const { clave_secreta } = req.body;
-
-      if (clave_secreta !== process.env.CRON_SECRET_KEY) {
-        return res.status(401).json({
-          success: false,
-          error: 'No autorizado'
-        });
-      }
-
-      // Obtener mes actual
-      const primerDiaMes = new Date();
-      primerDiaMes.setDate(1);
-      primerDiaMes.setHours(0, 0, 0, 0);
-      const mesActual = primerDiaMes.toISOString().split('T')[0];
-
-      // Resetear cupos de TODAS las empresas
-      const empresas = await sql`
-        SELECT id, limite_zips_mes, limite_analisis_mes
-        FROM empresas
-        WHERE activo = true
-      `;
-
-      let reseteadas = 0;
-
-      for (const empresa of empresas) {
-        // Verificar si ya existe registro para este mes
-        const existe = await sql`
-          SELECT id FROM uso_mensual
-          WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
-        `;
-
-        if (existe.length === 0) {
-          // Crear nuevo registro para el mes
-          await sql`
-            INSERT INTO uso_mensual
-            (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados,
-             zip_adicionales, analisis_adicionales, zip_limite_mes, analisis_limite_mes)
-            VALUES
-            (${empresa.id}, ${mesActual}, 0, 0, 0, 0,
-             ${empresa.limite_zips_mes || 10}, ${empresa.limite_analisis_mes || 5})
-          `;
-          reseteadas++;
-        }
-      }
-
-      console.log(`✅ Reseteo mensual completado. ${reseteadas} empresas procesadas para ${mesActual}`);
-
-      return res.status(200).json({
-        success: true,
-        message: 'Reseteo mensual completado',
-        empresas_procesadas: reseteadas,
-        mes: mesActual
-      });
-    }
 
   } catch (error) {
     console.error('Error en business-features:', error);
