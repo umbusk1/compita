@@ -89,25 +89,33 @@ export default async function handler(req, res) {
     // ====================================================
     // ACCIÓN: VALIDAR CUPO
     // ====================================================
-    if (accion === 'validar') {
-      let cupoDisponible = false;
-      let cuposRestantes = 0;
+if (accion === 'validar') {
+  let cupoDisponible = false;
+  let cuposRestantes = 0;
+  let usados = 0;
+  let limite = 0;
 
-      if (tipo === 'zip') {
-        cuposRestantes = limite_zips_mes - uso.descargas_zip_usadas;
-        cupoDisponible = cuposRestantes > 0;
-      } else if (tipo === 'analisis') {
-        cuposRestantes = limite_analisis_mes - uso.analisis_ia_usados;
-        cupoDisponible = cuposRestantes > 0;
-      }
+  if (tipo === 'zip') {
+    usados = uso.descargas_zip_usadas;
+    limite = limite_zips_mes;
+    cuposRestantes = limite - usados;
+    cupoDisponible = cuposRestantes > 0;
+  } else if (tipo === 'analisis') {
+    usados = uso.analisis_ia_usados;
+    limite = limite_analisis_mes;
+    cuposRestantes = limite - usados;
+    cupoDisponible = cuposRestantes > 0;
+  }
 
-      return res.status(200).json({
-        success: true,
-        permitido: cupoDisponible,
-        cupos_restantes: Math.max(0, cuposRestantes),
-        tipo: tipo
-      });
-    }
+  return res.status(200).json({
+    success: true,
+    permitido: cupoDisponible,
+    cupos_restantes: Math.max(0, cuposRestantes),
+    usados: usados,  // ✅ Agregado
+    limite: limite,  // ✅ Agregado
+    tipo: tipo
+  });
+}
 
     // ====================================================
     // ACCIÓN: REGISTRAR USO DE CUPO
