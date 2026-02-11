@@ -97,12 +97,12 @@ if (accion === 'validar') {
 
   if (tipo === 'zip') {
     usados = uso.descargas_zip_usadas;
-    limite = limite_zips_mes;
+    limite = limite_zips_mes + (uso.zip_adicionales || 0);  // ✅ SUMA ADICIONALES
     cuposRestantes = limite - usados;
     cupoDisponible = cuposRestantes > 0;
   } else if (tipo === 'analisis') {
     usados = uso.analisis_ia_usados;
-    limite = limite_analisis_mes;
+    limite = limite_analisis_mes + (uso.analisis_adicionales || 0);  // ✅ SUMA ADICIONALES
     cuposRestantes = limite - usados;
     cupoDisponible = cuposRestantes > 0;
   }
@@ -111,8 +111,8 @@ if (accion === 'validar') {
     success: true,
     permitido: cupoDisponible,
     cupos_restantes: Math.max(0, cuposRestantes),
-    usados: usados,  // ✅ Agregado
-    limite: limite,  // ✅ Agregado
+    usados: usados,
+    limite: limite,
     tipo: tipo
   });
 }
@@ -120,57 +120,60 @@ if (accion === 'validar') {
     // ====================================================
     // ACCIÓN: REGISTRAR USO DE CUPO
     // ====================================================
-    if (accion === 'registrar') {
-      if (tipo === 'zip') {
-        // Verificar límite
-        if (uso.descargas_zip_usadas >= limite_zips_mes) {
-          return res.status(403).json({
-            success: false,
-            error: 'Límite alcanzado',
-            cupos_disponibles: 0
-          });
-        }
+if (tipo === 'zip') {
+  const limite_total = limite_zips_mes + (uso.zip_adicionales || 0);  // ✅ INCLUYE ADICIONALES
 
-        // Incrementar contador
-        await sql`
-          UPDATE uso_mensual
-          SET descargas_zip_usadas = descargas_zip_usadas + 1,
-              updated_at = CURRENT_TIMESTAMP
-          WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
-        `;
+  // Verificar límite
+  if (uso.descargas_zip_usadas >= limite_total) {
+    return res.status(403).json({
+      success: false,
+      error: 'Límite alcanzado',
+      cupos_disponibles: 0
+    });
+  }
 
-        return res.status(200).json({
-          success: true,
-          message: 'Descarga ZIP registrada',
-          cupos_restantes: limite_zips_mes - uso.descargas_zip_usadas - 1
-        });
-      }
+  // Incrementar contador
+  await sql`
+    UPDATE uso_mensual
+    SET descargas_zip_usadas = descargas_zip_usadas + 1,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+  `;
 
-      if (tipo === 'analisis') {
-        // Verificar límite
-        if (uso.analisis_ia_usados >= limite_analisis_mes) {
-          return res.status(403).json({
-            success: false,
-            error: 'Límite alcanzado',
-            cupos_disponibles: 0
-          });
-        }
+  return res.status(200).json({
+    success: true,
+    message: 'Descarga ZIP registrada',
+    cupos_restantes: limite_total - uso.descargas_zip_usadas - 1
+  });
+}
 
-        // Incrementar contador
-        await sql`
-          UPDATE uso_mensual
-          SET analisis_ia_usados = analisis_ia_usados + 1,
-              updated_at = CURRENT_TIMESTAMP
-          WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
-        `;
+if (tipo === 'analisis') {
+  const limite_total = limite_analisis_mes + (uso.analisis_adicionales || 0);  // ✅ INCLUYE ADICIONALES
 
-        return res.status(200).json({
-          success: true,
-          message: 'Análisis IA registrado',
-          cupos_restantes: limite_analisis_mes - uso.analisis_ia_usados - 1
-        });
-      }
-    }
+  // Verificar límite
+  if (uso.analisis_ia_usados >= limite_total) {
+    return res.status(403).json({
+      success: false,
+      error: 'Límite alcanzado',
+      cupos_disponibles: 0
+    });
+  }
+
+  // Incrementar contador
+  await sql`
+    UPDATE uso_mensual
+    SET analisis_ia_usados = analisis_ia_usados + 1,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+  `;
+
+  return res.status(200).json({
+    success: true,
+    message: 'Análisis IA registrado',
+    cupos_restantes: limite_total - uso.analisis_ia_usados - 1
+  });
+}
+
 // ====================================================
     // ACCIÓN: RE-ANALIZAR OPORTUNIDADES
     // ====================================================
