@@ -31,49 +31,167 @@ if (accion === 'resetear-mensual') {
     });
   }
 
-  // Obtener mes actual
+  // Importar Stripe
+  const stripe = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY);
+
+  // Obtener mes actual y mes anterior
   const primerDiaMes = new Date();
   primerDiaMes.setDate(1);
   primerDiaMes.setHours(0, 0, 0, 0);
   const mesActual = primerDiaMes.toISOString().split('T')[0];
 
-  // Resetear cupos de TODAS las empresas
+  // NUEVO: Calcular mes anterior
+  const primerDiaMesAnterior = new Date(primerDiaMes);
+  primerDiaMesAnterior.setMonth(primerDiaMesAnterior.getMonth() - 1);
+  const mesAnterior = primerDiaMesAnterior.toISOString().split('T')[0];
+
+  // Obtener empresas CON su stripe_subscription_id
   const empresas = await sql`
-    SELECT id, limite_zips_mes, limite_analisis_mes
+    SELECT id, nombre, plan, stripe_subscription_id,
+           limite_zips_mes, limite_analisis_mes
     FROM empresas
     WHERE activo = true
   `;
 
   let reseteadas = 0;
+  let desactivadas = 0;
+  let errores = 0;
+  let cuposTransferidos = 0;
 
+  // Procesar cada empresa
   for (const empresa of empresas) {
-    // Verificar si ya existe registro para este mes
-    const existe = await sql`
-      SELECT id FROM uso_mensual
-      WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
-    `;
+    try {
+      // Variables para almacenar el resultado de la validación
+      let suscripcionActiva = false;
+      let zipLimite = 0;
+      let analisisLimite = 0;
 
-    if (existe.length === 0) {
-      // Crear nuevo registro para el mes
-      await sql`
-        INSERT INTO uso_mensual
-        (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados,
-         zip_adicionales, analisis_adicionales, zip_limite_mes, analisis_limite_mes)
-        VALUES
-        (${empresa.id}, ${mesActual}, 0, 0, 0, 0,
-         ${empresa.limite_zips_mes || 10}, ${empresa.limite_analisis_mes || 5})
-      `;
-      reseteadas++;
+      // Si la empresa tiene stripe_subscription_id, validar con Stripe
+      if (empresa.stripe_subscription_id) {
+        try {
+          const subscription = await stripe.subscriptions.retrieve(
+            empresa.stripe_subscription_id
+          );
+
+          // Verificar estado de la suscripción
+          if (subscription.status === 'active') {
+            suscripcionActiva = true;
+
+            // Asignar límites según el plan
+            if (empresa.plan === 'business') {
+              zipLimite = 10;
+              analisisLimite = 5;
+            } else if (empresa.plan === 'estandar') {
+              zipLimite = 0;
+              analisisLimite = 0;
+            }
+          } else if (subscription.status === 'trialing') {
+            // Empresa en periodo de prueba
+            suscripcionActiva = true;
+            zipLimite = 10;
+            analisisLimite = 5;
+          } else {
+            // Estados: past_due, canceled, incomplete, incomplete_expired, unpaid
+            console.log(`❌ Empresa ${empresa.nombre} (ID: ${empresa.id}) - Suscripción ${subscription.status}`);
+
+            // Desactivar la empresa en la BD
+            await sql`
+              UPDATE empresas
+              SET activo = false
+              WHERE id = ${empresa.id}
+            `;
+            desactivadas++;
+            continue; // Saltar a la siguiente empresa
+          }
+        } catch (stripeError) {
+          console.error(`Error consultando Stripe para empresa ${empresa.id}:`, stripeError.message);
+          errores++;
+          continue; // Saltar a la siguiente empresa
+        }
+      } else {
+        // Si NO tiene stripe_subscription_id, usar valores de la tabla empresas
+        suscripcionActiva = true;
+        zipLimite = empresa.limite_zips_mes || 0;
+        analisisLimite = empresa.limite_analisis_mes || 0;
+      }
+
+      // Solo crear registro si la suscripción está activa
+      if (suscripcionActiva) {
+        // Verificar si ya existe registro para este mes
+        const existe = await sql`
+          SELECT id FROM uso_mensual
+          WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
+        `;
+
+        if (existe.length === 0) {
+          // NUEVO: Obtener cupos sobrantes del mes anterior
+          let zipAdicionalesSobrantes = 0;
+          let analisisAdicionalesSobrantes = 0;
+
+          const mesAnteriorData = await sql`
+            SELECT
+              descargas_zip_usadas,
+              analisis_ia_usados,
+              zip_adicionales,
+              analisis_adicionales,
+              zip_limite_mes,
+              analisis_limite_mes
+            FROM uso_mensual
+            WHERE empresa_id = ${empresa.id} AND mes = ${mesAnterior}
+          `;
+
+          if (mesAnteriorData.length > 0) {
+            const anterior = mesAnteriorData[0];
+
+            // CALCULAR CUPOS ADICIONALES DE ZIP QUE SOBRARON
+            // ¿Cuántos adicionales usó? = max(0, usados - limite_base)
+            const zipAdicionalesUsados = Math.max(0, anterior.descargas_zip_usadas - anterior.zip_limite_mes);
+            // ¿Cuántos le quedan? = adicionales_que_tenia - adicionales_usados
+            zipAdicionalesSobrantes = Math.max(0, anterior.zip_adicionales - zipAdicionalesUsados);
+
+            // CALCULAR CUPOS ADICIONALES DE ANÁLISIS QUE SOBRARON
+            const analisisAdicionalesUsados = Math.max(0, anterior.analisis_ia_usados - anterior.analisis_limite_mes);
+            analisisAdicionalesSobrantes = Math.max(0, anterior.analisis_adicionales - analisisAdicionalesUsados);
+
+            if (zipAdicionalesSobrantes > 0 || analisisAdicionalesSobrantes > 0) {
+              cuposTransferidos++;
+            }
+          }
+
+          // Crear nuevo registro para el mes CON los cupos sobrantes
+          await sql`
+            INSERT INTO uso_mensual
+            (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados,
+             zip_adicionales, analisis_adicionales, zip_limite_mes, analisis_limite_mes)
+            VALUES
+            (${empresa.id}, ${mesActual}, 0, 0,
+             ${zipAdicionalesSobrantes}, ${analisisAdicionalesSobrantes},
+             ${zipLimite}, ${analisisLimite})
+          `;
+          reseteadas++;
+        }
+      }
+    } catch (error) {
+      console.error(`Error procesando empresa ${empresa.id}:`, error);
+      errores++;
     }
   }
 
-  console.log(`✅ Reseteo mensual completado. ${reseteadas} empresas procesadas para ${mesActual}`);
+  // Respuesta con información completa
+  console.log(`✅ Reseteo mensual completado para ${mesActual}`);
+  console.log(`   - ${reseteadas} empresas reseteadas`);
+  console.log(`   - ${cuposTransferidos} empresas con cupos transferidos`);
+  console.log(`   - ${desactivadas} empresas desactivadas`);
+  console.log(`   - ${errores} errores`);
 
   return res.status(200).json({
     success: true,
     message: 'Reseteo mensual completado',
-    empresas_procesadas: reseteadas,
-    mes: mesActual
+    mes: mesActual,
+    empresas_reseteadas: reseteadas,
+    empresas_con_cupos_transferidos: cuposTransferidos,
+    empresas_desactivadas: desactivadas,
+    errores: errores
   });
 }
 
