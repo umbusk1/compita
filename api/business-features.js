@@ -40,7 +40,7 @@ if (accion === 'resetear-mensual') {
   primerDiaMes.setHours(0, 0, 0, 0);
   const mesActual = primerDiaMes.toISOString().split('T')[0];
 
-  // NUEVO: Calcular mes anterior
+  // Calcular mes anterior
   const primerDiaMesAnterior = new Date(primerDiaMes);
   primerDiaMesAnterior.setMonth(primerDiaMesAnterior.getMonth() - 1);
   const mesAnterior = primerDiaMesAnterior.toISOString().split('T')[0];
@@ -55,6 +55,7 @@ if (accion === 'resetear-mensual') {
 
   let reseteadas = 0;
   let desactivadas = 0;
+  let cancelacionesProgramadas = 0; // NUEVO contador
   let errores = 0;
   let cuposTransferidos = 0;
 
@@ -75,6 +76,23 @@ if (accion === 'resetear-mensual') {
 
           // Verificar estado de la suscripción
           if (subscription.status === 'active') {
+            // NUEVO: Detectar cancelaciones programadas
+            if (subscription.cancel_at_period_end === true) {
+              const fechaExpiracion = new Date(subscription.current_period_end * 1000).toISOString();
+              console.log(`⚠️ Empresa ${empresa.nombre} (ID: ${empresa.id}) - Suscripción cancelada, expira el ${fechaExpiracion}`);
+
+              // NO dar cupos para el mes siguiente
+              // La empresa seguirá usando sus cupos actuales hasta que expire
+              await sql`
+                UPDATE empresas
+                SET activo = false
+                WHERE id = ${empresa.id}
+              `;
+              cancelacionesProgramadas++;
+              continue; // Saltar a siguiente empresa
+            }
+
+            // Si llegó aquí, la suscripción está activa normalmente
             suscripcionActiva = true;
 
             // Asignar límites según el plan
@@ -124,7 +142,7 @@ if (accion === 'resetear-mensual') {
         `;
 
         if (existe.length === 0) {
-          // NUEVO: Obtener cupos sobrantes del mes anterior
+          // Obtener cupos sobrantes del mes anterior
           let zipAdicionalesSobrantes = 0;
           let analisisAdicionalesSobrantes = 0;
 
@@ -182,6 +200,7 @@ if (accion === 'resetear-mensual') {
   console.log(`   - ${reseteadas} empresas reseteadas`);
   console.log(`   - ${cuposTransferidos} empresas con cupos transferidos`);
   console.log(`   - ${desactivadas} empresas desactivadas`);
+  console.log(`   - ${cancelacionesProgramadas} empresas con cancelación programada`); // NUEVO
   console.log(`   - ${errores} errores`);
 
   return res.status(200).json({
@@ -191,6 +210,7 @@ if (accion === 'resetear-mensual') {
     empresas_reseteadas: reseteadas,
     empresas_con_cupos_transferidos: cuposTransferidos,
     empresas_desactivadas: desactivadas,
+    empresas_cancelacion_programada: cancelacionesProgramadas, // NUEVO
     errores: errores
   });
 }
