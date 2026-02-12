@@ -21,6 +21,17 @@ export const config = {
   },
 };
 
+// ====================================================
+// HELPER: Calcular primer día del mes siguiente
+// ====================================================
+function getFirstDayOfNextMonth() {
+  const now = new Date();
+  // Crear fecha del primer día del mes siguiente
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0, 0);
+  // Retornar timestamp Unix en segundos (Stripe lo requiere así)
+  return Math.floor(nextMonth.getTime() / 1000);
+}
+
 export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -218,6 +229,7 @@ async function handleAction(req, res) {
         );
       }
 
+      // NUEVO: Crear sesión con billing cycle anclado al 1ro del mes
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         payment_method_types: ['card'],
@@ -225,6 +237,12 @@ async function handleAction(req, res) {
         mode: 'subscription',
         success_url: `${req.headers.origin}/oportunidades.html?checkout=success`,
         cancel_url: `${req.headers.origin}/cuenta.html?checkout=cancelled`,
+        subscription_data: {
+          // Anclar el billing cycle al 1ro del mes siguiente
+          billing_cycle_anchor: getFirstDayOfNextMonth(),
+          // Habilitar prorrateo automático
+          proration_behavior: 'create_prorations',
+        },
         metadata: {
           empresa_id: empresaId.toString(),
           user_id: userId.toString(),
