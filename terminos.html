@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compita - Análisis Inteligente de Licitaciones con IA</title>
+    <meta name="description" content="Encuentra las licitaciones que importan. Claude AI analiza 400+ licitaciones en minutos y te muestra solo las relevantes para tu empresa.">
+    <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Favicon simple que funciona en todos lados -->
+		<link rel="icon" type="image/png" href="favicon-umbusk.png">
+		<!-- Específico para Apple/iOS -->
+		<link rel="apple-touch-icon" href="favicon-umbusk.png">
+    <style>
+	    .mobile-menu {
+	        display: none;
+	    }
+	    .mobile-menu.active {
+	        display: block;
+	    }
+	    @media (max-width: 768px) {
+	        #grafico-diario {
+	            height: 300px !important;
+	        }
+	    }
+</style>
+</head>
+<body class="bg-white">
+<nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+			<!-- Logo -->
+			<div class="flex items-center gap-2">
+				<img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png"
+					 alt="Logo Compita"
+					 class="h-20">
+			</div>
+            <div class="hidden md:flex gap-6 items-center">
+                <a href="#Privacidad" class="text-gray-600 hover:text-indigo-600 transition">Privacidad</a>
+                <a href="#El Servicio" class="text-gray-600 hover:text-indigo-600 transition">El Servicio</a>
+                <a href="#Pagos-Reembolsos" class="text-gray-600 hover:text-indigo-600 transition">Pagos-Reembolsos</a>
+                <a href="#Otros" class="text-indigo-600 hover:text-indigo-800 font-semibold">Otros</a>
+            </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
+            <div class="flex flex-col gap-4">
+                <a href="#Privacidad" class="text-gray-600 hover:text-indigo-600 transition">Privacidad</a>
+                <a href="#El Servicio" class="text-gray-600 hover:text-indigo-600 transition">El Servicio</a>
+                <a href="#Pagos-Reembolsos" class="text-gray-600 hover:text-indigo-600 transition">Pagos-Reembolsos</a>
+                <a href="#Otros" class="text-indigo-600 hover:text-indigo-800 font-semibold">Otros</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section id="Privacidad" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-gray-900 text-center mb-16">
+                Tres pasos simples
+            </h2>
+
+            <div class="space-y-12">
+                <div class="flex gap-6 items-start">
+                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Crea tu perfil de empresa</h3>
+                        <p class="text-gray-600 mb-4">Define tu perfil con tres capas de filtrado inteligente:</p>
+                        <div class="bg-indigo-50 rounded-lg p-4 space-y-3">
+                            <div class="flex gap-3 items-start">
+                                <span class="text-indigo-600 font-bold">1.</span>
+                                <div>
+                                    <strong class="text-gray-900">Categorías UNSPSC</strong>
+                                    <p class="text-gray-600 text-sm">Selecciona las familias de productos/servicios de tu interés (ej: Construcción, Tecnología, Consultoría)</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <span class="text-indigo-600 font-bold">2.</span>
+                                <div>
+                                    <strong class="text-gray-900">Palabras clave</strong>
+                                    <p class="text-gray-600 text-sm">Define términos específicos dentro de esas categorías (ej: "capacitación", "software", "mantenimiento")</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <span class="text-indigo-600 font-bold">3.</span>
+                                <div>
+                                    <strong class="text-gray-900">Exclusiones</strong>
+                                    <p class="text-gray-600 text-sm">Descarta automáticamente lo que NO te interesa (ej: "alimentos", "construcción de carreteras")</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mt-4">Este triple filtrado asegura que solo lleguen oportunidades verdaderamente relevantes.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 items-start">
+                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">El sistema analiza automáticamente las licitaciones</h3>
+                        <p class="text-gray-600">Nuestro scraper carga <strong>2 veces al día (L-V)</strong> todas las nuevas licitaciones del <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">portal SECP</a>. Claude AI las analiza en tres etapas: primero filtra por categorías UNSPSC, luego por palabras clave, y finalmente evalúa la relevancia según el perfil de tu empresa.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 items-start">
+                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Recibe solo las oportunidades de ALTA y MEDIA relevancia</h3>
+                        <p class="text-gray-600">Un dashboard limpio muestra las licitaciones que realmente importan, con alertas por email opcionales. Ve el nivel de relevancia, monto y detalles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="El Servicio" class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-gray-900 text-center mb-4">Planes transparentes</h2>
+            <p class="text-center text-gray-600 mb-12">Comienza gratis ¡con el Plan Business!</p>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <div class="border-2 border-indigo-600 rounded-2xl p-8 relative shadow-lg">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold">Más Popular</div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Estándar</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">$10</span>
+                        <span class="text-gray-600">/mes</span>
+                    </div>
+
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Perfil empresarial completo</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>2 categorías UNSPSC</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Scraping automático 2x/día (L-V)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Análisis inteligente con IA</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Notificaciones por email (resumen)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Dashboard de oportunidades</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Historial de 1 mes</span>
+                        </li>
+                    </ul>
+					<a href="/registro.html?plan=business" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-gray-200 transition font-semibold flex items-center justify-center gap-2">
+					    <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+					    Comenzar
+                    </a>
+                </div>
+
+                <div class="border-2 border-gray-200 rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Business (el preferido)</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">$20</span>
+                        <span class="text-gray-600">/mes</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4 h-6">Todo lo del Estándar, más:</p>
+
+                    <ul class="space-y-3 mb-8 text-sm">
+                    	<li class="flex items-start gap-2">
+						    <span class="text-green-600 text-lg">✓</span>
+						    <span class="text-gray-700"><strong>✨ Prueba gratis de 7 días</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>5 categorías UNSPSC</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Notificaciones detalladas</strong> con análisis completo</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Enlaces directos</strong> a documentos y procedimientos</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Profundizar análisis con IA</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Documentación detallada</strong> de licitaciones</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Historial de 3 meses</strong></span>
+                        </li>
+                    </ul>
+                    <a href="/registro.html" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center justify-center gap-2">
+						<img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+					    Comenzar Prueba Gratis
+                    </a>
+
+                </div>
+
+                <div class="border-2 border-gray-200 rounded-2xl p-8 bg-gradient-to-br from-gray-50 to-white">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">Custom</span>
+                        <span class="text-gray-600 text-base">/año</span>
+                    </div>
+                    <p class="text-sm text-gray-500 mb-4 h-6">Todo en Business, más:</p>
+                    <ul class="space-y-3 mb-8 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Categorías UNSPSC ilimitadas</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Recomendaciones IA</strong> para preparar ofertas</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Acompañamiento de consultor</strong> especializado</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>Revisión de documentos</strong> antes de envío</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Soporte prioritario</span>
+                        </li>
+                    </ul>
+                    <a href="mailto:sales@umbusk.com?subject=Interés en Plan Enterprise - Compita" class="block text-center bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold flex items-center justify-center gap-2">
+                        📧 Contáctanos
+                    </a>
+                </div>
+            </div>
+
+<div class="bg-gray-50 rounded-2xl p-4 md:p-8">
+    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Comparación Detallada</h3>
+
+    <div class="hidden lg:block overflow-x-auto">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="border-b-2 border-gray-300">
+                    <th class="py-3 px-4 font-semibold text-gray-700">Funcionalidad</th>
+                    <th class="py-3 px-4 text-center font-semibold text-indigo-600">Estándar</th>
+                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Business</th>
+                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Enterprise</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm">
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4 font-semibold text-gray-800">Precio</td>
+                    <td class="py-3 px-4 text-center text-indigo-600 font-bold">$10/mes</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-bold">$20/mes</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-bold">Custom</td>
+                </tr>
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Funcionalidades Base</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Perfil Empresarial</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Categorías UNSPSC</td>
+                    <td class="py-3 px-4 text-center text-gray-600 font-semibold">2</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-bold">5</td>
+                    <td class="py-3 px-4 text-center text-green-600 font-bold">Ilimitado</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Scraping Automático</td>
+                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Análisis con IA</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Notificaciones</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Notificaciones por Email</td>
+                    <td class="py-3 px-4 text-center text-gray-600">Resumen básico</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Enlaces a Documentos</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Dashboard</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Dashboard de Oportunidades</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Profundizar con IA</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Documentación Detallada</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Historial Disponible</td>
+                    <td class="py-3 px-4 text-center text-gray-600">1 mes</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
+                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Filtros y Búsqueda</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+
+                <tr class="bg-gray-100">
+                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Servicios Premium</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Recomendaciones IA para Ofertas</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+                <tr class="border-b border-gray-200">
+                    <td class="py-3 px-4">Acompañamiento Consultor</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="lg:hidden space-y-6">
+        <div class="bg-white rounded-lg p-4 shadow">
+            <h4 class="text-lg font-bold text-indigo-600 mb-3">Plan Estándar - $10/mes</h4>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between py-1 border-b">
+                    <span> - </span>
+                    <span class="text-green-600 font-semibold"> - </span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Categorías UNSPSC</span>
+                    <span class="text-gray-600 font-semibold">2</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Scraping Automático</span>
+                    <span class="text-gray-600">2x/día (L-V)</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Análisis con IA</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Notificaciones Email</span>
+                    <span class="text-gray-600">Resumen</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span>Historial</span>
+                    <span class="text-gray-600">1 mes</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow">
+            <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Business - $20/mes</h4>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between py-1 border-b">
+                    <span>Todo lo de Estándar</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+				    <span>Prueba Gratuita</span>
+				    <span class="text-green-600 font-semibold">✓ 7 días</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Categorías UNSPSC</span>
+                    <span class="text-gray-800 font-bold">5</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Notificaciones Email</span>
+                    <span class="text-gray-800 font-semibold">Completas</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Profundizar con IA</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Documentación Detallada</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span>Historial</span>
+                    <span class="text-gray-800 font-semibold">3 meses</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg p-4 shadow">
+            <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Enterprise - Custom</h4>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between py-1 border-b">
+                    <span>Todo lo de Business</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Categorías UNSPSC</span>
+                    <span class="text-green-600 font-bold">Ilimitado</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Recomendaciones IA</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1 border-b">
+                    <span>Acompañamiento</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span>Revisión documentos</span>
+                    <span class="text-green-600">✓</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <p class="text-center text-gray-600 mt-8">
+                💬 ¿Dudas sobre qué plan elegir? <a href="mailto:sales@umbusk.com" class="text-indigo-600 font-semibold hover:text-indigo-800">Escríbenos</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section id="Pagos-Reembolsos" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl font-bold text-gray-900 text-center mb-12">Preguntas Frecuentes</h2>
+            <div class="space-y-6">
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Necesito tarjeta de crédito para la prueba gratuita?</summary>
+                    <p class="text-gray-600 mt-4">No. La prueba de 7 días es completamente gratuita y no requiere tarjeta de crédito. Solo necesitas un email corporativo válido.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Funciona con cualquier portal de compras?</summary>
+                    <p class="text-gray-600 mt-4">Actualmente optimizado para el portal de República Dominicana. Próximamente soportaremos otros países de LATAM.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Cómo funciona la IA de análisis?</summary>
+                    <p class="text-gray-600 mt-4">Usamos Claude AI de Anthropic para leer cada licitación que puede ser relevante según las categorías UNSPSC y palabras clave, entender el contexto de las pre-seleccionadas y evaluar su nivel de relevancia de acuerdo con el perfil de tu empresa. No es búsqueda simple de palabras, es comprensión semántica real de las oportunidades que importan.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Puedo cancelar en cualquier momento?</summary>
+                    <p class="text-gray-600 mt-4">Sí. Sin contratos ni permanencia mínima. Cancelas cuando quieras desde tu cuenta.</p>
+                </details>
+                <details class="bg-white rounded-lg p-6 shadow-sm">
+                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Mis datos están seguros?</summary>
+                    <p class="text-gray-600 mt-4">Absolutamente. Usamos encriptación end-to-end, base de datos PostgreSQL en Neon con backups diarios, y cumplimos con mejores prácticas de seguridad.</p>
+                </details>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="Otros" class="py-20 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6">Comienza a encontrar las mejores oportunidades que importan hoy</h2>
+            <p class="text-xl text-indigo-100 mb-8">7 días gratis. Sin tarjeta de crédito. Configura en 2 minutos.</p>
+            <a href="/registro.html" class="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition font-semibold text-lg shadow-xl">
+                <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
+                ¡Pruébalo gratis ya!
+            </a>
+            <p class="text-sm text-indigo-200 mt-6">¿Ya tienes cuenta? <a href="/login.html" class="underline hover:text-white">Iniciar sesión</a></p>
+        </div>
+    </div>
+</section>
+
+<footer class="bg-gray-900 text-gray-400 py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+			<!-- Logo -->
+			<div class="flex items-center gap-2">
+				<img src="LogoCompita_FondoNegro_VT_Chato_T.png"
+					 alt="Logo Compita"
+					 class="h-20">
+			</div>
+                <p class="text-sm">Análisis inteligente de licitaciones con IA</p>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4">Producto</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#como-funciona" class="hover:text-white transition">Cómo Funciona</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition">Precios</a></li>
+                    <li><a href="#faq" class="hover:text-white transition">FAQ</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4">Legal</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/terminos" class="hover:text-white transition">Términos y Condiciones</a></li>
+                    <li><a href="/privacidad" class="hover:text-white transition">Política de Privacidad</a></li>
+                    <li><a href="/cookies" class="hover:text-white transition">Política de Cookies</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="text-white font-semibold mb-4">Contacto</h3>
+                <ul class="space-y-2 text-sm">
+                    <li>
+                      <a href="https://compitaforms.netlify.app/index.html" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">
+                        <span class="lang-es">Llenar forma de contacto</span>
+                      </a>
+                    </li>
+                    <li><a href="https://umbusk.com" target="_blank" class="hover:text-white transition">umbusk.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 text-center text-sm">
+        	<!-- Logo Umbusk -->
+			<div>
+				<img src="logo-umbusk.png"
+					alt="Logo Umbusk"
+					class="h-20"
+					style="display: block; margin: 0 auto; max-width: 100%;">
+			</div>
+            <p>Vibe-coded by <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">UMBUSK</a><br>and Claude from Anthropic.</p>
+            <p class="mt-2">© 2026 Compita es un servicio de Umbusk, LLC. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
