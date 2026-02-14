@@ -620,6 +620,76 @@
         </div>
     </div>
 </div>
+
+<!-- Modal: Trial Expirado (BLOQUEANTE) -->
+<div id="modal-trial-expirado" class="hidden fixed inset-0 bg-black bg-opacity-75 z-[9999] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full">
+        <div class="bg-gradient-to-r from-red-600 to-orange-600 text-white p-6 rounded-t-2xl">
+            <div class="text-center">
+                <div class="text-5xl mb-3">⏰</div>
+                <h3 class="text-2xl font-bold mb-2">Tu Prueba Gratuita Ha Finalizado</h3>
+                <p class="text-white/90">Para continuar usando Compita, suscríbete a uno de nuestros planes</p>
+            </div>
+        </div>
+
+        <div class="p-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-sm text-blue-800">
+                    <strong>Durante tu prueba gratuita:</strong>
+                </p>
+                <ul class="text-sm text-blue-800 mt-2 space-y-1 ml-4">
+                    <li>✓ Recibiste oportunidades relevantes diariamente</li>
+                    <li>✓ Usaste análisis con IA</li>
+                    <li>✓ Descargaste documentos del SECP</li>
+                </ul>
+            </div>
+
+            <p class="text-gray-700 mb-6 text-center font-semibold">
+                ¡Suscríbete ahora para seguir recibiendo las oportunidades que importan!
+            </p>
+
+            <div class="space-y-3">
+                <!-- Plan Estándar -->
+                <button
+                    onclick="iniciarUpgrade('estandar')"
+                    class="w-full bg-indigo-600 text-white px-6 py-4 rounded-lg hover:bg-indigo-700 transition font-bold text-center shadow-md hover:shadow-lg"
+                >
+                    <div class="flex items-center justify-between">
+                        <div class="text-left">
+                            <div class="text-sm opacity-90">Plan Estándar</div>
+                            <div class="text-xs opacity-75 mt-1">Análisis diario + Notificaciones</div>
+                        </div>
+                        <div class="text-2xl">$10/mes</div>
+                    </div>
+                </button>
+
+                <!-- Plan Business -->
+                <button
+                    onclick="iniciarUpgrade('business')"
+                    class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center shadow-md hover:shadow-lg"
+                >
+                    <div class="flex items-center justify-between">
+                        <div class="text-left">
+                            <div class="text-sm font-bold">Plan Business</div>
+                            <div class="text-xs opacity-75 mt-1">+ Descargas + Análisis IA profundo</div>
+                        </div>
+                        <div class="text-2xl">$20/mes</div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+                <button
+                    onclick="cerrarSesion()"
+                    class="text-sm text-gray-600 hover:text-gray-900 underline"
+                >
+                    Cerrar sesión
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="bg-gray-900 text-gray-400 py-12">
     <div class="container mx-auto px-4">
         <div class="border-t border-gray-800 pt-8 text-center text-sm">
@@ -743,35 +813,70 @@
             await cargarOportunidades();
         });
 
-        async function cargarDatosUsuario() {
-            try {
-                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-                const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
+async function cargarDatosUsuario() {
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    datosEmpresa = data.empresa;
-                    document.getElementById('nombre-empresa').textContent = data.empresa.nombre;
-                    document.getElementById('nombre-empresa-mobile').textContent = data.empresa.nombre;
+        if (response.ok) {
+            const data = await response.json();
+            datosEmpresa = data.empresa;
+            document.getElementById('nombre-empresa').textContent = data.empresa.nombre;
+            document.getElementById('nombre-empresa-mobile').textContent = data.empresa.nombre;
 
-                    planActual = data.empresa.plan;
+            planActual = data.empresa.plan;
 
-                    if (planActual === 'business' || planActual === 'enterprise' || planActual === 'free_trial') {
-                        await cargarCuposBusiness();
-                    }
+            // ===== NUEVO: Detectar trial expirado =====
+            if (planActual === 'free_trial') {
+                const ahora = new Date();
+                const fin = new Date(data.empresa.trial_fin);
+                const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
 
-                    if (data.empresa.plan === 'free_trial') {
-                        mostrarMedidorTrial(data.empresa.trial_fin);
-                    }
+                if (diasRestantes < 0) {
+                    // Trial expirado - mostrar modal bloqueante
+                    mostrarModalTrialExpirado();
+                    return; // No cargar nada más
                 } else {
-                    cerrarSesion();
+                    // Trial activo - mostrar medidor
+                    mostrarMedidorTrial(data.empresa.trial_fin);
                 }
-            } catch (error) {
-                console.error('Error cargando usuario:', error);
             }
+
+            if (planActual === 'business' || planActual === 'enterprise' || planActual === 'free_trial') {
+                await cargarCuposBusiness();
+            }
+        } else {
+            cerrarSesion();
         }
+    } catch (error) {
+        console.error('Error cargando usuario:', error);
+    }
+}
+
+// ============================================
+// MOSTRAR MODAL DE TRIAL EXPIRADO (BLOQUEANTE)
+// ============================================
+function mostrarModalTrialExpirado() {
+    const modal = document.getElementById('modal-trial-expirado');
+    modal.classList.remove('hidden');
+
+    // Difuminar y deshabilitar el contenido detrás
+    const contenidoPrincipal = document.querySelector('.container');
+    if (contenidoPrincipal) {
+        contenidoPrincipal.style.filter = 'blur(8px)';
+        contenidoPrincipal.style.pointerEvents = 'none';
+    }
+
+    // Bloquear scroll
+    document.body.style.overflow = 'hidden';
+
+    // El modal NO se puede cerrar clickeando fuera
+    modal.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+}
 
 async function cargarCuposBusiness() {
     try {
@@ -924,7 +1029,16 @@ function renderizarOportunidades() {
     sinResultados.classList.add('hidden');
 
     const html = oportunidadesFiltradas.map(op => {
-        const esBusiness = planActual === 'business' || planActual === 'enterprise' || planActual === 'free_trial';
+// Verificar si tiene acceso Business (y que no esté expirado si es trial)
+let esBusiness = false;
+if (planActual === 'business' || planActual === 'enterprise') {
+    esBusiness = true;
+} else if (planActual === 'free_trial' && datosEmpresa && datosEmpresa.trial_fin) {
+    const ahora = new Date();
+    const fin = new Date(datosEmpresa.trial_fin);
+    const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
+    esBusiness = diasRestantes >= 0; // Solo si no expiró
+}
 
         return `
         <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 mb-4 hover:shadow-md transition">
