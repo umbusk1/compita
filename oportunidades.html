@@ -861,44 +861,6 @@ async function cargarCuposBusiness() {
             }
         }
 
-        // En oportunidades.html, después de cargar oportunidades:
-
-		if (oportunidades.length === 0) {
-		  mostrarAlertaConfiguracion();
-		}
-
-		function mostrarAlertaConfiguracion() {
-		  const alert = `
-		    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-		      <div class="flex">
-		        <div class="flex-shrink-0">
-		          ⚠️
-		        </div>
-		        <div class="ml-3">
-		          <h3 class="text-sm font-medium text-yellow-800">
-		            No hemos encontrado oportunidades para tu empresa
-		          </h3>
-		          <div class="mt-2 text-sm text-yellow-700">
-		            <p>Esto puede deberse a:</p>
-		            <ul class="list-disc list-inside mt-2">
-		              <li>Palabras clave muy específicas</li>
-		              <li>Criterios de filtrado muy restrictivos</li>
-		            </ul>
-		            <p class="mt-3">
-		              <a href="/perfil.html" class="font-medium underline text-yellow-700 hover:text-yellow-600">
-		                Revisa tu configuración aquí
-		              </a>
-		              o contáctanos para ayudarte a optimizarla.
-		            </p>
-		          </div>
-		        </div>
-		      </div>
-		    </div>
-		  `;
-
-		  document.querySelector('.container').insertAdjacentHTML('afterbegin', alert);
-}
-
         function filtrarOportunidades() {
             const busqueda = document.getElementById('busqueda').value.toLowerCase();
             const relevancia = document.getElementById('filtro-relevancia').value;
@@ -933,6 +895,14 @@ async function cargarCuposBusiness() {
 function renderizarOportunidades() {
     const container = document.getElementById('lista-oportunidades');
     const sinResultados = document.getElementById('sin-resultados');
+
+    // ====== NUEVA LÓGICA: Alerta de 0 oportunidades ======
+    if (todasOportunidades.length === 0) {
+        container.innerHTML = '';
+        sinResultados.classList.add('hidden');
+        mostrarAlertaConfiguracion();
+        return;
+    }
 
     if (oportunidadesFiltradas.length === 0) {
         container.innerHTML = '';
@@ -1061,16 +1031,61 @@ ${esBusiness ? `
     cargarEstadosGuardados();
 }
 
-        // Función helper para escapar HTML en atributos
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
+// ============================================
+// ALERTA: 0 OPORTUNIDADES DETECTADAS
+// ============================================
+function mostrarAlertaConfiguracion() {
+    const container = document.getElementById('lista-oportunidades');
+
+    const alert = `
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-6 mb-6 shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <span class="text-3xl">⚠️</span>
+                </div>
+                <div class="ml-4 flex-1">
+                    <h3 class="text-lg font-bold text-yellow-900 mb-3">
+                        No hemos encontrado oportunidades para tu empresa
+                    </h3>
+                    <div class="text-sm text-yellow-800 space-y-3">
+                        <p class="font-semibold">Esto puede deberse a:</p>
+                        <ul class="list-disc list-inside space-y-1 ml-2">
+                            <li><strong>Palabras clave demasiado específicas</strong> (marcas, modelos, términos técnicos muy especializados)</li>
+                            <li><strong>Categorías UNSPSC muy restrictivas</strong> o no configuradas</li>
+                            <li><strong>Exclusiones que están bloqueando oportunidades relevantes</strong></li>
+                        </ul>
+
+                        <div class="bg-yellow-100 border border-yellow-300 rounded-lg p-4 mt-4">
+                            <p class="font-semibold text-yellow-900 mb-2">💡 ¿Qué hacer?</p>
+                            <ol class="list-decimal list-inside space-y-2 text-yellow-900">
+                                <li>Usa <strong>palabras genéricas</strong> (ej: "mantenimiento", "equipos", "servicios")</li>
+                                <li>Evita nombres de marcas o modelos específicos</li>
+                                <li>Revisa tus categorías UNSPSC en Mi Cuenta</li>
+                            </ol>
+                        </div>
+
+                        <div class="flex gap-3 mt-6">
+                            <a
+                                href="/cuenta.html"
+                                class="inline-block bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 transition font-semibold shadow-md"
+                            >
+                                📝 Optimizar mi configuración
+                            </a>
+                            <a
+                                href="mailto:soporte@umbusk.com?subject=Ayuda con configuración Compita&body=Hola, necesito ayuda para optimizar mi configuración en Compita porque no estoy viendo oportunidades."
+                                class="inline-block bg-white text-yellow-700 border-2 border-yellow-600 px-6 py-3 rounded-lg hover:bg-yellow-50 transition font-semibold"
+                            >
+                                💬 Solicitar ayuda
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = alert;
+}
 
 		// ============================================
         // BOTÓN 1: DESCARGAR DOCUMENTO (PDF)
