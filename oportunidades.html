@@ -892,6 +892,17 @@ async function cargarCuposBusiness() {
             actualizarEstadisticas();
         }
 
+// Función helper para escapar HTML en atributos
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 function renderizarOportunidades() {
     const container = document.getElementById('lista-oportunidades');
     const sinResultados = document.getElementById('sin-resultados');
