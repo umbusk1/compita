@@ -106,22 +106,53 @@
                                 </p>
                             </div>
 
-                            <!-- Palabras Clave -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">
-                                    Palabras Clave (separadas por coma)
-                                </label>
-                                <textarea
-                                    id="empresa-palabras-clave"
-                                    rows="3"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
-                                    placeholder="capacitación, formación, cursos, talleres, consultoría"
-                                ></textarea>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    💡 Licitaciones con AL MENOS una de estas palabras serán clasificadas como MEDIA relevancia
-                                </p>
-                            </div>
+							<!-- Palabras Clave -->
+							<div>
+								<label class="block text-sm font-medium text-gray-700 mb-2">
+									Palabras Clave (separadas por coma)
+								</label>
 
+								<!-- NUEVO: Box de sugerencias -->
+								<div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-3 rounded-r-lg">
+									<div class="flex">
+										<div class="flex-shrink-0">
+											<span class="text-2xl">💡</span>
+										</div>
+										<div class="ml-3">
+											<h3 class="text-sm font-medium text-blue-800 mb-2">
+												Usa palabras GENÉRICAS, no marcas o modelos específicos
+											</h3>
+											<div class="text-xs text-blue-700 space-y-2">
+												<div>
+													<strong class="text-green-700">✅ Palabras efectivas:</strong>
+													<div class="mt-1 font-mono bg-green-50 px-2 py-1 rounded">
+														mantenimiento, equipos, servicios, consultoría, capacitación, sistemas, suministro
+													</div>
+												</div>
+												<div>
+													<strong class="text-red-700">❌ Evita palabras muy específicas:</strong>
+													<div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">
+														Guardian Z-Series, Kopr-Kote, modelo XYZ-2000, marca específica
+													</div>
+												</div>
+												<p class="mt-2 text-blue-600 italic">
+													Las licitaciones usan lenguaje genérico. Palabras muy técnicas pueden resultar en 0 oportunidades detectadas.
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<textarea
+									id="empresa-palabras-clave"
+									rows="4"
+									class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+									placeholder="Ejemplo: mantenimiento, equipos, lubricación, filtración, servicios industriales, capacitación"
+								></textarea>
+								<p class="text-xs text-gray-500 mt-1">
+									💡 Licitaciones con AL MENOS una de estas palabras serán clasificadas como MEDIA relevancia
+								</p>
+							</div>
                             <!-- Exclusiones -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">

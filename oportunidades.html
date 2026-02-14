@@ -861,6 +861,44 @@ async function cargarCuposBusiness() {
             }
         }
 
+        // En oportunidades.html, después de cargar oportunidades:
+
+		if (oportunidades.length === 0) {
+		  mostrarAlertaConfiguracion();
+		}
+
+		function mostrarAlertaConfiguracion() {
+		  const alert = `
+		    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+		      <div class="flex">
+		        <div class="flex-shrink-0">
+		          ⚠️
+		        </div>
+		        <div class="ml-3">
+		          <h3 class="text-sm font-medium text-yellow-800">
+		            No hemos encontrado oportunidades para tu empresa
+		          </h3>
+		          <div class="mt-2 text-sm text-yellow-700">
+		            <p>Esto puede deberse a:</p>
+		            <ul class="list-disc list-inside mt-2">
+		              <li>Palabras clave muy específicas</li>
+		              <li>Criterios de filtrado muy restrictivos</li>
+		            </ul>
+		            <p class="mt-3">
+		              <a href="/perfil.html" class="font-medium underline text-yellow-700 hover:text-yellow-600">
+		                Revisa tu configuración aquí
+		              </a>
+		              o contáctanos para ayudarte a optimizarla.
+		            </p>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+		  `;
+
+		  document.querySelector('.container').insertAdjacentHTML('afterbegin', alert);
+}
+
         function filtrarOportunidades() {
             const busqueda = document.getElementById('busqueda').value.toLowerCase();
             const relevancia = document.getElementById('filtro-relevancia').value;
