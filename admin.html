@@ -486,6 +486,100 @@
     </div>
 </div>
 
+<!-- Modal Invitar Administrador -->
+<div id="modal-invitar-admin" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <span>👥</span>
+                <span>Invitar Administrador</span>
+            </h3>
+            <button onclick="cerrarModalInvitar()" class="text-white hover:text-gray-200 text-2xl">×</button>
+        </div>
+
+        <!-- Formulario -->
+        <form onsubmit="invitarAdministrador(event)" class="p-6 space-y-6">
+
+            <!-- Información del Admin -->
+            <div class="space-y-4">
+                <h4 class="text-sm font-semibold text-gray-700 uppercase border-b pb-2">Información del Administrador</h4>
+
+                <!-- Nombre -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre Completo *</label>
+                    <input type="text" id="invitar-nombre" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        placeholder="Ej: María González">
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+                    <input type="email" id="invitar-email" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
+                        placeholder="Ej: maria@compita.com">
+                    <p class="text-xs text-gray-500 mt-1">Se enviará un correo con las credenciales de acceso</p>
+                </div>
+
+                <!-- Rol -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Rol *</label>
+                    <select id="invitar-rol" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <option value="admin">Admin - Acceso al dashboard</option>
+                        <option value="superadmin">Superadmin - Acceso completo + invitar otros admins</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">
+                        <strong>Admin:</strong> Puede ver y gestionar empresas<br>
+                        <strong>Superadmin:</strong> Puede todo + invitar otros administradores
+                    </p>
+                </div>
+
+                <!-- Contraseña temporal (generada automáticamente) -->
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-sm font-semibold text-purple-900">Contraseña Temporal</label>
+                        <button type="button" onclick="generarPasswordAdmin()"
+                            class="text-xs bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700">
+                            🔄 Regenerar
+                        </button>
+                    </div>
+                    <input type="text" id="invitar-password" readonly
+                        class="w-full px-4 py-2 border border-purple-300 rounded-lg bg-white font-mono text-sm"
+                        value="">
+                    <p class="text-xs text-purple-700 mt-2">El administrador deberá cambiarla en su primer acceso</p>
+                </div>
+            </div>
+
+            <!-- Nota informativa -->
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
+                <div class="flex items-start gap-3">
+                    <span class="text-xl">ℹ️</span>
+                    <div>
+                        <p class="text-sm font-semibold text-blue-800 mb-1">Acceso al Dashboard Admin</p>
+                        <p class="text-sm text-blue-700">
+                            El nuevo administrador recibirá un email con el enlace de acceso y sus credenciales.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-3 pt-4 border-t">
+                <button type="button" onclick="cerrarModalInvitar()"
+                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition font-medium">
+                    📧 Enviar Invitación
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
     <script>
         const API_BASE = window.location.origin;
         let adminData = null;
@@ -1106,9 +1200,86 @@ async function forzarAnalisis() {
     }
 }
 
-        function invitarAdmin() {
-            alert('🚧 Invitar administrador - Próximamente en Fase 3');
+// ============================================
+// MODAL INVITAR ADMINISTRADOR
+// ============================================
+function abrirModalInvitar() {
+    generarPasswordAdmin();
+    document.getElementById('modal-invitar-admin').classList.remove('hidden');
+}
+
+function cerrarModalInvitar() {
+    document.getElementById('invitar-nombre').value = '';
+    document.getElementById('invitar-email').value = '';
+    document.getElementById('invitar-rol').value = 'admin';
+    document.getElementById('modal-invitar-admin').classList.add('hidden');
+}
+
+function generarPasswordAdmin() {
+    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%&';
+    let password = '';
+    for (let i = 0; i < 12; i++) {
+        password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    document.getElementById('invitar-password').value = password;
+}
+
+async function invitarAdministrador(event) {
+    event.preventDefault();
+
+    const nombre = document.getElementById('invitar-nombre').value.trim();
+    const email = document.getElementById('invitar-email').value.trim().toLowerCase();
+    const password = document.getElementById('invitar-password').value;
+    const rol = document.getElementById('invitar-rol').value;
+
+    if (!nombre || !email || !password || !rol) {
+        alert('❌ Por favor completa todos los campos');
+        return;
+    }
+
+    if (!email.includes('@')) {
+        alert('❌ El email no es válido');
+        return;
+    }
+
+    if (!confirm(`¿Enviar invitación a ${nombre} (${email}) como ${rol.toUpperCase()}?`)) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=invitar_admin`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                nombre: nombre,
+                email: email,
+                password: password,
+                rol: rol
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`✅ Invitación enviada exitosamente!\n\n📧 ${nombre} recibirá un email con sus credenciales de acceso.`);
+            cerrarModalInvitar();
+            await cargarEstadisticas();
+        } else {
+            alert(`❌ Error: ${data.error}`);
         }
+    } catch (error) {
+        console.error('Error al invitar administrador:', error);
+        alert('❌ Error al enviar la invitación');
+    }
+}
+
+function invitarAdmin() {
+    abrirModalInvitar();
+}
 
 // ============================================
 // MODAL CREAR NUEVA EMPRESA
