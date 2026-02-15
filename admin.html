@@ -179,6 +179,167 @@
         </div>
     </div>
 
+<!-- Modal Ver Empresa -->
+<div id="modal-ver-empresa" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <span>🏢</span>
+                <span id="ver-nombre-empresa">Cargando...</span>
+            </h3>
+            <button onclick="cerrarModalVer()" class="text-white hover:text-gray-200 text-2xl">×</button>
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-6 space-y-6">
+            <!-- Información General -->
+            <div>
+                <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Información General</h4>
+                <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+                    <div>
+                        <p class="text-xs text-gray-500">Dominio</p>
+                        <p class="font-semibold text-gray-900" id="ver-dominio">-</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Email Usuario</p>
+                        <p class="font-semibold text-gray-900" id="ver-email">-</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Plan Actual</p>
+                        <p class="font-semibold text-gray-900" id="ver-plan">-</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500">Estado</p>
+                        <p class="font-semibold text-gray-900" id="ver-estado">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuración -->
+            <div>
+                <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Configuración de Búsqueda</h4>
+                <div class="bg-gray-50 p-4 rounded-lg space-y-3">
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Palabras Clave</p>
+                        <div id="ver-palabras-clave" class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Cargando...</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Familias UNSPSC</p>
+                        <div id="ver-familias-unspsc" class="flex flex-wrap gap-2">
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Cargando...</span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Monto Mínimo</p>
+                        <p class="font-semibold text-gray-900" id="ver-monto-minimo">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Uso -->
+            <div>
+                <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Uso del Servicio</h4>
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-blue-50 p-4 rounded-lg text-center">
+                        <p class="text-2xl font-bold text-blue-600" id="ver-oportunidades">0</p>
+                        <p class="text-xs text-gray-600 mt-1">Oportunidades</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg text-center">
+                        <p class="text-2xl font-bold text-green-600" id="ver-descargas">0</p>
+                        <p class="text-xs text-gray-600 mt-1">Descargas Mes</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg text-center">
+                        <p class="text-2xl font-bold text-purple-600" id="ver-analisis">0</p>
+                        <p class="text-xs text-gray-600 mt-1">Análisis IA Mes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 rounded-b-xl">
+            <button onclick="cerrarModalVer()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium">
+                Cerrar
+            </button>
+            <button onclick="abrirEditarDesdeVer()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">
+                ✏️ Editar Empresa
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Empresa -->
+<div id="modal-editar-empresa" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <span>✏️</span>
+                <span>Editar Empresa</span>
+            </h3>
+            <button onclick="cerrarModalEditar()" class="text-white hover:text-gray-200 text-2xl">×</button>
+        </div>
+
+        <!-- Formulario -->
+        <form onsubmit="guardarCambios(event)" class="p-6 space-y-6">
+            <input type="hidden" id="editar-empresa-id">
+
+            <!-- Plan -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Plan de Suscripción</label>
+                <select id="editar-plan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="free_trial">Free Trial (7 días)</option>
+                    <option value="basico">Básico - $10/mes</option>
+                    <option value="business">Business - $20/mes</option>
+                    <option value="enterprise">Enterprise - Personalizado</option>
+                </select>
+            </div>
+
+            <!-- Estado -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Estado de la Empresa</label>
+                <div class="flex items-center gap-4">
+                    <label class="flex items-center gap-2">
+                        <input type="radio" name="estado" value="true" id="estado-activo" class="w-4 h-4">
+                        <span class="text-sm">✅ Activa</span>
+                    </label>
+                    <label class="flex items-center gap-2">
+                        <input type="radio" name="estado" value="false" id="estado-inactivo" class="w-4 h-4">
+                        <span class="text-sm">❌ Inactiva</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Cuotas (solo para Business) -->
+            <div id="cuotas-section" class="hidden space-y-3">
+                <h4 class="text-sm font-semibold text-gray-700">Resetear Cuotas Mensuales</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <button type="button" onclick="resetearDescargas()" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition text-sm font-medium">
+                        🔄 Resetear Descargas
+                    </button>
+                    <button type="button" onclick="resetearAnalisis()" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition text-sm font-medium">
+                        🔄 Resetear Análisis IA
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500">Las cuotas se resetean automáticamente cada mes, pero puedes hacerlo manualmente aquí.</p>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-3 pt-4 border-t">
+                <button type="button" onclick="cerrarModalEditar()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium">
+                    Cancelar
+                </button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+                    💾 Guardar Cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
     <script>
         const API_BASE = window.location.origin;
         let adminData = null;
@@ -365,14 +526,257 @@
             tabActual = tab;
         }
 
-        function verEmpresa(id) {
-            alert(`🚧 Ver detalles de empresa ${id} - Próximamente`);
+// Variable global para guardar el ID de la empresa actual
+let empresaActualId = null;
+
+// ============================================
+// MODAL VER EMPRESA
+// ============================================
+async function verEmpresa(id) {
+    empresaActualId = id;
+
+    try {
+        // Mostrar el modal primero
+        document.getElementById('modal-ver-empresa').classList.remove('hidden');
+
+        // Traer los datos de la empresa
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=detalle&empresa_id=${id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            alert('❌ Error al cargar los datos de la empresa');
+            cerrarModalVer();
+            return;
         }
 
-        function editarEmpresa(id) {
-            alert(`🚧 Editar empresa ${id} - Próximamente`);
+        const data = await response.json();
+
+        // Llenar los datos en el modal
+        document.getElementById('ver-nombre-empresa').textContent = data.nombre;
+        document.getElementById('ver-dominio').textContent = data.dominio || '-';
+        document.getElementById('ver-email').textContent = data.usuario_email || '-';
+        document.getElementById('ver-plan').textContent = data.plan.toUpperCase();
+        document.getElementById('ver-estado').textContent = data.activo ? '✅ Activa' : '❌ Inactiva';
+        document.getElementById('ver-monto-minimo').textContent = data.monto_minimo ?
+            `$${parseFloat(data.monto_minimo).toLocaleString('es-DO')}` : '-';
+
+        // Palabras clave
+        const palabrasHTML = (data.palabras_clave && data.palabras_clave.length > 0) ?
+            data.palabras_clave.map(p => `<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${p}</span>`).join('') :
+            '<span class="text-gray-500 text-sm">No configuradas</span>';
+        document.getElementById('ver-palabras-clave').innerHTML = palabrasHTML;
+
+        // Familias UNSPSC
+        const familiasHTML = (data.familias_unspsc && data.familias_unspsc.length > 0) ?
+            data.familias_unspsc.map(f => `<span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">${f}</span>`).join('') :
+            '<span class="text-gray-500 text-sm">No configuradas</span>';
+        document.getElementById('ver-familias-unspsc').innerHTML = familiasHTML;
+
+        // Estadísticas
+        document.getElementById('ver-oportunidades').textContent = data.oportunidades_count || 0;
+        document.getElementById('ver-descargas').textContent = data.descargas_mes || 0;
+        document.getElementById('ver-analisis').textContent = data.analisis_ia_mes || 0;
+
+    } catch (error) {
+        console.error('Error al cargar empresa:', error);
+        alert('❌ Error al cargar los datos');
+        cerrarModalVer();
+    }
+}
+
+function cerrarModalVer() {
+    document.getElementById('modal-ver-empresa').classList.add('hidden');
+}
+
+// ============================================
+// MODAL EDITAR EMPRESA
+// ============================================
+async function editarEmpresa(id) {
+    empresaActualId = id;
+
+    try {
+        // Mostrar el modal primero
+        document.getElementById('modal-editar-empresa').classList.remove('hidden');
+
+        // Traer los datos de la empresa
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=detalle&empresa_id=${id}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            alert('❌ Error al cargar los datos de la empresa');
+            cerrarModalEditar();
+            return;
         }
 
+        const data = await response.json();
+
+        // Llenar el formulario
+        document.getElementById('editar-empresa-id').value = data.id;
+        document.getElementById('editar-plan').value = data.plan;
+
+        // Estado (radio buttons)
+        if (data.activo) {
+            document.getElementById('estado-activo').checked = true;
+        } else {
+            document.getElementById('estado-inactivo').checked = true;
+        }
+
+        // Mostrar sección de cuotas solo si es Business
+        if (data.plan === 'business' || data.plan === 'enterprise') {
+            document.getElementById('cuotas-section').classList.remove('hidden');
+        } else {
+            document.getElementById('cuotas-section').classList.add('hidden');
+        }
+
+    } catch (error) {
+        console.error('Error al cargar empresa:', error);
+        alert('❌ Error al cargar los datos');
+        cerrarModalEditar();
+    }
+}
+
+function cerrarModalEditar() {
+    document.getElementById('modal-editar-empresa').classList.add('hidden');
+}
+
+// Abrir modal de editar desde el modal de ver
+function abrirEditarDesdeVer() {
+    cerrarModalVer();
+    editarEmpresa(empresaActualId);
+}
+
+// ============================================
+// GUARDAR CAMBIOS
+// ============================================
+async function guardarCambios(event) {
+    event.preventDefault(); // Evitar que el formulario recargue la página
+
+    const empresaId = document.getElementById('editar-empresa-id').value;
+    const plan = document.getElementById('editar-plan').value;
+    const activo = document.querySelector('input[name="estado"]:checked').value === 'true';
+
+    // Confirmación
+    if (!confirm('¿Guardar los cambios en esta empresa?')) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=actualizar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                empresa_id: parseInt(empresaId),
+                plan: plan,
+                activo: activo
+            })
+        });
+
+        if (response.ok) {
+            alert('✅ Cambios guardados exitosamente');
+            cerrarModalEditar();
+            // Recargar las estadísticas para reflejar cambios
+            await cargarEstadisticas();
+        } else {
+            const error = await response.json();
+            alert(`❌ Error al guardar: ${error.error}`);
+        }
+    } catch (error) {
+        console.error('Error al guardar cambios:', error);
+        alert('❌ Error al guardar los cambios');
+    }
+}
+
+// ============================================
+// RESETEAR CUOTAS
+// ============================================
+async function resetearDescargas() {
+    if (!confirm('¿Resetear el contador de descargas a 0/10?')) {
+        return;
+    }
+
+    const empresaId = document.getElementById('editar-empresa-id').value;
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=resetear_cuota`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                empresa_id: parseInt(empresaId),
+                tipo: 'descargas'
+            })
+        });
+
+        if (response.ok) {
+            alert('✅ Cuota de descargas reseteada');
+        } else {
+            alert('❌ Error al resetear descargas');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al resetear descargas');
+    }
+}
+
+async function resetearAnalisis() {
+    if (!confirm('¿Resetear el contador de análisis IA a 0/5?')) {
+        return;
+    }
+
+    const empresaId = document.getElementById('editar-empresa-id').value;
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=resetear_cuota`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                empresa_id: parseInt(empresaId),
+                tipo: 'analisis'
+            })
+        });
+
+        if (response.ok) {
+            alert('✅ Cuota de análisis IA reseteada');
+        } else {
+            alert('❌ Error al resetear análisis');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al resetear análisis');
+    }
+}
+
+// ============================================
+// DETECTAR CAMBIO DE PLAN (mostrar/ocultar cuotas)
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const planSelect = document.getElementById('editar-plan');
+    if (planSelect) {
+        planSelect.addEventListener('change', function() {
+            const cuotasSection = document.getElementById('cuotas-section');
+            if (this.value === 'business' || this.value === 'enterprise') {
+                cuotasSection.classList.remove('hidden');
+            } else {
+                cuotasSection.classList.add('hidden');
+            }
+        });
+    }
+});
         function forzarScraping() {
             alert('🚧 Forzar scraping - Próximamente en Fase 2');
         }
