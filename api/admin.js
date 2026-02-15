@@ -29,22 +29,24 @@ export default async function handler(req, res) {
   const { action } = req.query;
 
   try {
-    switch(action) {
-      case 'login':
-        return await handleLogin(req, res);
-      case 'stats':
-        return await handleStats(req, res);
-      case 'verify':
-        return await handleVerify(req, res);
-      case 'detalle':
-        return await handleDetalle(req, res);
-      case 'actualizar':
-        return await handleActualizar(req, res);
-      case 'resetear_cuota':
-        return await handleResetearCuota(req, res);
-      default:
-        return res.status(400).json({ error: 'Acción no especificada' });
-    }
+	switch(action) {
+	  case 'login':
+		return await handleLogin(req, res);
+	  case 'stats':
+		return await handleStats(req, res);
+	  case 'verify':
+		return await handleVerify(req, res);
+	  case 'detalle':
+		return await handleDetalle(req, res);
+	  case 'actualizar':
+		return await handleActualizar(req, res);
+	  case 'resetear_cuota':
+		return await handleResetearCuota(req, res);
+	  case 'crear_empresa':
+		return await handleCrearEmpresa(req, res);
+	  default:
+		return res.status(400).json({ error: 'Acción no especificada' });
+	}
   } catch (error) {
     console.error('Error en admin API:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
@@ -327,4 +329,166 @@ async function handleResetearCuota(req, res) {
   }
 
   return res.json({ success: true, mensaje: `Cuota de ${tipo} reseteada correctamente` });
+
+  // CREAR EMPRESA
+  async function handleCrearEmpresa(req, res) {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Método no permitido' });
+    }
+
+    const admin = verificarToken(req.headers.authorization);
+    if (!admin) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const { nombre, dominio, contacto_nombre, email, password, plan, palabras_clave } = req.body;
+
+    // Validaciones
+    if (!nombre || !contacto_nombre || !email || !password || !plan) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+
+    try {
+      // 1. Verificar que el email no esté registrado
+      const emailExiste = await pool.query(
+        'SELECT id FROM usuarios WHERE email = $1',
+        [email.toLowerCase()]
+      );
+
+      if (emailExiste.rows.length > 0) {
+        return res.status(400).json({ error: 'Este email ya está registrado' });
+      }
+
+      // 2. Crear la empresa
+      const resultEmpresa = await pool.query(`
+        INSERT INTO empresas (
+          nombre,
+          dominio,
+          plan,
+          activo,
+          palabras_clave,
+          trial_fin,
+          creado_en
+        ) VALUES ($1, $2, $3, true, $4, $5, CURRENT_TIMESTAMP)
+        RETURNING id
+      `, [
+        nombre,
+        dominio || null,
+        plan,
+        palabras_clave || [],
+        plan === 'free_trial' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null
+      ]);
+
+      const empresaId = resultEmpresa.rows[0].id;
+
+      // 3. Hash de la contraseña
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // 4. Crear el usuario
+      await pool.query(`
+        INSERT INTO usuarios (
+          empresa_id,
+          email,
+          password_hash,
+          nombre,
+          rol,
+          activo,
+          debe_cambiar_password,
+          creado_en
+        ) VALUES ($1, $2, $3, $4, 'admin', true, true, CURRENT_TIMESTAMP)
+      `, [empresaId, email.toLowerCase(), passwordHash, contacto_nombre]);
+
+      console.log(`[ADMIN] Nueva empresa creada: ${nombre} (ID: ${empresaId}) por admin ${admin.email}`);
+
+      // 5. Enviar email de bienvenida con Resend
+      try {
+        const resendApiKey = process.env.RESEND_API_KEY;
+
+        if (resendApiKey) {
+          const emailResponse = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${resendApiKey}`
+            },
+            body: JSON.stringify({
+              from: 'Compita <no-reply@compita.umbusk.com>',
+              to: [email],
+              subject: '🎉 Bienvenido a Compita - Tus credenciales de acceso',
+              html: `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset="UTF-8">
+                </head>
+                <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+                  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+                    <h1 style="color: white; margin: 0;">🎉 ¡Bienvenido a Compita!</h1>
+                  </div>
+
+                  <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
+                    <p style="font-size: 16px;">Hola <strong>${contacto_nombre}</strong>,</p>
+
+                    <p>Tu cuenta en Compita ha sido creada exitosamente. Ya puedes acceder al sistema de análisis de licitaciones públicas dominicanas.</p>
+
+                    <div style="background: white; border-left: 4px solid #667eea; padding: 20px; margin: 20px 0; border-radius: 5px;">
+                      <h3 style="margin-top: 0; color: #667eea;">📋 Tus credenciales de acceso:</h3>
+                      <p style="margin: 10px 0;"><strong>Usuario:</strong> ${email}</p>
+                      <p style="margin: 10px 0;"><strong>Contraseña temporal:</strong> <code style="background: #f3f4f6; padding: 5px 10px; border-radius: 4px; font-size: 14px;">${password}</code></p>
+                      <p style="margin: 10px 0;"><strong>Plan:</strong> ${plan.toUpperCase()}</p>
+                    </div>
+
+                    <div style="text-align: center; margin: 30px 0;">
+                      <a href="https://compita.umbusk.com/login.html"
+                         style="background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+                        🚀 Iniciar Sesión Ahora
+                      </a>
+                    </div>
+
+                    <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 5px;">
+                      <p style="margin: 0; font-size: 14px;"><strong>⚠️ Importante:</strong> Por seguridad, deberás cambiar tu contraseña en el primer inicio de sesión.</p>
+                    </div>
+
+                    <h3 style="color: #667eea;">🎯 ¿Qué sigue?</h3>
+                    <ol style="padding-left: 20px;">
+                      <li>Inicia sesión con tus credenciales</li>
+                      <li>Cambia tu contraseña temporal</li>
+                      <li>Configura tus palabras clave de búsqueda</li>
+                      <li>Revisa tus oportunidades generadas</li>
+                    </ol>
+
+                    <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
+                      Si tienes alguna pregunta, no dudes en contactarnos.<br>
+                      <strong>Equipo Compita</strong>
+                    </p>
+                  </div>
+                </body>
+                </html>
+              `
+            })
+          });
+
+          if (!emailResponse.ok) {
+            console.error('Error al enviar email de bienvenida:', await emailResponse.text());
+          } else {
+            console.log(`[EMAIL] Credenciales enviadas a ${email}`);
+          }
+        }
+      } catch (emailError) {
+        console.error('Error enviando email de bienvenida:', emailError);
+        // No fallar la creación si el email falla
+      }
+
+      return res.json({
+        success: true,
+        empresa_id: empresaId,
+        mensaje: 'Empresa creada exitosamente'
+      });
+
+    } catch (error) {
+      console.error('Error al crear empresa:', error);
+      return res.status(500).json({ error: 'Error al crear la empresa' });
+    }
+  }
+
 }
