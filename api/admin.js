@@ -36,8 +36,14 @@ export default async function handler(req, res) {
         return await handleStats(req, res);
       case 'verify':
         return await handleVerify(req, res);
+      case 'detalle':
+        return await handleDetalle(req, res);
+      case 'actualizar':
+        return await handleActualizar(req, res);
+      case 'resetear_cuota':
+        return await handleResetearCuota(req, res);
       default:
-        return res.status(400).json({ error: 'Acción no especificada. Use ?action=login|stats|verify' });
+        return res.status(400).json({ error: 'Acción no especificada' });
     }
   } catch (error) {
     console.error('Error en admin API:', error);
@@ -177,4 +183,148 @@ async function handleVerify(req, res) {
     email: admin.email,
     rol: admin.rol
   });
+}
+
+// DETALLE DE EMPRESA
+async function handleDetalle(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Método no permitido' });
+  }
+
+  const admin = verificarToken(req.headers.authorization);
+  if (!admin) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  const { empresa_id } = req.query;
+
+  if (!empresa_id) {
+    return res.status(400).json({ error: 'empresa_id es requerido' });
+  }
+
+  // Información general de la empresa
+  const empresa = await pool.query(`
+    SELECT
+      e.*,
+      u.email as usuario_email,
+      COUNT(DISTINCT r.id) as oportunidades_count
+    FROM empresas e
+    LEFT JOIN usuarios u ON u.empresa_id = e.id
+    LEFT JOIN resultados r ON r.empresa_id = e.id
+    WHERE e.id = $1
+    GROUP BY e.id, u.email
+  `, [empresa_id]);
+
+  if (empresa.rows.length === 0) {
+    return res.status(404).json({ error: 'Empresa no encontrada' });
+  }
+
+  const datos = empresa.rows[0];
+
+  // Contar descargas del mes actual
+  const descargasMes = await pool.query(`
+    SELECT COUNT(*) as total
+    FROM descargas
+    WHERE empresa_id = $1
+    AND DATE_TRUNC('month', descargado_en) = DATE_TRUNC('month', CURRENT_DATE)
+  `, [empresa_id]);
+
+  // Contar análisis IA del mes actual
+  const analisisMes = await pool.query(`
+    SELECT COUNT(*) as total
+    FROM analisis_profundos
+    WHERE empresa_id = $1
+    AND DATE_TRUNC('month', analizado_en) = DATE_TRUNC('month', CURRENT_DATE)
+  `, [empresa_id]);
+
+  return res.json({
+    id: datos.id,
+    nombre: datos.nombre,
+    dominio: datos.dominio,
+    usuario_email: datos.usuario_email,
+    plan: datos.plan,
+    activo: datos.activo,
+    trial_fin: datos.trial_fin,
+    palabras_clave: datos.palabras_clave || [],
+    palabras_exclusion: datos.palabras_exclusion || [],
+    familias_unspsc: datos.familias_unspsc || [],
+    usa_unspsc: datos.usa_unspsc,
+    monto_minimo: datos.monto_minimo,
+    oportunidades_count: parseInt(datos.oportunidades_count) || 0,
+    descargas_mes: parseInt(descargasMes.rows[0].total) || 0,
+    analisis_ia_mes: parseInt(analisisMes.rows[0].total) || 0
+  });
+}
+
+// ACTUALIZAR EMPRESA
+async function handleActualizar(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método no permitido' });
+  }
+
+  const admin = verificarToken(req.headers.authorization);
+  if (!admin) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  const { empresa_id, plan, activo } = req.body;
+
+  if (!empresa_id) {
+    return res.status(400).json({ error: 'empresa_id es requerido' });
+  }
+
+  // Actualizar empresa
+  await pool.query(`
+    UPDATE empresas
+    SET plan = $1, activo = $2
+    WHERE id = $3
+  `, [plan, activo, empresa_id]);
+
+  console.log(`[ADMIN] Empresa ${empresa_id} actualizada: plan=${plan}, activo=${activo} por admin ${admin.email}`);
+
+  return res.json({ success: true, mensaje: 'Empresa actualizada correctamente' });
+}
+
+// RESETEAR CUOTA
+async function handleResetearCuota(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método no permitido' });
+  }
+
+  const admin = verificarToken(req.headers.authorization);
+  if (!admin) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  const { empresa_id, tipo } = req.body;
+
+  if (!empresa_id || !tipo) {
+    return res.status(400).json({ error: 'empresa_id y tipo son requeridos' });
+  }
+
+  if (tipo === 'descargas') {
+    // Eliminar todas las descargas del mes actual
+    await pool.query(`
+      DELETE FROM descargas
+      WHERE empresa_id = $1
+      AND DATE_TRUNC('month', descargado_en) = DATE_TRUNC('month', CURRENT_DATE)
+    `, [empresa_id]);
+
+    console.log(`[ADMIN] Cuota de descargas reseteada para empresa ${empresa_id} por admin ${admin.email}`);
+
+  } else if (tipo === 'analisis') {
+    // Eliminar todos los análisis profundos del mes actual
+    await pool.query(`
+      DELETE FROM analisis_profundos
+      WHERE empresa_id = $1
+      AND DATE_TRUNC('month', analizado_en) = DATE_TRUNC('month', CURRENT_DATE)
+    `, [empresa_id]);
+
+    console.log(`[ADMIN] Cuota de análisis IA reseteada para empresa ${empresa_id} por admin ${admin.email}`);
+
+  } else {
+    return res.status(400).json({ error: 'Tipo inválido. Use "descargas" o "analisis"' });
+  }
+
+  return res.json({ success: true, mensaje: `Cuota de ${tipo} reseteada correctamente` });
 }
