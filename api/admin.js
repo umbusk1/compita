@@ -135,6 +135,17 @@ async function handleStats(req, res) {
      WHERE DATE(fecha_analisis) = CURRENT_DATE`
   );
 
+  const emailsHoy = await pool.query(
+    `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados
+     WHERE DATE(fecha_analisis) = CURRENT_DATE`
+  );
+
+  // Contar análisis IA realizados hoy
+  const analisisHoy = await pool.query(
+    `SELECT COUNT(*) as total FROM resultados
+     WHERE DATE(fecha_analisis) = CURRENT_DATE`
+  );
+
   const empresas = await pool.query(`
     SELECT
       e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin,
@@ -160,6 +171,7 @@ async function handleStats(req, res) {
     licitaciones_hoy: parseInt(licitacionesHoy.rows[0].total),
     oportunidades_totales: parseInt(oportunidadesTotales.rows[0].total),
     emails_enviados_hoy: parseInt(emailsHoy.rows[0].total),
+    analisis_ia_hoy: parseInt(analisisHoy.rows[0].total),
     ultimo_scraping: ultimoScraping.rows[0].fecha,
     ultimo_analisis: ultimoAnalisis.rows[0].fecha,
     empresas: empresas.rows,
