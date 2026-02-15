@@ -28,31 +28,34 @@ function verificarToken(authHeader) {
 export default async function handler(req, res) {
   const { action } = req.query;
 
-  try {
-    switch(action) {
-      case 'login':
-        return await handleLogin(req, res);
-      case 'stats':
-        return await handleStats(req, res);
-      case 'verify':
-        return await handleVerify(req, res);
-      case 'detalle':
-        return await handleDetalle(req, res);
-      case 'actualizar':
-        return await handleActualizar(req, res);
-      case 'resetear_cuota':
-        return await handleResetearCuota(req, res);
-      case 'crear_empresa':
-        return await handleCrearEmpresa(req, res);
-      case 'desactivar_empresa':
-        return await handleDesactivarEmpresa(req, res);
-      case 'reactivar_empresa':
-        return await handleReactivarEmpresa(req, res);
-      case 'eliminar_empresa':
-        return await handleEliminarEmpresa(req, res);
-      default:
-        return res.status(400).json({ error: 'Acción no especificada' });
-    }
+switch(action) {
+  case 'login':
+    return await handleLogin(req, res);
+  case 'stats':
+    return await handleStats(req, res);
+  case 'verify':
+    return await handleVerify(req, res);
+  case 'detalle':
+    return await handleDetalle(req, res);
+  case 'actualizar':
+    return await handleActualizar(req, res);
+  case 'resetear_cuota':
+    return await handleResetearCuota(req, res);
+  case 'crear_empresa':
+    return await handleCrearEmpresa(req, res);
+  case 'desactivar_empresa':
+    return await handleDesactivarEmpresa(req, res);
+  case 'reactivar_empresa':
+    return await handleReactivarEmpresa(req, res);
+  case 'eliminar_empresa':
+    return await handleEliminarEmpresa(req, res);
+  case 'ejecutar_scraping':
+    return await handleEjecutarScraping(req, res);
+  case 'ejecutar_analisis':
+    return await handleEjecutarAnalisis(req, res);
+  default:
+    return res.status(400).json({ error: 'Acción no especificada' });
+}
   } catch (error) {
     console.error('Error en admin API:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
@@ -551,4 +554,97 @@ async function handleEliminarEmpresa(req, res) {
     console.error('Error al eliminar empresa:', error);
     return res.status(500).json({ error: 'Error al eliminar la empresa' });
   }
+
+  // EJECUTAR SCRAPING
+  async function handleEjecutarScraping(req, res) {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Método no permitido' });
+    }
+
+    const admin = verificarToken(req.headers.authorization);
+    if (!admin) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    try {
+      const githubToken = process.env.GITHUB_TOKEN;
+      const repo = 'umbusk1/compita';
+      const workflow = 'scraping-diario.yml';
+
+      const response = await fetch(
+        `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`,
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'Authorization': `Bearer ${githubToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ref: 'main' })
+        }
+      );
+
+      if (response.status === 204) {
+        console.log(`[ADMIN] Scraping ejecutado manualmente por admin ${admin.email}`);
+        return res.json({
+          success: true,
+          mensaje: 'Scraping iniciado correctamente. Revisa GitHub Actions para ver el progreso.'
+        });
+      } else {
+        const error = await response.text();
+        console.error('Error de GitHub:', error);
+        return res.status(500).json({ error: 'Error al ejecutar scraping' });
+      }
+    } catch (error) {
+      console.error('Error ejecutando scraping:', error);
+      return res.status(500).json({ error: 'Error al ejecutar scraping' });
+    }
+  }
+
+  // EJECUTAR ANÁLISIS
+  async function handleEjecutarAnalisis(req, res) {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Método no permitido' });
+    }
+
+    const admin = verificarToken(req.headers.authorization);
+    if (!admin) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    try {
+      const githubToken = process.env.GITHUB_TOKEN;
+      const repo = 'umbusk1/compita';
+      const workflow = 'analisis-diario.yml';
+
+      const response = await fetch(
+        `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`,
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'Authorization': `Bearer ${githubToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ ref: 'main' })
+        }
+      );
+
+      if (response.status === 204) {
+        console.log(`[ADMIN] Análisis ejecutado manualmente por admin ${admin.email}`);
+        return res.json({
+          success: true,
+          mensaje: 'Análisis iniciado correctamente. Revisa GitHub Actions para ver el progreso.'
+        });
+      } else {
+        const error = await response.text();
+        console.error('Error de GitHub:', error);
+        return res.status(500).json({ error: 'Error al ejecutar análisis' });
+      }
+    } catch (error) {
+      console.error('Error ejecutando análisis:', error);
+      return res.status(500).json({ error: 'Error al ejecutar análisis' });
+    }
+}
+
 }
