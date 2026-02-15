@@ -356,18 +356,19 @@ async function handleCrearEmpresa(req, res) {
       return res.status(400).json({ error: 'Este email ya está registrado' });
     }
 
-	const resultEmpresa = await pool.query(`
-	  INSERT INTO empresas (
-		nombre, dominio, plan, activo, palabras_clave, trial_fin
-	  ) VALUES ($1, $2, $3, true, $4, $5)
-	  RETURNING id
-    `, [
-      nombre,
-      dominio || null,
-      plan,
-      palabras_clave || [],
-      plan === 'free_trial' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null
-    ]);
+const resultEmpresa = await pool.query(`
+  INSERT INTO empresas (
+    nombre, dominio, plan, activo, palabras_clave, trial_fin, descripcion
+  ) VALUES ($1, $2, $3, true, $4, $5, $6)
+  RETURNING id
+`, [
+  nombre,
+  dominio || null,
+  plan,
+  palabras_clave || [],
+  plan === 'free_trial' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null,
+  '' // descripcion vacía por defecto
+]);
 
     const empresaId = resultEmpresa.rows[0].id;
     const passwordHash = await bcrypt.hash(password, 10);
