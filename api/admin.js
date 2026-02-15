@@ -365,8 +365,9 @@ async function handleCrearEmpresa(req, res) {
 		activo,
 		palabras_clave,
 		trial_inicio,
-		trial_fin
-	  ) VALUES ($1, $2, $3, $4, true, $5, $6, $7)
+		trial_fin,
+		max_familias_unspsc
+	  ) VALUES ($1, $2, $3, $4, true, $5, $6, $7, $8)
 	  RETURNING id
 	`, [
 	  nombre,
@@ -376,6 +377,7 @@ async function handleCrearEmpresa(req, res) {
 	  palabras_clave || [],
 	  plan === 'free_trial' ? new Date() : null,
 	  plan === 'free_trial' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null
+	  plan === 'free_trial' || plan === 'business' ? 5 : 2
 	]);
 
     const empresaId = resultEmpresa.rows[0].id;
@@ -388,14 +390,15 @@ async function handleCrearEmpresa(req, res) {
 		empresa,
 		password_hash,
 		rol,
-		activo
-	  ) VALUES ($1, $2, $3, $4, $5, true)
+		activo,
+		email_confirmado
+	  ) VALUES ($1, $2, $3, $4, $5, true, true)
 	`, [
 	  empresaId,
 	  email.toLowerCase(),
-	  nombre, // La columna "empresa" (character varying) recibe el nombre de la empresa
+	  nombre,
 	  passwordHash,
-	  'owner' // El rol por defecto es 'owner'
+	  'owner'
 	]);
 
     console.log(`[ADMIN] Nueva empresa creada: ${nombre} (ID: ${empresaId}) por admin ${admin.email}`);
