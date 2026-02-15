@@ -329,6 +329,7 @@ async function handleResetearCuota(req, res) {
   }
 
   return res.json({ success: true, mensaje: `Cuota de ${tipo} reseteada correctamente` });
+}
 
 // CREAR EMPRESA
 async function handleCrearEmpresa(req, res) {
