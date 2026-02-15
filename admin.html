@@ -1043,13 +1043,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-        function forzarScraping() {
-            alert('🚧 Forzar scraping - Próximamente en Fase 2');
-        }
 
-        function forzarAnalisis() {
-            alert('🚧 Re-analizar licitaciones - Próximamente en Fase 2');
+async function forzarScraping() {
+    if (!confirm('¿Ejecutar scraping manualmente?\n\nEsto puede tomar varios minutos.')) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=ejecutar_scraping`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`✅ ${data.mensaje}\n\nVer progreso en:\nhttps://github.com/umbusk1/compita/actions`);
+        } else {
+            alert(`❌ Error: ${data.error}`);
         }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al ejecutar scraping');
+    }
+}
+
+async function forzarAnalisis() {
+    if (!confirm('¿Re-analizar licitaciones de hoy?\n\nEsto procesará todas las empresas activas con IA.')) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=ejecutar_analisis`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`✅ ${data.mensaje}\n\nVer progreso en:\nhttps://github.com/umbusk1/compita/actions`);
+        } else {
+            alert(`❌ Error: ${data.error}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al ejecutar análisis');
+    }
+}
 
         function invitarAdmin() {
             alert('🚧 Invitar administrador - Próximamente en Fase 3');
