@@ -1,14 +1,6 @@
 // api/empresas.js - Gestión de empresas y familias UNSPSC
 import { neon } from '@neondatabase/serverless';
 
-// Límites de familias UNSPSC por plan
-const LIMITES_FAMILIAS = {
-  'free_trial': 2,      // Prueba gratuita
-  'estandar': 2,        // Plan Estándar
-  'business': 5,        // Plan Business
-  'enterprise': 999     // Plan Enterprise (ilimitado)
-};
-
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -39,29 +31,29 @@ export default async function handler(req, res) {
           });
         }
 
-        const empresa = await sql`
-          SELECT id, nombre, plan, familias_unspsc
-          FROM empresas
-          WHERE id = ${id} AND activo = true
-        `;
+		const empresa = await sql`
+		  SELECT id, nombre, plan, familias_unspsc, max_familias_unspsc
+		  FROM empresas
+		  WHERE id = ${id} AND activo = true
+		`;
 
-        if (empresa.length === 0) {
-          return res.status(404).json({
-            success: false,
-            error: 'Empresa no encontrada'
-          });
-        }
+		if (empresa.length === 0) {
+		  return res.status(404).json({
+			success: false,
+			error: 'Empresa no encontrada'
+		  });
+		}
 
-        const limite = LIMITES_FAMILIAS[empresa[0].plan] || 5;
+		const limite = empresa[0].max_familias_unspsc || 5;
 
-        return res.status(200).json({
-          success: true,
-          familias_unspsc: empresa[0].familias_unspsc || [],
-          plan: empresa[0].plan,
-          limite_familias: limite,
-          familias_usadas: (empresa[0].familias_unspsc || []).length
-        });
-      }
+		return res.status(200).json({
+		  success: true,
+		  familias_unspsc: empresa[0].familias_unspsc || [],
+		  plan: empresa[0].plan,
+		  limite_familias: limite,
+		  familias_usadas: (empresa[0].familias_unspsc || []).length
+		});
+	}
 
       // PUT: Actualizar familias UNSPSC de una empresa
       if (req.method === 'PUT') {
@@ -82,20 +74,20 @@ export default async function handler(req, res) {
           });
         }
 
-        // Obtener plan actual
-        const empresa = await sql`
-          SELECT plan FROM empresas WHERE id = ${id}
-        `;
+		// Obtener plan actual y límite de familias
+		const empresa = await sql`
+		  SELECT plan, max_familias_unspsc FROM empresas WHERE id = ${id}
+		`;
 
-        if (empresa.length === 0) {
-          return res.status(404).json({
-            success: false,
-            error: 'Empresa no encontrada'
-          });
-        }
+		if (empresa.length === 0) {
+		  return res.status(404).json({
+			success: false,
+			error: 'Empresa no encontrada'
+		  });
+		}
 
-        const plan = empresa[0].plan;
-        const limite = LIMITES_FAMILIAS[plan] || 5;
+		const plan = empresa[0].plan;
+		const limite = empresa[0].max_familias_unspsc || 5;
 
         // Validar límite
         if (familias_unspsc.length > limite) {
