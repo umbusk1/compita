@@ -356,28 +356,47 @@ async function handleCrearEmpresa(req, res) {
       return res.status(400).json({ error: 'Este email ya está registrado' });
     }
 
-const resultEmpresa = await pool.query(`
-  INSERT INTO empresas (
-    nombre, dominio, plan, activo, palabras_clave, trial_fin, descripcion
-  ) VALUES ($1, $2, $3, true, $4, $5, $6)
-  RETURNING id
-`, [
-  nombre,
-  dominio || null,
-  plan,
-  palabras_clave || [],
-  plan === 'free_trial' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null,
-  '' // descripcion vacía por defecto
-]);
+	const resultEmpresa = await pool.query(`
+	  INSERT INTO empresas (
+		nombre,
+		dominio,
+		descripcion,
+		plan,
+		activo,
+		palabras_clave,
+		trial_inicio,
+		trial_fin
+	  ) VALUES ($1, $2, $3, $4, true, $5, $6, $7)
+	  RETURNING id
+	`, [
+	  nombre,
+	  dominio || 'Sin dominio', // NOT NULL, así que necesita un valor
+	  '', // descripcion vacía
+	  plan,
+	  palabras_clave || [],
+	  plan === 'free_trial' ? new Date() : null,
+	  plan === 'free_trial' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null
+	]);
 
     const empresaId = resultEmpresa.rows[0].id;
     const passwordHash = await bcrypt.hash(password, 10);
 
 	await pool.query(`
 	  INSERT INTO usuarios (
-		empresa_id, email, password_hash, nombre, rol, activo, debe_cambiar_password
-	  ) VALUES ($1, $2, $3, $4, 'admin', true, true)
-    `, [empresaId, email.toLowerCase(), passwordHash, contacto_nombre]);
+		empresa_id,
+		email,
+		empresa,
+		password_hash,
+		rol,
+		activo
+	  ) VALUES ($1, $2, $3, $4, $5, true)
+	`, [
+	  empresaId,
+	  email.toLowerCase(),
+	  nombre, // La columna "empresa" (character varying) recibe el nombre de la empresa
+	  passwordHash,
+	  'owner' // El rol por defecto es 'owner'
+	]);
 
     console.log(`[ADMIN] Nueva empresa creada: ${nombre} (ID: ${empresaId}) por admin ${admin.email}`);
 
