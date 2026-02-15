@@ -377,9 +377,9 @@ async function handleCrearEmpresa(req, res) {
       '',
       plan,
       palabras_clave || [],
-      plan === 'free_trial' ? new Date() : null,
-      plan === 'free_trial' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null,
-      plan === 'free_trial' || plan === 'business' ? 5 : 2
+      plan === 'prueba_gratis' ? new Date() : null,
+      plan === 'prueba_gratis' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null,
+      plan === 'prueba_gratis' || plan === 'business' ? 5 : 2
     ]);
 
     const empresaId = resultEmpresa.rows[0].id;
