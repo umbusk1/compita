@@ -29,24 +29,24 @@ export default async function handler(req, res) {
   const { action } = req.query;
 
   try {
-	switch(action) {
-	  case 'login':
-		return await handleLogin(req, res);
-	  case 'stats':
-		return await handleStats(req, res);
-	  case 'verify':
-		return await handleVerify(req, res);
-	  case 'detalle':
-		return await handleDetalle(req, res);
-	  case 'actualizar':
-		return await handleActualizar(req, res);
-	  case 'resetear_cuota':
-		return await handleResetearCuota(req, res);
-	  case 'crear_empresa':
-		return await handleCrearEmpresa(req, res);
-	  default:
-		return res.status(400).json({ error: 'Acción no especificada' });
-	}
+    switch(action) {
+      case 'login':
+        return await handleLogin(req, res);
+      case 'stats':
+        return await handleStats(req, res);
+      case 'verify':
+        return await handleVerify(req, res);
+      case 'detalle':
+        return await handleDetalle(req, res);
+      case 'actualizar':
+        return await handleActualizar(req, res);
+      case 'resetear_cuota':
+        return await handleResetearCuota(req, res);
+      case 'crear_empresa':
+        return await handleCrearEmpresa(req, res);
+      default:
+        return res.status(400).json({ error: 'Acción no especificada' });
+    }
   } catch (error) {
     console.error('Error en admin API:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
@@ -305,7 +305,6 @@ async function handleResetearCuota(req, res) {
   }
 
   if (tipo === 'descargas') {
-    // Eliminar todas las descargas del mes actual
     await pool.query(`
       DELETE FROM descargas
       WHERE empresa_id = $1
@@ -315,7 +314,6 @@ async function handleResetearCuota(req, res) {
     console.log(`[ADMIN] Cuota de descargas reseteada para empresa ${empresa_id} por admin ${admin.email}`);
 
   } else if (tipo === 'analisis') {
-    // Eliminar todos los análisis profundos del mes actual
     await pool.query(`
       DELETE FROM analisis_profundos
       WHERE empresa_id = $1
@@ -344,13 +342,11 @@ async function handleCrearEmpresa(req, res) {
 
   const { nombre, dominio, contacto_nombre, email, password, plan, palabras_clave } = req.body;
 
-  // Validaciones
   if (!nombre || !contacto_nombre || !email || !password || !plan) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
 
   try {
-    // 1. Verificar que el email no esté registrado
     const emailExiste = await pool.query(
       'SELECT id FROM usuarios WHERE email = $1',
       [email.toLowerCase()]
@@ -360,16 +356,9 @@ async function handleCrearEmpresa(req, res) {
       return res.status(400).json({ error: 'Este email ya está registrado' });
     }
 
-    // 2. Crear la empresa
     const resultEmpresa = await pool.query(`
       INSERT INTO empresas (
-        nombre,
-        dominio,
-        plan,
-        activo,
-        palabras_clave,
-        trial_fin,
-        creado_en
+        nombre, dominio, plan, activo, palabras_clave, trial_fin, creado_en
       ) VALUES ($1, $2, $3, true, $4, $5, CURRENT_TIMESTAMP)
       RETURNING id
     `, [
@@ -381,30 +370,18 @@ async function handleCrearEmpresa(req, res) {
     ]);
 
     const empresaId = resultEmpresa.rows[0].id;
-
-    // 3. Hash de la contraseña
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // 4. Crear el usuario
     await pool.query(`
       INSERT INTO usuarios (
-        empresa_id,
-        email,
-        password_hash,
-        nombre,
-        rol,
-        activo,
-        debe_cambiar_password,
-        creado_en
+        empresa_id, email, password_hash, nombre, rol, activo, debe_cambiar_password, creado_en
       ) VALUES ($1, $2, $3, $4, 'admin', true, true, CURRENT_TIMESTAMP)
     `, [empresaId, email.toLowerCase(), passwordHash, contacto_nombre]);
 
     console.log(`[ADMIN] Nueva empresa creada: ${nombre} (ID: ${empresaId}) por admin ${admin.email}`);
 
-    // 5. Enviar email de bienvenida con Resend
     try {
       const resendApiKey = process.env.RESEND_API_KEY;
-
       if (resendApiKey) {
         const emailResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -416,68 +393,15 @@ async function handleCrearEmpresa(req, res) {
             from: 'Compita <no-reply@compita.umbusk.com>',
             to: [email],
             subject: '🎉 Bienvenido a Compita - Tus credenciales de acceso',
-            html: `
-              <!DOCTYPE html>
-              <html>
-              <head>
-                <meta charset="UTF-8">
-              </head>
-              <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-                  <h1 style="color: white; margin: 0;">🎉 ¡Bienvenido a Compita!</h1>
-                </div>
-
-                <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px;">
-                  <p style="font-size: 16px;">Hola <strong>${contacto_nombre}</strong>,</p>
-
-                  <p>Tu cuenta en Compita ha sido creada exitosamente. Ya puedes acceder al sistema de análisis de licitaciones públicas dominicanas.</p>
-
-                  <div style="background: white; border-left: 4px solid #667eea; padding: 20px; margin: 20px 0; border-radius: 5px;">
-                    <h3 style="margin-top: 0; color: #667eea;">📋 Tus credenciales de acceso:</h3>
-                    <p style="margin: 10px 0;"><strong>Usuario:</strong> ${email}</p>
-                    <p style="margin: 10px 0;"><strong>Contraseña temporal:</strong> <code style="background: #f3f4f6; padding: 5px 10px; border-radius: 4px; font-size: 14px;">${password}</code></p>
-                    <p style="margin: 10px 0;"><strong>Plan:</strong> ${plan.toUpperCase()}</p>
-                  </div>
-
-                  <div style="text-align: center; margin: 30px 0;">
-                    <a href="https://compita.umbusk.com/login.html"
-                       style="background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-                      🚀 Iniciar Sesión Ahora
-                    </a>
-                  </div>
-
-                  <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; border-radius: 5px;">
-                    <p style="margin: 0; font-size: 14px;"><strong>⚠️ Importante:</strong> Por seguridad, deberás cambiar tu contraseña en el primer inicio de sesión.</p>
-                  </div>
-
-                  <h3 style="color: #667eea;">🎯 ¿Qué sigue?</h3>
-                  <ol style="padding-left: 20px;">
-                    <li>Inicia sesión con tus credenciales</li>
-                    <li>Cambia tu contraseña temporal</li>
-                    <li>Configura tus palabras clave de búsqueda</li>
-                    <li>Revisa tus oportunidades generadas</li>
-                  </ol>
-
-                  <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
-                    Si tienes alguna pregunta, no dudes en contactarnos.<br>
-                    <strong>Equipo Compita</strong>
-                  </p>
-                </div>
-              </body>
-              </html>
-            `
+            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🎉 ¡Bienvenido a Compita!</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${contacto_nombre}</strong>,</p><p>Tu cuenta en Compita ha sido creada exitosamente.</p><div style="background:white;border-left:4px solid #667eea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#667eea">📋 Tus credenciales:</h3><p><strong>Usuario:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Plan:</strong> ${plan.toUpperCase()}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/login.html" style="background:#667eea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🚀 Iniciar Sesión</a></div></div></body></html>`
           })
         });
-
-        if (!emailResponse.ok) {
-          console.error('Error al enviar email de bienvenida:', await emailResponse.text());
-        } else {
+        if (emailResponse.ok) {
           console.log(`[EMAIL] Credenciales enviadas a ${email}`);
         }
       }
     } catch (emailError) {
-      console.error('Error enviando email de bienvenida:', emailError);
-      // No fallar la creación si el email falla
+      console.error('Error enviando email:', emailError);
     }
 
     return res.json({
@@ -490,6 +414,4 @@ async function handleCrearEmpresa(req, res) {
     console.error('Error al crear empresa:', error);
     return res.status(500).json({ error: 'Error al crear la empresa' });
   }
-}
-
 }
