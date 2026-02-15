@@ -29,24 +29,30 @@ export default async function handler(req, res) {
   const { action } = req.query;
 
   try {
-    switch(action) {
-      case 'login':
-        return await handleLogin(req, res);
-      case 'stats':
-        return await handleStats(req, res);
-      case 'verify':
-        return await handleVerify(req, res);
-      case 'detalle':
-        return await handleDetalle(req, res);
-      case 'actualizar':
-        return await handleActualizar(req, res);
-      case 'resetear_cuota':
-        return await handleResetearCuota(req, res);
-      case 'crear_empresa':
-        return await handleCrearEmpresa(req, res);
-      default:
-        return res.status(400).json({ error: 'Acción no especificada' });
-    }
+	switch(action) {
+	  case 'login':
+		return await handleLogin(req, res);
+	  case 'stats':
+		return await handleStats(req, res);
+	  case 'verify':
+		return await handleVerify(req, res);
+	  case 'detalle':
+		return await handleDetalle(req, res);
+	  case 'actualizar':
+		return await handleActualizar(req, res);
+	  case 'resetear_cuota':
+		return await handleResetearCuota(req, res);
+	  case 'crear_empresa':
+		return await handleCrearEmpresa(req, res);
+	  case 'desactivar_empresa':
+		return await handleDesactivarEmpresa(req, res);
+	  case 'reactivar_empresa':
+		return await handleReactivarEmpresa(req, res);
+	  case 'eliminar_empresa':
+		return await handleEliminarEmpresa(req, res);
+	  default:
+		return res.status(400).json({ error: 'Acción no especificada' });
+	}
   } catch (error) {
     console.error('Error en admin API:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
@@ -437,4 +443,124 @@ async function handleCrearEmpresa(req, res) {
     console.error('Error al crear empresa:', error);
     return res.status(500).json({ error: 'Error al crear la empresa' });
   }
+
+  // DESACTIVAR EMPRESA
+  async function handleDesactivarEmpresa(req, res) {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Método no permitido' });
+    }
+
+    const admin = verificarToken(req.headers.authorization);
+    if (!admin) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const { empresa_id } = req.body;
+
+    if (!empresa_id) {
+      return res.status(400).json({ error: 'empresa_id es requerido' });
+    }
+
+    try {
+      // Desactivar empresa
+      await pool.query('UPDATE empresas SET activo = false WHERE id = $1', [empresa_id]);
+
+      // Desactivar usuarios asociados
+      await pool.query('UPDATE usuarios SET activo = false WHERE empresa_id = $1', [empresa_id]);
+
+      console.log(`[ADMIN] Empresa ${empresa_id} desactivada por admin ${admin.email}`);
+
+      return res.json({ success: true, mensaje: 'Empresa desactivada correctamente' });
+    } catch (error) {
+      console.error('Error al desactivar empresa:', error);
+      return res.status(500).json({ error: 'Error al desactivar la empresa' });
+    }
+  }
+
+  // REACTIVAR EMPRESA
+  async function handleReactivarEmpresa(req, res) {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Método no permitido' });
+    }
+
+    const admin = verificarToken(req.headers.authorization);
+    if (!admin) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const { empresa_id } = req.body;
+
+    if (!empresa_id) {
+      return res.status(400).json({ error: 'empresa_id es requerido' });
+    }
+
+    try {
+      // Reactivar empresa
+      await pool.query('UPDATE empresas SET activo = true WHERE id = $1', [empresa_id]);
+
+      // Reactivar usuarios asociados
+      await pool.query('UPDATE usuarios SET activo = true WHERE empresa_id = $1', [empresa_id]);
+
+      console.log(`[ADMIN] Empresa ${empresa_id} reactivada por admin ${admin.email}`);
+
+      return res.json({ success: true, mensaje: 'Empresa reactivada correctamente' });
+    } catch (error) {
+      console.error('Error al reactivar empresa:', error);
+      return res.status(500).json({ error: 'Error al reactivar la empresa' });
+    }
+  }
+
+  // ELIMINAR EMPRESA (HARD DELETE)
+  async function handleEliminarEmpresa(req, res) {
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'Método no permitido' });
+    }
+
+    const admin = verificarToken(req.headers.authorization);
+    if (!admin) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+
+    const { empresa_id } = req.body;
+
+    if (!empresa_id) {
+      return res.status(400).json({ error: 'empresa_id es requerido' });
+    }
+
+    try {
+      // Contar registros antes de eliminar
+      const conteoResultados = await pool.query('SELECT COUNT(*) as total FROM resultados WHERE empresa_id = $1', [empresa_id]);
+      const conteoDescargas = await pool.query('SELECT COUNT(*) as total FROM descargas WHERE empresa_id = $1', [empresa_id]);
+      const conteoAnalisis = await pool.query('SELECT COUNT(*) as total FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
+      const conteoUsuarios = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
+
+      // Eliminar en orden (por las foreign keys)
+      await pool.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
+      await pool.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
+      await pool.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
+      await pool.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
+      await pool.query('DELETE FROM empresas WHERE id = $1', [empresa_id]);
+
+      const detalles = `
+  Registros eliminados:
+  - ${conteoUsuarios.rows[0].total} usuarios
+  - ${conteoResultados.rows[0].total} oportunidades
+  - ${conteoDescargas.rows[0].total} descargas
+  - ${conteoAnalisis.rows[0].total} análisis profundos
+      `.trim();
+
+      console.log(`[ADMIN] Empresa ${empresa_id} ELIMINADA por admin ${admin.email}`);
+      console.log(detalles);
+
+      return res.json({
+        success: true,
+        mensaje: 'Empresa eliminada permanentemente',
+        detalles: detalles
+      });
+    } catch (error) {
+      console.error('Error al eliminar empresa:', error);
+      return res.status(500).json({ error: 'Error al eliminar la empresa' });
+    }
+}
+
 }
