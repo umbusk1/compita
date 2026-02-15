@@ -356,11 +356,11 @@ async function handleCrearEmpresa(req, res) {
       return res.status(400).json({ error: 'Este email ya está registrado' });
     }
 
-    const resultEmpresa = await pool.query(`
-      INSERT INTO empresas (
-        nombre, dominio, plan, activo, palabras_clave, trial_fin, creado_en
-      ) VALUES ($1, $2, $3, true, $4, $5, CURRENT_TIMESTAMP)
-      RETURNING id
+	const resultEmpresa = await pool.query(`
+	  INSERT INTO empresas (
+		nombre, dominio, plan, activo, palabras_clave, trial_fin
+	  ) VALUES ($1, $2, $3, true, $4, $5)
+	  RETURNING id
     `, [
       nombre,
       dominio || null,
@@ -372,10 +372,10 @@ async function handleCrearEmpresa(req, res) {
     const empresaId = resultEmpresa.rows[0].id;
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await pool.query(`
-      INSERT INTO usuarios (
-        empresa_id, email, password_hash, nombre, rol, activo, debe_cambiar_password, creado_en
-      ) VALUES ($1, $2, $3, $4, 'admin', true, true, CURRENT_TIMESTAMP)
+	await pool.query(`
+	  INSERT INTO usuarios (
+		empresa_id, email, password_hash, nombre, rol, activo, debe_cambiar_password
+	  ) VALUES ($1, $2, $3, $4, 'admin', true, true)
     `, [empresaId, email.toLowerCase(), passwordHash, contacto_nombre]);
 
     console.log(`[ADMIN] Nueva empresa creada: ${nombre} (ID: ${empresaId}) por admin ${admin.email}`);
