@@ -539,6 +539,12 @@
                     document.getElementById('oportunidades-generadas').textContent = data.oportunidades_totales || 0;
                     document.getElementById('emails-enviados').textContent = data.emails_enviados_hoy || 0;
 
+                    // Actualizar uso de API
+					const analisisHoy = data.analisis_ia_hoy || 0;
+					const tokensEstimados = analisisHoy * 1500; // ~1500 tokens por análisis (estimado)
+					document.getElementById('tokens-consumidos').textContent =
+				    `${tokensEstimados.toLocaleString('es-DO')} tokens (~${analisisHoy} análisis)`;
+
                     // Cargar empresas
                     cargarTablaEmpresas(data.empresas || []);
 
