@@ -599,14 +599,27 @@
                         </span>
                     </td>
                     <td class="px-4 py-4 text-sm text-gray-700 font-semibold">${emp.oportunidades_count || 0}</td>
-                    <td class="px-4 py-4">
-                        <button onclick="verEmpresa(${emp.id})" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium mr-3">
-                            Ver
-                        </button>
-                        <button onclick="editarEmpresa(${emp.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                            Editar
-                        </button>
-                    </td>
+					<td class="px-4 py-4">
+						<div class="flex items-center gap-3">
+							<button onclick="verEmpresa(${emp.id})" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+								Ver
+							</button>
+							<button onclick="editarEmpresa(${emp.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+								Editar
+							</button>
+							${emp.activo ?
+								`<button onclick="desactivarEmpresa(${emp.id}, '${emp.nombre}')" class="text-yellow-600 hover:text-yellow-800 text-sm font-medium">
+									Desactivar
+								</button>` :
+								`<button onclick="reactivarEmpresa(${emp.id}, '${emp.nombre}')" class="text-green-600 hover:text-green-800 text-sm font-medium">
+									Reactivar
+								</button>`
+							}
+							<button onclick="eliminarEmpresa(${emp.id}, '${emp.nombre}')" class="text-red-600 hover:text-red-800 text-sm font-medium">
+								Eliminar
+							</button>
+						</div>
+					</td>
                 </tr>
             `).join('');
 
@@ -904,6 +917,113 @@ async function resetearAnalisis() {
     } catch (error) {
         console.error('Error:', error);
         alert('❌ Error al resetear análisis');
+    }
+}
+
+// ============================================
+// DESACTIVAR / REACTIVAR / ELIMINAR EMPRESA
+// ============================================
+
+async function desactivarEmpresa(id, nombre) {
+    // Primera confirmación
+    if (!confirm(`⚠️ ¿Desactivar la empresa "${nombre}"?\n\nLa empresa dejará de recibir notificaciones y no podrá acceder al sistema.`)) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=desactivar_empresa`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ empresa_id: id })
+        });
+
+        if (response.ok) {
+            alert('✅ Empresa desactivada exitosamente');
+            await cargarEstadisticas();
+        } else {
+            const error = await response.json();
+            alert(`❌ Error: ${error.error}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al desactivar la empresa');
+    }
+}
+
+async function reactivarEmpresa(id, nombre) {
+    if (!confirm(`✅ ¿Reactivar la empresa "${nombre}"?`)) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=reactivar_empresa`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ empresa_id: id })
+        });
+
+        if (response.ok) {
+            alert('✅ Empresa reactivada exitosamente');
+            await cargarEstadisticas();
+        } else {
+            const error = await response.json();
+            alert(`❌ Error: ${error.error}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al reactivar la empresa');
+    }
+}
+
+async function eliminarEmpresa(id, nombre) {
+    // Primera confirmación
+    if (!confirm(`🚨 ATENCIÓN: ¿Eliminar PERMANENTEMENTE la empresa "${nombre}"?\n\n⚠️ Esta acción NO SE PUEDE DESHACER.\n\nSe eliminarán:\n- La empresa y su configuración\n- Todos los usuarios asociados\n- Todas las oportunidades detectadas\n- Todo el historial\n\n¿Estás ABSOLUTAMENTE seguro?`)) {
+        return;
+    }
+
+    // Segunda confirmación: escribir el nombre
+    const confirmacion = prompt(`Para confirmar la eliminación, escribe el nombre exacto de la empresa:\n\n"${nombre}"`);
+
+    if (confirmacion !== nombre) {
+        alert('❌ Cancelado: El nombre no coincide');
+        return;
+    }
+
+    // Tercera confirmación final
+    if (!confirm(`⚠️ ÚLTIMA CONFIRMACIÓN\n\nEstás a punto de eliminar "${nombre}" PERMANENTEMENTE.\n\n¿Proceder con la eliminación?`)) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=eliminar_empresa`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ empresa_id: id })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`✅ Empresa eliminada exitosamente\n\n${data.detalles}`);
+            await cargarEstadisticas();
+        } else {
+            alert(`❌ Error: ${data.error}`);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al eliminar la empresa');
     }
 }
 
