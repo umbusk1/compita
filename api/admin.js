@@ -656,98 +656,99 @@ async function handleEjecutarAnalisis(req, res) {
     console.error('Error ejecutando análisis:', error);
     return res.status(500).json({ error: 'Error al ejecutar análisis' });
   }
-  // INVITAR ADMINISTRADOR
-  async function handleInvitarAdmin(req, res) {
-    if (req.method !== 'POST') {
-      return res.status(405).json({ error: 'Método no permitido' });
+}
+
+// INVITAR ADMINISTRADOR
+async function handleInvitarAdmin(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método no permitido' });
+  }
+
+  const admin = verificarToken(req.headers.authorization);
+  if (!admin) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  // Solo superadmins pueden invitar otros administradores
+  if (admin.rol !== 'superadmin') {
+    return res.status(403).json({ error: 'Solo los superadministradores pueden invitar otros administradores' });
+  }
+
+  const { nombre, email, password, rol } = req.body;
+
+  if (!nombre || !email || !password || !rol) {
+    return res.status(400).json({ error: 'Faltan campos obligatorios' });
+  }
+
+  if (!['admin', 'superadmin'].includes(rol)) {
+    return res.status(400).json({ error: 'Rol inválido. Use "admin" o "superadmin"' });
+  }
+
+  try {
+    // Verificar que el email no esté registrado
+    const emailExiste = await pool.query(
+      'SELECT id FROM administradores WHERE email = $1',
+      [email.toLowerCase()]
+    );
+
+    if (emailExiste.rows.length > 0) {
+      return res.status(400).json({ error: 'Este email ya está registrado como administrador' });
     }
 
-    const admin = verificarToken(req.headers.authorization);
-    if (!admin) {
-      return res.status(401).json({ error: 'No autorizado' });
-    }
+    // Hash de la contraseña
+    const passwordHash = await bcrypt.hash(password, 10);
 
-    // Solo superadmins pueden invitar otros administradores
-    if (admin.rol !== 'superadmin') {
-      return res.status(403).json({ error: 'Solo los superadministradores pueden invitar otros administradores' });
-    }
+    // Crear administrador
+    const result = await pool.query(`
+      INSERT INTO administradores (
+        nombre,
+        email,
+        password_hash,
+        rol,
+        activo,
+        invitado_por
+      ) VALUES ($1, $2, $3, $4, true, $5)
+      RETURNING id
+    `, [nombre, email.toLowerCase(), passwordHash, rol, admin.id]);
 
-    const { nombre, email, password, rol } = req.body;
+    const nuevoAdminId = result.rows[0].id;
 
-    if (!nombre || !email || !password || !rol) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios' });
-    }
+    console.log(`[ADMIN] Nuevo administrador creado: ${nombre} (${rol}) por ${admin.email}`);
 
-    if (!['admin', 'superadmin'].includes(rol)) {
-      return res.status(400).json({ error: 'Rol inválido. Use "admin" o "superadmin"' });
-    }
-
+    // Enviar email con credenciales
     try {
-      // Verificar que el email no esté registrado
-      const emailExiste = await pool.query(
-        'SELECT id FROM administradores WHERE email = $1',
-        [email.toLowerCase()]
-      );
+      const resendApiKey = process.env.RESEND_API_KEY;
+      if (resendApiKey) {
+        const emailResponse = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${resendApiKey}`
+          },
+          body: JSON.stringify({
+            from: 'Compita <no-reply@compita.umbusk.com>',
+            to: [email],
+            subject: '🔐 Acceso al Dashboard Admin de Compita',
+            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#9333ea 0%,#7c3aed 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🔐 Acceso Admin - Compita</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${nombre}</strong>,</p><p>Has sido invitado como <strong>${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</strong> del sistema Compita.</p><div style="background:white;border-left:4px solid #9333ea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#9333ea">📋 Tus credenciales:</h3><p><strong>Email:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Rol:</strong> ${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/admin-login.html" style="background:#9333ea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🔐 Acceder al Dashboard</a></div><div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:15px;margin:20px 0;border-radius:5px"><p style="margin:0;font-size:14px"><strong>⚠️ Importante:</strong> Cambia tu contraseña en el primer inicio de sesión.</p></div></div></body></html>`
+          })
+        });
 
-      if (emailExiste.rows.length > 0) {
-        return res.status(400).json({ error: 'Este email ya está registrado como administrador' });
-      }
-
-      // Hash de la contraseña
-      const passwordHash = await bcrypt.hash(password, 10);
-
-      // Crear administrador
-      const result = await pool.query(`
-        INSERT INTO administradores (
-          nombre,
-          email,
-          password_hash,
-          rol,
-          activo,
-          invitado_por
-        ) VALUES ($1, $2, $3, $4, true, $5)
-        RETURNING id
-      `, [nombre, email.toLowerCase(), passwordHash, rol, admin.id]);
-
-      const nuevoAdminId = result.rows[0].id;
-
-      console.log(`[ADMIN] Nuevo administrador creado: ${nombre} (${rol}) por ${admin.email}`);
-
-      // Enviar email con credenciales
-      try {
-        const resendApiKey = process.env.RESEND_API_KEY;
-        if (resendApiKey) {
-          const emailResponse = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${resendApiKey}`
-            },
-            body: JSON.stringify({
-              from: 'Compita <no-reply@compita.umbusk.com>',
-              to: [email],
-              subject: '🔐 Acceso al Dashboard Admin de Compita',
-              html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#9333ea 0%,#7c3aed 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🔐 Acceso Admin - Compita</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${nombre}</strong>,</p><p>Has sido invitado como <strong>${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</strong> del sistema Compita.</p><div style="background:white;border-left:4px solid #9333ea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#9333ea">📋 Tus credenciales:</h3><p><strong>Email:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Rol:</strong> ${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/admin-login.html" style="background:#9333ea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🔐 Acceder al Dashboard</a></div><div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:15px;margin:20px 0;border-radius:5px"><p style="margin:0;font-size:14px"><strong>⚠️ Importante:</strong> Cambia tu contraseña en el primer inicio de sesión.</p></div></div></body></html>`
-            })
-          });
-
-          if (emailResponse.ok) {
-            console.log(`[EMAIL] Credenciales de admin enviadas a ${email}`);
-          }
+        if (emailResponse.ok) {
+          console.log(`[EMAIL] Credenciales de admin enviadas a ${email}`);
         }
-      } catch (emailError) {
-        console.error('Error enviando email:', emailError);
       }
-
-      return res.json({
-        success: true,
-        admin_id: nuevoAdminId,
-        mensaje: 'Administrador invitado exitosamente'
-      });
-
-    } catch (error) {
-      console.error('Error al invitar administrador:', error);
-      return res.status(500).json({ error: 'Error al invitar administrador' });
+    } catch (emailError) {
+      console.error('Error enviando email:', emailError);
     }
+
+    return res.json({
+      success: true,
+      admin_id: nuevoAdminId,
+      mensaje: 'Administrador invitado exitosamente'
+    });
+
+  } catch (error) {
+    console.error('Error al invitar administrador:', error);
+    return res.status(500).json({ error: 'Error al invitar administrador' });
   }
 }
