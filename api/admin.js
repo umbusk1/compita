@@ -135,11 +135,6 @@ async function handleStats(req, res) {
      WHERE DATE(fecha_analisis) = CURRENT_DATE`
   );
 
-  const emailsHoy = await pool.query(
-    `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados
-     WHERE DATE(fecha_analisis) = CURRENT_DATE`
-  );
-
   // Contar análisis IA realizados hoy
   const analisisHoy = await pool.query(
     `SELECT COUNT(*) as total FROM resultados
