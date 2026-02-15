@@ -518,23 +518,26 @@ async function handleEliminarEmpresa(req, res) {
     return res.status(400).json({ error: 'empresa_id es requerido' });
   }
 
-  try {
-    const conteoResultados = await pool.query('SELECT COUNT(*) as total FROM resultados WHERE empresa_id = $1', [empresa_id]);
-    const conteoDescargas = await pool.query('SELECT COUNT(*) as total FROM descargas WHERE empresa_id = $1', [empresa_id]);
-    const conteoAnalisis = await pool.query('SELECT COUNT(*) as total FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
-    const conteoUsuarios = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
+	try {
+	  const conteoResultados = await pool.query('SELECT COUNT(*) as total FROM resultados WHERE empresa_id = $1', [empresa_id]);
+	  const conteoDescargas = await pool.query('SELECT COUNT(*) as total FROM descargas WHERE empresa_id = $1', [empresa_id]);
+	  const conteoAnalisisProfundos = await pool.query('SELECT COUNT(*) as total FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
+	  const conteoAnalisis = await pool.query('SELECT COUNT(*) as total FROM analisis WHERE empresa_id = $1', [empresa_id]);
+	  const conteoUsuarios = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
 
-    await pool.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM empresas WHERE id = $1', [empresa_id]);
+	  await pool.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
+	  await pool.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
+	  await pool.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
+	  await pool.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
+	  await pool.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
+	  await pool.query('DELETE FROM empresas WHERE id = $1', [empresa_id]);
 
-    const detalles = `Registros eliminados:
-- ${conteoUsuarios.rows[0].total} usuarios
-- ${conteoResultados.rows[0].total} oportunidades
-- ${conteoDescargas.rows[0].total} descargas
-- ${conteoAnalisis.rows[0].total} análisis profundos`;
+	const detalles = `Registros eliminados:
+	- ${conteoUsuarios.rows[0].total} usuarios
+	- ${conteoResultados.rows[0].total} oportunidades
+	- ${conteoDescargas.rows[0].total} descargas
+	- ${conteoAnalisisProfundos.rows[0].total} análisis profundos
+	- ${conteoAnalisis.rows[0].total} análisis`;
 
     console.log(`[ADMIN] Empresa ${empresa_id} ELIMINADA por admin ${admin.email}`);
     console.log(detalles);
