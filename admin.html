@@ -94,9 +94,9 @@
                 <div id="content-empresas" class="tab-content">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-gray-900">Lista de Empresas</h2>
-                        <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
-                            + Nueva Empresa
-                        </button>
+						<button onclick="abrirModalCrear()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
+							+ Nueva Empresa
+						</button>
                     </div>
 
                     <!-- Tabla de Empresas -->
@@ -940,10 +940,111 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('🚧 Invitar administrador - Próximamente en Fase 3');
         }
 
-        function cerrarSesion() {
-            localStorage.removeItem('admin_token');
-            window.location.href = '/admin-login.html';
+// ============================================
+// MODAL CREAR NUEVA EMPRESA
+// ============================================
+function abrirModalCrear() {
+    // Generar contraseña temporal automáticamente
+    generarPasswordTemporal();
+
+    // Mostrar modal
+    document.getElementById('modal-crear-empresa').classList.remove('hidden');
+}
+
+function cerrarModalCrear() {
+    // Limpiar formulario
+    document.getElementById('crear-nombre').value = '';
+    document.getElementById('crear-dominio').value = '';
+    document.getElementById('crear-contacto-nombre').value = '';
+    document.getElementById('crear-email').value = '';
+    document.getElementById('crear-palabras-clave').value = '';
+    document.getElementById('crear-plan').value = 'free_trial';
+
+    // Ocultar modal
+    document.getElementById('modal-crear-empresa').classList.add('hidden');
+}
+
+function generarPasswordTemporal() {
+    // Generar contraseña aleatoria de 12 caracteres
+    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%&';
+    let password = '';
+    for (let i = 0; i < 12; i++) {
+        password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    document.getElementById('crear-password').value = password;
+}
+
+async function crearEmpresa(event) {
+    event.preventDefault();
+
+    // Recoger datos del formulario
+    const nombre = document.getElementById('crear-nombre').value.trim();
+    const dominio = document.getElementById('crear-dominio').value.trim();
+    const contactoNombre = document.getElementById('crear-contacto-nombre').value.trim();
+    const email = document.getElementById('crear-email').value.trim().toLowerCase();
+    const password = document.getElementById('crear-password').value;
+    const plan = document.getElementById('crear-plan').value;
+    const palabrasClave = document.getElementById('crear-palabras-clave').value.trim();
+
+    // Validaciones básicas
+    if (!nombre || !contactoNombre || !email || !password) {
+        alert('❌ Por favor completa todos los campos obligatorios');
+        return;
+    }
+
+    if (!email.includes('@')) {
+        alert('❌ El email no es válido');
+        return;
+    }
+
+    // Procesar palabras clave
+    let palabrasArray = [];
+    if (palabrasClave) {
+        palabrasArray = palabrasClave
+            .split(',')
+            .map(p => p.trim().toLowerCase())
+            .filter(p => p.length > 0);
+    }
+
+    // Confirmar creación
+    if (!confirm(`¿Crear empresa "${nombre}" con usuario "${email}"?`)) {
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem('admin_token');
+        const response = await fetch(`${API_BASE}/api/admin?action=crear_empresa`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                nombre: nombre,
+                dominio: dominio || null,
+                contacto_nombre: contactoNombre,
+                email: email,
+                password: password,
+                plan: plan,
+                palabras_clave: palabrasArray
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(`✅ Empresa creada exitosamente!\n\n📧 Se ha enviado un email a ${email} con las credenciales de acceso.`);
+            cerrarModalCrear();
+            // Recargar estadísticas para mostrar la nueva empresa
+            await cargarEstadisticas();
+        } else {
+            alert(`❌ Error al crear empresa: ${data.error}`);
         }
+    } catch (error) {
+        console.error('Error al crear empresa:', error);
+        alert('❌ Error al crear la empresa. Verifica la conexión.');
+    }
+}
     </script>
 </body>
 </html>
