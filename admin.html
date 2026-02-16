@@ -617,6 +617,12 @@
             }
         }
 
+        // Cerrar sesión
+		function cerrarSesion() {
+		    localStorage.removeItem('admin_token');
+		    window.location.href = 'admin-login.html';
+		}
+
         async function cargarEstadisticas() {
             try {
                 const token = localStorage.getItem('admin_token');
