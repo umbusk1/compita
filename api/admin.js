@@ -147,7 +147,8 @@ async function handleStats(req, res) {
     SELECT
       e.id, e.nombre, e.dominio, e.plan, e.activo, e.trial_fin,
       u.email as usuario_email,
-      COUNT(r.id) as oportunidades_count
+      COUNT(r.id) as oportunidades_count,
+      (COUNT(r.id) * 1500)::bigint as tokens_usados_total
     FROM empresas e
     LEFT JOIN usuarios u ON u.empresa_id = e.id
     LEFT JOIN resultados r ON r.empresa_id = e.id
@@ -163,12 +164,18 @@ async function handleStats(req, res) {
   const ultimoScraping = await pool.query('SELECT MAX(scrapeado_en) as fecha FROM licitaciones');
   const ultimoAnalisis = await pool.query('SELECT MAX(fecha_analisis) as fecha FROM resultados');
 
+  // Calcular total de tokens de todas las empresas
+    const totalTokens = empresas.rows.reduce((sum, emp) =>
+      sum + parseInt(emp.tokens_usados_total || 0), 0
+  );
+
   return res.json({
     total_empresas: parseInt(totalEmpresas.rows[0].total),
     licitaciones_hoy: parseInt(licitacionesHoy.rows[0].total),
     oportunidades_totales: parseInt(oportunidadesTotales.rows[0].total),
     emails_enviados_hoy: parseInt(emailsHoy.rows[0].total),
     analisis_ia_hoy: parseInt(analisisHoy.rows[0].total),
+    tokens_totales: totalTokens,
     ultimo_scraping: ultimoScraping.rows[0].fecha,
     ultimo_analisis: ultimoAnalisis.rows[0].fecha,
     empresas: empresas.rows,
