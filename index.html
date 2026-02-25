@@ -3,37 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compita - Análisis Inteligente de Licitaciones con IA</title>
-    <meta name="description" content="Encuentra las licitaciones que importan. Claude AI analiza 400+ licitaciones en minutos y te muestra solo las relevantes para tu empresa.">
+    <title>Compita - Tu agente de licitaciones en República Dominicana</title>
+    <meta name="description" content="Compita te encuentra las licitaciones. Tú ganas los contratos. Tu agente de inteligencia comercial revisa el portal del Estado dos veces al día y te entrega solo las oportunidades relevantes para tu empresa. Desde $10/mes.">
     <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Favicon simple que funciona en todos lados -->
-		<link rel="icon" type="image/png" href="favicon-umbusk.png">
-		<!-- Específico para Apple/iOS -->
-		<link rel="apple-touch-icon" href="favicon-umbusk.png">
+    <link rel="icon" type="image/png" href="favicon-umbusk.png">
+    <link rel="apple-touch-icon" href="favicon-umbusk.png">
     <style>
-	    .mobile-menu {
-	        display: none;
-	    }
-	    .mobile-menu.active {
-	        display: block;
-	    }
-	    @media (max-width: 768px) {
-	        #grafico-diario {
-	            height: 300px !important;
-	        }
-	    }
-</style>
+        .mobile-menu {
+            display: none;
+        }
+        .mobile-menu.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            #grafico-diario {
+                height: 300px !important;
+            }
+        }
+    </style>
 </head>
 <body class="bg-white">
+
+<!-- NAVEGACIÓN -->
 <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
     <div class="container mx-auto px-4 py-4">
         <div class="flex justify-between items-center">
-			<!-- Logo -->
-			<div class="flex items-center gap-2">
-				<img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png"
-					 alt="Logo Compita"
-					 class="h-20">
-			</div>
+            <div class="flex items-center gap-2">
+                <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-20">
+            </div>
             <div class="hidden md:flex gap-6 items-center">
                 <a href="#como-funciona" class="text-gray-600 hover:text-indigo-600 transition">Cómo Funciona</a>
                 <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition">Precios</a>
@@ -66,19 +63,24 @@
     </div>
 </nav>
 
+<!-- HERO -->
 <section class="pt-32 pb-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto text-center">
-            <p class="text-xl text-gray-600 mb-6 flex items-center justify-center gap-2">
-                Cargando los datos del Portal de Compras de República Dominicana
+            <p class="text-lg text-indigo-600 font-semibold mb-4 flex items-center justify-center gap-2">
+                Tu agente de inteligencia comercial en República Dominicana
                 <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="República Dominicana">
             </p>
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                Encuentra las licitaciones que <span class="text-indigo-600">importan</span>
+                Compita te encuentra las licitaciones.<br>
+                <span class="text-indigo-600">Tú ganas los contratos.</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-600 mb-8">
-                Compita analiza cientos de licitaciones en minutos y extrae solo las relevantes para tu empresa.<br>
-                <span class="font-semibold text-gray-800">Por ejemplo, de 100+ solo 3 o 4 pueden ser verdaderas oportunidades.</span>
+            <p class="text-lg md:text-xl text-gray-600 mb-4">
+                Revisa el portal del Estado dos veces al día y te entrega solo las oportunidades que son para tu empresa.<br>
+                <span class="font-semibold text-gray-800">No es una búsqueda. Es un colaborador que toma iniciativa.</span>
+            </p>
+            <p class="text-base text-indigo-700 font-semibold mb-8">
+                El servicio equivalente cuesta $1,000 al año. Compita desde $10/mes.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                 <a href="/registro.html" class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
@@ -96,6 +98,7 @@
     </div>
 </section>
 
+<!-- ESTADÍSTICAS EN TIEMPO REAL -->
 <section class="py-20 bg-white">
     <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
@@ -107,7 +110,6 @@
                     Datos de licitaciones abiertas para presentar ofertas, actualizados diariamente desde el portal oficial SECP
                 </p>
             </div>
-
             <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
                 <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
                     <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
@@ -118,7 +120,6 @@
                     <div class="h-10 bg-gray-300 rounded w-1/2"></div>
                 </div>
             </div>
-
             <div class="bg-white rounded-xl shadow-lg p-6">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6">Licitaciones Abiertas por Mes/Día</h3>
                 <div class="flex justify-center gap-1 md:gap-2 mb-6 border-b border-gray-200 overflow-x-auto" id="month-tabs"></div>
@@ -130,78 +131,84 @@
     </div>
 </section>
 
+<!-- EL PROBLEMA -->
 <section class="py-20 bg-white">
     <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto text-center">
             <h2 class="text-4xl font-bold text-gray-900 mb-6">
-                ¿Revisas cientos de licitaciones repitiendo manualmente tu búsqueda?
+                ¿Cuántas licitaciones perdiste esta semana porque no las viste a tiempo?
             </h2>
-            <div class="grid md:grid-cols-3 gap-6 mt-12">
+            <p class="text-xl text-gray-600 mb-12">
+                El portal del Estado dominicano publica cientos de licitaciones cada semana. La mayoría no son para tu empresa — pero algunas sí lo son, y encontrarlas manualmente toma horas que no tienes. Mientras tanto, tu competencia ya presentó oferta.
+            </p>
+            <div class="grid md:grid-cols-3 gap-6 mt-4">
                 <div class="p-6 bg-red-50 rounded-lg border border-red-100">
                     <div class="text-4xl mb-4">⏰</div>
                     <h3 class="font-bold text-gray-800 mb-2">Horas perdidas</h3>
-                    <p class="text-gray-600 text-sm">Revisar licitaciones manualmente toma horas de trabajo rutinario</p>
+                    <p class="text-gray-600 text-sm">Revisar licitaciones manualmente toma horas de trabajo rutinario que tu equipo podría dedicar a ganar contratos</p>
                 </div>
                 <div class="p-6 bg-red-50 rounded-lg border border-red-100">
                     <div class="text-4xl mb-4">😓</div>
                     <h3 class="font-bold text-gray-800 mb-2">Oportunidades perdidas</h3>
-                    <p class="text-gray-600 text-sm">Las mejores oportunidades se esconden entre montañas de información</p>
+                    <p class="text-gray-600 text-sm">Las mejores oportunidades se esconden entre cientos de licitaciones que no son para ti</p>
                 </div>
                 <div class="p-6 bg-red-50 rounded-lg border border-red-100">
                     <div class="text-4xl mb-4">💸</div>
                     <h3 class="font-bold text-gray-800 mb-2">Recursos desperdiciados</h3>
-                    <p class="text-gray-600 text-sm">Tu empresa incurre en costos de oportunidad de tu equipo humano</p>
+                    <p class="text-gray-600 text-sm">Tu empresa incurre en costos de oportunidad cada vez que alguien busca manualmente lo que Compita puede hacer solo</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- VIDEO DEMO -->
 <section id="demo" class="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
     <div class="container mx-auto px-4">
         <div class="max-w-5xl mx-auto">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                    Compita + Claude AI hacen el trabajo por ti
+                    Mira cómo Compita trabaja por ti
                 </h2>
                 <p class="text-xl text-gray-600">
-                    Descubre las licitaciones que te importan en minutos
+                    En menos de 2 minutos entenderás por qué tus competidores no deberían verlo
                 </p>
             </div>
             <div class="bg-gray-900 rounded-2xl shadow-2xl aspect-video flex items-center justify-center">
-				<div class="text-center">
-					<iframe
-						class="mx-auto rounded-lg"
-						width="560"
-						height="315"
-						src="https://www.youtube.com/embed/qvMhMCZGqns"
-						title="Video Promo (24 segundos)"
-						frameborder="0"
-						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-						referrerpolicy="strict-origin-when-cross-origin"
-						allowfullscreen>
-					</iframe>
-					<p class="text-white text-xl mt-4">Video Promo (22 segundos)</p>
-				</div>
-
+                <div class="text-center">
+                    <iframe
+                        class="mx-auto rounded-lg"
+                        width="560"
+                        height="315"
+                        src="https://www.youtube.com/embed/qvMhMCZGqns"
+                        title="Video Promo Compita"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                    </iframe>
+                    <p class="text-white text-xl mt-4">Video Promo (22 segundos)</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- CÓMO FUNCIONA -->
 <section id="como-funciona" class="py-20 bg-white">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl font-bold text-gray-900 text-center mb-16">
-                Tres pasos simples
+            <h2 class="text-4xl font-bold text-gray-900 text-center mb-4">
+                Así trabaja Compita por ti
             </h2>
+            <p class="text-center text-gray-600 text-lg mb-16">Tres pasos. Tú solo haces el primero.</p>
 
             <div class="space-y-12">
                 <div class="flex gap-6 items-start">
                     <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Crea tu perfil de empresa</h3>
-                        <p class="text-gray-600 mb-4">Define tu perfil con tres capas de filtrado inteligente:</p>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Configura el perfil de tu empresa</h3>
+                        <p class="text-gray-600 mb-4">Dinos en qué sector opera tu empresa, qué productos o servicios ofreces y qué palabras describen tu negocio. Toma menos de 5 minutos. Compita hace el resto.</p>
                         <div class="bg-indigo-50 rounded-lg p-4 space-y-3">
                             <div class="flex gap-3 items-start">
                                 <span class="text-indigo-600 font-bold">1.</span>
@@ -225,23 +232,22 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="text-gray-600 mt-4">Este triple filtrado asegura que solo lleguen oportunidades verdaderamente relevantes.</p>
                     </div>
                 </div>
 
                 <div class="flex gap-6 items-start">
                     <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">El sistema analiza automáticamente las licitaciones</h3>
-                        <p class="text-gray-600">Nuestro scraper carga <strong>2 veces al día (L-V)</strong> todas las nuevas licitaciones del <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">portal SECP</a>. Claude AI las analiza en tres etapas: primero filtra por categorías UNSPSC, luego por palabras clave, y finalmente evalúa la relevancia según el perfil de tu empresa.</p>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Compita analiza el portal del Estado — solo</h3>
+                        <p class="text-gray-600">Cada mañana y cada tarde de lunes a viernes, Compita revisa el <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">portal SECP</a> completo. Claude AI analiza cada licitación en tres etapas: primero filtra por categorías, luego por palabras clave, y finalmente evalúa la relevancia según el perfil de tu empresa. No es búsqueda de palabras — es comprensión real.</p>
                     </div>
                 </div>
 
                 <div class="flex gap-6 items-start">
                     <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Recibe solo las oportunidades de ALTA y MEDIA relevancia</h3>
-                        <p class="text-gray-600">Un dashboard limpio muestra las licitaciones que realmente importan, con alertas por email opcionales. Ve el nivel de relevancia, monto y detalles.</p>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Tú recibes solo lo que importa</h3>
+                        <p class="text-gray-600">Te avisamos por email cuando hay nuevas oportunidades de alta y media relevancia para tu empresa. Entras al dashboard y las encuentras organizadas, claras y listas para evaluar. De 100 licitaciones, solo 3 o 4 son verdaderas oportunidades para ti. Compita ya lo sabe.</p>
                     </div>
                 </div>
             </div>
@@ -249,43 +255,49 @@
     </div>
 </section>
 
+<!-- RESULTADOS -->
 <section class="py-20 bg-indigo-600 text-white">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-12">Resultados reales</h2>
+            <h2 class="text-4xl font-bold mb-12">Lo que Compita hace por tu empresa</h2>
             <div class="grid md:grid-cols-3 gap-8">
                 <div>
                     <div class="text-5xl font-bold mb-2">99%</div>
-                    <p class="text-indigo-100">Ahorro de tiempo</p>
+                    <p class="text-indigo-100">Ahorro de tiempo en monitoreo</p>
                 </div>
                 <div>
                     <div class="text-2xl font-bold mb-2">de '100' a '3 o 4'<br>que interesan</div>
-                    <p class="text-indigo-100">Licitaciones filtradas</p>
+                    <p class="text-indigo-100">Licitaciones filtradas con precisión</p>
                 </div>
                 <div>
-                    <div class="text-5xl font-bold mb-2">+Tiempo</div>
-                    <p class="text-indigo-100">Para análisis que importa</p>
+                    <div class="text-5xl font-bold mb-2">2x</div>
+                    <p class="text-indigo-100">Al día, de lunes a viernes, sin que hagas nada</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
+<!-- PLANES -->
 <section id="pricing" class="py-20 bg-white">
     <div class="container mx-auto px-4">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-4xl font-bold text-gray-900 text-center mb-4">Planes transparentes</h2>
-            <p class="text-center text-gray-600 mb-12">Comienza gratis ¡con el Plan Business!</p>
-
+            <p class="text-center text-gray-600 mb-2">Comienza gratis ¡con el Plan Business!</p>
+            <p class="text-center text-indigo-700 font-semibold mb-12">
+                El servicio equivalente en el mercado regional cuesta $1,000 al año. Compita Business son $240 al año.
+            </p>
 
             <div class="grid md:grid-cols-3 gap-8 mb-16">
+
+                <!-- Plan Estándar -->
                 <div class="border-2 border-gray-200 rounded-2xl p-8">
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">Estándar</h3>
                     <div class="mb-6">
                         <span class="text-4xl font-bold">$10</span>
                         <span class="text-gray-600">/mes</span>
                     </div>
-
+                    <p class="text-sm text-gray-500 mb-4">Para empresas que quieren estar siempre informadas sobre las licitaciones relevantes en su sector.</p>
                     <ul class="space-y-3 mb-8 text-sm">
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
@@ -297,7 +309,7 @@
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Scraping automático 2x/día (L-V)</span>
+                            <span class="text-gray-700">Monitoreo automático 2x/día (L-V)</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
@@ -305,7 +317,7 @@
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Notificaciones por email (resumen)</span>
+                            <span class="text-gray-700">Alertas por email con las oportunidades del día</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
@@ -316,12 +328,13 @@
                             <span class="text-gray-700">Historial de 1 mes</span>
                         </li>
                     </ul>
-					<a href="/registro.html?plan=business" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-gray-200 transition font-semibold flex items-center justify-center gap-2">
-					    <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-					    Comenzar
+                    <a href="/registro.html?plan=estandar" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center justify-center gap-2">
+                        <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+                        Comenzar
                     </a>
                 </div>
 
+                <!-- Plan Business -->
                 <div class="border-2 border-indigo-600 rounded-2xl p-8 relative shadow-lg">
                     <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold">Más Popular</div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">Business</h3>
@@ -329,12 +342,15 @@
                         <span class="text-4xl font-bold">$20</span>
                         <span class="text-gray-600">/mes</span>
                     </div>
-                    <p class="text-sm text-gray-500 mb-4 h-6">Todo lo del Estándar, más:</p>
-
+                    <p class="text-sm text-gray-500 mb-4">Para empresas que no solo quieren encontrar las licitaciones — sino saber si vale la pena presentar oferta.</p>
                     <ul class="space-y-3 mb-8 text-sm">
-                    	<li class="flex items-start gap-2">
-						    <span class="text-green-600 text-lg">✓</span>
-						    <span class="text-gray-700"><strong>✨ Prueba gratis de 7 días</strong></span>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700"><strong>✨ Prueba gratis de 7 días</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Todo lo del Plan Estándar</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
@@ -342,11 +358,11 @@
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Documentación de detalle (PDF pliego)</strong> de licitaciones</span>
+                            <span class="text-gray-700"><strong>Descarga de pliegos de condiciones</strong> (PDF)</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Análisis de pliego con IA</strong></span>
+                            <span class="text-gray-700"><strong>Análisis del pliego con IA:</strong> requisitos, riesgos y si tu empresa cumple el perfil</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
@@ -354,20 +370,24 @@
                         </li>
                     </ul>
                     <a href="/registro.html" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center justify-center gap-2">
-						<img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-					    Comenzar Prueba Gratis
+                        <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
+                        Comenzar Prueba Gratis
                     </a>
-
                 </div>
 
+                <!-- Plan Enterprise -->
                 <div class="border-2 border-gray-200 rounded-2xl p-8 bg-gradient-to-br from-gray-50 to-white">
                     <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
                     <div class="mb-6">
                         <span class="text-4xl font-bold">Custom</span>
                         <span class="text-gray-600 text-base">/año</span>
                     </div>
-                    <p class="text-sm text-gray-500 mb-4 h-6">Todo en Business, más:</p>
+                    <p class="text-sm text-gray-500 mb-4">Para empresas que quieren acompañamiento experto además de la tecnología.</p>
                     <ul class="space-y-3 mb-8 text-sm">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 text-lg">✓</span>
+                            <span class="text-gray-700">Todo lo del Plan Business</span>
+                        </li>
                         <li class="flex items-start gap-2">
                             <span class="text-green-600 text-lg">✓</span>
                             <span class="text-gray-700"><strong>Categorías UNSPSC ilimitadas</strong></span>
@@ -395,215 +415,151 @@
                 </div>
             </div>
 
-<div class="bg-gray-50 rounded-2xl p-4 md:p-8">
-    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Comparación Detallada</h3>
+            <!-- Tabla comparativa -->
+            <div class="bg-gray-50 rounded-2xl p-4 md:p-8">
+                <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Comparación Detallada</h3>
 
-    <div class="hidden lg:block overflow-x-auto">
-        <table class="w-full text-left">
-            <thead>
-                <tr class="border-b-2 border-gray-300">
-                    <th class="py-3 px-4 font-semibold text-gray-700">Funcionalidad</th>
-                    <th class="py-3 px-4 text-center font-semibold text-indigo-600">Estándar</th>
-                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Business</th>
-                    <th class="py-3 px-4 text-center font-semibold text-gray-700">Enterprise</th>
-                </tr>
-            </thead>
-            <tbody class="text-sm">
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4 font-semibold text-gray-800">Precio</td>
-                    <td class="py-3 px-4 text-center text-indigo-600 font-bold">$10/mes</td>
-                    <td class="py-3 px-4 text-center text-gray-800 font-bold">$20/mes</td>
-                    <td class="py-3 px-4 text-center text-gray-800 font-bold">Custom</td>
-                </tr>
-                <tr class="bg-gray-100">
-                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Funcionalidades Base</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Perfil Empresarial</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Categorías UNSPSC</td>
-                    <td class="py-3 px-4 text-center text-gray-600 font-semibold">2</td>
-                    <td class="py-3 px-4 text-center text-gray-800 font-bold">5</td>
-                    <td class="py-3 px-4 text-center text-green-600 font-bold">Ilimitado</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Scraping Automático</td>
-                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
-                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
-                    <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Análisis con IA</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
+                <div class="hidden lg:block overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b-2 border-gray-300">
+                                <th class="py-3 px-4 font-semibold text-gray-700">Funcionalidad</th>
+                                <th class="py-3 px-4 text-center font-semibold text-indigo-600">Estándar</th>
+                                <th class="py-3 px-4 text-center font-semibold text-gray-700">Business</th>
+                                <th class="py-3 px-4 text-center font-semibold text-gray-700">Enterprise</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4 font-semibold text-gray-800">Precio</td>
+                                <td class="py-3 px-4 text-center text-indigo-600 font-bold">$10/mes</td>
+                                <td class="py-3 px-4 text-center text-gray-800 font-bold">$20/mes</td>
+                                <td class="py-3 px-4 text-center text-gray-800 font-bold">Custom</td>
+                            </tr>
+                            <tr class="bg-gray-100">
+                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Funcionalidades Base</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Perfil Empresarial</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Categorías UNSPSC</td>
+                                <td class="py-3 px-4 text-center text-gray-600 font-semibold">2</td>
+                                <td class="py-3 px-4 text-center text-gray-800 font-bold">5</td>
+                                <td class="py-3 px-4 text-center text-green-600 font-bold">Ilimitado</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Monitoreo Automático</td>
+                                <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                                <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                                <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Análisis con IA</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                            <tr class="bg-gray-100">
+                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Notificaciones</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Alertas por Email</td>
+                                <td class="py-3 px-4 text-center text-gray-600">Resumen básico</td>
+                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
+                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Acceso a Pliegos (PDF)</td>
+                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                            <tr class="bg-gray-100">
+                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Dashboard</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Dashboard de Oportunidades</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Análisis de Pliego con IA</td>
+                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Historial Disponible</td>
+                                <td class="py-3 px-4 text-center text-gray-600">1 mes</td>
+                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
+                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Filtros y Búsqueda</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                            <tr class="bg-gray-100">
+                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Servicios Premium</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Recomendaciones IA para Ofertas</td>
+                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                            <tr class="border-b border-gray-200">
+                                <td class="py-3 px-4">Acompañamiento Consultor</td>
+                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
+                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <tr class="bg-gray-100">
-                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Notificaciones</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Notificaciones por Email</td>
-                    <td class="py-3 px-4 text-center text-gray-600">Resumen básico</td>
-                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
-                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Enlaces a Documentos</td>
-                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-
-                <tr class="bg-gray-100">
-                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Dashboard</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Dashboard de Oportunidades</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Profundizar con IA</td>
-                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Documentación Detallada</td>
-                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Historial Disponible</td>
-                    <td class="py-3 px-4 text-center text-gray-600">1 mes</td>
-                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
-                    <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Filtros y Búsqueda</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-
-                <tr class="bg-gray-100">
-                    <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Servicios Premium</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Recomendaciones IA para Ofertas</td>
-                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-                <tr class="border-b border-gray-200">
-                    <td class="py-3 px-4">Acompañamiento Consultor</td>
-                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                    <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                    <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="lg:hidden space-y-6">
-        <div class="bg-white rounded-lg p-4 shadow">
-            <h4 class="text-lg font-bold text-indigo-600 mb-3">Plan Estándar - $10/mes</h4>
-            <div class="space-y-2 text-sm">
-                <div class="flex justify-between py-1 border-b">
-                    <span> - </span>
-                    <span class="text-green-600 font-semibold"> - </span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Categorías UNSPSC</span>
-                    <span class="text-gray-600 font-semibold">2</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Scraping Automático</span>
-                    <span class="text-gray-600">2x/día (L-V)</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Análisis con IA</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Notificaciones Email</span>
-                    <span class="text-gray-600">Resumen</span>
-                </div>
-                <div class="flex justify-between py-1">
-                    <span>Historial</span>
-                    <span class="text-gray-600">1 mes</span>
+                <!-- Tabla mobile -->
+                <div class="lg:hidden space-y-6">
+                    <div class="bg-white rounded-lg p-4 shadow">
+                        <h4 class="text-lg font-bold text-indigo-600 mb-3">Plan Estándar - $10/mes</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between py-1 border-b"><span>Categorías UNSPSC</span><span class="text-gray-600 font-semibold">2</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Monitoreo Automático</span><span class="text-gray-600">2x/día (L-V)</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Análisis con IA</span><span class="text-green-600">✓</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Alertas Email</span><span class="text-gray-600">Resumen</span></div>
+                            <div class="flex justify-between py-1"><span>Historial</span><span class="text-gray-600">1 mes</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Business - $20/mes</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between py-1 border-b"><span>Todo lo de Estándar</span><span class="text-green-600">✓</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Prueba Gratuita</span><span class="text-green-600 font-semibold">✓ 7 días</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Categorías UNSPSC</span><span class="text-gray-800 font-bold">5</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Acceso a Pliegos PDF</span><span class="text-green-600">✓</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Análisis de Pliego con IA</span><span class="text-green-600">✓</span></div>
+                            <div class="flex justify-between py-1"><span>Historial</span><span class="text-gray-800 font-semibold">3 meses</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow">
+                        <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Enterprise - Custom</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between py-1 border-b"><span>Todo lo de Business</span><span class="text-green-600">✓</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Categorías UNSPSC</span><span class="text-green-600 font-bold">Ilimitado</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Recomendaciones IA</span><span class="text-green-600">✓</span></div>
+                            <div class="flex justify-between py-1 border-b"><span>Acompañamiento</span><span class="text-green-600">✓</span></div>
+                            <div class="flex justify-between py-1"><span>Revisión documentos</span><span class="text-green-600">✓</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="bg-white rounded-lg p-4 shadow">
-            <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Business - $20/mes</h4>
-            <div class="space-y-2 text-sm">
-                <div class="flex justify-between py-1 border-b">
-                    <span>Todo lo de Estándar</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-				    <span>Prueba Gratuita</span>
-				    <span class="text-green-600 font-semibold">✓ 7 días</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Categorías UNSPSC</span>
-                    <span class="text-gray-800 font-bold">5</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Notificaciones Email</span>
-                    <span class="text-gray-800 font-semibold">Completas</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Profundizar con IA</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Documentación Detallada</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-                <div class="flex justify-between py-1">
-                    <span>Historial</span>
-                    <span class="text-gray-800 font-semibold">3 meses</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg p-4 shadow">
-            <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Enterprise - Custom</h4>
-            <div class="space-y-2 text-sm">
-                <div class="flex justify-between py-1 border-b">
-                    <span>Todo lo de Business</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Categorías UNSPSC</span>
-                    <span class="text-green-600 font-bold">Ilimitado</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Recomendaciones IA</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-                <div class="flex justify-between py-1 border-b">
-                    <span>Acompañamiento</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-                <div class="flex justify-between py-1">
-                    <span>Revisión documentos</span>
-                    <span class="text-green-600">✓</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
             <p class="text-center text-gray-600 mt-8">
                 💬 ¿Dudas sobre qué plan elegir? <a href="mailto:sales@umbusk.com" class="text-indigo-600 font-semibold hover:text-indigo-800">Escríbenos</a>
             </p>
@@ -611,6 +567,7 @@
     </div>
 </section>
 
+<!-- FAQ -->
 <section id="faq" class="py-20 bg-gray-50">
     <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto">
@@ -641,11 +598,15 @@
     </div>
 </section>
 
+<!-- CTA FINAL -->
 <section id="registro" class="py-20 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
     <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-6">Comienza a encontrar las mejores oportunidades que importan hoy</h2>
-            <p class="text-xl text-indigo-100 mb-8">7 días gratis. Sin tarjeta de crédito. Configura en 2 minutos.</p>
+            <h2 class="text-4xl font-bold mb-6">
+                Tu próxima licitación ya está publicada.<br>
+                ¿La vas a ver tú o tu competencia?
+            </h2>
+            <p class="text-xl text-indigo-100 mb-8">7 días gratis. Sin tarjeta de crédito. En 5 minutos Compita ya está trabajando para ti.</p>
             <a href="/registro.html" class="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition font-semibold text-lg shadow-xl">
                 <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
                 ¡Pruébalo gratis ya!
@@ -655,17 +616,15 @@
     </div>
 </section>
 
+<!-- FOOTER -->
 <footer class="bg-gray-900 text-gray-400 py-12">
     <div class="container mx-auto px-4">
         <div class="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-			<!-- Logo -->
-			<div class="flex items-center gap-2">
-				<img src="LogoCompita_FondoNegro_VT_Chato_T.png"
-					 alt="Logo Compita"
-					 class="h-20">
-			</div>
-                <p class="text-sm">Análisis inteligente de licitaciones con IA</p>
+                <div class="flex items-center gap-2">
+                    <img src="LogoCompita_FondoNegro_VT_Chato_T.png" alt="Logo Compita" class="h-20">
+                </div>
+                <p class="text-sm mt-2">Compita te encuentra las licitaciones. Tú ganas los contratos.</p>
             </div>
             <div>
                 <h3 class="text-white font-semibold mb-4">Producto</h3>
@@ -685,23 +644,19 @@
                 <h3 class="text-white font-semibold mb-4">Contacto</h3>
                 <ul class="space-y-2 text-sm">
                     <li>
-                      <a href="https://compitaforms.netlify.app/index.html" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">
-                        <span class="lang-es">Llenar forma de contacto</span>
-                      </a>
+                        <a href="https://compitaforms.netlify.app/index.html" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">
+                            Llenar forma de contacto
+                        </a>
                     </li>
                     <li><a href="https://umbusk.com" target="_blank" class="hover:text-white transition">umbusk.com</a></li>
                 </ul>
             </div>
         </div>
         <div class="border-t border-gray-800 pt-8 text-center text-sm">
-        	<!-- Logo Umbusk -->
-			<div>
-				<img src="logo-umbusk.png"
-					alt="Logo Umbusk"
-					class="h-20"
-					style="display: block; margin: 0 auto; max-width: 100%;">
-			</div>
-            <p>Vibe-coded by <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">UMBUSK</a><br>and Claude from Anthropic.</p>
+            <div>
+                <img src="logo-umbusk.png" alt="Logo Umbusk" class="h-20" style="display: block; margin: 0 auto; max-width: 100%;">
+            </div>
+            <p class="mt-4">Vibe-coded by <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">UMBUSK</a><br>and Claude from Anthropic.</p>
             <p class="mt-2">© 2026 Compita es un servicio de Umbusk, LLC. Todos los derechos reservados.</p>
         </div>
     </div>
@@ -718,7 +673,6 @@ function obtenerTodosMeses() {
     const nombresCortos = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     const hoy = new Date();
     const mesActual = hoy.getMonth();
-
     for (let i = 0; i < 12; i++) {
         meses.push({
             numero: i + 1,
@@ -729,7 +683,6 @@ function obtenerTodosMeses() {
             esActual: i === mesActual
         });
     }
-
     return meses;
 }
 
@@ -737,7 +690,6 @@ function crearPestanas(meses) {
     const tabsContainer = document.getElementById('month-tabs');
     tabsContainer.innerHTML = '';
     const mesActual = new Date().getMonth();
-
     meses.forEach((mes, index) => {
         const button = document.createElement('button');
         button.className = index === mesActual
@@ -759,40 +711,28 @@ function cambiarMes(mesSeleccionado, todosMeses) {
             tab.className = 'px-4 py-2 font-semibold text-gray-600 border-b-2 border-transparent hover:text-indigo-600 hover:border-indigo-300 transition text-sm';
         }
     });
-
     const datosMes = datosCompletos.por_dia.filter(d => {
         const fecha = new Date(d.fecha);
         return fecha.getMonth() === mesSeleccionado.numero - 1 && fecha.getFullYear() === mesSeleccionado.año;
     });
-
     actualizarGrafico(datosMes, mesSeleccionado);
 }
 
 function actualizarGrafico(datos, mesInfo) {
-    if (chartInstance) {
-        chartInstance.destroy();
-    }
-
+    if (chartInstance) { chartInstance.destroy(); }
     const diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
     const hoy = new Date();
     const diaActual = hoy.getDate();
     const mesActual = hoy.getMonth() + 1;
-
     const datosPorDia = {};
     datos.forEach(d => {
         const fecha = new Date(d.fecha);
-        const dia = fecha.getDate();
-        datosPorDia[dia] = d.cantidad;
+        datosPorDia[fecha.getDate()] = d.cantidad;
     });
-
-    const diasCompletos = [];
-    const cantidadesAbiertas = [];
-    const cantidadesCerradas = [];
-
+    const diasCompletos = [], cantidadesAbiertas = [], cantidadesCerradas = [];
     for (let dia = 1; dia <= diasEnMes; dia++) {
         diasCompletos.push(dia);
         const cantidad = datosPorDia[dia] || 0;
-
         if (mesInfo.numero < mesActual || (mesInfo.numero === mesActual && dia < diaActual)) {
             cantidadesCerradas.push(cantidad);
             cantidadesAbiertas.push(0);
@@ -801,64 +741,26 @@ function actualizarGrafico(datos, mesInfo) {
             cantidadesCerradas.push(0);
         }
     }
-
     const ctx = document.getElementById('grafico-diario').getContext('2d');
     chartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: diasCompletos,
             datasets: [
-                {
-                    label: 'Abiertas',
-                    data: cantidadesAbiertas,
-                    backgroundColor: 'rgba(79, 70, 229, 0.8)',
-                    borderColor: 'rgba(79, 70, 229, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Cerradas',
-                    data: cantidadesCerradas,
-                    backgroundColor: 'rgba(209, 213, 219, 0.5)',
-                    borderColor: 'rgba(156, 163, 175, 0.8)',
-                    borderWidth: 1
-                }
+                { label: 'Abiertas', data: cantidadesAbiertas, backgroundColor: 'rgba(79, 70, 229, 0.8)', borderColor: 'rgba(79, 70, 229, 1)', borderWidth: 1 },
+                { label: 'Cerradas', data: cantidadesCerradas, backgroundColor: 'rgba(209, 213, 219, 0.5)', borderColor: 'rgba(156, 163, 175, 0.8)', borderWidth: 1 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: window.innerWidth > 768,
             plugins: {
-                legend: {
-                    display: true,
-                    position: 'top'
-                },
-                title: {
-                    display: true,
-                    text: `Licitaciones según fecha tope para presentar ofertas - ${mesInfo.nombreCompleto}`,
-                    font: { size: 16, weight: 'bold' }
-                }
+                legend: { display: true, position: 'top' },
+                title: { display: true, text: `Licitaciones según fecha tope para presentar ofertas - ${mesInfo.nombreCompleto}`, font: { size: 16, weight: 'bold' } }
             },
             scales: {
-                x: {
-                    stacked: true,
-                    title: {
-                        display: true,
-                        text: 'Día del Mes'
-                    }
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true,
-                    max: maxGlobalCalculado,
-                    ticks: {
-                        stepSize: 5,
-                        precision: 0
-                    },
-                    title: {
-                        display: true,
-                        text: 'Cantidad de Licitaciones'
-                    }
-                }
+                x: { stacked: true, title: { display: true, text: 'Día del Mes' } },
+                y: { stacked: true, beginAtZero: true, max: maxGlobalCalculado, ticks: { stepSize: 5, precision: 0 }, title: { display: true, text: 'Cantidad de Licitaciones' } }
             }
         }
     });
@@ -869,40 +771,13 @@ async function cargarEstadisticas() {
         const response = await fetch('/stats-2026.json');
         const data = await response.json();
         datosCompletos = data;
-
         const todasCantidades = data.por_dia.map(d => d.cantidad);
-        maxGlobalCalculado = Math.max(...todasCantidades, 50);
-        maxGlobalCalculado = Math.ceil(maxGlobalCalculado / 5) * 5;
-
-        // Calcular licitaciones abiertas a partir de hoy (sumar barras azules)
+        maxGlobalCalculado = Math.ceil(Math.max(...todasCantidades, 50) / 5) * 5;
         const hoy = new Date();
         hoy.setHours(0, 0, 0, 0);
-
-        const abiertasDesdeHoy = data.por_dia
-            .filter(d => {
-                const fechaLicitacion = new Date(d.fecha);
-                return fechaLicitacion >= hoy;
-            })
-            .reduce((sum, d) => sum + d.cantidad, 0);
-
-        // Calcular promedio REAL: solo licitaciones cerradas ÷ días laborables pasados
-        const licitacionesCerradas = data.por_dia
-            .filter(d => {
-                const fechaLicitacion = new Date(d.fecha);
-                return fechaLicitacion < hoy && d.cantidad > 0;
-            })
-            .reduce((sum, d) => sum + d.cantidad, 0);
-
-        const diasLaborablesPasados = data.por_dia
-            .filter(d => {
-                const fechaLicitacion = new Date(d.fecha);
-                return fechaLicitacion < hoy && d.cantidad > 0;
-            }).length;
-
-        const promedioDiarioReal = diasLaborablesPasados > 0
-            ? Math.round(licitacionesCerradas / diasLaborablesPasados)
-            : 0;
-
+        const abiertasDesdeHoy = data.por_dia.filter(d => new Date(d.fecha) >= hoy).reduce((sum, d) => sum + d.cantidad, 0);
+        const diasCerrados = data.por_dia.filter(d => new Date(d.fecha) < hoy && d.cantidad > 0);
+        const promedioDiarioReal = diasCerrados.length > 0 ? Math.round(diasCerrados.reduce((sum, d) => sum + d.cantidad, 0) / diasCerrados.length) : 0;
         document.getElementById('stats-cards').innerHTML = `
             <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg shadow p-6 text-center">
                 <p class="text-gray-600 text-sm mb-2">Abiertas a Partir de Hoy</p>
@@ -913,21 +788,17 @@ async function cargarEstadisticas() {
                 <p class="text-gray-600 text-sm mb-2">Promedio Diario</p>
                 <p class="text-4xl font-bold text-purple-600">${promedioDiarioReal.toLocaleString()}</p>
                 <p class="text-xs text-gray-500 mt-2">en días laborables</p>
-            </div>
-        `;
-
+            </div>`;
         const meses = obtenerTodosMeses();
         crearPestanas(meses);
         cambiarMes(meses[new Date().getMonth()], meses);
-
     } catch (error) {
         console.error('Error cargando estadísticas:', error);
         document.getElementById('stats-cards').innerHTML = `
             <div class="col-span-2 text-center text-gray-600 p-6">
                 <p class="text-lg mb-2">📊 Estadísticas próximamente</p>
                 <p class="text-sm">Los datos se actualizarán diariamente</p>
-            </div>
-        `;
+            </div>`;
     }
 }
 
