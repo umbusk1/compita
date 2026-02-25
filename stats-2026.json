@@ -1,20 +1,20 @@
 {
-  "ultima_actualizacion": "2026-02-25 18:35:12",
+  "ultima_actualizacion": "2026-02-25 21:26:05",
   "stats": {
-    "total": 6266,
+    "total": 6347,
     "por_estado": {
-      "abiertas": 6266,
+      "abiertas": 6347,
       "todas": {
         "NonAwarded": 3,
         "Canceled": 12,
         "Proceso cancelado": 3,
-        "Awarded": 1419,
-        "ClosedForReplies": 1771,
+        "Awarded": 1442,
+        "ClosedForReplies": 1802,
         "Proceso publicado": 395,
-        "Published": 2663
+        "Published": 2690
       }
     },
-    "promedio_diario": 111.9
+    "promedio_diario": 109.4
   },
   "por_dia": [
     {
@@ -159,11 +159,11 @@
     },
     {
       "fecha": "2026-02-25",
-      "cantidad": 148
+      "cantidad": 202
     },
     {
       "fecha": "2026-02-26",
-      "cantidad": 87
+      "cantidad": 93
     },
     {
       "fecha": "2026-03-02",
@@ -171,15 +171,15 @@
     },
     {
       "fecha": "2026-03-03",
-      "cantidad": 32
+      "cantidad": 43
     },
     {
       "fecha": "2026-03-04",
-      "cantidad": 12
+      "cantidad": 17
     },
     {
       "fecha": "2026-03-05",
-      "cantidad": 10
+      "cantidad": 11
     },
     {
       "fecha": "2026-03-06",
@@ -187,7 +187,7 @@
     },
     {
       "fecha": "2026-03-09",
-      "cantidad": 2
+      "cantidad": 3
     },
     {
       "fecha": "2026-03-10",
@@ -203,7 +203,7 @@
     },
     {
       "fecha": "2026-03-13",
-      "cantidad": 3
+      "cantidad": 4
     },
     {
       "fecha": "2026-03-17",
@@ -239,6 +239,14 @@
     },
     {
       "fecha": "2026-04-08",
+      "cantidad": 1
+    },
+    {
+      "fecha": "2026-04-14",
+      "cantidad": 1
+    },
+    {
+      "fecha": "2026-04-15",
       "cantidad": 1
     }
   ]
