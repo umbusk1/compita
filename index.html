@@ -600,6 +600,95 @@
     </div>
 </section>
 
+<!-- REPORTE SEMANAL -->
+<section id="reporte" class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-2xl mx-auto text-center">
+      <p class="text-indigo-600 font-semibold text-sm uppercase tracking-wide mb-3">Gratis — sin cuenta requerida</p>
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">
+        El pulso semanal del mercado de licitaciones
+      </h2>
+      <p class="text-xl text-gray-600 mb-8">
+        Cada lunes recibe un análisis del mercado: los contratos más grandes y más pequeños, los que vencen esta semana y los que dan más tiempo, los más complejos y los más simples. Una radiografía del Estado dominicano en tu bandeja de entrada.
+      </p>
+
+      <div class="bg-indigo-50 rounded-2xl p-8 shadow-sm">
+        <div id="form-suscripcion">
+          <div class="flex flex-col sm:flex-row gap-3 mb-3">
+            <input
+              type="text"
+              id="sub-nombre"
+              placeholder="Tu nombre"
+              class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500 text-gray-800"
+            />
+            <input
+              type="email"
+              id="sub-email"
+              placeholder="Tu email"
+              class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500 text-gray-800"
+            />
+          </div>
+          <button
+            onclick="suscribirReporte()"
+            class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg"
+          >
+            📋 Suscribirme al Reporte Semanal — es gratis
+          </button>
+          <p id="sub-mensaje" class="mt-3 text-sm text-gray-500 min-h-[20px]"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+async function suscribirReporte() {
+  const nombre = document.getElementById('sub-nombre').value.trim();
+  const email = document.getElementById('sub-email').value.trim();
+  const mensaje = document.getElementById('sub-mensaje');
+  const boton = document.querySelector('[onclick="suscribirReporte()"]');
+
+  if (!nombre || !email) {
+    mensaje.textContent = '⚠️ Por favor completa tu nombre y email.';
+    mensaje.className = 'mt-3 text-sm text-red-500';
+    return;
+  }
+
+  boton.disabled = true;
+  boton.textContent = 'Procesando...';
+  mensaje.textContent = '';
+
+  try {
+    const res = await fetch('https://compita-reporte-semanal.vercel.app/api/suscribir', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, email })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      document.getElementById('form-suscripcion').innerHTML = `
+        <div class="text-center py-4">
+          <div class="text-5xl mb-4">🎉</div>
+          <h3 class="text-2xl font-bold text-indigo-700 mb-2">¡Listo, ${nombre}!</h3>
+          <p class="text-gray-600">Revisa tu bandeja de entrada — ya te enviamos un email de bienvenida.<br>Tu primer reporte llega el próximo lunes.</p>
+        </div>`;
+    } else {
+      mensaje.textContent = '⚠️ Hubo un problema. Intenta de nuevo.';
+      mensaje.className = 'mt-3 text-sm text-red-500';
+      boton.disabled = false;
+      boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
+    }
+  } catch (err) {
+    mensaje.textContent = '⚠️ Error de conexión. Intenta de nuevo.';
+    mensaje.className = 'mt-3 text-sm text-red-500';
+    boton.disabled = false;
+    boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
+  }
+}
+</script>
+
 <!-- CTA FINAL -->
 <section id="registro" class="py-20 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
     <div class="container mx-auto px-4">
