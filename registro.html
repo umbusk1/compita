@@ -4,22 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Compita</title>
-        <!-- Favicon simple que funciona en todos lados -->
-		<link rel="icon" type="image/png" href="favicon-umbusk.png">
-		<!-- Específico para Apple/iOS -->
-		<link rel="apple-touch-icon" href="favicon-umbusk.png">
+    <link rel="icon" type="image/png" href="favicon-umbusk.png">
+    <link rel="apple-touch-icon" href="favicon-umbusk.png">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-4xl">
         <!-- Logo y título -->
         <div class="text-center mb-8">
-			<div class="flex items-center gap-2">
-				<img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png"
-					 alt="Logo Compita"
-					 class="h-20"
-					 style="display: block; margin: 0 auto; max-width: 100%;">
-			</div>
+            <div class="flex items-center gap-2">
+                <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png"
+                     alt="Logo Compita"
+                     class="h-20"
+                     style="display: block; margin: 0 auto; max-width: 100%;">
+            </div>
             <h1 class="text-2xl font-bold text-gray-900 mb-2">Registro</h1>
             <p class="text-gray-600">7 días gratis sin TDC, luego pagas</p>
         </div>
@@ -28,74 +26,38 @@
         <div id="formulario-registro" class="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-auto">
             <form id="form-registro" onsubmit="mostrarOpciones(event)">
                 <div class="space-y-4">
-                    <!-- Email -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Email Corporativo *
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            required
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Corporativo *</label>
+                        <input type="email" id="email" required
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
-                            placeholder="tu@empresa.com"
-                        >
+                            placeholder="tu@empresa.com">
                         <p class="text-xs text-gray-500 mt-1">⚠️ No se aceptan emails personales de Gmail, Yahoo, etc.</p>
                     </div>
-
-                    <!-- Nombre de Empresa -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Nombre de la Empresa *
-                        </label>
-                        <input
-                            type="text"
-                            id="empresa"
-                            required
-                            minlength="2"
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Empresa *</label>
+                        <input type="text" id="empresa" required minlength="2"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
-                            placeholder="Empresa.com"
-                        >
+                            placeholder="Empresa.com">
                         <p class="text-xs text-gray-500 mt-1">Email debe coincidir con Nombre de la Empresa</p>
                     </div>
-
-                    <!-- Contraseña -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Contraseña *
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            required
-                            minlength="8"
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Contraseña *</label>
+                        <input type="password" id="password" required minlength="8"
                             class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
-                            placeholder="Mínimo 8 caracteres"
-                        >
+                            placeholder="Mínimo 8 caracteres">
                     </div>
-
-                    <!-- Términos -->
                     <div class="flex items-start gap-2">
-                        <input
-                            type="checkbox"
-                            id="terminos"
-                            required
-                            class="mt-1"
-                        >
+                        <input type="checkbox" id="terminos" required class="mt-1">
                         <label for="terminos" class="text-sm text-gray-600">
                             Acepto los <a href="/terminos" class="text-indigo-600 hover:text-indigo-800 underline">Términos y Condiciones</a>
                         </label>
                     </div>
                 </div>
-
-                <button
-                    type="submit"
-                    class="w-full mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
-                >
+                <button type="submit"
+                    class="w-full mt-6 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
                     Continuar →
                 </button>
             </form>
-
             <p class="text-center text-sm text-gray-600 mt-6">
                 ¿Ya tienes cuenta? <a href="/login.html" class="text-indigo-600 hover:text-indigo-800 font-semibold">Iniciar sesión</a>
             </p>
@@ -108,118 +70,65 @@
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Casi listo!</h2>
                 <p class="text-gray-600">Suscríbete a uno de los planes ya, o</p>
             </div>
-
-            <!-- Dos planes lado a lado -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <!-- Plan Estándar -->
                 <div class="border-2 border-indigo-200 rounded-xl p-6">
                     <div class="mb-4">
                         <h3 class="text-lg font-bold text-gray-900">Plan Estándar</h3>
-                        <p class="text-3xl font-bold text-indigo-600 mt-2">
-                            $10<span class="text-sm text-gray-600 font-normal">/mes</span>
-                        </p>
+                        <p class="text-3xl font-bold text-indigo-600 mt-2">$10<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
                     <ul class="space-y-2 mb-4 text-sm">
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span>2 categorías UNSPSC</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span>Scraping automático diario</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span>Análisis inteligente con IA</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span>Notificaciones por email</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span>Dashboard de oportunidades</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span>Historial de 1 mes</span>
-                        </li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>2 categorías UNSPSC</span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Scraping automático diario</span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Análisis inteligente con IA</span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Notificaciones por email</span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Dashboard de oportunidades</span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Historial de 1 mes</span></li>
                     </ul>
-                    <button
-                        onclick="procesarSuscripcion('estandar')"
-                        class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
-                    >
+                    <button onclick="procesarSuscripcion('estandar')"
+                        class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
                         💳 Suscribirse
                     </button>
                 </div>
-
                 <!-- Plan Business -->
                 <div class="border-2 border-orange-300 rounded-xl p-6 bg-gradient-to-br from-orange-50 to-yellow-50">
                     <div class="mb-4">
-                        <div class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">
-                            MÁS POPULAR
-                        </div>
+                        <div class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">MÁS POPULAR</div>
                         <h3 class="text-lg font-bold text-gray-900">Plan Business</h3>
-                        <p class="text-3xl font-bold text-orange-600 mt-2">
-                            $20<span class="text-sm text-gray-600 font-normal">/mes</span>
-                        </p>
+                        <p class="text-3xl font-bold text-orange-600 mt-2">$20<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
                     <ul class="space-y-2 mb-4 text-sm">
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span><strong>Todo lo del Estándar, más:</strong></span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span><strong>5 categorías UNSPSC</strong></span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span><strong>PDF del pliego de licitaciones</strong> (10/mes)</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span><strong>Análisis de pliego con IA</strong> (5/mes)</span>
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <span class="text-green-600">✓</span>
-                            <span><strong>Historial de 3 meses</strong></span>
-                        </li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Todo lo del Estándar, más:</strong></span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>5 categorías UNSPSC</strong></span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>PDF del pliego de licitaciones</strong> (10/mes)</span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Análisis de pliego con IA</strong> (5/mes)</span></li>
+                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Historial de 3 meses</strong></span></li>
                     </ul>
-                    <button
-                        onclick="procesarSuscripcion('business')"
-                        class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold"
-                    >
+                    <button onclick="procesarSuscripcion('business')"
+                        class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold">
                         💳 Suscribirse
                     </button>
                 </div>
             </div>
-
-            <!-- Botón de Trial Gratuito -->
-            <button
-                onclick="procesarTrialGratuito()"
-                class="w-full bg-gray-800 text-white px-6 py-4 rounded-lg hover:bg-gray-900 transition font-bold text-lg shadow-lg"
-            >
+            <button onclick="procesarTrialGratuito()"
+                class="w-full bg-gray-800 text-white px-6 py-4 rounded-lg hover:bg-gray-900 transition font-bold text-lg shadow-lg">
                 Continuar con Prueba Gratuita del Plan Business
             </button>
         </div>
 
         <footer class="bg-gray-900 text-gray-400 py-12">
-		    <div class="container mx-auto px-4">
-		        <div class="border-t border-gray-800 pt-8 text-center text-sm">
-		        	<!-- Logo Umbusk -->
-					<div>
-						<img src="logo-umbusk.png"
-							alt="Logo Umbusk"
-							class="h-20"
-							style="display: block; margin: 0 auto; max-width: 100%;">
-					</div>
-		            <p>Vibe-coded by <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">UMBUSK</a><br>and Claude from Anthropic.</p>
-		            <p class="mt-2">© 2026 Compita es un servicio de Umbusk, LLC. Todos los derechos reservados.</p>
-		        </div>
-		    </div>
-		</footer>
-
+            <div class="container mx-auto px-4">
+                <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                    <div>
+                        <img src="logo-umbusk.png" alt="Logo Umbusk" class="h-20"
+                            style="display: block; margin: 0 auto; max-width: 100%;">
+                    </div>
+                    <p>Vibe-coded by <a href="https://umbusk.com" target="_blank" rel="noopener noreferrer"
+                        class="font-semibold text-indigo-400 hover:text-indigo-300 transition">UMBUSK</a><br>and Claude from Anthropic.</p>
+                    <p class="mt-2">© 2026 Compita es un servicio de Umbusk, LLC. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -229,35 +138,31 @@
         function mostrarOpciones(event) {
             event.preventDefault();
 
-            // Validar email corporativo
             const email = document.getElementById('email').value.toLowerCase();
             const dominio = email.split('@')[1];
-
-            const dominiosGratuitos = [
-                'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
-                'live.com', 'icloud.com', 'protonmail.com', 'aol.com'
-            ];
+            const dominiosGratuitos = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
+                'live.com', 'icloud.com', 'protonmail.com', 'aol.com'];
 
             if (dominiosGratuitos.includes(dominio)) {
                 alert(`No se permiten emails de ${dominio}. Por favor usa tu email corporativo.`);
                 return;
             }
 
-            // Guardar datos
             datosRegistro = {
                 email: email,
                 empresa: document.getElementById('empresa').value.trim(),
                 password: document.getElementById('password').value
             };
 
-            // Mostrar opciones de pago
             document.getElementById('formulario-registro').classList.add('hidden');
             document.getElementById('opciones-pago').classList.remove('hidden');
         }
 
         async function procesarSuscripcion(plan) {
             try {
-                // Primero crear la cuenta
+                // ✅ EVENTO META: Usuario inicia proceso de pago
+                fbq('track', 'InitiateCheckout', { content_name: plan });
+
                 const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -276,7 +181,6 @@
                     return;
                 }
 
-                // Hacer login automático para obtener el token
                 const responseLogin = await fetch(`${API_BASE}/api/auth`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -296,20 +200,16 @@
                 const loginData = await responseLogin.json();
                 const token = loginData.token;
 
-                // Guardar token temporalmente
                 sessionStorage.setItem('token', token);
                 sessionStorage.setItem('user', JSON.stringify(loginData.user));
 
-                // Crear sesión de checkout en Stripe
                 const responseCheckout = await fetch(`${API_BASE}/api/stripe-checkout`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({
-                        plan: plan
-                    })
+                    body: JSON.stringify({ plan: plan })
                 });
 
                 if (!responseCheckout.ok) {
@@ -320,7 +220,9 @@
 
                 const checkoutData = await responseCheckout.json();
 
-                // Redirigir a Stripe Checkout
+                // ✅ EVENTO META: Registro completado, va a Stripe
+                fbq('track', 'CompleteRegistration', { content_name: plan });
+
                 window.location.href = checkoutData.checkout_url;
 
             } catch (error) {
@@ -346,6 +248,9 @@
                 const result = await response.json();
 
                 if (response.ok) {
+                    // ✅ EVENTO META: Registro completado con prueba gratuita
+                    fbq('track', 'CompleteRegistration', { content_name: 'trial' });
+
                     alert('✅ ' + result.message);
                     window.location.href = '/login.html';
                 } else {
