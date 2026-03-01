@@ -8,6 +8,16 @@
     <link rel="apple-touch-icon" href="favicon-umbusk.png">
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-YBQQM365Q8"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-YBQQM365Q8');
+    </script>
+
     <!-- Meta Pixel Code -->
 	<script>
 	!function(f,b,e,v,n,t,s)
@@ -25,6 +35,8 @@
 	src="https://www.facebook.com/tr?id=1335366601961235&ev=PageView&noscript=1"
 	/></noscript>
     <!-- End Meta Pixel Code -->
+
+
 
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center p-4">
@@ -159,7 +171,7 @@
 
             const email = document.getElementById('email').value.toLowerCase();
             const dominio = email.split('@')[1];
-            const dominiosGratuitos = ['yahoo.com', 'hotmail.com', 'outlook.com',
+            const dominiosGratuitos = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
                 'live.com', 'icloud.com', 'protonmail.com', 'aol.com'];
 
             if (dominiosGratuitos.includes(dominio)) {
