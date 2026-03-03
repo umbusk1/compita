@@ -1227,6 +1227,8 @@ function mostrarAlertaConfiguracion() {
         // BOTÓN 1: DESCARGAR DOCUMENTO (PDF)
         // ============================================
 async function descargarDocumentos(referencia) {
+    const botonDescarga = event.target.closest('button') || event.target;
+    const textoOriginal = botonDescarga.innerHTML;
     try {
         if (!datosEmpresa) {
             mostrarMensaje('No se pudo obtener información de la empresa. Recarga la página.', 'error');
@@ -1234,8 +1236,6 @@ async function descargarDocumentos(referencia) {
         }
         const empresaId = datosEmpresa.id;
 
-        const botonDescarga = event.target;
-        const textoOriginal = botonDescarga.innerHTML;
         botonDescarga.disabled = true;
         botonDescarga.innerHTML = `
             <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -1351,7 +1351,6 @@ async function descargarDocumentos(referencia) {
     } catch (error) {
         console.error('Error descargando documento:', error);
 
-        const botonDescarga = event.target;
         botonDescarga.innerHTML = '<span>📄</span><span>Descargar Pliego o Especificaciones (PDF)</span>';
         botonDescarga.disabled = false;
 
