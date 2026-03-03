@@ -1370,6 +1370,11 @@ async function descargarDocumentos(referencia) {
         // BOTÓN 2: ANALIZAR PLIEGO CON IA
         // ============================================
 async function analizarConIA(referencia, titulo, descripcion, monto) {
+    // ✅ CAPTURAR BOTÓN ANTES DEL TRY/CATCH
+    const botonAnalisis = event.target.closest('button') || event.target;
+    const contenedorBoton = botonAnalisis.parentElement;
+    const textoOriginal = botonAnalisis.innerHTML;
+
     try {
         if (!datosEmpresa) {
             mostrarMensaje('No se pudo obtener información de la empresa. Recarga la página.', 'error');
@@ -1377,9 +1382,6 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
         }
         const empresaId = datosEmpresa.id;
 
-        const botonAnalisis = event.target;
-        const contenedorBoton = botonAnalisis.parentElement;
-        const textoOriginal = botonAnalisis.innerHTML;
         botonAnalisis.disabled = true;
         botonAnalisis.innerHTML = `
             <svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -1456,6 +1458,25 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
 
         const resultado = await analisisResponse.json();
 
+        // ✅ NUEVO: Manejo específico para pliego demasiado grande
+        if (!analisisResponse.ok) {
+            botonAnalisis.innerHTML = textoOriginal;
+            botonAnalisis.disabled = false;
+
+            if (resultado.error && resultado.error.includes('demasiado grande')) {
+                mostrarMensaje(
+                    '📄 Este pliego es demasiado extenso para el análisis automático.<br>' +
+                    'Te recomendamos descargarlo y revisarlo manualmente.<br>' +
+                    '<small>Límite actual: 10 MB</small>',
+                    'warning',
+                    8000
+                );
+            } else {
+                mostrarMensaje('Error al analizar: ' + (resultado.error || 'Error desconocido'), 'error');
+            }
+            return;
+        }
+
         if (!resultado.success) {
             throw new Error(resultado.error || 'Error al analizar');
         }
@@ -1514,12 +1535,10 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
     } catch (error) {
         console.error('Error analizando:', error);
 
-        const botonAnalisis = event.target;
-        const contenedorBoton = botonAnalisis.parentElement;
+        // ✅ botonAnalisis disponible aquí porque se declaró antes del try
         botonAnalisis.innerHTML = '<span>🤖</span><span>Analizar Pliego con IA</span>';
         botonAnalisis.disabled = false;
 
-        // Mensaje específico según el tipo de error
         if (error.name === 'AbortError') {
             mostrarMensaje('El análisis tardó más de 3 minutos.<br>Esto suele pasar con documentos grandes. Puede intentarlo de nuevo más tarde.', 'warning', 8000);
         } else if (error.name === 'TypeError') {
@@ -1528,7 +1547,6 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
             mostrarMensaje('Error al analizar: ' + error.message, 'error');
         }
 
-        // Evita que se duplique el link si hay varios errores seguidos
         const previo = contenedorBoton.querySelector('.link-reporte');
         if (previo) previo.remove();
 
