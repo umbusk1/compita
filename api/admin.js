@@ -126,21 +126,26 @@ async function handleStats(req, res) {
     return res.status(401).json({ error: 'No autorizado' });
   }
 
-  const totalEmpresas = await pool.query('SELECT COUNT(*) as total FROM empresas WHERE activo = true');
-  const licitacionesHoy = await pool.query(
+// ✅ DESPUÉS — Usa zona horaria de RD (UTC-4):
+const licitacionesHoy = await pool.query(
     `SELECT COUNT(*) as total, MAX(scrapeado_en) as ultimo_scraping
-     FROM licitaciones WHERE DATE(scrapeado_en) = CURRENT_DATE`
-  );
+     FROM licitaciones
+     WHERE DATE(scrapeado_en AT TIME ZONE 'America/Santo_Domingo') =
+           CURRENT_DATE AT TIME ZONE 'America/Santo_Domingo'`
+);
   const oportunidadesTotales = await pool.query('SELECT COUNT(*) as total FROM resultados');
-  const emailsHoy = await pool.query(
+// ✅ DESPUÉS:
+const emailsHoy = await pool.query(
     `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados
-     WHERE DATE(fecha_analisis) = CURRENT_DATE`
-  );
+     WHERE DATE(fecha_analisis AT TIME ZONE 'America/Santo_Domingo') =
+           CURRENT_DATE AT TIME ZONE 'America/Santo_Domingo'`
+);
 
-  // Contar análisis IA realizados hoy
+// ✅ DESPUÉS — reemplázalo por esto:
   const analisisHoy = await pool.query(
     `SELECT COUNT(*) as total FROM resultados
-     WHERE DATE(fecha_analisis) = CURRENT_DATE`
+     WHERE DATE(fecha_analisis AT TIME ZONE 'America/Santo_Domingo') =
+           CURRENT_DATE AT TIME ZONE 'America/Santo_Domingo'`
   );
 
   const empresas = await pool.query(`
