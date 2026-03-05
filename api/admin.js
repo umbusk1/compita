@@ -121,6 +121,8 @@ async function handleStats(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
+const totalEmpresas = await pool.query('SELECT COUNT(*) as total FROM empresas WHERE activo = true');
+
   const admin = verificarToken(req.headers.authorization);
   if (!admin) {
     return res.status(401).json({ error: 'No autorizado' });
