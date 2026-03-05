@@ -11,7 +11,6 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
-  // Permitir peticiones desde cualquier origen (CORS)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -26,7 +25,6 @@ export default async function handler(req, res) {
 
   const { action, email, password, nombre, empresa } = req.body;
 
-  // Determinar si es registro o login
   if (action === 'registro') {
     return handleRegistro(req, res, email, password, nombre, empresa);
   } else if (action === 'login') {
@@ -36,19 +34,15 @@ export default async function handler(req, res) {
   }
 }
 
-// REEMPLAZA solo la función handleRegistro en auth.js con esta versión que tiene logging
-
 async function handleRegistro(req, res, email, password, nombre, empresa) {
   try {
     console.log('🔵 [REGISTRO] Iniciando registro para:', email);
 
-    // Validar que todos los campos estén presentes
     if (!email || !password || !nombre || !empresa) {
       console.log('❌ [REGISTRO] Faltan campos');
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
 
-    // Verificar si el email ya existe
     const checkEmail = await pool.query(
       'SELECT id FROM usuarios WHERE email = $1',
       [email]
@@ -61,10 +55,8 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
 
     console.log('✅ [REGISTRO] Email disponible');
 
-    // Extraer el dominio del email
     const dominio = email.split('@')[1];
 
-    // Crear la empresa nueva con valores por defecto
     console.log('🔵 [REGISTRO] Creando empresa:', empresa);
     const empresaResult = await pool.query(
       `INSERT INTO empresas (nombre, dominio, descripcion, palabras_clave, exclusiones, monto_minimo_alta, plan, activo, trial_inicio, trial_fin)
@@ -76,11 +68,9 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     const empresaId = empresaResult.rows[0].id;
     console.log('✅ [REGISTRO] Empresa creada con ID:', empresaId);
 
-    // Encriptar la contraseña
     const passwordHash = await bcrypt.hash(password, 10);
     console.log('✅ [REGISTRO] Password hasheado');
 
-    // Generar token de confirmación ANTES de crear el usuario
     const tokenConfirmacion = jwt.sign(
       { email: email },
       process.env.JWT_SECRET || 'compita-secret-2024',
@@ -88,7 +78,6 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     );
     console.log('✅ [REGISTRO] Token generado:', tokenConfirmacion.substring(0, 20) + '...');
 
-    // Crear el usuario CON email_confirmado = false y token guardado
     console.log('🔵 [REGISTRO] Creando usuario...');
     const userResult = await pool.query(
       `INSERT INTO usuarios (email, password_hash, empresa_id, empresa, rol, activo, email_confirmado, trial_fin, token_confirmacion)
@@ -102,11 +91,7 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
 
     // Enviar email de confirmación
     console.log('🔵 [REGISTRO] Intentando enviar email a:', email);
-    console.log('🔵 [REGISTRO] RESEND_API_KEY:', process.env.RESEND_API_KEY ? 're_***' + process.env.RESEND_API_KEY.slice(-4) : 'NO EXISTE');
-
-    // Inicializar Resend aquí, dentro de la función
     const resend = new Resend(process.env.RESEND_API_KEY);
-    console.log('🔵 [REGISTRO] Resend inicializado');
 
     try {
       const emailResult = await resend.emails.send({
@@ -137,14 +122,35 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
           </p>
         `
       });
-
-      console.log('🔵 [REGISTRO] Respuesta completa de Resend:', JSON.stringify(emailResult, null, 2));
       console.log('✅ [REGISTRO] Email enviado. ID:', emailResult?.id || emailResult?.data?.id || 'NO ENCONTRADO');
     } catch (emailError) {
       console.error('❌ [REGISTRO] ERROR AL ENVIAR EMAIL:', emailError);
-      console.error('❌ [REGISTRO] Detalles del error:', JSON.stringify(emailError, null, 2));
       // No detenemos el registro, solo logueamos el error
     }
+
+    // ========== AGREGAR A BREVO — PRUEBA GRATUITA ==========
+    try {
+      await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': process.env.BREVO_API_KEY
+        },
+        body: JSON.stringify({
+          email: usuario.email,
+          attributes: {
+            EMPRESA: empresa
+          },
+          listIds: [5],          // Lista: "Prueba Gratuita - Activos"
+          updateEnabled: true    // Si el contacto ya existe, lo actualiza
+        })
+      });
+      console.log('✅ [REGISTRO] Contacto agregado a Brevo lista 5');
+    } catch (brevoError) {
+      console.error('❌ [REGISTRO] Error añadiendo contacto a Brevo:', brevoError);
+      // No bloqueamos el registro si Brevo falla
+    }
+    // ========== FIN BLOQUE BREVO ==========
 
     console.log('✅ [REGISTRO] Proceso completado para:', email);
 
@@ -165,15 +171,12 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
   }
 }
 
-// FUNCIÓN PARA LOGIN
 async function handleLogin(req, res, email, password) {
   try {
-    // Validar campos
     if (!email || !password) {
       return res.status(400).json({ error: 'Email y contraseña son requeridos' });
     }
 
-    // Buscar usuario con su empresa
     const result = await pool.query(
       `SELECT u.*, e.nombre as empresa_nombre, e.plan, e.activo as empresa_activa, e.trial_fin as empresa_trial_fin
        FROM usuarios u
@@ -188,23 +191,19 @@ async function handleLogin(req, res, email, password) {
 
     const user = result.rows[0];
 
-    // Verificar contraseña
     const passwordMatch = await bcrypt.compare(password, user.password_hash);
     if (!passwordMatch) {
       return res.status(401).json({ error: 'Email o contraseña incorrectos' });
     }
 
-    // Verificar si la cuenta está activa
     if (!user.activo) {
       return res.status(403).json({ error: 'Tu cuenta está desactivada. Contacta al administrador.' });
     }
 
-    // Verificar si el email está confirmado
     if (!user.email_confirmado) {
       return res.status(403).json({ error: 'Debes confirmar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.' });
     }
 
-    // Generar JWT token
     const token = jwt.sign(
       {
         userId: user.id,
