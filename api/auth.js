@@ -10,6 +10,16 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// Genera un código de referido único tipo REF-abc123
+function generarCodigoReferido() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let codigo = 'REF-';
+  for (let i = 0; i < 6; i++) {
+    codigo += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return codigo;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -26,7 +36,9 @@ export default async function handler(req, res) {
   const { action, email, password, nombre, empresa } = req.body;
 
   if (action === 'registro') {
-    return handleRegistro(req, res, email, password, nombre, empresa);
+    // Extraer código de referido si viene en el body
+    const { ref } = req.body;
+    return handleRegistro(req, res, email, password, nombre, empresa, ref);
   } else if (action === 'login') {
     return handleLogin(req, res, email, password);
   } else {
@@ -34,9 +46,10 @@ export default async function handler(req, res) {
   }
 }
 
-async function handleRegistro(req, res, email, password, nombre, empresa) {
+async function handleRegistro(req, res, email, password, nombre, empresa, ref) {
   try {
     console.log('🔵 [REGISTRO] Iniciando registro para:', email);
+    if (ref) console.log('🔵 [REGISTRO] Código de referido recibido:', ref);
 
     if (!email || !password || !nombre || !empresa) {
       console.log('❌ [REGISTRO] Faltan campos');
@@ -55,12 +68,31 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
 
     console.log('✅ [REGISTRO] Email disponible');
 
+    // ========== VERIFICAR CÓDIGO DE REFERIDO ==========
+    let referidorId = null;
+    let diasTrial = 7;
+
+    if (ref) {
+      const refResult = await pool.query(
+        'SELECT id FROM usuarios WHERE referido_codigo = $1',
+        [ref]
+      );
+      if (refResult.rows.length > 0) {
+        referidorId = refResult.rows[0].id;
+        diasTrial = 37; // Bono para el invitado
+        console.log('✅ [REGISTRO] Referidor encontrado, ID:', referidorId, '— trial extendido a 37 días');
+      } else {
+        console.log('⚠️ [REGISTRO] Código de referido no válido, se ignora:', ref);
+      }
+    }
+    // ========== FIN VERIFICAR REFERIDO ==========
+
     const dominio = email.split('@')[1];
 
     console.log('🔵 [REGISTRO] Creando empresa:', empresa);
     const empresaResult = await pool.query(
       `INSERT INTO empresas (nombre, dominio, descripcion, palabras_clave, exclusiones, monto_minimo_alta, plan, activo, trial_inicio, trial_fin)
-       VALUES ($1, $2, '', ARRAY[]::text[], ARRAY[]::text[], 500000, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '7 days')
+       VALUES ($1, $2, '', ARRAY[]::text[], ARRAY[]::text[], 500000, 'free_trial', true, CURRENT_DATE, CURRENT_DATE + INTERVAL '${diasTrial} days')
        RETURNING id, nombre, plan, trial_inicio, trial_fin`,
       [empresa, dominio]
     );
@@ -69,32 +101,61 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
     console.log('✅ [REGISTRO] Empresa creada con ID:', empresaId);
 
     const passwordHash = await bcrypt.hash(password, 10);
-    console.log('✅ [REGISTRO] Password hasheado');
 
     const tokenConfirmacion = jwt.sign(
       { email: email },
       process.env.JWT_SECRET || 'compita-secret-2024',
       { expiresIn: '24h' }
     );
-    console.log('✅ [REGISTRO] Token generado:', tokenConfirmacion.substring(0, 20) + '...');
 
-    console.log('🔵 [REGISTRO] Creando usuario...');
+    // Generar código de referido único para el nuevo usuario
+    let codigoReferido = null;
+    let intentos = 0;
+    while (!codigoReferido && intentos < 5) {
+      const candidato = generarCodigoReferido();
+      const existe = await pool.query(
+        'SELECT id FROM usuarios WHERE referido_codigo = $1',
+        [candidato]
+      );
+      if (existe.rows.length === 0) codigoReferido = candidato;
+      intentos++;
+    }
+
+    console.log('🔵 [REGISTRO] Creando usuario con código referido:', codigoReferido);
     const userResult = await pool.query(
-      `INSERT INTO usuarios (email, password_hash, empresa_id, empresa, rol, activo, email_confirmado, trial_fin, token_confirmacion)
-       VALUES ($1, $2, $3, $4, 'admin', true, false, $5, $6)
+      `INSERT INTO usuarios (email, password_hash, empresa_id, empresa, rol, activo, email_confirmado, trial_fin, token_confirmacion, referido_codigo)
+       VALUES ($1, $2, $3, $4, 'admin', true, false, $5, $6, $7)
        RETURNING id, email, empresa_id, rol, trial_fin`,
-      [email, passwordHash, empresaId, empresa, empresaResult.rows[0].trial_fin, tokenConfirmacion]
+      [email, passwordHash, empresaId, empresa, empresaResult.rows[0].trial_fin, tokenConfirmacion, codigoReferido]
     );
 
     const usuario = userResult.rows[0];
     console.log('✅ [REGISTRO] Usuario creado con ID:', usuario.id);
 
+    // ========== GUARDAR REFERIDO PENDIENTE ==========
+    if (referidorId) {
+      try {
+        await pool.query(
+          `INSERT INTO referidos (referidor_id, referido_id, estado)
+           VALUES ($1, $2, 'pendiente')`,
+          [referidorId, usuario.id]
+        );
+        console.log('✅ [REGISTRO] Referido guardado como pendiente');
+      } catch (refError) {
+        console.error('❌ [REGISTRO] Error guardando referido:', refError);
+        // No bloqueamos el registro
+      }
+    }
+    // ========== FIN GUARDAR REFERIDO ==========
+
     // Enviar email de confirmación
-    console.log('🔵 [REGISTRO] Intentando enviar email a:', email);
     const resend = new Resend(process.env.RESEND_API_KEY);
+    const mensajeTrial = referidorId
+      ? `<p><strong>¡Llegaste invitado! Tienes <span style="color:#4F46E5">37 días</span> de prueba gratuita</strong> con todas las funciones del Plan Business:</p>`
+      : `<p><strong>Tienes 7 días de prueba gratuita con todas las funciones del Plan Business:</strong></p>`;
 
     try {
-      const emailResult = await resend.emails.send({
+      await resend.emails.send({
         from: 'Compita <noreply@compita.umbusk.com>',
         to: email,
         subject: 'Confirma tu email para activar tu cuenta en Compita',
@@ -102,7 +163,7 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
           <h2>¡Bienvenido a Compita!</h2>
           <p>Hola,</p>
           <p>Tu empresa <strong>${empresa}</strong> ha sido registrada exitosamente.</p>
-          <p><strong>Tienes 7 días de prueba gratuita con todas las funciones del Plan Business:</strong></p>
+          ${mensajeTrial}
           <ul>
             <li>✓ Análisis diario automático de licitaciones</li>
             <li>✓ Notificaciones por email de oportunidades ALTA y MEDIA</li>
@@ -122,10 +183,9 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
           </p>
         `
       });
-      console.log('✅ [REGISTRO] Email enviado. ID:', emailResult?.id || emailResult?.data?.id || 'NO ENCONTRADO');
+      console.log('✅ [REGISTRO] Email de confirmación enviado');
     } catch (emailError) {
       console.error('❌ [REGISTRO] ERROR AL ENVIAR EMAIL:', emailError);
-      // No detenemos el registro, solo logueamos el error
     }
 
     // ========== AGREGAR A BREVO — PRUEBA GRATUITA ==========
@@ -138,17 +198,14 @@ async function handleRegistro(req, res, email, password, nombre, empresa) {
         },
         body: JSON.stringify({
           email: usuario.email,
-          attributes: {
-            EMPRESA: empresa
-          },
-          listIds: [5],          // Lista: "Prueba Gratuita - Activos"
-          updateEnabled: true    // Si el contacto ya existe, lo actualiza
+          attributes: { EMPRESA: empresa },
+          listIds: [5],
+          updateEnabled: true
         })
       });
       console.log('✅ [REGISTRO] Contacto agregado a Brevo lista 5');
     } catch (brevoError) {
       console.error('❌ [REGISTRO] Error añadiendo contacto a Brevo:', brevoError);
-      // No bloqueamos el registro si Brevo falla
     }
     // ========== FIN BLOQUE BREVO ==========
 
