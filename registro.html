@@ -162,139 +162,151 @@
         </footer>
     </div>
 
-    <script>
-        const API_BASE = window.location.origin;
-        let datosRegistro = {};
+// REEMPLAZA el bloque <script> completo en registro.html por este:
 
-        function mostrarOpciones(event) {
-            event.preventDefault();
+const API_BASE = window.location.origin;
+let datosRegistro = {};
 
-            const email = document.getElementById('email').value.toLowerCase();
-            const dominio = email.split('@')[1];
-            const dominiosGratuitos = ['yahoo.com', 'hotmail.com', 'outlook.com',
-                'live.com', 'icloud.com', 'protonmail.com', 'aol.com'];
+// ========== CAPTURAR CÓDIGO DE REFERIDO ==========
+const urlParams = new URLSearchParams(window.location.search);
+const codigoRef = urlParams.get('ref') || null;
 
-            if (dominiosGratuitos.includes(dominio)) {
-                alert(`No se permiten emails de ${dominio}. Por favor usa tu email corporativo.`);
-                return;
-            }
+if (codigoRef) {
+    // Mostrar mensaje sutil al usuario invitado
+    const subtitulo = document.querySelector('p.text-gray-600');
+    if (subtitulo) {
+        subtitulo.textContent = '🎁 ¡Llegaste invitado! Disfruta 37 días gratis sin TDC, luego pagas';
+        subtitulo.classList.add('text-indigo-600', 'font-semibold');
+    }
+    console.log('✅ Código de referido detectado:', codigoRef);
+}
+// ========== FIN CAPTURAR REFERIDO ==========
 
-            datosRegistro = {
-                email: email,
-                empresa: document.getElementById('empresa').value.trim(),
-                password: document.getElementById('password').value
-            };
+function mostrarOpciones(event) {
+    event.preventDefault();
 
-            document.getElementById('formulario-registro').classList.add('hidden');
-            document.getElementById('opciones-pago').classList.remove('hidden');
+    const email = document.getElementById('email').value.toLowerCase();
+    const dominio = email.split('@')[1];
+    const dominiosGratuitos = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
+        'live.com', 'icloud.com', 'protonmail.com', 'aol.com'];
+
+    if (dominiosGratuitos.includes(dominio)) {
+        alert(`No se permiten emails de ${dominio}. Por favor usa tu email corporativo.`);
+        return;
+    }
+
+    datosRegistro = {
+        email: email,
+        empresa: document.getElementById('empresa').value.trim(),
+        password: document.getElementById('password').value
+    };
+
+    document.getElementById('formulario-registro').classList.add('hidden');
+    document.getElementById('opciones-pago').classList.remove('hidden');
+}
+
+async function procesarSuscripcion(plan) {
+    try {
+        fbq('track', 'InitiateCheckout', { content_name: plan });
+
+        const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'registro',
+                email: datosRegistro.email,
+                password: datosRegistro.password,
+                nombre: datosRegistro.email.split('@')[0],
+                empresa: datosRegistro.empresa,
+                ref: codigoRef   // ← NUEVO
+            })
+        });
+
+        if (!responseRegistro.ok) {
+            const error = await responseRegistro.json();
+            alert('❌ Error: ' + error.error);
+            return;
         }
 
-        async function procesarSuscripcion(plan) {
-            try {
-                // ✅ EVENTO META: Usuario inicia proceso de pago
-                fbq('track', 'InitiateCheckout', { content_name: plan });
+        const responseLogin = await fetch(`${API_BASE}/api/auth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'login',
+                email: datosRegistro.email,
+                password: datosRegistro.password
+            })
+        });
 
-                const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'registro',
-                        email: datosRegistro.email,
-                        password: datosRegistro.password,
-                        nombre: datosRegistro.email.split('@')[0],
-                        empresa: datosRegistro.empresa
-                    })
-                });
-
-                if (!responseRegistro.ok) {
-                    const error = await responseRegistro.json();
-                    alert('❌ Error: ' + error.error);
-                    return;
-                }
-
-                const responseLogin = await fetch(`${API_BASE}/api/auth`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'login',
-                        email: datosRegistro.email,
-                        password: datosRegistro.password
-                    })
-                });
-
-                if (!responseLogin.ok) {
-                    alert('❌ Cuenta creada pero error al iniciar sesión. Por favor inicia sesión manualmente.');
-                    window.location.href = '/login.html';
-                    return;
-                }
-
-                const loginData = await responseLogin.json();
-                const token = loginData.token;
-
-                sessionStorage.setItem('token', token);
-                sessionStorage.setItem('user', JSON.stringify(loginData.user));
-
-                const responseCheckout = await fetch(`${API_BASE}/api/stripe-checkout`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ plan: plan })
-                });
-
-                if (!responseCheckout.ok) {
-                    const error = await responseCheckout.json();
-                    alert('❌ Error creando sesión de pago: ' + error.error);
-                    return;
-                }
-
-                const checkoutData = await responseCheckout.json();
-
-                // ✅ EVENTO META: Registro completado, va a Stripe
-                fbq('track', 'CompleteRegistration', { content_name: plan });
-
-                window.location.href = checkoutData.checkout_url;
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert('❌ Error al procesar suscripción. Por favor intenta nuevamente.');
-            }
+        if (!responseLogin.ok) {
+            alert('❌ Cuenta creada pero error al iniciar sesión. Por favor inicia sesión manualmente.');
+            window.location.href = '/login.html';
+            return;
         }
 
-        async function procesarTrialGratuito() {
-            try {
-                const response = await fetch(`${API_BASE}/api/auth`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'registro',
-                        email: datosRegistro.email,
-                        password: datosRegistro.password,
-                        nombre: datosRegistro.email.split('@')[0],
-                        empresa: datosRegistro.empresa
-                    })
-                });
+        const loginData = await responseLogin.json();
+        const token = loginData.token;
 
-                const result = await response.json();
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('user', JSON.stringify(loginData.user));
 
-                if (response.ok) {
-                    // ✅ EVENTO META: Registro completado con prueba gratuita
-                    fbq('track', 'CompleteRegistration', { content_name: 'trial' });
+        const responseCheckout = await fetch(`${API_BASE}/api/stripe-checkout`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ plan: plan })
+        });
 
-                    alert('✅ ' + result.message);
-                    window.location.href = '/login.html';
-                } else {
-                    alert('❌ Error: ' + result.error);
-                    document.getElementById('opciones-pago').classList.add('hidden');
-                    document.getElementById('formulario-registro').classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('❌ Error al crear cuenta. Por favor intenta nuevamente.');
-            }
+        if (!responseCheckout.ok) {
+            const error = await responseCheckout.json();
+            alert('❌ Error creando sesión de pago: ' + error.error);
+            return;
         }
-    </script>
+
+        const checkoutData = await responseCheckout.json();
+
+        fbq('track', 'CompleteRegistration', { content_name: plan });
+        window.location.href = checkoutData.checkout_url;
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al procesar suscripción. Por favor intenta nuevamente.');
+    }
+}
+
+async function procesarTrialGratuito() {
+    try {
+        const response = await fetch(`${API_BASE}/api/auth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'registro',
+                email: datosRegistro.email,
+                password: datosRegistro.password,
+                nombre: datosRegistro.email.split('@')[0],
+                empresa: datosRegistro.empresa,
+                ref: codigoRef   // ← NUEVO
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            fbq('track', 'CompleteRegistration', { content_name: 'trial' });
+            alert('✅ ' + result.message);
+            window.location.href = '/login.html';
+        } else {
+            alert('❌ Error: ' + result.error);
+            document.getElementById('opciones-pago').classList.add('hidden');
+            document.getElementById('formulario-registro').classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al crear cuenta. Por favor intenta nuevamente.');
+    }
+}
 
 	<!-- Botón flotante de WhatsApp -->
 	<style>
