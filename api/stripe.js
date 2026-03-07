@@ -230,6 +230,17 @@ async function handleAction(req, res) {
       }
 
       // NUEVO: Crear sesión con billing cycle anclado al 1ro del mes
+      // Verificar si el usuario vino por referido (para dar 30 días de trial)
+      const referidoCheck = await pool.query(
+        `SELECT r.id FROM referidos r
+         JOIN usuarios u ON u.empresa_id = $1
+         WHERE r.referido_id = u.id AND r.estado = 'pendiente'
+         LIMIT 1`,
+        [empresaId]
+      );
+      const tieneReferido = referidoCheck.rows.length > 0;
+      console.log(`🎁 [CHECKOUT] ¿Tiene referido pendiente? ${tieneReferido}`);
+
       const session = await stripe.checkout.sessions.create({
         customer: customerId,
         payment_method_types: ['card'],
@@ -238,10 +249,10 @@ async function handleAction(req, res) {
         success_url: `${req.headers.origin}/oportunidades.html?checkout=success`,
         cancel_url: `${req.headers.origin}/cuenta.html?checkout=cancelled`,
         subscription_data: {
-          // Anclar el billing cycle al 1ro del mes siguiente
           billing_cycle_anchor: getFirstDayOfNextMonth(),
-          // Habilitar prorrateo automático
           proration_behavior: 'create_prorations',
+          // Si vino por referido, 30 días gratis antes del primer cobro
+          ...(tieneReferido && { trial_period_days: 30 }),
         },
         metadata: {
           empresa_id: empresaId.toString(),

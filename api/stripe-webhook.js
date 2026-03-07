@@ -248,6 +248,79 @@ async function handlePaymentSucceeded(invoice) {
   );
 
   console.log(`💰 Pago procesado para empresa ${empresaId}`);
+
+  // ========== RECOMPENSA AL REFERIDOR ==========
+  try {
+    // Buscar si hay un referido pendiente para esta empresa
+    const referidoRes = await pool.query(
+      `SELECT r.id, r.referidor_id
+       FROM referidos r
+       JOIN usuarios u ON u.empresa_id = $1
+       WHERE r.referido_id = u.id AND r.estado = 'pendiente'
+       LIMIT 1`,
+      [empresaId]
+    );
+
+    if (referidoRes.rows.length > 0) {
+      const { id: referidoId, referidor_id } = referidoRes.rows[0];
+
+      // Obtener datos del referidor
+      const referidorRes = await pool.query(
+        `SELECT e.id as empresa_id, e.plan, e.trial_fin,
+                e.stripe_customer_id, u.email
+         FROM usuarios u
+         JOIN empresas e ON e.id = u.empresa_id
+         WHERE u.id = $1
+         LIMIT 1`,
+        [referidor_id]
+      );
+
+      if (referidorRes.rows.length > 0) {
+        const referidor = referidorRes.rows[0];
+
+        if (referidor.plan === 'free_trial') {
+          // Referidor en trial → extender 30 días
+          await pool.query(
+            `UPDATE empresas
+             SET trial_fin = trial_fin + INTERVAL '30 days'
+             WHERE id = $1`,
+            [referidor.empresa_id]
+          );
+          console.log(`🎁 Referidor ${referidor.email} — trial extendido 30 días`);
+
+        } else if (referidor.stripe_customer_id) {
+          // Referidor con plan pago → crédito en Stripe para el próximo mes
+          const creditAmounts = { estandar: 1000, business: 2000 }; // centavos USD
+          const creditAmount = creditAmounts[referidor.plan] || 1000;
+
+          await stripe.customers.createBalanceTransaction(
+            referidor.stripe_customer_id,
+            {
+              amount: -creditAmount, // negativo = crédito a favor
+              currency: 'usd',
+              description: `Recompensa por referido — 1 mes gratis`
+            }
+          );
+          console.log(`🎁 Referidor ${referidor.email} — crédito $${creditAmount/100} aplicado en Stripe`);
+        }
+
+        // Marcar referido como completado
+        await pool.query(
+          `UPDATE referidos
+           SET estado = 'completado', recompensa_aplicada_at = NOW()
+           WHERE id = $1`,
+          [referidoId]
+        );
+
+        console.log(`✅ Referido ${referidoId} marcado como completado`);
+      }
+    }
+  } catch (refError) {
+    console.error('❌ Error aplicando recompensa de referido:', refError);
+    // No bloqueamos el flujo principal si falla la recompensa
+  }
+  // ========== FIN RECOMPENSA AL REFERIDOR ==========
+
 }
 
 // ============================================================================
