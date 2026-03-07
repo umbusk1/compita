@@ -79,8 +79,8 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref) {
       );
       if (refResult.rows.length > 0) {
         referidorId = refResult.rows[0].id;
-        diasTrial = 37; // Bono para el invitado
-        console.log('✅ [REGISTRO] Referidor encontrado, ID:', referidorId, '— trial extendido a 37 días');
+        diasTrial = 30; // Bono para el invitado
+        console.log('✅ [REGISTRO] Referidor encontrado, ID:', referidorId, '— trial extendido a 30 días');
       } else {
         console.log('⚠️ [REGISTRO] Código de referido no válido, se ignora:', ref);
       }
