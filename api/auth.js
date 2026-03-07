@@ -110,19 +110,6 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
       }
     }
 
-    // Si no hubo inv válido, intentar con código ref
-    if (!referidorId && ref) {
-      const refResult = await pool.query(
-        'SELECT id FROM usuarios WHERE referido_codigo = $1', [ref]
-      );
-      if (refResult.rows.length > 0) {
-        referidorId = refResult.rows[0].id;
-        diasTrial = 30;
-        console.log('✅ [REGISTRO] Código ref válido. Referidor ID:', referidorId, '— trial 30 días');
-      } else {
-        console.log('⚠️ [REGISTRO] Código ref no válido, se ignora');
-      }
-    }
     // ===== FIN VERIFICAR REFERIDO =====
 
     const dominio = email.split('@')[1];
@@ -369,7 +356,7 @@ async function handleInvitar(req, res, usuarioJWT) {
 
     // Enviar email de invitación
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const linkRegistro = `https://compita.umbusk.com/registro.html?inv=${token}`;
+	const linkRegistro = `https://compita.umbusk.com/registro.html?inv=${token}&email=${encodeURIComponent(email_invitado)}`;
 
     try {
       await resend.emails.send({
