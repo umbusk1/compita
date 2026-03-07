@@ -270,7 +270,8 @@ async function analizarDiario() {
         e.monto_minimo_alta,
         e.plan,
         e.familias_unspsc,
-        u.email as owner_email
+        u.email as owner_email,
+        u.referido_codigo
       FROM empresas e
       JOIN usuarios u ON u.empresa_id = e.id
       WHERE u.activo = true
@@ -431,6 +432,7 @@ async function analizarDiario() {
         media: media.length,
         baja: baja.length,
         oportunidades_alta: alta,
+        referido_codigo: empresa.referido_codigo || null,
         oportunidades_media: media
       });
     }
@@ -539,54 +541,34 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
 // ENVÍO DE EMAILS
 // ============================================================================
 
-async function enviarNotificaciones(resultados) {
-  console.log('\n📧 PASO 2: ENVÍO DE NOTIFICACIONES');
-  console.log('╚══════════════════════════════════════════════════════════╝\n');
-
-  let emailsEnviados = 0;
-
-  for (const resultado of resultados) {
-    const totalOportunidades = resultado.alta + resultado.media;
-
-    if (totalOportunidades === 0) {
-      console.log(`⚠️  ${resultado.nombre}: 0 oportunidades`);
-      continue;
-    }
-
-    console.log(`📨 ${resultado.nombre}: ${totalOportunidades} oportunidades`);
-
-    try {
-      const emailHTML = generarEmailSegunPlan(resultado);
-
-      await resend.emails.send({
-        from: 'Compita <notificaciones@compita.umbusk.com>',
-        to: resultado.email,
-        subject: `🎯 ${totalOportunidades} nueva${totalOportunidades > 1 ? 's' : ''} oportunidad${totalOportunidades > 1 ? 'es' : ''}`,
-        html: emailHTML
-      });
-
-      await pool.query(`
-        UPDATE resultados
-        SET notificada = true
-        WHERE empresa_id = $1
-          AND notificada = false
-          AND relevancia IN ('ALTA', 'MEDIA')
-      `, [resultado.empresa_id]);
-
-      emailsEnviados++;
-      console.log(`   ✅ Enviado a ${resultado.email}`);
-
-    } catch (error) {
-      console.error(`   ❌ Error: ${error.message}`);
-    }
-  }
-
-  console.log(`\n✨ Emails enviados: ${emailsEnviados}/${resultados.length}`);
-  return emailsEnviados;
-}
-
 function generarEmailSegunPlan(resultado) {
-  const { plan, nombre, alta, media, oportunidades_alta, oportunidades_media } = resultado;
+  const { plan, nombre, alta, media, oportunidades_alta, oportunidades_media, referido_codigo } = resultado;
+
+  // Footer de referido — aparece en todos los planes
+  const linkReferido = referido_codigo
+    ? `https://compita.umbusk.com/registro.html?ref=${referido_codigo}`
+    : null;
+
+  const footerReferido = linkReferido ? `
+    <div style="margin-top: 20px; padding: 16px; background: #EEF2FF; border-radius: 8px; text-align: center;">
+      <p style="margin: 0 0 8px 0; font-size: 13px; color: #4F46E5; font-weight: bold;">
+        🎁 ¿Conoces a alguien que necesite ganar licitaciones?
+      </p>
+      <p style="margin: 0 0 12px 0; font-size: 12px; color: #6B7280;">
+        Invítalos a Compita. Ellos obtienen 37 días de prueba gratis y tú recibes un mes gratis cuando se suscriban.
+      </p>
+      <a href="${linkReferido}"
+         style="display: inline-block; background: #4F46E5; color: white; padding: 8px 20px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold;">
+        Compartir mi link de invitación →
+      </a>
+    </div>
+  ` : '';
+
+  const footerFirma = `
+    <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; font-size: 11px; color: #9CA3AF; text-align: center;">
+      Compita - Sistema de Análisis de Licitaciones con IA
+    </p>
+  `;
 
   if (plan === 'trial_gratuito' || plan === 'free_trial') {
     return `
@@ -604,6 +586,8 @@ function generarEmailSegunPlan(resultado) {
         <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; font-size: 12px; color: #6B7280;">
           💡 Actualiza a un plan de pago para recibir detalles completos en el email.
         </p>
+        ${footerReferido}
+        ${footerFirma}
       </div>
     `;
   }
@@ -637,9 +621,8 @@ function generarEmailSegunPlan(resultado) {
           Ver Todas en Dashboard →
         </a>
 
-        <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; font-size: 11px; color: #9CA3AF; text-align: center;">
-          Compita - Sistema de Análisis de Licitaciones con IA
-        </p>
+        ${footerReferido}
+        ${footerFirma}
       </div>
     `;
   }
@@ -680,15 +663,13 @@ function generarEmailSegunPlan(resultado) {
           Ir al Dashboard →
         </a>
 
-        <p style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; font-size: 11px; color: #9CA3AF; text-align: center;">
-          Compita - Sistema de Análisis de Licitaciones con IA
-        </p>
+        ${footerReferido}
+        ${footerFirma}
       </div>
     `;
   }
 
   return '';
-}
 
 export const config = {
   maxDuration: 300,
