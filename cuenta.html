@@ -71,6 +71,13 @@
                     🔒 Seguridad
                 </button>
                 <button
+				    onclick="showTab('invitar')"
+				    id="tab-invitar"
+				    class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap"
+				>
+				    🤝 Invitar
+				</button>
+                <button
                     onclick="showTab('facturacion')"
                     id="tab-facturacion"
                     class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap"
@@ -348,6 +355,43 @@
                     </form>
                 </div>
 
+                <!-- TAB: Invitar -->
+				<div id="content-invitar" class="tab-content hidden">
+				    <h2 class="text-2xl font-bold text-gray-900 mb-2">🤝 Invitar a un Colega</h2>
+				    <p class="text-gray-600 text-sm mb-6">
+				        Invita a otra empresa a probar Compita. Recibirán un email con un link de registro personalizado.
+				    </p>
+
+				    <!-- Formulario de invitación -->
+				    <div class="bg-white border-2 border-indigo-100 rounded-xl p-6 mb-6">
+				        <div class="mb-4">
+				            <label class="block text-sm font-medium text-gray-700 mb-2">
+				                Email de la persona a invitar *
+				            </label>
+				            <input
+				                type="email"
+				                id="invitar-email"
+				                class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"
+				                placeholder="correo@empresa.com"
+				            >
+				        </div>
+				        <button
+				            onclick="enviarInvitacion()"
+				            class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition"
+				        >
+				            ✉️ Enviar Invitación
+				        </button>
+				    </div>
+
+				    <!-- Historial de invitaciones -->
+				    <div>
+				        <h3 class="text-lg font-bold text-gray-900 mb-4">Invitaciones enviadas</h3>
+				        <div id="invitaciones-lista" class="space-y-3">
+				            <p class="text-gray-500 text-sm">Cargando...</p>
+				        </div>
+				    </div>
+				</div>
+
                 <!-- TAB: Facturación -->
                 <div id="content-facturacion" class="tab-content hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Facturación</h2>
@@ -529,9 +573,12 @@
             document.getElementById(`tab-${tabName}`).classList.add('border-indigo-600', 'text-indigo-600');
 
             // Si entramos al tab de familias, cargarlas
-            if (tabName === 'familias') {
-                cargarFamiliasUNSPSC();
-            }
+			if (tabName === 'familias') {
+				cargarFamiliasUNSPSC();
+			}
+			if (tabName === 'invitar') {
+				cargarInvitaciones();
+			}
         }
 
         // ============ PERFIL DE EMPRESA ============
@@ -868,6 +915,83 @@
                 alert('Error al cambiar contraseña');
             }
         }
+
+        // ============ INVITACIONES ============
+		async function enviarInvitacion() {
+		    const email = document.getElementById('invitar-email').value.trim();
+		    if (!email) {
+		        alert('Por favor ingresa un email');
+		        return;
+		    }
+
+		    try {
+		        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+		        const response = await fetch(`${API_BASE}/api/auth`, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		                'Authorization': `Bearer ${token}`
+		            },
+		            body: JSON.stringify({
+		                action: 'invitar',
+		                email_invitado: email
+		            })
+		        });
+
+		        const result = await response.json();
+
+		        if (response.ok) {
+		            alert('✅ Invitación enviada a ' + email);
+		            document.getElementById('invitar-email').value = '';
+		            cargarInvitaciones();
+		        } else {
+		            alert('Error: ' + result.error);
+		        }
+		    } catch (error) {
+		        console.error('Error enviando invitación:', error);
+		        alert('Error al enviar invitación');
+		    }
+		}
+
+		async function cargarInvitaciones() {
+		    try {
+		        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+		        const response = await fetch(`${API_BASE}/api/auth`, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		                'Authorization': `Bearer ${token}`
+		            },
+		            body: JSON.stringify({ action: 'mis_invitaciones' })
+		        });
+
+		        if (!response.ok) return;
+		        const data = await response.json();
+		        const lista = document.getElementById('invitaciones-lista');
+
+		        if (!data.invitaciones || data.invitaciones.length === 0) {
+		            lista.innerHTML = '<p class="text-gray-500 text-sm">Aún no has enviado invitaciones.</p>';
+		            return;
+		        }
+
+		        lista.innerHTML = data.invitaciones.map(inv => {
+		            const estadoColor = inv.estado === 'usado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+		            const estadoLabel = inv.estado === 'usado' ? '✅ Registrado' : '⏳ Pendiente';
+		            const fecha = new Date(inv.created_at).toLocaleDateString('es-DO');
+		            return `
+		                <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+		                    <div>
+		                        <p class="font-medium text-gray-900">${inv.email_invitado}</p>
+		                        <p class="text-xs text-gray-500">Enviado el ${fecha}</p>
+		                    </div>
+		                    <span class="px-3 py-1 rounded-full text-xs font-semibold ${estadoColor}">${estadoLabel}</span>
+		                </div>
+		            `;
+		        }).join('');
+		    } catch (error) {
+		        console.error('Error cargando invitaciones:', error);
+		    }
+		}
 
         // ============ FACTURACIÓN ============
         async function cargarInfoFacturacion() {
