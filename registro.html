@@ -169,15 +169,16 @@ let datosRegistro = {};
 // ========== CAPTURAR CÓDIGO DE REFERIDO ==========
 const urlParams = new URLSearchParams(window.location.search);
 const codigoRef = urlParams.get('ref') || null;
+const tokenInv = urlParams.get('inv') || null;
 
-if (codigoRef) {
-    // Mostrar mensaje sutil al usuario invitado
+if (codigoRef || tokenInv) {
     const subtitulo = document.querySelector('p.text-gray-600');
     if (subtitulo) {
         subtitulo.textContent = '🎁 ¡Llegaste invitado! Disfruta 30 días gratis sin TDC, luego pagas';
         subtitulo.classList.add('text-indigo-600', 'font-semibold');
     }
-    console.log('✅ Código de referido detectado:', codigoRef);
+    if (codigoRef) console.log('✅ Código ref detectado:', codigoRef);
+    if (tokenInv) console.log('✅ Token de invitación detectado:', tokenInv);
 }
 // ========== FIN CAPTURAR REFERIDO ==========
 
@@ -211,13 +212,14 @@ async function procesarSuscripcion(plan) {
         const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+			body: JSON.stringify({
                 action: 'registro',
                 email: datosRegistro.email,
                 password: datosRegistro.password,
                 nombre: datosRegistro.email.split('@')[0],
                 empresa: datosRegistro.empresa,
-                ref: codigoRef   // ← NUEVO
+                ref: codigoRef,
+                inv: tokenInv
             })
         });
 
@@ -280,13 +282,14 @@ async function procesarTrialGratuito() {
         const response = await fetch(`${API_BASE}/api/auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+			body: JSON.stringify({
                 action: 'registro',
                 email: datosRegistro.email,
                 password: datosRegistro.password,
                 nombre: datosRegistro.email.split('@')[0],
                 empresa: datosRegistro.empresa,
-                ref: codigoRef   // ← NUEVO
+                ref: codigoRef,
+                inv: tokenInv
             })
         });
 
