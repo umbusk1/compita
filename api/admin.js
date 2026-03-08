@@ -563,7 +563,7 @@ async function handleEliminarEmpresa(req, res) {
     );
     for (const u of usuariosEmpresa.rows) {
       await pool.query('DELETE FROM invitaciones_referido WHERE referidor_id = $1', [u.id]);
-      await pool.query('DELETE FROM referidos WHERE referidor_id = $1 OR referido_id = $1', [u.id, u.id]);
+      await pool.query('DELETE FROM referidos WHERE referidor_id = $1 OR referido_id = $1', [u.id]);
     }
 
     await pool.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
