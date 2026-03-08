@@ -5,15 +5,15 @@ import jwt from 'jsonwebtoken';
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
   if (req.method !== 'GET') {
-    return res.status(405).json({ 
-      success: false, 
-      error: 'Método no permitido' 
+    return res.status(405).json({
+      success: false,
+      error: 'Método no permitido'
     });
   }
 
@@ -42,9 +42,9 @@ export default async function handler(req, res) {
 
     // Buscar usuario con ese token
     const usuarios = await sql`
-      SELECT id, email, email_confirmado 
-      FROM usuarios 
-      WHERE email = ${decoded.email} 
+      SELECT id, email, email_confirmado
+      FROM usuarios
+      WHERE email = ${decoded.email}
       AND token_confirmacion = ${token}
     `;
 
@@ -59,17 +59,29 @@ export default async function handler(req, res) {
 
     // Si ya está confirmado
     if (usuario.email_confirmado) {
-      return res.status(200).json({
-        success: true,
-        mensaje: 'El email ya estaba confirmado',
-        ya_confirmado: true
-      });
+// Generar JWT para que pueda invitar sin hacer login
+    const usuarioCompleto = await sql`
+      SELECT id, email, empresa_id, rol FROM usuarios WHERE id = ${usuario.id}
+    `;
+    const u = usuarioCompleto[0];
+    const tokenSesion = jwt.sign(
+      { userId: u.id, email: u.email, empresaId: u.empresa_id, rol: u.rol },
+      process.env.JWT_SECRET || 'compita-secret-2024',
+      { expiresIn: '1h' }
+    );
+
+    return res.status(200).json({
+      success: true,
+      mensaje: 'Email confirmado exitosamente',
+      ya_confirmado: false,
+      token: tokenSesion
+    });
     }
 
     // Confirmar el email
     await sql`
-      UPDATE usuarios 
-      SET 
+      UPDATE usuarios
+      SET
         email_confirmado = true,
         token_confirmacion = NULL,
         updated_at = NOW()
