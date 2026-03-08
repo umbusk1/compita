@@ -198,6 +198,14 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
             <li>✓ Descarga de documentos (10/mes)</li>
             <li>✓ Análisis profundo con IA (5/mes)</li>
           </ul>
+
+          <div style="background-color:#EEF2FF; border-left: 4px solid #4F46E5; padding: 12px 16px; margin: 20px 0; border-radius: 4px;">
+		              <p style="margin:0; color:#4F46E5; font-weight:bold;">🎁 ¿Quieres 30 días en vez de 7?</p>
+		              <p style="margin:8px 0 0 0; color:#374151; font-size:14px;">
+		                Al confirmar tu email podrás invitar a alguien de otra empresa. Si acepta, <strong>ambos obtienen 30 días gratis</strong> en vez de 7.
+		              </p>
+          </div>
+
           <p><strong>Para activar tu cuenta, confirma tu email haciendo clic aquí:</strong></p>
           <p style="text-align: center; margin: 30px 0;">
             <a href="https://compita.umbusk.com/confirmar-email.html?token=${tokenConfirmacion}"
