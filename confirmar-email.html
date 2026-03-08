@@ -125,8 +125,7 @@
 
 const tokenConfirmado = new URLSearchParams(window.location.search).get('token');
 
-        function mostrarExito(token) {
-            tokenConfirmado = token || null;
+		function mostrarExito(token) {
             document.getElementById('loading-card').classList.add('hidden');
             document.getElementById('exito-card').classList.remove('hidden');
         }
