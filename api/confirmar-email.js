@@ -59,16 +59,23 @@ export default async function handler(req, res) {
 
     // Si ya está confirmado
     if (usuario.email_confirmado) {
-// Generar JWT para que pueda invitar sin hacer login
-    const usuarioCompleto = await sql`
-      SELECT id, email, empresa_id, rol FROM usuarios WHERE id = ${usuario.id}
-    `;
-    const u = usuarioCompleto[0];
-    const tokenSesion = jwt.sign(
-      { userId: u.id, email: u.email, empresaId: u.empresa_id, rol: u.rol },
-      process.env.JWT_SECRET || 'compita-secret-2024',
-      { expiresIn: '1h' }
-    );
+let tokenSesion = null;
+    try {
+      const usuarioCompleto = await sql`
+        SELECT id, email, empresa_id, rol FROM usuarios WHERE id = ${usuario.id}
+      `;
+      const u = usuarioCompleto[0];
+      if (u) {
+        tokenSesion = jwt.sign(
+          { userId: u.id, email: u.email, empresaId: u.empresa_id, rol: u.rol },
+          process.env.JWT_SECRET || 'compita-secret-2024',
+          { expiresIn: '1h' }
+        );
+      }
+    } catch (tokenError) {
+      console.error('⚠️ [CONFIRMAR] Error generando token de sesión:', tokenError);
+      // No bloqueamos — la confirmación fue exitosa igual
+    }
 
     return res.status(200).json({
       success: true,
