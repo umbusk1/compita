@@ -100,7 +100,13 @@
 
             try {
                 const response = await fetch(`/api/confirmar-email?token=${encodeURIComponent(token)}`);
-                const data = await response.json();
+                let data;
+				                try {
+				                    data = await response.json();
+				                } catch(e) {
+				                    mostrarError('Error del servidor. Por favor intenta de nuevo o contacta soporte.');
+				                    return;
+                }
 
                 if (response.ok) {
                     if (data.ya_confirmado) {
