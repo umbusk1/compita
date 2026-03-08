@@ -117,7 +117,7 @@
             }
         });
 
-let tokenConfirmado = null;
+const tokenConfirmado = new URLSearchParams(window.location.search).get('token');
 
         function mostrarExito(token) {
             tokenConfirmado = token || null;
