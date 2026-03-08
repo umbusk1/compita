@@ -552,10 +552,20 @@ async function handleEliminarEmpresa(req, res) {
     const conteoAnalisis = await pool.query('SELECT COUNT(*) as total FROM analisis WHERE empresa_id = $1', [empresa_id]);
     const conteoUsuarios = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
 
-    await pool.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
+	await pool.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
+
+    // Limpiar tablas de referidos antes de borrar usuarios
+    const usuariosEmpresa = await pool.query(
+      'SELECT id FROM usuarios WHERE empresa_id = $1', [empresa_id]
+    );
+    for (const u of usuariosEmpresa.rows) {
+      await pool.query('DELETE FROM invitaciones_referido WHERE referidor_id = $1', [u.id]);
+      await pool.query('DELETE FROM referidos WHERE referidor_id = $1 OR referido_id = $1', [u.id, u.id]);
+    }
+
     await pool.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM empresas WHERE id = $1', [empresa_id]);
 
