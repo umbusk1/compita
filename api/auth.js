@@ -324,6 +324,15 @@ async function handleInvitar(req, res, usuarioJWT) {
   try {
     const { email_invitado } = req.body;
 
+    // Soporta tanto token de sesión (userId) como token de confirmación (email)
+    let userId = usuarioJWT.userId;
+    if (!userId && usuarioJWT.email) {
+      const r = await pool.query('SELECT id FROM usuarios WHERE email = $1', [usuarioJWT.email]);
+      if (r.rows.length === 0) return res.status(401).json({ error: 'Usuario no encontrado' });
+      userId = r.rows[0].id;
+    }
+    if (!userId) return res.status(401).json({ error: 'No autorizado' });
+
     if (!email_invitado) {
       return res.status(400).json({ error: 'El email del invitado es requerido' });
     }
@@ -340,7 +349,7 @@ async function handleInvitar(req, res, usuarioJWT) {
     const yaInvitado = await pool.query(
       `SELECT id FROM invitaciones_referido
        WHERE referidor_id = $1 AND email_invitado = $2 AND estado = 'pendiente' AND expira_at > NOW()`,
-      [usuarioJWT.userId, email_invitado]
+      [userId, email_invitado]
     );
     if (yaInvitado.rows.length > 0) {
       return res.status(400).json({ error: 'Ya enviaste una invitación pendiente a ese email' });
@@ -353,12 +362,12 @@ async function handleInvitar(req, res, usuarioJWT) {
     await pool.query(
       `INSERT INTO invitaciones_referido (referidor_id, email_invitado, token)
        VALUES ($1, $2, $3)`,
-      [usuarioJWT.userId, email_invitado, token]
+      [userId, email_invitado, token]
     );
 
     // Obtener nombre del referidor para personalizar el email
     const referidorResult = await pool.query(
-      'SELECT empresa FROM usuarios WHERE id = $1', [usuarioJWT.userId]
+      'SELECT empresa FROM usuarios WHERE id = $1', [userId]
     );
     const empresaReferidor = referidorResult.rows[0]?.empresa || 'un colega';
 
