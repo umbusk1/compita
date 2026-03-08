@@ -51,6 +51,11 @@
             </div>
             <h1 class="text-2xl font-bold text-gray-900 mb-2">Registro</h1>
             <p class="text-gray-600">7 días gratis sin TDC, luego pagas</p>
+			<p class="text-sm text-indigo-600 mt-1">
+			    🎁 ¿Quieres 30 días sin TDC en vez de 7?<br>
+			    Al confirmar tu email corporativo puedes invitar a alguien de otra empresa<br>
+			    y en ambos casos obtienen los 30 días para usar Compita ¡gratis!
+			</p>
         </div>
 
         <!-- Formulario de Registro -->
@@ -193,7 +198,7 @@ function mostrarOpciones(event) {
 
     const email = document.getElementById('email').value.toLowerCase();
     const dominio = email.split('@')[1];
-    const dominiosGratuitos = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com',
+    const dominiosGratuitos = ['yahoo.com', 'hotmail.com', 'outlook.com',
         'live.com', 'icloud.com', 'protonmail.com', 'aol.com'];
 
     if (dominiosGratuitos.includes(dominio)) {
