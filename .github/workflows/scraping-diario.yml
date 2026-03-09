@@ -4,7 +4,6 @@ on:
     - cron: "30 17 * * 1-5"  # 1:30 PM AST (5:30 PM UTC), Lunes a Viernes
     - cron: "0 21 * * 1-5"   # 5:00 PM AST (9:00 PM UTC), Lunes a Viernes
   workflow_dispatch:  # Permite ejecución manual
-
 jobs:
   scraping:
     runs-on: ubuntu-latest
@@ -48,6 +47,7 @@ jobs:
             echo "No hay cambios en stats-2026.json"
           else
             git commit -m "🤖 Actualizar estadísticas - $(date '+%Y-%m-%d %H:%M')"
+            git pull --rebase
             git push
           fi
         continue-on-error: true
