@@ -369,44 +369,31 @@ def scraping_diario():
             max_clicks_seguridad = 50  # tope de seguridad para no correr indefinidamente
 
             while clicks < max_clicks_seguridad:
-                # Revisar fecha de la última licitación visible
+
+                # Paso 1: intentar click
+                exito = hacer_click_ver_mas(page)
+
+                if not exito:
+                    print(f"\n   ℹ️  Botón 'Ver más' no encontrado — fin de páginas disponibles")
+                    break
+
+                clicks += 1
+                print(f"   ✅ Click #{clicks}...")
+
+                # Paso 2: revisar la fecha más antigua de lo que hay cargado
                 try:
                     filas = page.query_selector_all("table tbody tr")
                     for fila in filas:
                         celdas = fila.query_selector_all("td")
                         if len(celdas) > 100:
-                            ultima_fecha_pub = extraer_fecha_publicacion_de_celdas(celdas)
-                            if ultima_fecha_pub:
-                                if ultima_fecha_pub < hoy:
-                                    print(f"\n🛑 Detectada licitación del {ultima_fecha_pub.strftime('%d/%m/%Y')} — deteniendo clicks")
-                                    print(f"   ✅ Se hicieron {clicks} clicks en total\n")
-                                    break
+                            ultima_fecha = extraer_fecha_publicacion_de_celdas(celdas)
+                            if ultima_fecha and ultima_fecha < hoy:
+                                print(f"\n🛑 Detectada licitación del {ultima_fecha.strftime('%d/%m/%Y')} — deteniendo clicks")
+                                print(f"   ✅ Se hicieron {clicks} clicks en total\n")
+                                clicks = max_clicks_seguridad  # fuerza salida del while
                             break
-                    else:
-                        # Si llegamos aquí sin break, intentar click
-                        exito = hacer_click_ver_mas(page)
-                        if exito:
-                            clicks += 1
-                            print(f"   ✅ Click #{clicks} — cargando más licitaciones de hoy...")
-                            continue
-                        else:
-                            print(f"\n   ℹ️  Botón 'Ver más' no encontrado — todas las licitaciones cargadas")
-                            break
-                        continue
-
-                    # Si el for terminó con break (fecha anterior detectada)
-                    break
-
                 except Exception as e:
                     print(f"   ⚠️  Error revisando fechas: {e}")
-
-                exito = hacer_click_ver_mas(page)
-                if exito:
-                    clicks += 1
-                    print(f"   ✅ Click #{clicks}...")
-                else:
-                    print(f"\n   ℹ️  No hay más páginas disponibles")
-                    break
 
             # ================================================================
             # EXTRACCIÓN DE DATOS
