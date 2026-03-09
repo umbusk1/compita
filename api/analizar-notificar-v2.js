@@ -669,7 +669,8 @@ function generarEmailSegunPlan(resultado) {
     `;
   }
 
-  return '';
+return '';
+}
 
 export const config = {
   maxDuration: 300,
