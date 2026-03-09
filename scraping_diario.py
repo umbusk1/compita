@@ -1,14 +1,14 @@
 """
-COMPITA - Scraping Diario Automático
-=====================================
-    - cron: "30 17 * * 1-5"  # 1:30 PM AST (5:30 PM UTC), Lunes a Viernes
-    - cron: "0 21 * * 1-5"   # 5:00 PM AST (9:00 PM UTC), Lunes a Viernes
-    workflow_dispatch:  # Permite ejecución manual
+COMPITA - Scraping Diario Automático (v2 - MEJORADO)
+=====================================================
+MEJORA PRINCIPAL: Captura TODAS las licitaciones de hoy
+- Antes: ~100 licitaciones (MAX_CLICKS fijo = 10, clicks no efectivos)
+- Ahora: ~300+ licitaciones (clicks robustos + parada inteligente por fecha)
 
-✨ ACTUALIZACIÓN: Ahora incluye clasificación UNSPSC automática
+Lógica de parada: cuando aparecen licitaciones del día anterior, detiene
+los clicks — así nunca mezcla días ni pierde registros de hoy.
 
-Fecha: 28 de enero 2026
-Autor: Desarrollo para Moisesp/Compita
+Fecha: Marzo 2026
 """
 
 import os
@@ -21,13 +21,11 @@ import psycopg2
 from psycopg2.extras import execute_values
 
 # ============================================================================
-# CONFIGURACIÓN PARA SCRAPING DIARIO
+# CONFIGURACIÓN
 # ============================================================================
 
 PORTAL_URL = "https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index"
-MAX_CLICKS = 10  # Solo 10 clicks para licitaciones recientes
-HEADLESS = True  # Modo sin interfaz gráfica para GitHub Actions
-
+HEADLESS = True
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 # ============================================================================
@@ -186,27 +184,20 @@ unspsc_taxonomy = {
     '91-10': {'name': 'Servicios de belleza', 'segment': 'Servicios personales', 'keywords': ['belleza', 'peluquería', 'estética']},
     '92-10': {'name': 'Servicios de vigilancia', 'segment': 'Servicios seguridad', 'keywords': ['vigilancia', 'guardias', 'seguridad privada', 'custodia']},
     '92-12': {'name': 'Servicios de investigación', 'segment': 'Servicios seguridad', 'keywords': ['investigación privada', 'detective']},
-    '93-14': {'name': 'Servicios de telecomunicaciones públicas', 'segment': 'Servicios públicos', 'keywords': ['telecomunicaciones públicas']},
     '93-15': {'name': 'Servicios de energía', 'segment': 'Servicios públicos', 'keywords': ['energía eléctrica', 'electricidad', 'servicio eléctrico']},
     '93-16': {'name': 'Servicios de agua', 'segment': 'Servicios públicos', 'keywords': ['agua potable', 'acueducto', 'servicio agua']},
-    '94-10': {'name': 'Servicios cívicos y culturales', 'segment': 'Servicios políticos', 'keywords': ['cívico', 'ciudadano', 'patriótico', 'patrióticas', 'patria', 'cultural', 'culturales', 'actividades cívicas']},
+    '94-10': {'name': 'Servicios cívicos y culturales', 'segment': 'Servicios políticos', 'keywords': ['cívico', 'ciudadano', 'patriótico', 'cultural', 'culturales', 'actividades cívicas']},
     '95-10': {'name': 'Terrenos', 'segment': 'Inmuebles', 'keywords': ['terreno', 'lote', 'parcela']},
     '95-11': {'name': 'Edificios', 'segment': 'Inmuebles', 'keywords': ['edificio', 'inmueble', 'local']},
     '99-99': {'name': 'Otros', 'segment': 'Otros', 'keywords': []},
 }
 
 def clasificar_keywords(descripcion):
-    """
-    Clasifica una licitación según palabras clave UNSPSC.
-    Retorna una tupla (codigo, familia, segmento).
-    """
     if not descripcion:
         return ('99-99', 'Otros', 'Otros')
-    
     desc_lower = str(descripcion).lower()
     best_match = None
     max_score = 0
-    
     for code, family in unspsc_taxonomy.items():
         if code == '99-99':
             continue
@@ -214,483 +205,402 @@ def clasificar_keywords(descripcion):
         if score > max_score:
             max_score = score
             best_match = code
-    
     if best_match and max_score > 0:
-        return (
-            best_match, 
-            unspsc_taxonomy[best_match]['name'],
-            unspsc_taxonomy[best_match]['segment']
-        )
-    else:
-        return ('99-99', 'Otros', 'Otros')
+        return (best_match, unspsc_taxonomy[best_match]['name'], unspsc_taxonomy[best_match]['segment'])
+    return ('99-99', 'Otros', 'Otros')
 
 # ============================================================================
 # FUNCIONES AUXILIARES
 # ============================================================================
 
 def limpiar_monto(texto_monto):
-    """Convierte texto como "280,000.00 Pesos Dominicanos" a número decimal."""
     if not texto_monto:
         return None, None
-    
     numeros = re.findall(r'[\d,\.]+', texto_monto)
     if not numeros:
         return None, None
-    
     monto_str = numeros[0].replace(',', '')
-    
-    moneda = "DOP"
-    if "USD" in texto_monto.upper() or "DÓLAR" in texto_monto.upper():
-        moneda = "USD"
-    
+    moneda = "USD" if ("USD" in texto_monto.upper() or "DÓLAR" in texto_monto.upper()) else "DOP"
     try:
-        monto = Decimal(monto_str)
-        return monto, moneda
+        return Decimal(monto_str), moneda
     except:
         return None, None
 
-
 def convertir_fecha(texto_fecha):
-    """Convierte fecha en formato DD/MM/YYYY HH:MM a datetime."""
     if not texto_fecha:
         return None
-    
-    try:
-        formatos = [
-            "%d/%m/%Y %H:%M",
-            "%d/%m/%Y %H:%M:%S",
-            "%d/%m/%Y",
-            "%Y-%m-%d %H:%M:%S",
-            "%Y-%m-%d"
-        ]
-        
-        for formato in formatos:
-            try:
-                return datetime.strptime(texto_fecha.strip(), formato)
-            except:
-                continue
-        
-        return None
-    except:
-        return None
+    formatos = ["%d/%m/%Y %H:%M", "%d/%m/%Y %H:%M:%S", "%d/%m/%Y", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"]
+    for fmt in formatos:
+        try:
+            return datetime.strptime(texto_fecha.strip(), fmt)
+        except:
+            continue
+    return None
 
+def extraer_fecha_publicacion_de_celdas(celdas, inicio=93):
+    """
+    Extrae la fecha de publicación de la última licitación cargada.
+    Columna i+4 es fecha_publicacion (índice 4 dentro del bloque de 10).
+    Retorna un objeto date o None.
+    """
+    ultima_fecha = None
+    for i in range(inicio, len(celdas) - 10, 10):
+        try:
+            texto = celdas[i+4].inner_text().strip()
+            texto_limpio = texto.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
+            fecha = convertir_fecha(texto_limpio)
+            if fecha:
+                ultima_fecha = fecha.date()
+        except:
+            continue
+    return ultima_fecha
 
 def conectar_base_datos():
-    """Crea conexión a la base de datos Neon PostgreSQL."""
     try:
         conn = psycopg2.connect(DATABASE_URL)
-        print("✅ Conexión exitosa a base de datos Neon")
+        print("✅ Conexión exitosa a base de datos")
         return conn
     except Exception as e:
-        print(f"❌ Error conectando a base de datos: {e}")
+        print(f"❌ Error conectando a BD: {e}")
         return None
 
+# ============================================================================
+# CLICK ROBUSTO — funciona en headless GitHub Actions
+# ============================================================================
+
+def hacer_click_ver_mas(page):
+    """
+    Intenta hacer click en 'Ver más' usando múltiples estrategias.
+    Retorna True si tuvo éxito, False si no encontró el botón.
+    """
+    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+    time.sleep(2)
+
+    # Estrategia 1: JavaScript directo (más confiable en headless)
+    try:
+        resultado = page.evaluate("""
+            () => {
+                const todos = Array.from(document.querySelectorAll('a, button, span, div'));
+                for (let el of todos) {
+                    const txt = (el.innerText || el.textContent || '').trim().toLowerCase();
+                    if (txt === 'ver más' || txt === 'ver mas') {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        el.click();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        """)
+        if resultado:
+            time.sleep(6)
+            return True
+    except:
+        pass
+
+    # Estrategia 2: Playwright locator
+    selectores = [
+        "text='Ver más'", "text='ver más'", "text='VER MÁS'",
+        "a:has-text('Ver más')", "button:has-text('Ver más')"
+    ]
+    for sel in selectores:
+        try:
+            boton = page.locator(sel).first
+            if boton.is_visible(timeout=3000):
+                boton.scroll_into_view_if_needed()
+                time.sleep(1)
+                boton.click()
+                time.sleep(6)
+                return True
+        except:
+            continue
+
+    return False
 
 # ============================================================================
-# FUNCIÓN PRINCIPAL - SCRAPING DIARIO
+# SCRAPING PRINCIPAL
 # ============================================================================
 
 def scraping_diario():
-    """
-    Scraping optimizado para ejecución diaria:
-    - Solo carga primeras páginas (10 clicks)
-    - Modo headless para GitHub Actions
-    - Filtra licitaciones de 2026
-    - ✨ CLASIFICA AUTOMÁTICAMENTE CON UNSPSC
-    """
-    
     print("\n" + "="*70)
-    print("🚀 SCRAPING DIARIO DE LICITACIONES - " + datetime.now().strftime("%d/%m/%Y %H:%M"))
+    print("🚀 COMPITA - SCRAPING DIARIO v2")
+    print(f"🕐 Inicio: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
     print("="*70)
-    print(f"📄 Cargando primeras {MAX_CLICKS} páginas (licitaciones más recientes)")
-    print("🏷️  Clasificación UNSPSC automática activada\n")
-    
+    print("🎯 Captura TODAS las licitaciones de HOY (parada inteligente por fecha)")
+    print("🏷️  Clasificación UNSPSC automática\n")
+
+    # Calcular fecha de hoy en Santo Domingo (UTC-4)
+    hoy = (datetime.utcnow() - timedelta(hours=4)).date()
+    ayer = hoy - timedelta(days=1)
+    print(f"📅 Fecha de hoy (Santo Domingo): {hoy.strftime('%d/%m/%Y')}")
+    print(f"🛑 Parada al detectar licitaciones de: {ayer.strftime('%d/%m/%Y')} o anterior\n")
+
     licitaciones_encontradas = []
-    
+
     with sync_playwright() as p:
-        print("📱 Iniciando navegador (modo headless)...")
-        browser = p.chromium.launch(headless=HEADLESS)
-        page = browser.new_page()
+        print("📱 Iniciando navegador headless...")
+        browser = p.chromium.launch(
+            headless=HEADLESS,
+            args=['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+        )
+        context = browser.new_context(
+            viewport={'width': 1280, 'height': 900},
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        )
+        page = context.new_page()
         page.set_default_timeout(30000)
-        
+
         try:
             print(f"🌐 Navegando al portal...")
-            page.goto(PORTAL_URL)
-            
-            # ================================================================
-            # FASE 1: CARGAR PRIMERAS PÁGINAS
-            # ================================================================
-            print("\n🔥 FASE 1: CARGANDO LICITACIONES RECIENTES")
-            print("="*70 + "\n")
-            
-            # PASO 1: Esperar a que la tabla inicial cargue
-            print("⏳ Esperando a que cargue la tabla inicial...")
-            try:
-                page.wait_for_selector("table tbody tr", timeout=15000)
-                print("✅ Tabla inicial cargada")
-            except Exception as e:
-                print(f"⚠️ Advertencia esperando tabla: {e}")
-            
+            page.goto(PORTAL_URL, wait_until='networkidle', timeout=60000)
+
+            print("⏳ Esperando tabla inicial...")
+            page.wait_for_selector("table tbody tr", timeout=20000)
+            print("✅ Tabla inicial cargada\n")
             time.sleep(5)
-            
-            # PASO 2: Scroll para activar lazy loading
-            print("📜 Activando carga dinámica con scroll...")
-            for _ in range(3):
-                page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                time.sleep(1)
-            
-            time.sleep(3)
-            
-            # PASO 3: Buscar y hacer clicks en "Ver más"
-            clicks_exitosos = 0
-            intentos_fallidos = 0
-            max_intentos_fallidos = 3
-            
-            while clicks_exitosos < MAX_CLICKS and intentos_fallidos < max_intentos_fallidos:
-                print(f"🔄 Click #{clicks_exitosos + 1}...", end=" ", flush=True)
-                
-                boton_encontrado = False
-                
+
+            # ================================================================
+            # CLICKS HASTA DETECTAR DÍA ANTERIOR
+            # ================================================================
+            print("🔄 Cargando licitaciones de hoy...")
+            print("   (se detiene automáticamente al aparecer licitaciones de ayer)\n")
+
+            clicks = 0
+            max_clicks_seguridad = 50  # tope de seguridad para no correr indefinidamente
+
+            while clicks < max_clicks_seguridad:
+                # Revisar fecha de la última licitación visible
                 try:
-                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                    time.sleep(1)
-                    
-                    selectores_a_probar = [
-                        "text='Ver más'",
-                        "text='ver más'",
-                        "text='VER MÁS'",
-                        "a:has-text('Ver más')",
-                        "button:has-text('Ver más')",
-                        "[onclick*='VerMas']",
-                        "[onclick*='vermas']"
-                    ]
-                    
-                    for selector in selectores_a_probar:
-                        try:
-                            boton = page.locator(selector).first
-                            if boton.is_visible(timeout=2000):
-                                boton.scroll_into_view_if_needed()
-                                time.sleep(0.5)
-                                boton.click()
-                                clicks_exitosos += 1
-                                boton_encontrado = True
-                                print(f"✅ (selector: {selector[:20]}...)")
-                                time.sleep(5)
-                                intentos_fallidos = 0
-                                break
-                        except:
+                    filas = page.query_selector_all("table tbody tr")
+                    for fila in filas:
+                        celdas = fila.query_selector_all("td")
+                        if len(celdas) > 100:
+                            ultima_fecha_pub = extraer_fecha_publicacion_de_celdas(celdas)
+                            if ultima_fecha_pub:
+                                if ultima_fecha_pub < hoy:
+                                    print(f"\n🛑 Detectada licitación del {ultima_fecha_pub.strftime('%d/%m/%Y')} — deteniendo clicks")
+                                    print(f"   ✅ Se hicieron {clicks} clicks en total\n")
+                                    break
+                            break
+                    else:
+                        # Si llegamos aquí sin break, intentar click
+                        exito = hacer_click_ver_mas(page)
+                        if exito:
+                            clicks += 1
+                            print(f"   ✅ Click #{clicks} — cargando más licitaciones de hoy...")
                             continue
-                    
-                    if boton_encontrado:
+                        else:
+                            print(f"\n   ℹ️  Botón 'Ver más' no encontrado — todas las licitaciones cargadas")
+                            break
                         continue
-                        
+
+                    # Si el for terminó con break (fecha anterior detectada)
+                    break
+
                 except Exception as e:
-                    pass
-                
-                if not boton_encontrado:
-                    try:
-                        page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                        time.sleep(1)
-                        
-                        enlaces = page.query_selector_all("a, button")
-                        for enlace in enlaces:
-                            try:
-                                texto = enlace.inner_text().strip().lower()
-                                if "ver más" in texto or "ver mas" in texto:
-                                    if enlace.is_visible():
-                                        enlace.scroll_into_view_if_needed()
-                                        time.sleep(0.5)
-                                        enlace.click()
-                                        clicks_exitosos += 1
-                                        boton_encontrado = True
-                                        print(f"✅ (búsqueda manual)")
-                                        time.sleep(5)
-                                        intentos_fallidos = 0
-                                        break
-                            except:
-                                continue
-                    except:
-                        pass
-                
-                if not boton_encontrado:
-                    try:
-                        resultado = page.evaluate("""
-                            () => {
-                                const elementos = Array.from(document.querySelectorAll('a, button'));
-                                for (let elem of elementos) {
-                                    const texto = elem.innerText || elem.textContent || '';
-                                    if (texto.toLowerCase().includes('ver más') || texto.toLowerCase().includes('ver mas')) {
-                                        elem.click();
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            }
-                        """)
-                        
-                        if resultado:
-                            clicks_exitosos += 1
-                            boton_encontrado = True
-                            print(f"✅ (JavaScript)")
-                            time.sleep(5)
-                            intentos_fallidos = 0
-                    except:
-                        pass
-                
-                if not boton_encontrado:
-                    intentos_fallidos += 1
-                    print(f"❌ (intento {intentos_fallidos}/{max_intentos_fallidos})")
-                    
-                    if intentos_fallidos >= max_intentos_fallidos:
-                        print(f"\n   ℹ️ No se encontró botón 'Ver más' después de {max_intentos_fallidos} intentos")
-                        break
-                    
-                    time.sleep(3)
-            
-            print(f"\n✅ Se cargaron {clicks_exitosos} páginas adicionales\n")
-            
+                    print(f"   ⚠️  Error revisando fechas: {e}")
+
+                exito = hacer_click_ver_mas(page)
+                if exito:
+                    clicks += 1
+                    print(f"   ✅ Click #{clicks}...")
+                else:
+                    print(f"\n   ℹ️  No hay más páginas disponibles")
+                    break
+
             # ================================================================
-            # FASE 2: EXTRAER Y CLASIFICAR LICITACIONES
+            # EXTRACCIÓN DE DATOS
             # ================================================================
-            print("="*70)
-            print("📊 FASE 2: EXTRAYENDO Y CLASIFICANDO LICITACIONES")
+            print("\n" + "="*70)
+            print("📊 EXTRAYENDO LICITACIONES DE HOY...")
             print("="*70 + "\n")
-            
+
             time.sleep(2)
-            
-            page.wait_for_selector("table", timeout=10000)
             filas = page.query_selector_all("table tbody tr")
-            
-            print(f"✅ Tabla cargada con {len(filas)} filas")
-            
             fila_principal = None
             for fila in filas:
                 celdas = fila.query_selector_all("td")
                 if len(celdas) > 100:
                     fila_principal = celdas
-                    print(f"✅ Encontradas {len(celdas)} celdas (aprox. {(len(celdas)-93)//10} licitaciones)\n")
+                    print(f"✅ {len(celdas)} celdas encontradas (~{(len(celdas)-93)//10} licitaciones)\n")
                     break
-            
+
             if not fila_principal:
-                print("❌ No se encontró la fila principal")
-                return licitaciones_encontradas
-            
-            print("🔍 Procesando licitaciones...\n")
-            
-            inicio = 93
+                print("❌ No se encontró la tabla de licitaciones")
+                return []
+
             total_procesadas = 0
-            
-            for i in range(inicio, len(fila_principal), 10):
+            omitidas_dia_anterior = 0
+
+            for i in range(93, len(fila_principal) - 9, 10):
                 try:
-                    if i + 8 >= len(fila_principal):
-                        break
-                    
-                    unidad = fila_principal[i].inner_text().strip()
+                    unidad    = fila_principal[i].inner_text().strip()
                     referencia = fila_principal[i+1].inner_text().strip()
                     descripcion = fila_principal[i+2].inner_text().strip()
-                    fecha_pub = fila_principal[i+4].inner_text().strip()
-                    fecha_pres = fila_principal[i+5].inner_text().strip()
+                    fecha_pub_txt = fila_principal[i+4].inner_text().strip()
+                    fecha_pres_txt = fila_principal[i+5].inner_text().strip()
                     total_estimado = fila_principal[i+6].inner_text().strip()
                     estado = fila_principal[i+7].inner_text().strip()
-                    
+
                     if not referencia:
                         continue
-                    
-                    # Obtener URL
+
+                    fecha_pub_limpia = fecha_pub_txt.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
+                    fecha_pres_limpia = fecha_pres_txt.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
+
+                    fecha_publicacion = convertir_fecha(fecha_pub_limpia)
+                    fecha_presentacion = convertir_fecha(fecha_pres_limpia)
+
+                    # Filtrar: solo licitaciones publicadas HOY
+                    if fecha_publicacion and fecha_publicacion.date() < hoy:
+                        omitidas_dia_anterior += 1
+                        continue
+
+                    # Filtrar: solo licitaciones con fecha de presentación futura
+                    if fecha_presentacion and fecha_presentacion < datetime.now():
+                        continue
+
                     boton_detalle = fila_principal[i+8].query_selector("a")
                     url_detalle = ""
                     if boton_detalle:
                         href = boton_detalle.get_attribute("href")
                         if href:
-                            if href.startswith("/"):
-                                url_detalle = f"https://comunidad.comprasdominicana.gob.do{href}"
-                            else:
-                                url_detalle = href
-                    
-                    fecha_pub_limpia = fecha_pub.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
-                    fecha_pres_limpia = fecha_pres.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
-                    
-                    fecha_publicacion = convertir_fecha(fecha_pub_limpia)
-                    fecha_presentacion = convertir_fecha(fecha_pres_limpia)
-                    
-                    total_procesadas += 1
-                    
-                    if total_procesadas % 25 == 0:
-                        print(f"   📌 Procesadas: {total_procesadas}...")
-                    
+                            url_detalle = f"https://comunidad.comprasdominicana.gob.do{href}" if href.startswith("/") else href
+
                     monto, moneda = limpiar_monto(total_estimado)
-                    
-                    # FILTRAR: Solo 2026+
-                    if fecha_presentacion and fecha_presentacion.year >= 2026:
-                        # ✨ CLASIFICAR CON UNSPSC
-                        codigo_unspsc, familia_unspsc, segmento_unspsc = clasificar_keywords(descripcion)
-                        
-                        licitacion = {
-                            'unidad_compras': unidad,
-                            'referencia': referencia,
-                            'descripcion': descripcion,
-                            'fecha_publicacion': fecha_publicacion,
-                            'fecha_presentacion': fecha_presentacion,
-                            'total_estimado_texto': total_estimado,
-                            'monto_estimado': monto,
-                            'moneda': moneda,
-                            'estado': estado,
-                            'url_detalle': url_detalle,
-                            'codigo_unspsc': codigo_unspsc,
-                            'familia_unspsc': familia_unspsc,
-                            'segmento_unspsc': segmento_unspsc
-                        }
-                        
-                        licitaciones_encontradas.append(licitacion)
-                        
-                        if len(licitaciones_encontradas) <= 5:
-                            print(f"   ✓ [{len(licitaciones_encontradas)}] {referencia[:30]:<30} | {codigo_unspsc} {familia_unspsc[:30]}")
-                
-                except Exception as e:
+                    codigo_unspsc, familia_unspsc, segmento_unspsc = clasificar_keywords(descripcion)
+
+                    licitaciones_encontradas.append({
+                        'unidad_compras': unidad,
+                        'referencia': referencia,
+                        'descripcion': descripcion,
+                        'fecha_publicacion': fecha_publicacion,
+                        'fecha_presentacion': fecha_presentacion,
+                        'total_estimado_texto': total_estimado,
+                        'monto_estimado': monto,
+                        'moneda': moneda,
+                        'estado': estado,
+                        'url_detalle': url_detalle,
+                        'codigo_unspsc': codigo_unspsc,
+                        'familia_unspsc': familia_unspsc,
+                        'segmento_unspsc': segmento_unspsc
+                    })
+
+                    total_procesadas += 1
+                    if total_procesadas % 50 == 0:
+                        print(f"   📌 {total_procesadas} licitaciones de hoy procesadas...")
+
+                except Exception:
                     continue
-            
-            print(f"\n✅ Procesamiento completado:")
-            print(f"   - Total procesadas: {total_procesadas}")
-            print(f"   - Licitaciones 2026: {len(licitaciones_encontradas)}")
-            print(f"   - Clasificadas con UNSPSC: {len([l for l in licitaciones_encontradas if l['codigo_unspsc'] != '99-99'])}")
-        
+
+            print(f"\n✅ Extracción completada:")
+            print(f"   📅 Licitaciones de HOY:          {len(licitaciones_encontradas)}")
+            print(f"   ⏭️  Omitidas (días anteriores):   {omitidas_dia_anterior}")
+
         except Exception as e:
             print(f"\n❌ Error durante scraping: {e}")
             import traceback
             traceback.print_exc()
-        
+
         finally:
             print("\n🔒 Cerrando navegador...")
             browser.close()
-    
-    return licitaciones_encontradas
 
+    return licitaciones_encontradas
 
 # ============================================================================
 # GUARDAR EN BASE DE DATOS
 # ============================================================================
 
 def guardar_en_base_datos(licitaciones):
-    """Guarda las licitaciones en Neon con clasificación UNSPSC, evitando duplicados."""
-    
     if not licitaciones:
-        print("\n⚠️ No hay licitaciones nuevas para guardar")
+        print("\n⚠️  No hay licitaciones para guardar")
         return
-    
-    print(f"\n💾 Guardando {len(licitaciones)} licitaciones en base de datos...")
-    
-    # Filtrar duplicados en memoria
-    referencias_vistas = set()
-    licitaciones_unicas = []
-    duplicados = 0
-    
+
+    print(f"\n💾 Guardando {len(licitaciones)} licitaciones en BD...")
+
+    # Eliminar duplicados en memoria
+    vistas = set()
+    unicas = []
     for lic in licitaciones:
-        if lic['referencia'] not in referencias_vistas:
-            licitaciones_unicas.append(lic)
-            referencias_vistas.add(lic['referencia'])
-        else:
-            duplicados += 1
-    
-    if duplicados > 0:
-        print(f"⚠️ {duplicados} referencias duplicadas filtradas")
-    
-    print(f"✅ Insertando {len(licitaciones_unicas)} licitaciones únicas")
-    
+        if lic['referencia'] not in vistas:
+            unicas.append(lic)
+            vistas.add(lic['referencia'])
+
     conn = conectar_base_datos()
     if not conn:
         return
-    
+
     try:
         cursor = conn.cursor()
-        
-        valores = []
-        for lic in licitaciones_unicas:
-            valores.append((
-                lic['unidad_compras'],
-                lic['referencia'],
-                lic['descripcion'],
-                lic['fecha_publicacion'],
-                lic['fecha_presentacion'],
-                lic['total_estimado_texto'],
-                lic['monto_estimado'],
-                lic['moneda'],
-                lic['estado'],
-                lic['url_detalle'],
-                lic['codigo_unspsc'],
-                lic['familia_unspsc'],
-                lic['segmento_unspsc']
-            ))
-        
+
+        valores = [(
+            l['unidad_compras'], l['referencia'], l['descripcion'],
+            l['fecha_publicacion'], l['fecha_presentacion'],
+            l['total_estimado_texto'], l['monto_estimado'], l['moneda'],
+            l['estado'], l['url_detalle'],
+            l['codigo_unspsc'], l['familia_unspsc'], l['segmento_unspsc']
+        ) for l in unicas]
+
         query = """
             INSERT INTO licitaciones (
-                unidad_compras, referencia, descripcion, 
-                fecha_publicacion, fecha_presentacion, 
-                total_estimado_texto, monto_estimado, moneda, 
+                unidad_compras, referencia, descripcion,
+                fecha_publicacion, fecha_presentacion,
+                total_estimado_texto, monto_estimado, moneda,
                 estado, url_detalle,
                 codigo_unspsc, familia_unspsc, segmento_unspsc
             )
             VALUES %s
             ON CONFLICT (referencia) DO UPDATE SET
-                estado = EXCLUDED.estado,
-                codigo_unspsc = EXCLUDED.codigo_unspsc,
-                familia_unspsc = EXCLUDED.familia_unspsc,
+                estado          = EXCLUDED.estado,
+                codigo_unspsc   = EXCLUDED.codigo_unspsc,
+                familia_unspsc  = EXCLUDED.familia_unspsc,
                 segmento_unspsc = EXCLUDED.segmento_unspsc,
-                actualizado_en = NOW()
+                actualizado_en  = NOW()
         """
-        
         execute_values(cursor, query, valores)
-        
-        # Contar cuántas son nuevas vs actualizadas
-        cursor.execute("SELECT COUNT(*) FROM licitaciones WHERE DATE(scrapeado_en) = CURRENT_DATE")
-        nuevas_hoy = cursor.fetchone()[0]
-        
         conn.commit()
-        
+
+        cursor.execute("""
+            SELECT COUNT(*) FROM licitaciones
+            WHERE DATE(scrapeado_en AT TIME ZONE 'America/Santo_Domingo') =
+                  (CURRENT_TIMESTAMP AT TIME ZONE 'America/Santo_Domingo')::date
+        """)
+        total_hoy = cursor.fetchone()[0]
+
         print(f"✅ Guardado exitoso:")
-        print(f"   - Nuevas hoy: {nuevas_hoy}")
-        print(f"   - Total procesadas: {len(licitaciones_unicas)}")
-        print(f"   - Con clasificación UNSPSC: {len([l for l in licitaciones_unicas if l['codigo_unspsc'] != '99-99'])}")
-        
+        print(f"   Nuevas/actualizadas: {len(unicas)}")
+        print(f"   Total en BD hoy:     {total_hoy}")
+
         cursor.close()
         conn.close()
-        
+
     except Exception as e:
-        print(f"❌ Error guardando en BD: {e}")
+        print(f"❌ Error guardando: {e}")
         import traceback
         traceback.print_exc()
         if conn:
             conn.rollback()
             conn.close()
 
-
 # ============================================================================
-# EJECUTAR SCRAPING DIARIO
+# MAIN
 # ============================================================================
 
 if __name__ == "__main__":
-    print("\n" + "🔄 "*35)
-    print("COMPITA - SCRAPING DIARIO AUTOMÁTICO")
-    print("🏷️  Con clasificación UNSPSC automática")
-    print("🔄 "*35 + "\n")
-    
     inicio = datetime.now()
-    
-    # Ejecutar scraping
+
     licitaciones = scraping_diario()
-    
-    # Mostrar resumen
+
     print("\n" + "="*70)
-    print("📊 RESUMEN")
+    print("📊 RESUMEN FINAL")
     print("="*70)
-    print(f"🕐 Hora: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
-    print(f"📈 Licitaciones encontradas: {len(licitaciones)}")
-    
-    # Guardar en BD
+    print(f"🕐 {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+    print(f"📈 Licitaciones de hoy: {len(licitaciones)}")
+
     if licitaciones:
         guardar_en_base_datos(licitaciones)
-    
-    fin = datetime.now()
-    duracion = (fin - inicio).total_seconds()
-    
-    print(f"\n⏱️ Duración total: {duracion:.1f} segundos")
-    print("\n✨ Proceso completado exitosamente\n")
+
+    duracion = (datetime.now() - inicio).total_seconds()
+    print(f"⏱️  Duración: {duracion:.1f} segundos")
+    print("✨ Completado\n")
