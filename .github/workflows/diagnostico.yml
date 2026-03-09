@@ -1,0 +1,18 @@
+name: Diagnóstico de Scraping
+on:
+  workflow_dispatch:
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps
+      - name: Ejecutar diagnóstico
+        run: python scraping_diagnostico.py
