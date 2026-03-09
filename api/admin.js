@@ -55,7 +55,7 @@ export default async function handler(req, res) {
       case 'ejecutar_analisis':
         return await handleEjecutarAnalisis(req, res);
       case 'invitar_admin':
-  	    return await handleInvitarAdmin(req, res);
+        return await handleInvitarAdmin(req, res);
       default:
         return res.status(400).json({ error: 'Acción no especificada' });
     }
@@ -121,33 +121,40 @@ async function handleStats(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-const totalEmpresas = await pool.query('SELECT COUNT(*) as total FROM empresas WHERE activo = true');
-
   const admin = verificarToken(req.headers.authorization);
   if (!admin) {
     return res.status(401).json({ error: 'No autorizado' });
   }
 
-// ✅ DESPUÉS — Usa zona horaria de RD (UTC-4):
-const licitacionesHoy = await pool.query(
+  const totalEmpresas = await pool.query(
+    'SELECT COUNT(*) as total FROM empresas WHERE activo = true'
+  );
+
+  // ✅ CORREGIDO: zona horaria Santo Domingo aplicada correctamente
+  const licitacionesHoy = await pool.query(
     `SELECT COUNT(*) as total, MAX(scrapeado_en) as ultimo_scraping
      FROM licitaciones
      WHERE DATE(scrapeado_en AT TIME ZONE 'America/Santo_Domingo') =
-           CURRENT_DATE AT TIME ZONE 'America/Santo_Domingo'`
-);
-  const oportunidadesTotales = await pool.query('SELECT COUNT(*) as total FROM resultados');
-// ✅ DESPUÉS:
-const emailsHoy = await pool.query(
-    `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados
-     WHERE DATE(fecha_analisis AT TIME ZONE 'America/Santo_Domingo') =
-           CURRENT_DATE AT TIME ZONE 'America/Santo_Domingo'`
-);
+           (CURRENT_TIMESTAMP AT TIME ZONE 'America/Santo_Domingo')::date`
+  );
 
-// ✅ DESPUÉS — reemplázalo por esto:
+  const oportunidadesTotales = await pool.query(
+    'SELECT COUNT(*) as total FROM resultados'
+  );
+
+  // ✅ CORREGIDO: usa created_at y notificada = true
+  const emailsHoy = await pool.query(
+    `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados
+     WHERE notificada = true
+       AND DATE(created_at AT TIME ZONE 'America/Santo_Domingo') =
+           (CURRENT_TIMESTAMP AT TIME ZONE 'America/Santo_Domingo')::date`
+  );
+
+  // ✅ CORREGIDO: usa created_at
   const analisisHoy = await pool.query(
     `SELECT COUNT(*) as total FROM resultados
-     WHERE DATE(fecha_analisis AT TIME ZONE 'America/Santo_Domingo') =
-           CURRENT_DATE AT TIME ZONE 'America/Santo_Domingo'`
+     WHERE DATE(created_at AT TIME ZONE 'America/Santo_Domingo') =
+           (CURRENT_TIMESTAMP AT TIME ZONE 'America/Santo_Domingo')::date`
   );
 
   const empresas = await pool.query(`
@@ -168,12 +175,16 @@ const emailsHoy = await pool.query(
     FROM administradores ORDER BY rol DESC, nombre
   `);
 
-  const ultimoScraping = await pool.query('SELECT MAX(scrapeado_en) as fecha FROM licitaciones');
-  const ultimoAnalisis = await pool.query('SELECT MAX(fecha_analisis) as fecha FROM resultados');
+  const ultimoScraping = await pool.query(
+    'SELECT MAX(scrapeado_en) as fecha FROM licitaciones'
+  );
 
-  // Calcular total de tokens de todas las empresas
-    const totalTokens = empresas.rows.reduce((sum, emp) =>
-      sum + parseInt(emp.tokens_usados_total || 0), 0
+  const ultimoAnalisis = await pool.query(
+    'SELECT MAX(created_at) as fecha FROM resultados'
+  );
+
+  const totalTokens = empresas.rows.reduce((sum, emp) =>
+    sum + parseInt(emp.tokens_usados_total || 0), 0
   );
 
   return res.json({
@@ -552,12 +563,11 @@ async function handleEliminarEmpresa(req, res) {
     const conteoAnalisis = await pool.query('SELECT COUNT(*) as total FROM analisis WHERE empresa_id = $1', [empresa_id]);
     const conteoUsuarios = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
 
-	await pool.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
+    await pool.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
 
-    // Limpiar tablas de referidos antes de borrar usuarios
     const usuariosEmpresa = await pool.query(
       'SELECT id FROM usuarios WHERE empresa_id = $1', [empresa_id]
     );
@@ -693,7 +703,6 @@ async function handleInvitarAdmin(req, res) {
     return res.status(401).json({ error: 'No autorizado' });
   }
 
-  // Solo superadmins pueden invitar otros administradores
   if (admin.rol !== 'superadmin') {
     return res.status(403).json({ error: 'Solo los superadministradores pueden invitar otros administradores' });
   }
@@ -709,7 +718,6 @@ async function handleInvitarAdmin(req, res) {
   }
 
   try {
-    // Verificar que el email no esté registrado
     const emailExiste = await pool.query(
       'SELECT id FROM administradores WHERE email = $1',
       [email.toLowerCase()]
@@ -719,10 +727,8 @@ async function handleInvitarAdmin(req, res) {
       return res.status(400).json({ error: 'Este email ya está registrado como administrador' });
     }
 
-    // Hash de la contraseña
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Crear administrador
     const result = await pool.query(`
       INSERT INTO administradores (
         nombre,
@@ -739,7 +745,6 @@ async function handleInvitarAdmin(req, res) {
 
     console.log(`[ADMIN] Nuevo administrador creado: ${nombre} (${rol}) por ${admin.email}`);
 
-    // Enviar email con credenciales
     try {
       const resendApiKey = process.env.RESEND_API_KEY;
       if (resendApiKey) {
