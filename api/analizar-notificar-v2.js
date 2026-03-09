@@ -538,7 +538,73 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
 }
 
 // ============================================================================
-// ENVÍO DE EMAILS
+// ENVÍO DE EMAILS  ← FUNCIÓN RESTAURADA
+// ============================================================================
+
+async function enviarNotificaciones(resultados) {
+  console.log('\n📧 PASO 2: ENVÍO DE NOTIFICACIONES');
+  console.log('╚══════════════════════════════════════════════════════════╝\n');
+
+  let emailsEnviados = 0;
+
+  for (const resultado of resultados) {
+    const { nombre, email, plan, alta, media } = resultado;
+
+    // Solo enviar si hay oportunidades de ALTA o MEDIA relevancia
+    if (alta + media === 0) {
+      console.log(`   ⏭️  ${nombre}: Sin oportunidades relevantes, omitiendo email`);
+      continue;
+    }
+
+    if (!email) {
+      console.log(`   ⚠️  ${nombre}: Sin email registrado, omitiendo`);
+      continue;
+    }
+
+    const htmlBody = generarEmailSegunPlan(resultado);
+
+    if (!htmlBody) {
+      console.log(`   ⚠️  ${nombre}: Plan "${plan}" sin plantilla de email, omitiendo`);
+      continue;
+    }
+
+    try {
+      await resend.emails.send({
+        from: 'Compita <notificaciones@compita.umbusk.com>',
+        to: email,
+        subject: `🎯 ${alta + media} nueva${alta + media > 1 ? 's' : ''} oportunidad${alta + media > 1 ? 'es' : ''} detectada${alta + media > 1 ? 's' : ''} para ${nombre}`,
+        html: htmlBody
+      });
+
+      // Marcar oportunidades como notificadas en BD
+      const todasReferencias = [
+        ...resultado.oportunidades_alta,
+        ...resultado.oportunidades_media
+      ].map(o => o.referencia);
+
+      if (todasReferencias.length > 0) {
+        await pool.query(`
+          UPDATE resultados
+          SET notificada = true
+          WHERE empresa_id = $1
+            AND referencia = ANY($2)
+        `, [resultado.empresa_id, todasReferencias]);
+      }
+
+      emailsEnviados++;
+      console.log(`   ✅ Email enviado a ${nombre} (${email}) — ${alta} ALTA, ${media} MEDIA`);
+
+    } catch (error) {
+      console.error(`   ❌ Error enviando email a ${nombre} (${email}):`, error.message);
+    }
+  }
+
+  console.log(`\n📧 Total emails enviados: ${emailsEnviados}\n`);
+  return emailsEnviados;
+}
+
+// ============================================================================
+// GENERACIÓN DE EMAIL SEGÚN PLAN
 // ============================================================================
 
 function generarEmailSegunPlan(resultado) {
@@ -669,8 +735,12 @@ function generarEmailSegunPlan(resultado) {
     `;
   }
 
-return '';
+  return '';
 }
+
+// ============================================================================
+// CONFIGURACIÓN VERCEL
+// ============================================================================
 
 export const config = {
   maxDuration: 300,
