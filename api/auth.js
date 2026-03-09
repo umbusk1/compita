@@ -150,7 +150,7 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
     const usuario = userResult.rows[0];
     console.log('✅ [REGISTRO] Usuario creado ID:', usuario.id);
 
-    // Guardar referido en tabla referidos
+// Guardar referido en tabla referidos + extender trial del referidor
     if (referidorId) {
       try {
         await pool.query(
@@ -158,8 +158,41 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
           [referidorId, usuario.id]
         );
         console.log('✅ [REGISTRO] Referido guardado como pendiente');
+
+        // Extender trial del referidor a 30 días desde hoy (si aún no llegó a 30)
+        const extResult = await pool.query(
+          `UPDATE empresas
+           SET trial_fin = GREATEST(trial_fin, CURRENT_DATE + INTERVAL '30 days')
+           WHERE id = (SELECT empresa_id FROM usuarios WHERE id = $1)
+           RETURNING trial_fin`,
+          [referidorId]
+        );
+        console.log('✅ [REGISTRO] Trial del referidor extendido a:', extResult.rows[0]?.trial_fin);
+
+        // Actualizar TRIAL_FIN del referidor en Brevo
+        const referidorEmailResult = await pool.query(
+          'SELECT email FROM usuarios WHERE id = $1', [referidorId]
+        );
+        const referidorEmail = referidorEmailResult.rows[0]?.email;
+        if (referidorEmail && extResult.rows[0]?.trial_fin) {
+          const nuevaFechaBrevo = extResult.rows[0].trial_fin.toISOString().split('T')[0];
+          await fetch('https://api.brevo.com/v3/contacts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'api-key': process.env.BREVO_API_KEY
+            },
+            body: JSON.stringify({
+              email: referidorEmail,
+              attributes: { TRIAL_FIN: nuevaFechaBrevo },
+              updateEnabled: true
+            })
+          });
+          console.log('✅ [REGISTRO] TRIAL_FIN del referidor actualizado en Brevo:', nuevaFechaBrevo);
+        }
+
       } catch (refError) {
-        console.error('❌ [REGISTRO] Error guardando referido:', refError);
+        console.error('❌ [REGISTRO] Error procesando referidor:', refError);
       }
     }
 
@@ -232,12 +265,15 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
           'Content-Type': 'application/json',
           'api-key': process.env.BREVO_API_KEY
         },
-        body: JSON.stringify({
-          email: usuario.email,
-          attributes: { EMPRESA: empresa },
-          listIds: [5],
-          updateEnabled: true
-        })
+		body: JSON.stringify({
+		  email: usuario.email,
+		  attributes: {
+			EMPRESA: empresa,
+			TRIAL_FIN: empresaResult.rows[0].trial_fin.toISOString().split('T')[0]
+		  },
+		  listIds: [5],
+		  updateEnabled: true
+		})
       });
       console.log('✅ [REGISTRO] Contacto agregado a Brevo lista 5');
     } catch (brevoError) {
