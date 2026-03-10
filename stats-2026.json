@@ -1,21 +1,25 @@
 {
-  "ultima_actualizacion": "2026-03-10 14:41:29",
+  "ultima_actualizacion": "2026-03-10 18:06:39",
   "stats": {
-    "total": 7891,
+    "total": 10529,
     "por_estado": {
-      "abiertas": 7891,
+      "abiertas": 10529,
       "todas": {
         "Suspended": 1,
         "NonAwarded": 4,
-        "Canceled": 14,
-        "Proceso cancelado": 3,
-        "Awarded": 1698,
-        "ClosedForReplies": 2319,
-        "Proceso publicado": 395,
-        "Published": 3457
+        "Canceled": 15,
+        "Proceso cancelado": 59,
+        "Proceso adjudicado y celebrado": 1904,
+        "Awarded": 1737,
+        "ClosedForReplies": 2361,
+        "Proceso publicado": 510,
+        "Published": 3502,
+        "Proceso con etapa cerrada": 386,
+        "Suspendido": 3,
+        "Proceso desierto": 47
       }
     },
-    "promedio_diario": 123.3
+    "promedio_diario": 146.2
   },
   "por_dia": [
     {
@@ -40,7 +44,7 @@
     },
     {
       "fecha": "2026-01-12",
-      "cantidad": 104
+      "cantidad": 111
     },
     {
       "fecha": "2026-01-13",
@@ -48,190 +52,194 @@
     },
     {
       "fecha": "2026-01-14",
-      "cantidad": 152
+      "cantidad": 154
     },
     {
       "fecha": "2026-01-15",
-      "cantidad": 137
+      "cantidad": 152
     },
     {
       "fecha": "2026-01-16",
-      "cantidad": 159
-    },
-    {
-      "fecha": "2026-01-19",
-      "cantidad": 149
-    },
-    {
-      "fecha": "2026-01-20",
-      "cantidad": 183
-    },
-    {
-      "fecha": "2026-01-22",
-      "cantidad": 200
-    },
-    {
-      "fecha": "2026-01-23",
-      "cantidad": 203
-    },
-    {
-      "fecha": "2026-01-27",
-      "cantidad": 194
-    },
-    {
-      "fecha": "2026-01-28",
-      "cantidad": 223
-    },
-    {
-      "fecha": "2026-01-29",
-      "cantidad": 200
-    },
-    {
-      "fecha": "2026-01-30",
-      "cantidad": 193
-    },
-    {
-      "fecha": "2026-02-02",
-      "cantidad": 143
-    },
-    {
-      "fecha": "2026-02-03",
-      "cantidad": 166
-    },
-    {
-      "fecha": "2026-02-04",
-      "cantidad": 209
-    },
-    {
-      "fecha": "2026-02-05",
-      "cantidad": 192
-    },
-    {
-      "fecha": "2026-02-06",
-      "cantidad": 219
-    },
-    {
-      "fecha": "2026-02-09",
       "cantidad": 161
     },
     {
-      "fecha": "2026-02-10",
-      "cantidad": 195
+      "fecha": "2026-01-19",
+      "cantidad": 160
     },
     {
-      "fecha": "2026-02-11",
-      "cantidad": 214
-    },
-    {
-      "fecha": "2026-02-12",
-      "cantidad": 215
-    },
-    {
-      "fecha": "2026-02-13",
-      "cantidad": 203
-    },
-    {
-      "fecha": "2026-02-16",
-      "cantidad": 190
-    },
-    {
-      "fecha": "2026-02-17",
+      "fecha": "2026-01-20",
       "cantidad": 196
     },
     {
-      "fecha": "2026-02-18",
-      "cantidad": 205
+      "fecha": "2026-01-22",
+      "cantidad": 231
     },
     {
-      "fecha": "2026-02-19",
-      "cantidad": 220
+      "fecha": "2026-01-23",
+      "cantidad": 248
     },
     {
-      "fecha": "2026-02-20",
-      "cantidad": 216
+      "fecha": "2026-01-27",
+      "cantidad": 236
     },
     {
-      "fecha": "2026-02-23",
-      "cantidad": 159
+      "fecha": "2026-01-28",
+      "cantidad": 236
     },
     {
-      "fecha": "2026-02-24",
-      "cantidad": 170
+      "fecha": "2026-01-29",
+      "cantidad": 241
     },
     {
-      "fecha": "2026-02-25",
-      "cantidad": 202
+      "fecha": "2026-01-30",
+      "cantidad": 242
     },
     {
-      "fecha": "2026-02-26",
-      "cantidad": 210
-    },
-    {
-      "fecha": "2026-03-02",
-      "cantidad": 175
-    },
-    {
-      "fecha": "2026-03-03",
-      "cantidad": 157
-    },
-    {
-      "fecha": "2026-03-04",
-      "cantidad": 208
-    },
-    {
-      "fecha": "2026-03-05",
-      "cantidad": 202
-    },
-    {
-      "fecha": "2026-03-06",
-      "cantidad": 210
-    },
-    {
-      "fecha": "2026-03-09",
+      "fecha": "2026-02-02",
       "cantidad": 198
     },
     {
+      "fecha": "2026-02-03",
+      "cantidad": 220
+    },
+    {
+      "fecha": "2026-02-04",
+      "cantidad": 267
+    },
+    {
+      "fecha": "2026-02-05",
+      "cantidad": 264
+    },
+    {
+      "fecha": "2026-02-06",
+      "cantidad": 285
+    },
+    {
+      "fecha": "2026-02-09",
+      "cantidad": 216
+    },
+    {
+      "fecha": "2026-02-10",
+      "cantidad": 266
+    },
+    {
+      "fecha": "2026-02-11",
+      "cantidad": 296
+    },
+    {
+      "fecha": "2026-02-12",
+      "cantidad": 313
+    },
+    {
+      "fecha": "2026-02-13",
+      "cantidad": 277
+    },
+    {
+      "fecha": "2026-02-16",
+      "cantidad": 255
+    },
+    {
+      "fecha": "2026-02-17",
+      "cantidad": 273
+    },
+    {
+      "fecha": "2026-02-18",
+      "cantidad": 286
+    },
+    {
+      "fecha": "2026-02-19",
+      "cantidad": 319
+    },
+    {
+      "fecha": "2026-02-20",
+      "cantidad": 314
+    },
+    {
+      "fecha": "2026-02-23",
+      "cantidad": 246
+    },
+    {
+      "fecha": "2026-02-24",
+      "cantidad": 290
+    },
+    {
+      "fecha": "2026-02-25",
+      "cantidad": 304
+    },
+    {
+      "fecha": "2026-02-26",
+      "cantidad": 318
+    },
+    {
+      "fecha": "2026-03-02",
+      "cantidad": 246
+    },
+    {
+      "fecha": "2026-03-03",
+      "cantidad": 273
+    },
+    {
+      "fecha": "2026-03-04",
+      "cantidad": 286
+    },
+    {
+      "fecha": "2026-03-05",
+      "cantidad": 328
+    },
+    {
+      "fecha": "2026-03-06",
+      "cantidad": 300
+    },
+    {
+      "fecha": "2026-03-09",
+      "cantidad": 291
+    },
+    {
       "fecha": "2026-03-10",
-      "cantidad": 102
+      "cantidad": 234
     },
     {
       "fecha": "2026-03-11",
-      "cantidad": 82
+      "cantidad": 112
     },
     {
       "fecha": "2026-03-12",
-      "cantidad": 136
+      "cantidad": 154
     },
     {
       "fecha": "2026-03-13",
-      "cantidad": 53
+      "cantidad": 96
     },
     {
       "fecha": "2026-03-16",
-      "cantidad": 15
+      "cantidad": 22
     },
     {
       "fecha": "2026-03-17",
-      "cantidad": 19
+      "cantidad": 24
     },
     {
       "fecha": "2026-03-18",
-      "cantidad": 12
+      "cantidad": 16
     },
     {
       "fecha": "2026-03-19",
-      "cantidad": 4
+      "cantidad": 5
     },
     {
       "fecha": "2026-03-20",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-03-23",
       "cantidad": 4
     },
     {
+      "fecha": "2026-03-23",
+      "cantidad": 5
+    },
+    {
       "fecha": "2026-03-24",
+      "cantidad": 2
+    },
+    {
+      "fecha": "2026-03-25",
       "cantidad": 2
     },
     {
@@ -239,32 +247,60 @@
       "cantidad": 1
     },
     {
+      "fecha": "2026-03-27",
+      "cantidad": 4
+    },
+    {
+      "fecha": "2026-03-31",
+      "cantidad": 2
+    },
+    {
       "fecha": "2026-04-06",
-      "cantidad": 1
+      "cantidad": 2
+    },
+    {
+      "fecha": "2026-04-07",
+      "cantidad": 4
     },
     {
       "fecha": "2026-04-08",
       "cantidad": 1
     },
     {
+      "fecha": "2026-04-09",
+      "cantidad": 2
+    },
+    {
+      "fecha": "2026-04-10",
+      "cantidad": 3
+    },
+    {
+      "fecha": "2026-04-13",
+      "cantidad": 2
+    },
+    {
       "fecha": "2026-04-14",
-      "cantidad": 1
+      "cantidad": 3
     },
     {
       "fecha": "2026-04-15",
       "cantidad": 1
     },
     {
-      "fecha": "2026-04-20",
-      "cantidad": 2
+      "fecha": "2026-04-17",
+      "cantidad": 3
     },
     {
-      "fecha": "2026-04-21",
+      "fecha": "2026-04-20",
       "cantidad": 4
     },
     {
+      "fecha": "2026-04-21",
+      "cantidad": 5
+    },
+    {
       "fecha": "2026-04-22",
-      "cantidad": 1
+      "cantidad": 2
     },
     {
       "fecha": "2026-04-23",
