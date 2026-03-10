@@ -301,7 +301,8 @@ def hacer_click_ver_mas(page):
     # Estrategia 2: Playwright locator
     selectores = [
         "text='Ver más'", "text='ver más'", "text='VER MÁS'",
-        "a:has-text('Ver más')", "button:has-text('Ver más')"
+        "a:has-text('Ver más')", "button:has-text('Ver más')",
+        "text='More Items'", "a:has-text('More Items')"
     ]
     for sel in selectores:
         try:
