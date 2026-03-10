@@ -340,20 +340,13 @@ def scraping_diario():
 
     with sync_playwright() as p:
         print("📱 Iniciando navegador headless...")
-        browser = p.chromium.launch(
-            headless=HEADLESS,
-            args=['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-        )
-        context = browser.new_context(
-            viewport={'width': 1280, 'height': 900},
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        )
-        page = context.new_page()
+        browser = p.chromium.launch(headless=HEADLESS)
+        page = browser.new_page()
         page.set_default_timeout(30000)
 
         try:
             print(f"🌐 Navegando al portal...")
-            page.goto(PORTAL_URL, wait_until='domcontentloaded', timeout=60000)
+            page.goto(PORTAL_URL)
 
             print("⏳ Esperando tabla inicial...")
             page.wait_for_selector("table tbody tr", timeout=20000)
