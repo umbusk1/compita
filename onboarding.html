@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configura tu empresa - Compita</title>
+  <link rel="icon" type="image/png" href="favicon-umbusk.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBQQM365Q8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YBQQM365Q8');
+  </script>
+  <style>
+    .sector-card { transition: all 0.2s ease; cursor: pointer; }
+    .sector-card:hover { transform: translateY(-2px); }
+    .sector-card.selected { border-color: #4f46e5; background: #eef2ff; }
+    .region-pill { transition: all 0.15s ease; cursor: pointer; user-select: none; }
+    .region-pill.selected { background: #4f46e5; color: white; border-color: #4f46e5; }
+    .step-circle {
+      width: 2rem; height: 2rem; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.875rem; font-weight: 700;
+      border: 2px solid #d1d5db; background: white; color: #9ca3af;
+      transition: all 0.3s ease; flex-shrink: 0;
+    }
+    .step-circle.active { border-color: #4f46e5; background: #4f46e5; color: white; }
+    .step-circle.done { border-color: #4f46e5; background: #4f46e5; color: white; }
+    .step-bar { height: 3px; flex: 1; background: #d1d5db; border-radius: 2px; transition: background 0.3s ease; }
+    .step-bar.done { background: #4f46e5; }
+    .paso { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+    .keyword-chip {
+      display: inline-block; background: #eef2ff; color: #4f46e5;
+      border: 1px solid #c7d2fe; border-radius: 9999px;
+      padding: 4px 12px; font-size: 0.8rem; cursor: pointer;
+      transition: all 0.15s; margin: 3px;
+    }
+    .keyword-chip:hover { background: #e0e7ff; }
+    .keyword-chip.added { background: #4f46e5; color: white; border-color: #4f46e5; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen py-8 px-4">
+
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Compita" class="h-16 mx-auto mb-4">
+    <h1 class="text-2xl font-bold text-gray-900">¡Bienvenido a Compita!</h1>
+    <p class="text-gray-500 mt-1 text-sm">Configura tu empresa en 3 pasos y recibe solo las oportunidades que importan</p>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="max-w-xl mx-auto mb-8">
+    <div class="flex items-center gap-0">
+      <div class="step-circle active" id="sc-1">1</div>
+      <div class="step-bar" id="sb-1"></div>
+      <div class="step-circle" id="sc-2">2</div>
+      <div class="step-bar" id="sb-2"></div>
+      <div class="step-circle" id="sc-3">3</div>
+    </div>
+    <div class="flex justify-between mt-2 px-1">
+      <span class="text-xs text-indigo-600 font-semibold" id="sl-1">Tu sector</span>
+      <span class="text-xs text-gray-400" id="sl-2">Región y monto</span>
+      <span class="text-xs text-gray-400" id="sl-3">Palabras clave</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- PASO 1: Sector principal               -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="paso-1" class="paso max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">¿En qué sector opera tu empresa?</h2>
+    <p class="text-sm text-gray-500 mb-6">
+      Selecciona el sector <strong>principal</strong>. El sistema pre-configurará tus palabras clave
+      y priorizará las licitaciones de ese sector.
+    </p>
+
+    <div class="grid grid-cols-2 gap-3" id="sectores-grid">
+      <!-- Generado por JS -->
+    </div>
+
+    <div class="mt-6 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg p-3 text-xs text-blue-700">
+      💡 <strong>¿Por qué esto importa?</strong> El sector determina las palabras clave iniciales.
+      Cuanto más preciso, menos ruido y más oportunidades relevantes en tus alertas.
+    </div>
+
+    <div class="flex flex-col gap-3 mt-8">
+      <button onclick="irPaso(2)"
+        class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition disabled:opacity-40"
+        id="btn-paso1">
+        Siguiente →
+      </button>
+      <button onclick="saltarOnboarding()" class="text-sm text-gray-400 hover:text-gray-600 transition">
+        Completar después (ir al dashboard)
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- PASO 2: Región + Monto                 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="paso-2" class="paso hidden max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">¿Dónde y cuánto?</h2>
+    <p class="text-sm text-gray-500 mb-6">
+      Estas preferencias filtran automáticamente las oportunidades antes de que lleguen a ti.
+    </p>
+
+    <!-- Regiones -->
+    <div class="mb-6">
+      <label class="block font-semibold text-gray-800 mb-1">Regiones de interés</label>
+      <p class="text-xs text-gray-500 mb-3">
+        Selecciona todas las regiones donde puedes participar en licitaciones.
+        💡 <em>Si puedes operar en todo el país, marca "Nacional".</em>
+      </p>
+      <div id="regiones-container" class="flex flex-wrap gap-2">
+        <!-- Generado por JS -->
+      </div>
+    </div>
+
+    <!-- Monto mínimo -->
+    <div class="mb-2">
+      <label class="block font-semibold text-gray-800 mb-1">
+        Monto mínimo de contrato <span class="text-gray-400 font-normal">(DOP)</span>
+      </label>
+      <p class="text-xs text-gray-500 mb-2">
+        Solo verás contratos por <strong>encima</strong> de este valor como ALTA prioridad.
+        Puedes dejarlo en 0 para ver todos.
+      </p>
+      <div class="relative">
+        <span class="absolute left-3 top-3.5 text-gray-400 font-semibold text-sm">RD$</span>
+        <input type="number" id="onb-monto" min="0" step="100000" placeholder="500,000"
+          class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-lg font-semibold">
+      </div>
+      <div class="grid grid-cols-4 gap-2 mt-2">
+        <button onclick="setMonto(0)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">Todos</button>
+        <button onclick="setMonto(200000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$200K</button>
+        <button onclick="setMonto(500000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$500K</button>
+        <button onclick="setMonto(1000000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$1M+</button>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-8">
+      <button onclick="irPaso(1)"
+        class="px-5 py-3 border-2 border-gray-200 text-gray-600 rounded-xl font-semibold hover:bg-gray-50 transition">
+        ← Atrás
+      </button>
+      <button onclick="irPaso(3)"
+        class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition">
+        Siguiente →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- PASO 3: Descripción + Palabras clave   -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="paso-3" class="paso hidden max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+    <h2 class="text-xl font-bold text-gray-900 mb-1">Afina las palabras clave</h2>
+    <p class="text-sm text-gray-500 mb-4">
+      Basado en tu sector, te sugerimos estas palabras. Haz clic para agregar o quitar.
+      También puedes escribir las tuyas.
+    </p>
+
+    <!-- Chips sugeridos -->
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">💡 Sugerencias para tu sector:</label>
+      <div id="chips-sugeridos" class="min-h-12">
+        <!-- Generado por JS -->
+      </div>
+    </div>
+
+    <!-- Área de palabras clave editables -->
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-2">
+        Tus palabras clave <span class="text-gray-400 font-normal">(separadas por coma)</span>
+      </label>
+      <textarea id="onb-palabras" rows="3"
+        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-sm transition resize-none"
+        placeholder="Ej: consultoría, gestión, sistemas de información..."></textarea>
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb-4">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">
+        Descripción breve de tu empresa <span class="text-gray-400 font-normal">(opcional pero recomendado)</span>
+      </label>
+      <p class="text-xs text-gray-500 mb-2">La IA usa esto para entender tu perfil y hacer mejores recomendaciones.</p>
+      <textarea id="onb-descripcion" rows="3"
+        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-sm transition resize-none"
+        placeholder="Ej: Empresa dominicana de consultoría en gestión pública con 10 años de experiencia..."></textarea>
+    </div>
+
+    <!-- Impacto estimado -->
+    <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
+      <p class="text-sm text-green-800 font-medium mb-1">🎯 Con esta configuración podrás:</p>
+      <ul class="text-xs text-green-700 space-y-1">
+        <li>✅ Recibir alertas semanales con solo las licitaciones relevantes</li>
+        <li>✅ Filtrar automáticamente entre ~800 nuevas licitaciones al mes</li>
+        <li>✅ Analizar documentos con IA para decidir si participar</li>
+      </ul>
+    </div>
+
+    <div class="flex gap-3">
+      <button onclick="irPaso(2)"
+        class="px-5 py-3 border-2 border-gray-200 text-gray-600 rounded-xl font-semibold hover:bg-gray-50 transition">
+        ← Atrás
+      </button>
+      <button onclick="guardarOnboarding()" id="btn-guardar"
+        class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition shadow-md">
+        ✅ Guardar y comenzar
+      </button>
+    </div>
+    <button onclick="saltarOnboarding()" class="w-full text-sm text-gray-400 hover:text-gray-600 transition mt-3">
+      Saltar y completar después
+    </button>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+
+    // ─── Datos ─────────────────────────────────────────────────────────────
+    const sectores = [
+      { id: 'construccion',  emoji: '🏗️',  label: 'Construcción e infraestructura' },
+      { id: 'tecnologia',    emoji: '💻',  label: 'Tecnología y sistemas' },
+      { id: 'salud',         emoji: '🏥',  label: 'Salud y farmacéuticos' },
+      { id: 'educacion',     emoji: '📚',  label: 'Educación y capacitación' },
+      { id: 'consultoria',   emoji: '📊',  label: 'Consultoría y servicios profesionales' },
+      { id: 'suministros',   emoji: '📦',  label: 'Suministros y materiales' },
+      { id: 'limpieza',      emoji: '🧹',  label: 'Limpieza y mantenimiento' },
+      { id: 'transporte',    emoji: '🚛',  label: 'Transporte y logística' },
+      { id: 'alimentacion',  emoji: '🍽️', label: 'Alimentación y catering' },
+      { id: 'seguridad',     emoji: '🔒',  label: 'Seguridad y vigilancia' },
+      { id: 'ingenieria',    emoji: '⚙️',  label: 'Ingeniería y arquitectura' },
+      { id: 'otro',          emoji: '🔧',  label: 'Otro sector' },
+    ];
+
+    const sectorKeywords = {
+      construccion: ['construcción', 'infraestructura', 'obra civil', 'mantenimiento', 'reparación', 'rehabilitación', 'pavimentación', 'edificios', 'carreteras', 'puentes'],
+      tecnologia:   ['tecnología', 'sistemas', 'software', 'hardware', 'redes', 'telecomunicaciones', 'informática', 'soporte técnico', 'ciberseguridad', 'bases de datos'],
+      salud:        ['salud', 'médico', 'farmacéutico', 'equipos médicos', 'laboratorio', 'insumos médicos', 'diagnóstico', 'hospitalario', 'clínica'],
+      educacion:    ['educación', 'capacitación', 'formación', 'materiales educativos', 'libros', 'talleres', 'entrenamiento', 'cursos', 'desarrollo profesional'],
+      consultoria:  ['consultoría', 'asesoría', 'servicios profesionales', 'gestión', 'planificación', 'estudios', 'investigación', 'evaluación', 'diagnóstico organizacional'],
+      suministros:  ['suministros', 'materiales', 'oficina', 'papelería', 'insumos', 'artículos', 'equipos de oficina', 'mobiliario', 'útiles'],
+      limpieza:     ['limpieza', 'mantenimiento', 'fumigación', 'desinfección', 'jardinería', 'saneamiento', 'higiene', 'sanitización'],
+      transporte:   ['transporte', 'logística', 'vehículos', 'combustible', 'flota', 'carga', 'traslado', 'distribución', 'mensajería'],
+      alimentacion: ['alimentación', 'catering', 'comida', 'bebidas', 'servicios de alimentación', 'provisiones', 'comedor', 'refrigerios'],
+      seguridad:    ['seguridad', 'vigilancia', 'monitoreo', 'sistemas de seguridad', 'guardias', 'CCTV', 'acceso controlado', 'alarmas'],
+      ingenieria:   ['ingeniería', 'topografía', 'arquitectura', 'diseño', 'estudios técnicos', 'supervisión', 'planos', 'peritaje', 'geotecnia'],
+      otro:         [],
+    };
+
+    const regiones = [
+      'Nacional (todo el país)',
+      'Distrito Nacional',
+      'Santo Domingo (provincia)',
+      'Santiago',
+      'La Vega / Cibao Central',
+      'Puerto Plata',
+      'Duarte / Nordeste',
+      'San Pedro de Macorís',
+      'La Romana / La Altagracia',
+      'San Cristóbal / Sur',
+      'Barahona / Suroeste',
+      'Monte Cristi / Noroeste',
+      'Otras provincias',
+    ];
+
+    // ─── Estado ────────────────────────────────────────────────────────────
+    let sectorSeleccionado = null;
+    let regionesSeleccionadas = new Set();
+    let pasoActual = 1;
+
+    // ─── Inicializar ───────────────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+      verificarAuth();
+      renderSectores();
+      renderRegiones();
+    });
+
+    function verificarAuth() {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      if (!token) window.location.href = '/login.html';
+    }
+
+    function renderSectores() {
+      const grid = document.getElementById('sectores-grid');
+      grid.innerHTML = sectores.map(s => `
+        <div
+          class="sector-card border-2 border-gray-200 rounded-xl p-4 text-center"
+          id="sector-${s.id}"
+          onclick="seleccionarSector('${s.id}')"
+        >
+          <div class="text-3xl mb-2">${s.emoji}</div>
+          <div class="text-xs font-semibold text-gray-700 leading-tight">${s.label}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderRegiones() {
+      const container = document.getElementById('regiones-container');
+      container.innerHTML = regiones.map(r => `
+        <span
+          class="region-pill border-2 border-gray-200 rounded-full px-4 py-2 text-sm font-medium text-gray-600"
+          onclick="toggleRegion(this, '${r}')"
+        >${r}</span>
+      `).join('');
+    }
+
+    function seleccionarSector(id) {
+      sectorSeleccionado = id;
+      document.querySelectorAll('.sector-card').forEach(el => el.classList.remove('selected'));
+      document.getElementById(`sector-${id}`).classList.add('selected');
+    }
+
+    function toggleRegion(el, nombre) {
+      el.classList.toggle('selected');
+      if (regionesSeleccionadas.has(nombre)) {
+        regionesSeleccionadas.delete(nombre);
+      } else {
+        // Si selecciona "Nacional", desmarcar las demás
+        if (nombre === 'Nacional (todo el país)') {
+          regionesSeleccionadas.clear();
+          document.querySelectorAll('.region-pill').forEach(p => p.classList.remove('selected'));
+          el.classList.add('selected');
+        } else {
+          // Si selecciona una específica, desmarcar "Nacional"
+          const pills = document.querySelectorAll('.region-pill');
+          pills.forEach(p => {
+            if (p.textContent === 'Nacional (todo el país)') {
+              p.classList.remove('selected');
+              regionesSeleccionadas.delete('Nacional (todo el país)');
+            }
+          });
+        }
+        regionesSeleccionadas.add(nombre);
+      }
+    }
+
+    function setMonto(val) {
+      document.getElementById('onb-monto').value = val || '';
+    }
+
+    // ─── Navegación entre pasos ────────────────────────────────────────────
+    function irPaso(n) {
+      if (n === 2 && !sectorSeleccionado) {
+        alert('Por favor selecciona tu sector principal para continuar');
+        return;
+      }
+      if (n === 3) {
+        renderChips();
+        // Pre-llenar palabras clave si el campo está vacío
+        const kw = document.getElementById('onb-palabras');
+        if (!kw.value && sectorSeleccionado && sectorKeywords[sectorSeleccionado]) {
+          kw.value = sectorKeywords[sectorSeleccionado].join(', ');
+        }
+      }
+
+      pasoActual = n;
+      // Ocultar todos los pasos
+      document.querySelectorAll('[id^="paso-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`paso-${n}`).classList.remove('hidden');
+      actualizarProgressBar(n);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function actualizarProgressBar(n) {
+      for (let i = 1; i <= 3; i++) {
+        const circle = document.getElementById(`sc-${i}`);
+        const label  = document.getElementById(`sl-${i}`);
+        circle.classList.remove('active', 'done');
+        if (i < n)  { circle.innerHTML = '✓'; circle.classList.add('done'); }
+        if (i === n){ circle.innerHTML = i; circle.classList.add('active'); }
+        if (i > n)  { circle.innerHTML = i; }
+
+        if (i < 3) {
+          const bar = document.getElementById(`sb-${i}`);
+          bar.classList.toggle('done', i < n);
+        }
+
+        label.className = `text-xs ${i === n ? 'text-indigo-600 font-semibold' : 'text-gray-400'}`;
+      }
+    }
+
+    // ─── Chips de sugerencias ──────────────────────────────────────────────
+    function renderChips() {
+      if (!sectorSeleccionado) return;
+      const chips = sectorKeywords[sectorSeleccionado] || [];
+      const container = document.getElementById('chips-sugeridos');
+      container.innerHTML = chips.map(k => `
+        <span class="keyword-chip added" onclick="toggleChip(this, '${k}')">${k}</span>
+      `).join('');
+    }
+
+    function toggleChip(el, keyword) {
+      el.classList.toggle('added');
+      const kw = document.getElementById('onb-palabras');
+      let palabras = kw.value.split(',').map(s => s.trim()).filter(s => s);
+      if (el.classList.contains('added')) {
+        if (!palabras.includes(keyword)) palabras.push(keyword);
+      } else {
+        palabras = palabras.filter(p => p !== keyword);
+      }
+      kw.value = palabras.join(', ');
+    }
+
+    // ─── Guardar ──────────────────────────────────────────────────────────
+    async function guardarOnboarding() {
+      const btn = document.getElementById('btn-guardar');
+      btn.textContent = 'Guardando...';
+      btn.disabled = true;
+
+      const palabrasClave = document.getElementById('onb-palabras').value
+        .split(',').map(s => s.trim()).filter(s => s);
+
+      const montoRaw = document.getElementById('onb-monto').value;
+      const monto = parseFloat(montoRaw) || 0;
+
+      const datos = {
+        sector_principal:   sectorSeleccionado,
+        regiones_interes:   Array.from(regionesSeleccionadas),
+        palabras_clave:     palabrasClave,
+        monto_minimo_alta:  monto,
+        descripcion:        document.getElementById('onb-descripcion').value.trim(),
+        onboarding_completado: true,
+      };
+
+      try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const res = await fetch(`${API_BASE}/api/perfil`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(datos)
+        });
+
+        if (res.ok) {
+          // Mostrar mensaje de bienvenida antes de redirigir
+          btn.textContent = '¡Listo! Redirigiendo...';
+          btn.className = btn.className.replace('from-indigo-600 to-purple-600', 'from-green-500 to-green-600');
+          setTimeout(() => window.location.href = '/oportunidades.html', 1200);
+        } else {
+          const err = await res.json();
+          alert('Error al guardar: ' + (err.error || 'Intenta de nuevo'));
+          btn.textContent = '✅ Guardar y comenzar';
+          btn.disabled = false;
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Error de conexión. Intenta de nuevo.');
+        btn.textContent = '✅ Guardar y comenzar';
+        btn.disabled = false;
+      }
+    }
+
+    function saltarOnboarding() {
+      window.location.href = '/oportunidades.html';
+    }
+  </script>
+</body>
+</html>
