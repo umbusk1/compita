@@ -563,16 +563,8 @@ def guardar_en_base_datos(licitaciones):
         execute_values(cursor, query, valores)
         conn.commit()
 
-        cursor.execute("""
-            SELECT COUNT(*) FROM licitaciones
-            WHERE DATE(scrapeado_en AT TIME ZONE 'America/Santo_Domingo') =
-                  (CURRENT_TIMESTAMP AT TIME ZONE 'America/Santo_Domingo')::date
-        """)
-        total_hoy = cursor.fetchone()[0]
-
         print(f"✅ Guardado exitoso:")
-        print(f"   Nuevas/actualizadas: {len(unicas)}")
-        print(f"   Total en BD hoy:     {total_hoy}")
+        print(f"   Procesadas: {len(unicas)}")
 
         cursor.close()
         conn.close()
