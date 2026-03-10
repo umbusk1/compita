@@ -6,15 +6,9 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
+  if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') {
-    return res.status(405).json({
-      success: false,
-      error: 'Método no permitido'
-    });
+    return res.status(405).json({ success: false, error: 'Método no permitido' });
   }
 
   const sql = neon(process.env.DATABASE_URL);
@@ -23,93 +17,72 @@ export default async function handler(req, res) {
     const { token } = req.query;
 
     if (!token) {
-      return res.status(400).json({
-        success: false,
-        error: 'Token de confirmación requerido'
-      });
+      return res.status(400).json({ success: false, error: 'Token de confirmación requerido' });
     }
 
-    // Verificar el token
+    // Verificar el token JWT
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET || 'compita-secret-2024');
     } catch (error) {
-      return res.status(400).json({
-        success: false,
-        error: 'Token inválido o expirado'
-      });
+      return res.status(400).json({ success: false, error: 'Token inválido o expirado' });
     }
 
     // Buscar usuario con ese token
     const usuarios = await sql`
-      SELECT id, email, email_confirmado
+      SELECT id, email, email_confirmado, empresa_id, rol
       FROM usuarios
       WHERE email = ${decoded.email}
       AND token_confirmacion = ${token}
     `;
 
     if (usuarios.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Usuario no encontrado o token inválido'
-      });
+      return res.status(404).json({ success: false, error: 'Usuario no encontrado o token inválido' });
     }
 
     const usuario = usuarios[0];
 
-    // Si ya está confirmado
+    // ── Función auxiliar: generar token de sesión ─────────────────────────
+    function generarTokenSesion(u) {
+      return jwt.sign(
+        { userId: u.id, email: u.email, empresaId: u.empresa_id, rol: u.rol },
+        process.env.JWT_SECRET || 'compita-secret-2024',
+        { expiresIn: '30d' }
+      );
+    }
+
+    // ── Ya estaba confirmado ──────────────────────────────────────────────
+    // ── CAMBIO: corregido ya_confirmado: true (antes decía false por error)
     if (usuario.email_confirmado) {
-let tokenSesion = null;
-    try {
-      const usuarioCompleto = await sql`
-        SELECT id, email, empresa_id, rol FROM usuarios WHERE id = ${usuario.id}
-      `;
-      const u = usuarioCompleto[0];
-      if (u) {
-        tokenSesion = jwt.sign(
-          { userId: u.id, email: u.email, empresaId: u.empresa_id, rol: u.rol },
-          process.env.JWT_SECRET || 'compita-secret-2024',
-          { expiresIn: '1h' }
-        );
-      }
-    } catch (tokenError) {
-      console.error('⚠️ [CONFIRMAR] Error generando token de sesión:', tokenError);
-      // No bloqueamos — la confirmación fue exitosa igual
+      return res.status(200).json({
+        success:        true,
+        mensaje:        'Email ya confirmado anteriormente',
+        ya_confirmado:  true,
+        token:          generarTokenSesion(usuario)
+      });
     }
 
-    return res.status(200).json({
-      success: true,
-      mensaje: 'Email confirmado exitosamente',
-      ya_confirmado: false,
-      token: tokenSesion
-    });
-    }
-
-    // Confirmar el email
+    // ── Confirmar el email ────────────────────────────────────────────────
     await sql`
       UPDATE usuarios
-      SET
-        email_confirmado = true,
-        token_confirmacion = NULL,
-        updated_at = NOW()
+      SET email_confirmado    = true,
+          token_confirmacion  = NULL,
+          updated_at          = NOW()
       WHERE id = ${usuario.id}
     `;
 
+    // ── CAMBIO: ahora también genera token en el flujo de éxito real ──────
     return res.status(200).json({
-      success: true,
-      mensaje: 'Email confirmado exitosamente',
-      ya_confirmado: false
+      success:        true,
+      mensaje:        'Email confirmado exitosamente',
+      ya_confirmado:  false,
+      token:          generarTokenSesion(usuario)
     });
 
   } catch (error) {
     console.error('Error confirmando email:', error);
-    return res.status(500).json({
-      success: false,
-      error: 'Error al confirmar email'
-    });
+    return res.status(500).json({ success: false, error: 'Error al confirmar email' });
   }
 }
 
-export const config = {
-  maxDuration: 10,
-};
+export const config = { maxDuration: 10 };
