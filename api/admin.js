@@ -134,7 +134,7 @@ async function handleStats(req, res) {
   const licitacionesHoy = await pool.query(
     `SELECT COUNT(*) as total, MAX(scrapeado_en) as ultimo_scraping
      FROM licitaciones
-     WHERE DATE(scrapeado_en AT TIME ZONE 'America/Santo_Domingo') =
+     WHERE DATE(fecha_publicacion AT TIME ZONE 'America/Santo_Domingo') =
            (CURRENT_TIMESTAMP AT TIME ZONE 'America/Santo_Domingo')::date`
   );
 
