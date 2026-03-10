@@ -456,13 +456,9 @@ def scraping_diario():
                     fecha_publicacion = convertir_fecha(fecha_pub_limpia)
                     fecha_presentacion = convertir_fecha(fecha_pres_limpia)
 
-                    # Filtrar: solo licitaciones publicadas HOY
-                    if fecha_publicacion and fecha_publicacion.date() < hoy:
-                        omitidas_dia_anterior += 1
-                        continue
-
                     # Filtrar: solo licitaciones con fecha de presentación futura
                     if fecha_presentacion and fecha_presentacion < datetime.now():
+                        omitidas_dia_anterior += 1
                         continue
 
                     boton_detalle = fila_principal[i+8].query_selector("a")
@@ -561,6 +557,7 @@ def guardar_en_base_datos(licitaciones):
                 codigo_unspsc   = EXCLUDED.codigo_unspsc,
                 familia_unspsc  = EXCLUDED.familia_unspsc,
                 segmento_unspsc = EXCLUDED.segmento_unspsc,
+                scrapeado_en    = NOW(),
                 actualizado_en  = NOW()
         """
         execute_values(cursor, query, valores)
