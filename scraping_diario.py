@@ -1,12 +1,13 @@
 """
-COMPITA - Scraping Diario Automático (v2 - MEJORADO)
-=====================================================
-MEJORA PRINCIPAL: Captura TODAS las licitaciones de hoy
-- Antes: ~100 licitaciones (MAX_CLICKS fijo = 10, clicks no efectivos)
-- Ahora: ~300+ licitaciones (clicks robustos + parada inteligente por fecha)
+COMPITA - Scraping Diario Automático (v3 - BUGS CORREGIDOS)
+============================================================
+FIX 1: Parada inteligente mejorada
+  - Antes: paraba al primer resultado viejo (aunque hubiera hoy debajo)
+  - Ahora: para solo cuando 2 clicks consecutivos no agregan nada nuevo de hoy
 
-Lógica de parada: cuando aparecen licitaciones del día anterior, detiene
-los clicks — así nunca mezcla días ni pierde registros de hoy.
+FIX 2: Filtro de extracción corregido
+  - Antes: filtraba por fecha_presentacion (guardaba licitaciones viejas con plazo futuro)
+  - Ahora: filtra por fecha_publicacion == hoy (solo lo de hoy)
 
 Fecha: Marzo 2026
 """
@@ -237,24 +238,6 @@ def convertir_fecha(texto_fecha):
             continue
     return None
 
-def extraer_fecha_publicacion_de_celdas(celdas, inicio=93):
-    """
-    Extrae la fecha de publicación de la última licitación cargada.
-    Columna i+4 es fecha_publicacion (índice 4 dentro del bloque de 10).
-    Retorna un objeto date o None.
-    """
-    ultima_fecha = None
-    for i in range(inicio, len(celdas) - 10, 10):
-        try:
-            texto = celdas[i+4].inner_text().strip()
-            texto_limpio = texto.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
-            fecha = convertir_fecha(texto_limpio)
-            if fecha:
-                ultima_fecha = fecha.date()
-        except:
-            continue
-    return ultima_fecha
-
 def conectar_base_datos():
     try:
         conn = psycopg2.connect(DATABASE_URL)
@@ -263,6 +246,29 @@ def conectar_base_datos():
     except Exception as e:
         print(f"❌ Error conectando a BD: {e}")
         return None
+
+# ============================================================================
+# FIX 1 — CONTAR licitaciones de HOY en la tabla cargada
+# (reemplaza la lógica de "última fecha" que paraba demasiado pronto)
+# ============================================================================
+
+def contar_licitaciones_hoy(celdas, hoy):
+    """
+    Cuenta cuántas licitaciones en la tabla actual tienen
+    fecha_publicacion == hoy. Se usa para detectar si un
+    nuevo click agregó licitaciones nuevas de hoy o no.
+    """
+    count = 0
+    for i in range(93, len(celdas) - 9, 10):
+        try:
+            texto = celdas[i+4].inner_text().strip()
+            texto = texto.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
+            fecha = convertir_fecha(texto)
+            if fecha and fecha.date() == hoy:
+                count += 1
+        except:
+            continue
+    return count
 
 # ============================================================================
 # CLICK ROBUSTO — funciona en headless GitHub Actions
@@ -324,17 +330,16 @@ def hacer_click_ver_mas(page):
 
 def scraping_diario():
     print("\n" + "="*70)
-    print("🚀 COMPITA - SCRAPING DIARIO v2")
+    print("🚀 COMPITA - SCRAPING DIARIO v3")
     print(f"🕐 Inicio: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
     print("="*70)
-    print("🎯 Captura TODAS las licitaciones de HOY (parada inteligente por fecha)")
+    print("🎯 Captura TODAS las licitaciones de HOY (parada inteligente mejorada)")
     print("🏷️  Clasificación UNSPSC automática\n")
 
     # Calcular fecha de hoy en Santo Domingo (UTC-4)
     hoy = (datetime.utcnow() - timedelta(hours=4)).date()
-    ayer = hoy - timedelta(days=1)
     print(f"📅 Fecha de hoy (Santo Domingo): {hoy.strftime('%d/%m/%Y')}")
-    print(f"🛑 Parada al detectar licitaciones de: {ayer.strftime('%d/%m/%Y')} o anterior\n")
+    print(f"🛑 Para cuando 2 clicks seguidos no agregan licitaciones nuevas de hoy\n")
 
     licitaciones_encontradas = []
 
@@ -354,41 +359,21 @@ def scraping_diario():
             time.sleep(5)
 
             # ================================================================
-            # CLICKS HASTA DETECTAR DÍA ANTERIOR
+            # FIX 1 — CLICKS CON PARADA INTELIGENTE MEJORADA
+            # Lógica anterior: paraba al primer resultado viejo (bug)
+            # Lógica nueva: para solo cuando 2 clicks seguidos no suman
+            #               ninguna licitación nueva de hoy
             # ================================================================
             print("🔄 Cargando licitaciones de hoy...")
-            print("   (se detiene automáticamente al aparecer licitaciones de ayer)\n")
+            print("   (para cuando 2 clicks seguidos no agregan nada nuevo de hoy)\n")
 
             clicks = 0
-            max_clicks_seguridad = 50  # tope de seguridad para no correr indefinidamente
-
-            # ── DIAGNÓSTICO: ver qué elementos hay en la página ──
-            try:
-                elementos = page.evaluate("""
-                    () => {
-                        const tags = ['a', 'button', 'span', 'div'];
-                        const resultados = [];
-                        for (const tag of tags) {
-                            for (const el of document.querySelectorAll(tag)) {
-                                const txt = (el.innerText || el.textContent || '').trim();
-                                if (txt.length > 0 && txt.length < 30) {
-                                    resultados.push(tag + ': [' + txt + ']');
-                                }
-                            }
-                        }
-                        return [...new Set(resultados)].slice(0, 60);
-                    }
-                """)
-                print("🔎 Elementos de texto corto en la página:")
-                for el in elementos:
-                    print(f"   {el}")
-            except Exception as e:
-                print(f"   ⚠️  Error en diagnóstico: {e}")
-            # ── FIN DIAGNÓSTICO ──
+            max_clicks_seguridad = 30
+            count_hoy_anterior = 0
+            clicks_sin_nuevas = 0          # FIX: contador de clicks sin progreso
 
             while clicks < max_clicks_seguridad:
 
-                # Paso 1: intentar click
                 exito = hacer_click_ver_mas(page)
 
                 if not exito:
@@ -398,20 +383,30 @@ def scraping_diario():
                 clicks += 1
                 print(f"   ✅ Click #{clicks}...")
 
-                # Paso 2: revisar la fecha más antigua de lo que hay cargado
+                # FIX: contar cuántas licitaciones de hoy hay ahora en la tabla
                 try:
                     filas = page.query_selector_all("table tbody tr")
                     for fila in filas:
                         celdas = fila.query_selector_all("td")
                         if len(celdas) > 100:
-                            ultima_fecha = extraer_fecha_publicacion_de_celdas(celdas)
-                            if ultima_fecha and ultima_fecha < hoy:
-                                print(f"\n🛑 Detectada licitación del {ultima_fecha.strftime('%d/%m/%Y')} — deteniendo clicks")
-                                print(f"   ✅ Se hicieron {clicks} clicks en total\n")
-                                clicks = max_clicks_seguridad  # fuerza salida del while
+                            count_hoy_actual = contar_licitaciones_hoy(celdas, hoy)
+                            print(f"   📅 Licitaciones de hoy visibles hasta ahora: {count_hoy_actual}")
+
+                            if count_hoy_actual > count_hoy_anterior:
+                                # Hubo progreso — resetear contador
+                                clicks_sin_nuevas = 0
+                                count_hoy_anterior = count_hoy_actual
+                            else:
+                                # Sin progreso en este click
+                                clicks_sin_nuevas += 1
+                                print(f"   ⚠️  Sin nuevas de hoy ({clicks_sin_nuevas}/2)")
+                                if clicks_sin_nuevas >= 2:
+                                    print(f"\n🛑 2 clicks seguidos sin licitaciones nuevas de hoy — deteniendo")
+                                    print(f"   ✅ Se hicieron {clicks} clicks en total\n")
+                                    clicks = max_clicks_seguridad  # fuerza salida
                             break
                 except Exception as e:
-                    print(f"   ⚠️  Error revisando fechas: {e}")
+                    print(f"   ⚠️  Error revisando conteo: {e}")
 
             # ================================================================
             # EXTRACCIÓN DE DATOS
@@ -427,7 +422,7 @@ def scraping_diario():
                 celdas = fila.query_selector_all("td")
                 if len(celdas) > 100:
                     fila_principal = celdas
-                    print(f"✅ {len(celdas)} celdas encontradas (~{(len(celdas)-93)//10} licitaciones)\n")
+                    print(f"✅ {len(celdas)} celdas encontradas (~{(len(celdas)-93)//10} licitaciones totales)\n")
                     break
 
             if not fila_principal:
@@ -435,30 +430,34 @@ def scraping_diario():
                 return []
 
             total_procesadas = 0
-            omitidas_dia_anterior = 0
+            omitidas_otra_fecha = 0
 
             for i in range(93, len(fila_principal) - 9, 10):
                 try:
-                    unidad    = fila_principal[i].inner_text().strip()
-                    referencia = fila_principal[i+1].inner_text().strip()
-                    descripcion = fila_principal[i+2].inner_text().strip()
-                    fecha_pub_txt = fila_principal[i+4].inner_text().strip()
+                    unidad       = fila_principal[i].inner_text().strip()
+                    referencia   = fila_principal[i+1].inner_text().strip()
+                    descripcion  = fila_principal[i+2].inner_text().strip()
+                    fecha_pub_txt  = fila_principal[i+4].inner_text().strip()
                     fecha_pres_txt = fila_principal[i+5].inner_text().strip()
                     total_estimado = fila_principal[i+6].inner_text().strip()
-                    estado = fila_principal[i+7].inner_text().strip()
+                    estado         = fila_principal[i+7].inner_text().strip()
 
                     if not referencia:
                         continue
 
-                    fecha_pub_limpia = fecha_pub_txt.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
+                    fecha_pub_limpia  = fecha_pub_txt.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
                     fecha_pres_limpia = fecha_pres_txt.replace(" (UTC -4 hours)", "").replace(" (UTC -4 horas)", "").strip()
 
-                    fecha_publicacion = convertir_fecha(fecha_pub_limpia)
+                    fecha_publicacion  = convertir_fecha(fecha_pub_limpia)
                     fecha_presentacion = convertir_fecha(fecha_pres_limpia)
 
-                    # Filtrar: solo licitaciones con fecha de presentación futura
-                    if fecha_presentacion and fecha_presentacion < datetime.now():
-                        omitidas_dia_anterior += 1
+                    # --------------------------------------------------------
+                    # FIX 2 — Filtrar por fecha_publicacion == hoy
+                    # Antes filtraba por fecha_presentacion (bug: guardaba
+                    # licitaciones viejas con plazo de presentación futuro)
+                    # --------------------------------------------------------
+                    if not fecha_publicacion or fecha_publicacion.date() != hoy:
+                        omitidas_otra_fecha += 1
                         continue
 
                     boton_detalle = fila_principal[i+8].query_selector("a")
@@ -496,7 +495,7 @@ def scraping_diario():
 
             print(f"\n✅ Extracción completada:")
             print(f"   📅 Licitaciones de HOY:          {len(licitaciones_encontradas)}")
-            print(f"   ⏭️  Omitidas (días anteriores):   {omitidas_dia_anterior}")
+            print(f"   ⏭️  Omitidas (otra fecha):        {omitidas_otra_fecha}")
 
         except Exception as e:
             print(f"\n❌ Error durante scraping: {e}")
