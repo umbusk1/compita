@@ -353,7 +353,7 @@ def scraping_diario():
 
         try:
             print(f"🌐 Navegando al portal...")
-            page.goto(PORTAL_URL, wait_until='networkidle', timeout=60000)
+            page.goto(PORTAL_URL, wait_until='domcontentloaded', timeout=60000)
 
             print("⏳ Esperando tabla inicial...")
             page.wait_for_selector("table tbody tr", timeout=20000)
