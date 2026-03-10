@@ -368,6 +368,30 @@ def scraping_diario():
             clicks = 0
             max_clicks_seguridad = 50  # tope de seguridad para no correr indefinidamente
 
+            # ── DIAGNÓSTICO: ver qué elementos hay en la página ──
+            try:
+                elementos = page.evaluate("""
+                    () => {
+                        const tags = ['a', 'button', 'span', 'div'];
+                        const resultados = [];
+                        for (const tag of tags) {
+                            for (const el of document.querySelectorAll(tag)) {
+                                const txt = (el.innerText || el.textContent || '').trim();
+                                if (txt.length > 0 && txt.length < 30) {
+                                    resultados.push(tag + ': [' + txt + ']');
+                                }
+                            }
+                        }
+                        return [...new Set(resultados)].slice(0, 60);
+                    }
+                """)
+                print("🔎 Elementos de texto corto en la página:")
+                for el in elementos:
+                    print(f"   {el}")
+            except Exception as e:
+                print(f"   ⚠️  Error en diagnóstico: {e}")
+            # ── FIN DIAGNÓSTICO ──
+
             while clicks < max_clicks_seguridad:
 
                 # Paso 1: intentar click
