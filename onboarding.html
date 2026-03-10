@@ -406,55 +406,80 @@
     }
 
     // ─── Guardar ──────────────────────────────────────────────────────────
-    async function guardarOnboarding() {
-      const btn = document.getElementById('btn-guardar');
-      btn.textContent = 'Guardando...';
-      btn.disabled = true;
+	async function guardarOnboarding() {
+	  const btn = document.getElementById('btn-guardar');
+	  btn.textContent = 'Guardando...';
+	  btn.disabled = true;
 
-      const palabrasClave = document.getElementById('onb-palabras').value
-        .split(',').map(s => s.trim()).filter(s => s);
+	  const palabrasClave = document.getElementById('onb-palabras').value
+		.split(',').map(s => s.trim()).filter(s => s);
 
-      const montoRaw = document.getElementById('onb-monto').value;
-      const monto = parseFloat(montoRaw) || 0;
+	  const montoRaw = document.getElementById('onb-monto').value;
+	  const monto = parseFloat(montoRaw) || 0;
 
-      const datos = {
-        sector_principal:   sectorSeleccionado,
-        regiones_interes:   Array.from(regionesSeleccionadas),
-        palabras_clave:     palabrasClave,
-        monto_minimo_alta:  monto,
-        descripcion:        document.getElementById('onb-descripcion').value.trim(),
-        onboarding_completado: true,
-      };
+	  const datos = {
+		sector_principal:      sectorSeleccionado,
+		regiones_interes:      Array.from(regionesSeleccionadas),
+		palabras_clave:        palabrasClave,
+		monto_minimo_alta:     monto,
+		descripcion:           document.getElementById('onb-descripcion').value.trim(),
+		onboarding_completado: true,
+	  };
 
-      try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const res = await fetch(`${API_BASE}/api/perfil`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(datos)
-        });
+	  try {
+		const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-        if (res.ok) {
-          // Mostrar mensaje de bienvenida antes de redirigir
-          btn.textContent = '¡Listo! Redirigiendo...';
-          btn.className = btn.className.replace('from-indigo-600 to-purple-600', 'from-green-500 to-green-600');
-          setTimeout(() => window.location.href = '/oportunidades.html', 1200);
-        } else {
-          const err = await res.json();
-          alert('Error al guardar: ' + (err.error || 'Intenta de nuevo'));
-          btn.textContent = '✅ Guardar y comenzar';
-          btn.disabled = false;
-        }
-      } catch (e) {
-        console.error(e);
-        alert('Error de conexión. Intenta de nuevo.');
-        btn.textContent = '✅ Guardar y comenzar';
-        btn.disabled = false;
-      }
-    }
+		const res = await fetch(`${API_BASE}/api/perfil`, {
+		  method: 'POST',
+		  headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
+		  },
+		  body: JSON.stringify(datos)
+		});
+
+		if (res.ok) {
+		  // ── FIX: buscar y guardar el objeto user antes de redirigir ──────────
+		  // oportunidades.html requiere TANTO token COMO user en localStorage
+		  try {
+			const userRes = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+			  headers: { 'Authorization': `Bearer ${token}` }
+			});
+			if (userRes.ok) {
+			  const userData = await userRes.json();
+			  // Guardamos el mismo formato que usa login.html
+			  const userObj = {
+				id:         userData.id,
+				email:      userData.email,
+				rol:        userData.rol,
+				empresa_id: userData.empresa.id
+			  };
+			  localStorage.setItem('user', JSON.stringify(userObj));
+			}
+		  } catch (e) {
+			console.warn('No se pudo guardar user, pero continuamos:', e);
+		  }
+		  // ─────────────────────────────────────────────────────────────────────
+
+		  btn.textContent = '¡Listo! Redirigiendo...';
+		  btn.className = btn.className
+			.replace('from-indigo-600 to-purple-600', 'from-green-500 to-green-600')
+			.replace('hover:from-indigo-700 hover:to-purple-700', '');
+		  setTimeout(() => window.location.href = '/oportunidades.html', 1200);
+
+		} else {
+		  const err = await res.json();
+		  alert('Error al guardar: ' + (err.error || 'Intenta de nuevo'));
+		  btn.textContent = '✅ Guardar y comenzar';
+		  btn.disabled = false;
+		}
+	  } catch (e) {
+		console.error(e);
+		alert('Error de conexión. Intenta de nuevo.');
+		btn.textContent = '✅ Guardar y comenzar';
+		btn.disabled = false;
+	  }
+	}
 
     function saltarOnboarding() {
       window.location.href = '/oportunidades.html';
