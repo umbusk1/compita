@@ -814,14 +814,23 @@
 
         // Verificar autenticación
         window.addEventListener('DOMContentLoaded', async function() {
-            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-            if (!token) {
-                window.location.href = '/login.html';
-                return;
-            }
+		            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+		            if (!token) {
+		                window.location.href = '/login.html';
+		                return;
+		            }
 
-            await cargarDatosUsuario();
-            await cargarOportunidades();
+		            await cargarDatosUsuario();
+		            await cargarOportunidades();
+
+		            // Si el usuario viene del onboarding, re-analizar automáticamente
+		            const params = new URLSearchParams(window.location.search);
+		            if (params.get('nuevo') === '1') {
+		                // Limpiar el parámetro de la URL sin recargar la página
+		                history.replaceState({}, '', '/oportunidades.html');
+		                // Esperar un momento para que el dashboard esté visible
+		                setTimeout(() => reAnalizarSilencioso(), 800);
+		            }
         });
 
 async function cargarDatosUsuario() {
@@ -1909,6 +1918,69 @@ function exportarAExcel() {
     XLSX.writeFile(wb, nombreArchivo);
 
     mostrarMensaje(`Exportadas ${licitacionesParaExportar.length} licitaciones a Excel`, 'success');
+}
+
+async function reAnalizarSilencioso() {
+    if (!datosEmpresa || !datosEmpresa.id) return;
+
+    mostrarMensaje(
+        '⚙️ Analizando oportunidades con tu perfil nuevo...',
+        'info',
+        60000 // persiste hasta que termine
+    );
+
+    // Deshabilitar botón Actualizar durante el proceso
+    const botonActualizar = document.querySelector('button[onclick="reAnalizarOportunidades()"]');
+    if (botonActualizar) {
+        botonActualizar.disabled = true;
+        botonActualizar.innerHTML = '<span>⏳</span><span>Analizando...</span>';
+    }
+
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+        const response = await fetch(`${API_BASE}/api/business-features`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                empresa_id: datosEmpresa.id,
+                accion: 're-analizar'
+            })
+        });
+
+        const resultado = await response.json();
+
+        // Cerrar el toast de "analizando..."
+        document.querySelectorAll('.toast').forEach(t => t.remove());
+
+        if (response.ok && resultado.success) {
+            mostrarMensaje(
+                `<strong>¡Tu dashboard está listo!</strong><br>` +
+                `🟢 ALTA: ${resultado.alta} &nbsp; 🟡 MEDIA: ${resultado.media} &nbsp; ` +
+                `📊 Analizadas: ${resultado.analizadas}`,
+                'success',
+                8000
+            );
+            await cargarOportunidades();
+        } else {
+            mostrarMensaje(
+                'No se pudo completar el análisis automático. ' +
+                'Usa el botón Actualizar cuando quieras.',
+                'warning'
+            );
+        }
+    } catch (error) {
+        console.error('Error en re-análisis silencioso:', error);
+        document.querySelectorAll('.toast').forEach(t => t.remove());
+    } finally {
+        if (botonActualizar) {
+            botonActualizar.disabled = false;
+            botonActualizar.innerHTML = '<span>🔄</span><span>Actualizar</span>';
+        }
+    }
 }
 
 // Función para re-analizar oportunidades con perfil actualizado
