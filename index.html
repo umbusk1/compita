@@ -833,16 +833,151 @@ function toggleMobileMenu() {
 
     </div>
   </div>
+
+  <!-- Tabla comparativa -->
+  <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
+              padding:2rem; margin-top:2.5rem;">
+
+    <h3 class="lora text-center"
+        style="font-size:1.25rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:1.75rem;">
+      Comparación detallada
+    </h3>
+
+    <!-- Desktop -->
+    <div class="hidden lg:block overflow-x-auto">
+      <table style="width:100%; text-align:left; border-collapse:collapse; font-size:0.85rem;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--crema-borde);">
+            <th style="padding:10px 16px; color:var(--texto-medio); font-weight:600;">Funcionalidad</th>
+            <th style="padding:10px 16px; text-align:center; color:var(--violeta); font-weight:700;">Estándar</th>
+            <th style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:700;">Business</th>
+            <th style="padding:10px 16px; text-align:center; color:#6d28d9; font-weight:700;">Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; font-weight:600; color:var(--texto-oscuro);">Precio</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--violeta); font-weight:700;">$10/mes</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:700;">$20/mes</td>
+            <td style="padding:10px 16px; text-align:center; color:#6d28d9; font-weight:700;">Custom</td>
+          </tr>
+          <tr style="background:var(--crema);">
+            <td colspan="4" style="padding:8px 16px; font-size:0.7rem; font-weight:700;
+                letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
+              Monitoreo
+            </td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Categorías UNSPSC</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio); font-weight:600;">2</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:700;">5</td>
+            <td style="padding:10px 16px; text-align:center; color:#6d28d9; font-weight:700;">Ilimitado</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Monitoreo automático</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Análisis con IA</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+          </tr>
+          <tr style="background:var(--crema);">
+            <td colspan="4" style="padding:8px 16px; font-size:0.7rem; font-weight:700;
+                letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
+              Pliegos
+            </td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Acceso al PDF del pliego</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Análisis del pliego con IA</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+          </tr>
+          <tr style="background:var(--crema);">
+            <td colspan="4" style="padding:8px 16px; font-size:0.7rem; font-weight:700;
+                letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
+              Historial y soporte
+            </td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Historial disponible</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">1 mes</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:600;">3 meses</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:600;">3 meses</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Plan de trabajo desde el pliego</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--crema-borde);">
+            <td style="padding:10px 16px; color:var(--texto-medio);">Consultor dedicado</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
+            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Mobile -->
+    <div class="lg:hidden" style="display:flex; flex-direction:column; gap:1rem;">
+      <div style="background:var(--crema); border-radius:12px; padding:1rem;">
+        <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Estándar — $10/mes</h4>
+        <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--texto-oscuro); font-weight:600;">2</span></div>
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Pliegos PDF</span><span style="color:var(--rojo, #cd2d2c);">✗</span></div>
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Historial</span><span style="color:var(--texto-oscuro); font-weight:600;">1 mes</span></div>
+        </div>
+      </div>
+      <div style="background:var(--crema); border-radius:12px; padding:1rem;">
+        <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Business — $20/mes</h4>
+        <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--texto-oscuro); font-weight:600;">5</span></div>
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Pliegos PDF</span><span style="color:var(--verde-cta);">✓</span></div>
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Análisis IA del pliego</span><span style="color:var(--verde-cta);">✓</span></div>
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Historial</span><span style="color:var(--texto-oscuro); font-weight:600;">3 meses</span></div>
+        </div>
+      </div>
+      <div style="background:var(--crema); border-radius:12px; padding:1rem;">
+        <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Enterprise — Custom</h4>
+        <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--verde-cta); font-weight:600;">Ilimitado</span></div>
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Plan de trabajo</span><span style="color:var(--verde-cta);">✓</span></div>
+          <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Consultor</span><span style="color:var(--verde-cta);">✓</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-center" style="margin-top:1.5rem; font-size:0.85rem; color:var(--texto-claro);">
+      ¿Dudas sobre qué plan elegir?
+      <a href="mailto:hola@umbusk.com"
+         style="color:var(--violeta); font-weight:600; text-decoration:none;">Escríbenos</a>
+    </p>
+  </div>
+<!-- FIN TABLA COMPARATIVA -->
+
 </section>
 
-<!-- ════════════════════════════════════════
-     SECCIÓN 05 · EVIDENCIA
-════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════
+     SECCIÓN 05 — EVIDENCIA (versión corregida)
+     Reemplaza completamente la S05 anterior
+     ══════════════════════════════════════════════════════ -->
 <section id="evidencia" style="background: var(--verde-oscuro); padding: 6rem 0;">
   <div class="container mx-auto px-4">
     <div class="max-w-4xl mx-auto">
 
-      <!-- Encabezado -->
       <div class="text-center mb-14">
         <p class="section-eyebrow mb-4" style="color: var(--dorado);">
           <span style="display:inline-block; width:24px; height:2px; background:var(--dorado);
@@ -859,36 +994,21 @@ function toggleMobileMenu() {
         </p>
       </div>
 
-      <!-- Widget de estadísticas -->
       <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
                   border-radius:16px; padding:2.5rem 2rem;">
 
-        <!-- Tarjetas KPI -->
-        <div id="stats-kpis"
-             class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <!-- Rellenadas por JS -->
-          <div class="text-center">
+        <!-- KPIs -->
+        <div id="stats-cards"
+             class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+          <!-- Rellenados por JS -->
+          <div class="text-center" style="background:rgba(255,255,255,0.04); border-radius:12px; padding:1.25rem;">
             <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
             <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
                         text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
-              Total 2026
+              Abiertas desde hoy
             </div>
           </div>
-          <div class="text-center">
-            <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
-            <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
-                        text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
-              Abiertas hoy
-            </div>
-          </div>
-          <div class="text-center">
-            <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
-            <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
-                        text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
-              Días activos
-            </div>
-          </div>
-          <div class="text-center">
+          <div class="text-center" style="background:rgba(255,255,255,0.04); border-radius:12px; padding:1.25rem;">
             <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
             <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
                         text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
@@ -899,25 +1019,22 @@ function toggleMobileMenu() {
 
         <hr style="border:none; border-top:1px solid rgba(255,255,255,0.08); margin-bottom:2rem;">
 
-        <!-- Título del gráfico -->
         <p class="lora text-center"
            style="font-size:1rem; font-weight:600; color:#f5f0e8; margin-bottom:1.25rem;">
-          Licitaciones publicadas en 2026 por mes
+          Licitaciones abiertas por mes y día
         </p>
 
         <!-- Pestañas de meses -->
-        <div id="pestanas-meses"
-             style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
-                    margin-bottom:1.5rem;">
+        <div class="flex justify-center gap-1 md:gap-2 mb-6 overflow-x-auto"
+             id="month-tabs-evidencia">
           <!-- Generadas por JS -->
         </div>
 
         <!-- Gráfico -->
-        <div style="position:relative; height:220px;">
-          <canvas id="grafico-licitaciones"></canvas>
+        <div style="position:relative;">
+          <canvas id="grafico-diario-evidencia"></canvas>
         </div>
 
-        <!-- Fuente -->
         <p class="text-center"
            style="font-size:0.72rem; color:var(--texto-claro); margin-top:1.25rem;">
           Fuente: Portal SECP &nbsp;·&nbsp; Actualizado automáticamente dos veces al día &nbsp;·&nbsp; Lunes a viernes
@@ -926,11 +1043,213 @@ function toggleMobileMenu() {
       </div>
     </div>
   </div>
-</section>
 
-<!-- ── Chart.js ── -->
-<!-- NOTA: si ya tienes este <script> más abajo en el archivo, borra esta línea -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+  (function () {
+    var chartInstance = null;
+    var datosCompletos = null;
+    var maxGlobalCalculado = 50;
+
+    function obtenerTodosMeses() {
+      var meses = [];
+      var nombresCortos = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      var nombresLargos  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                            'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      var mesActual = new Date().getMonth();
+      for (var i = 0; i < 12; i++) {
+        meses.push({
+          numero: i + 1,
+          nombre: nombresCortos[i],
+          nombreCompleto: nombresLargos[i],
+          año: 2026,
+          esActual: i === mesActual
+        });
+      }
+      return meses;
+    }
+
+    function crearPestanas(meses) {
+      var cont = document.getElementById('month-tabs-evidencia');
+      cont.innerHTML = '';
+      var mesActual = new Date().getMonth();
+      meses.forEach(function(mes, i) {
+        var btn = document.createElement('button');
+        var activo = i === mesActual;
+        btn.id = 'ev-tab-' + mes.numero;
+        btn.style.cssText = [
+          'font-family:\'Manrope\',sans-serif',
+          'font-size:0.8rem',
+          'font-weight:600',
+          'padding:6px 16px',
+          'border-radius:99px',
+          'cursor:pointer',
+          'border:none',
+          'transition:background 0.2s, color 0.2s',
+          activo
+            ? 'background:var(--dorado); color:var(--verde-oscuro);'
+            : 'background:rgba(255,255,255,0.07); color:var(--texto-claro);'
+        ].join(';');
+        btn.textContent = mes.nombre;
+        btn.onclick = (function(m) {
+          return function() { cambiarMesEvidencia(m, meses); };
+        })(mes);
+        cont.appendChild(btn);
+      });
+    }
+
+    function cambiarMesEvidencia(mesSeleccionado, todosMeses) {
+      todosMeses.forEach(function(mes) {
+        var btn = document.getElementById('ev-tab-' + mes.numero);
+        if (!btn) return;
+        var activo = mes.numero === mesSeleccionado.numero;
+        btn.style.background = activo ? 'var(--dorado)' : 'rgba(255,255,255,0.07)';
+        btn.style.color       = activo ? 'var(--verde-oscuro)' : 'var(--texto-claro)';
+      });
+      var datosMes = datosCompletos.por_dia.filter(function(d) {
+        var fecha = new Date(d.fecha);
+        return fecha.getMonth() === mesSeleccionado.numero - 1
+            && fecha.getFullYear() === mesSeleccionado.año;
+      });
+      actualizarGraficoEvidencia(datosMes, mesSeleccionado);
+    }
+
+    function actualizarGraficoEvidencia(datos, mesInfo) {
+      if (chartInstance) chartInstance.destroy();
+      var diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
+      var hoy = new Date();
+      var diaActual  = hoy.getDate();
+      var mesActual  = hoy.getMonth() + 1;
+      var datosPorDia = {};
+      datos.forEach(function(d) {
+        datosPorDia[new Date(d.fecha).getDate()] = d.cantidad;
+      });
+      var diasCompletos = [], cantidadesAbiertas = [], cantidadesCerradas = [];
+      for (var dia = 1; dia <= diasEnMes; dia++) {
+        diasCompletos.push(dia);
+        var cantidad = datosPorDia[dia] || 0;
+        var esPasado = mesInfo.numero < mesActual
+                    || (mesInfo.numero === mesActual && dia < diaActual);
+        if (esPasado) {
+          cantidadesCerradas.push(cantidad);
+          cantidadesAbiertas.push(0);
+        } else {
+          cantidadesAbiertas.push(cantidad);
+          cantidadesCerradas.push(0);
+        }
+      }
+      var ctx = document.getElementById('grafico-diario-evidencia');
+      if (!ctx) return;
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: diasCompletos,
+          datasets: [
+            {
+              label: 'Abiertas',
+              data: cantidadesAbiertas,
+              backgroundColor: 'rgba(234,186,129,0.85)',
+              borderColor: 'rgba(234,186,129,1)',
+              borderWidth: 1
+            },
+            {
+              label: 'Cerradas',
+              data: cantidadesCerradas,
+              backgroundColor: 'rgba(154,184,176,0.25)',
+              borderColor: 'rgba(154,184,176,0.5)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: window.innerWidth > 768,
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: 'rgba(245,240,232,0.75)',
+                font: { family: 'Manrope', size: 12 }
+              }
+            }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              ticks: { color: 'rgba(154,184,176,0.7)', font: { size: 10, family: 'Manrope' } },
+              grid: { color: 'rgba(255,255,255,0.04)' }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              max: maxGlobalCalculado,
+              ticks: {
+                color: 'rgba(154,184,176,0.7)',
+                font: { size: 10, family: 'Manrope' },
+                stepSize: Math.ceil(maxGlobalCalculado / 5),
+                precision: 0
+              },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
+    }
+
+    async function cargarStatsEvidencia() {
+      try {
+        var res  = await fetch('/stats-2026.json');
+        var data = await res.json();
+        datosCompletos = data;
+
+        var todas = data.por_dia.map(function(d) { return d.cantidad; });
+        maxGlobalCalculado = Math.ceil(Math.max.apply(null, todas.concat([50])) / 5) * 5;
+
+        var hoy = new Date(); hoy.setHours(0,0,0,0);
+        var abiertasDesdeHoy = data.por_dia
+          .filter(function(d) { return new Date(d.fecha) >= hoy; })
+          .reduce(function(s, d) { return s + d.cantidad; }, 0);
+
+        var diasCerrados = data.por_dia.filter(function(d) {
+          return new Date(d.fecha) < hoy && d.cantidad > 0;
+        });
+        var promedio = diasCerrados.length > 0
+          ? Math.round(diasCerrados.reduce(function(s,d){return s+d.cantidad;},0) / diasCerrados.length)
+          : 0;
+
+        document.getElementById('stats-cards').innerHTML =
+          '<div class="text-center" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:1.25rem;">'
+          + '<div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">'
+          + abiertasDesdeHoy.toLocaleString('es-DO') + '</div>'
+          + '<div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;'
+          + 'text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">Abiertas desde hoy</div>'
+          + '<div style="font-size:0.75rem;color:var(--texto-claro);margin-top:4px;">'
+          + data.stats.total.toLocaleString('es-DO') + ' total en base de datos</div>'
+          + '</div>'
+          + '<div class="text-center" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:1.25rem;">'
+          + '<div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">'
+          + promedio + '</div>'
+          + '<div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;'
+          + 'text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">Promedio diario</div>'
+          + '<div style="font-size:0.75rem;color:var(--texto-claro);margin-top:4px;">en días laborables</div>'
+          + '</div>';
+
+        var meses = obtenerTodosMeses();
+        crearPestanas(meses);
+        cambiarMesEvidencia(meses[new Date().getMonth()], meses);
+
+      } catch(e) {
+        console.error('Error cargando stats-2026.json:', e);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', cargarStatsEvidencia);
+  })();
+  </script>
+<!-- FIN SECCIÓN 05 EVIDENCIA -->
+
+</section>
 
 <script>
 (function () {
@@ -1108,6 +1427,421 @@ function toggleMobileMenu() {
   cargarStats();
 })();
 </script>
+
+<!-- ══════════════════════════════════════════════════════
+     FAQ
+     ══════════════════════════════════════════════════════ -->
+<section id="faq" style="background: var(--crema); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto">
+
+      <div class="text-center mb-14">
+        <p class="section-eyebrow mb-4" style="color: var(--violeta);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--violeta);
+                       border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+          Preguntas frecuentes
+        </p>
+        <h2 class="lora"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                   color: var(--texto-oscuro); line-height:1.25;">
+          FAQ
+        </h2>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+
+        <details style="background:#fff; border:1px solid var(--crema-borde);
+                        border-radius:12px; padding:1.5rem;">
+          <summary style="font-weight:600; color:var(--texto-oscuro); cursor:pointer; font-size:0.95rem;">
+            ¿Necesito tarjeta de crédito para la prueba gratuita?
+          </summary>
+          <p style="color:var(--texto-medio); margin-top:1rem; font-size:0.9rem; line-height:1.7;">
+            No. La prueba de 7 días es completamente gratuita y no requiere tarjeta de crédito.
+            Solo necesitas un email corporativo válido.
+          </p>
+        </details>
+
+        <details style="background:#fff; border:1px solid var(--crema-borde);
+                        border-radius:12px; padding:1.5rem;">
+          <summary style="font-weight:600; color:var(--texto-oscuro); cursor:pointer; font-size:0.95rem;">
+            ¿Funciona con cualquier portal de compras?
+          </summary>
+          <p style="color:var(--texto-medio); margin-top:1rem; font-size:0.9rem; line-height:1.7;">
+            Actualmente optimizado para el portal de República Dominicana.
+            Próximamente soportaremos otros países de LATAM.
+          </p>
+        </details>
+
+        <details style="background:#fff; border:1px solid var(--crema-borde);
+                        border-radius:12px; padding:1.5rem;">
+          <summary style="font-weight:600; color:var(--texto-oscuro); cursor:pointer; font-size:0.95rem;">
+            ¿Cómo funciona la IA de análisis?
+          </summary>
+          <p style="color:var(--texto-medio); margin-top:1rem; font-size:0.9rem; line-height:1.7;">
+            Usamos Claude AI de Anthropic para leer cada licitación pre-seleccionada,
+            entender su contexto y evaluar su relevancia según el perfil de tu empresa.
+            No es búsqueda simple de palabras — es comprensión semántica real.
+          </p>
+        </details>
+
+        <details style="background:#fff; border:1px solid var(--crema-borde);
+                        border-radius:12px; padding:1.5rem;">
+          <summary style="font-weight:600; color:var(--texto-oscuro); cursor:pointer; font-size:0.95rem;">
+            ¿Puedo cancelar en cualquier momento?
+          </summary>
+          <p style="color:var(--texto-medio); margin-top:1rem; font-size:0.9rem; line-height:1.7;">
+            Sí. Sin contratos ni permanencia mínima. Cancelas cuando quieras desde tu cuenta.
+          </p>
+        </details>
+
+        <details style="background:#fff; border:1px solid var(--crema-borde);
+                        border-radius:12px; padding:1.5rem;">
+          <summary style="font-weight:600; color:var(--texto-oscuro); cursor:pointer; font-size:0.95rem;">
+            ¿Mis datos están seguros?
+          </summary>
+          <p style="color:var(--texto-medio); margin-top:1rem; font-size:0.9rem; line-height:1.7;">
+            Absolutamente. Usamos encriptación end-to-end, base de datos PostgreSQL en Neon
+            con backups diarios, y cumplimos con mejores prácticas de seguridad.
+          </p>
+        </details>
+
+      </div>
+    </div>
+  </div>
+</section>
+<!-- FIN FAQ -->
+
+
+
+
+<!-- ══════════════════════════════════════════════════════
+     REPORTE SEMANAL
+     ══════════════════════════════════════════════════════ -->
+<section id="reporte" style="background: var(--verde-oscuro); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-2xl mx-auto text-center">
+
+      <p class="section-eyebrow mb-4" style="color: var(--dorado);">
+        <span style="display:inline-block; width:24px; height:2px; background:var(--dorado);
+                     border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+        Gratis · Sin cuenta requerida
+      </p>
+
+      <h2 class="lora mb-6"
+          style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                 color:#f5f0e8; line-height:1.25;">
+        El pulso semanal del mercado de licitaciones
+      </h2>
+
+      <p style="font-size:1rem; line-height:1.8; color:var(--texto-claro); margin-bottom:2rem;">
+        Cada lunes recibirás un vistazo a este mercado: las oportunidades más grandes
+        y las más pequeñas, las que vencen pronto y las que dan más tiempo,
+        las más complejas y las más simples. Una radiografía de las compras públicas
+        en República Dominicana en tu bandeja de entrada.
+      </p>
+
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+                  border-radius:16px; padding:2rem;">
+        <div id="form-suscripcion">
+          <div class="flex flex-col sm:flex-row gap-3 mb-3">
+            <input type="text" id="sub-nombre" placeholder="Tu nombre"
+                   style="flex:1; padding:0.75rem 1rem; border-radius:8px;
+                          border:1px solid rgba(255,255,255,0.15);
+                          background:rgba(255,255,255,0.07); color:#f5f0e8;
+                          font-family:'Manrope',sans-serif; font-size:0.9rem; outline:none;">
+            <input type="email" id="sub-email" placeholder="Tu email"
+                   style="flex:1; padding:0.75rem 1rem; border-radius:8px;
+                          border:1px solid rgba(255,255,255,0.15);
+                          background:rgba(255,255,255,0.07); color:#f5f0e8;
+                          font-family:'Manrope',sans-serif; font-size:0.9rem; outline:none;">
+          </div>
+          <button onclick="suscribirReporte()"
+                  style="width:100%; background:var(--verde-cta); color:#fff;
+                         padding:0.875rem 1rem; border-radius:8px; border:none; cursor:pointer;
+                         font-family:'Manrope',sans-serif; font-weight:700; font-size:0.95rem;
+                         transition:background 0.2s;"
+                  onmouseover="this.style.background='#22a02d'"
+                  onmouseout="this.style.background='var(--verde-cta)'">
+            📋 Suscribirme al Reporte Semanal — es gratis
+          </button>
+          <p id="sub-mensaje" style="margin-top:0.75rem; font-size:0.8rem;
+                                     color:var(--texto-claro); min-height:20px;"></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- JS del reporte — sin cambios respecto al original -->
+<script>
+async function suscribirReporte() {
+  const nombre  = document.getElementById('sub-nombre').value.trim();
+  const email   = document.getElementById('sub-email').value.trim();
+  const mensaje = document.getElementById('sub-mensaje');
+  const boton   = document.querySelector('[onclick="suscribirReporte()"]');
+
+  if (!nombre || !email) {
+    mensaje.textContent = '⚠️ Por favor completa tu nombre y email.';
+    mensaje.style.color = '#cd2d2c';
+    return;
+  }
+  boton.disabled = true;
+  boton.textContent = 'Procesando...';
+  mensaje.textContent = '';
+
+  try {
+    const res  = await fetch('https://compita-reporte-semanal.vercel.app/api/suscribir', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, email })
+    });
+    if (res.ok) {
+      document.getElementById('form-suscripcion').innerHTML =
+        '<div style="text-align:center; padding:1.5rem;">'
+        + '<div style="font-size:3rem; margin-bottom:1rem;">🎉</div>'
+        + '<h3 class="lora" style="font-size:1.4rem; font-weight:700; color:var(--dorado); margin-bottom:0.5rem;">'
+        + '¡Listo, ' + nombre + '!</h3>'
+        + '<p style="color:var(--texto-claro); font-size:0.9rem; line-height:1.7;">'
+        + 'Revisa tu bandeja de entrada — ya te enviamos un email de bienvenida.<br>'
+        + 'Tu primer reporte llega el próximo lunes.</p>'
+        + '</div>';
+    } else {
+      mensaje.textContent = '⚠️ Hubo un problema. Intenta de nuevo.';
+      mensaje.style.color = '#cd2d2c';
+      boton.disabled = false;
+      boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
+    }
+  } catch(err) {
+    mensaje.textContent = '⚠️ Error de conexión. Intenta de nuevo.';
+    mensaje.style.color = '#cd2d2c';
+    boton.disabled = false;
+    boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
+  }
+}
+</script>
+<!-- FIN REPORTE SEMANAL -->
+
+
+
+
+<!-- ══════════════════════════════════════════════════════
+     ASOCIACIONES
+     ══════════════════════════════════════════════════════ -->
+<section id="asociaciones" style="background: var(--crema); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="text-center mb-14">
+        <p class="section-eyebrow mb-4" style="color: var(--violeta);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--violeta);
+                       border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+          Alianzas sectoriales
+        </p>
+        <h2 class="lora mb-4"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                   color: var(--texto-oscuro); line-height:1.25;">
+          Compita llega a tu sector<br>a través de tu asociación
+        </h2>
+        <p style="font-size:1rem; line-height:1.8; color:var(--texto-medio);
+                  max-width:540px; margin:0 auto;">
+          Trabajamos con las principales asociaciones empresariales de República Dominicana
+          para entregar cada mes un reporte gratuito de licitaciones relevantes
+          directamente a sus miembros.
+        </p>
+      </div>
+
+      <!-- Mecánica -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0 mb-14">
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 1.5rem;">
+          <div style="width:48px; height:48px; background:var(--violeta); color:#fff; border-radius:50%;
+                      display:flex; align-items:center; justify-content:center;
+                      font-family:'Lora',serif; font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">1</div>
+          <p style="font-size:0.8rem; color:var(--texto-medio); max-width:110px;">Compita filtra las licitaciones del sector</p>
+        </div>
+        <div class="hidden sm:block" style="color:var(--dorado); font-size:1.5rem;">→</div>
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 1.5rem;">
+          <div style="width:48px; height:48px; background:var(--violeta); color:#fff; border-radius:50%;
+                      display:flex; align-items:center; justify-content:center;
+                      font-family:'Lora',serif; font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">2</div>
+          <p style="font-size:0.8rem; color:var(--texto-medio); max-width:110px;">La asociación recibe el reporte co-branded</p>
+        </div>
+        <div class="hidden sm:block" style="color:var(--dorado); font-size:1.5rem;">→</div>
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 1.5rem;">
+          <div style="width:48px; height:48px; background:var(--violeta); color:#fff; border-radius:50%;
+                      display:flex; align-items:center; justify-content:center;
+                      font-family:'Lora',serif; font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">3</div>
+          <p style="font-size:0.8rem; color:var(--texto-medio); max-width:110px;">Los miembros reciben las oportunidades a tiempo</p>
+        </div>
+      </div>
+
+      <!-- Tarjetas -->
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <!-- CODOPYME -->
+        <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
+                    overflow:hidden; transition:box-shadow 0.2s;"
+             onmouseover="this.style.boxShadow='0 12px 40px rgba(22,51,50,0.12)'"
+             onmouseout="this.style.boxShadow='none'">
+          <div style="height:4px; background:linear-gradient(90deg, #1e3a6e, #3b6cb7);"></div>
+          <div style="padding:1.5rem;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+              <span style="background:#eff6ff; color:#1d4ed8; font-size:0.7rem; font-weight:800;
+                           letter-spacing:0.06em; padding:4px 10px; border-radius:6px;">CODOPYME</span>
+              <span style="font-size:0.65rem; color:var(--texto-claro); text-transform:uppercase;
+                           letter-spacing:0.08em; font-weight:600;">MIPYMES</span>
+            </div>
+            <h3 class="lora" style="font-size:0.95rem; font-weight:700; color:var(--texto-oscuro);
+                                    margin-bottom:0.5rem; line-height:1.4;">
+              Confederación Dominicana de la Micro, Pequeña y Mediana Empresa
+            </h3>
+            <p style="font-size:0.8rem; color:var(--texto-medio); line-height:1.6; margin-bottom:1.25rem;">
+              Suministros, servicios profesionales, tecnología y capacitación para
+              más de 7,500 empresas miembros.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <a href="/docs/onepager-codopyme.pdf" target="_blank" rel="noopener"
+                 style="display:flex; align-items:center; justify-content:center; gap:8px;
+                        background:#1d4ed8; color:#fff; font-size:0.8rem; font-weight:600;
+                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
+                        transition:background 0.2s;"
+                 onmouseover="this.style.background='#1e40af'"
+                 onmouseout="this.style.background='#1d4ed8'">
+                ↓ Descargar Propuesta
+              </a>
+              <a href="/docs/reporte-muestra-codopyme.pdf" target="_blank" rel="noopener"
+                 style="display:flex; align-items:center; justify-content:center; gap:8px;
+                        border:1.5px solid #1d4ed8; color:#1d4ed8; font-size:0.8rem; font-weight:600;
+                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
+                        transition:background 0.2s;"
+                 onmouseover="this.style.background='#eff6ff'"
+                 onmouseout="this.style.background='transparent'">
+                Ver Reporte de Muestra
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ASONAHORES -->
+        <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
+                    overflow:hidden; transition:box-shadow 0.2s;"
+             onmouseover="this.style.boxShadow='0 12px 40px rgba(22,51,50,0.12)'"
+             onmouseout="this.style.boxShadow='none'">
+          <div style="height:4px; background:linear-gradient(90deg, #14532d, #16a34a);"></div>
+          <div style="padding:1.5rem;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+              <span style="background:#f0fdf4; color:#15803d; font-size:0.7rem; font-weight:800;
+                           letter-spacing:0.06em; padding:4px 10px; border-radius:6px;">ASONAHORES</span>
+              <span style="font-size:0.65rem; color:var(--texto-claro); text-transform:uppercase;
+                           letter-spacing:0.08em; font-weight:600;">Turismo</span>
+            </div>
+            <h3 class="lora" style="font-size:0.95rem; font-weight:700; color:var(--texto-oscuro);
+                                    margin-bottom:0.5rem; line-height:1.4;">
+              Asociación de Hoteles y Turismo de la República Dominicana
+            </h3>
+            <p style="font-size:0.8rem; color:var(--texto-medio); line-height:1.6; margin-bottom:1.25rem;">
+              Alimentos, equipamiento hotelero, mantenimiento, consultoría turística
+              e infraestructura para el sector de hospitalidad.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <a href="/docs/onepager-asonahores.pdf" target="_blank" rel="noopener"
+                 style="display:flex; align-items:center; justify-content:center; gap:8px;
+                        background:#16a34a; color:#fff; font-size:0.8rem; font-weight:600;
+                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
+                        transition:background 0.2s;"
+                 onmouseover="this.style.background='#15803d'"
+                 onmouseout="this.style.background='#16a34a'">
+                ↓ Descargar Propuesta
+              </a>
+              <a href="/docs/reporte-muestra-asonahores.pdf" target="_blank" rel="noopener"
+                 style="display:flex; align-items:center; justify-content:center; gap:8px;
+                        border:1.5px solid #16a34a; color:#16a34a; font-size:0.8rem; font-weight:600;
+                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
+                        transition:background 0.2s;"
+                 onmouseover="this.style.background='#f0fdf4'"
+                 onmouseout="this.style.background='transparent'">
+                Ver Reporte de Muestra
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACOPROVI -->
+        <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
+                    overflow:hidden; transition:box-shadow 0.2s;"
+             onmouseover="this.style.boxShadow='0 12px 40px rgba(22,51,50,0.12)'"
+             onmouseout="this.style.boxShadow='none'">
+          <div style="height:4px; background:linear-gradient(90deg, #92400e, #f97316);"></div>
+          <div style="padding:1.5rem;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+              <span style="background:#fff7ed; color:#c2410c; font-size:0.7rem; font-weight:800;
+                           letter-spacing:0.06em; padding:4px 10px; border-radius:6px;">ACOPROVI</span>
+              <span style="font-size:0.65rem; color:var(--texto-claro); text-transform:uppercase;
+                           letter-spacing:0.08em; font-weight:600;">Construcción</span>
+            </div>
+            <h3 class="lora" style="font-size:0.95rem; font-weight:700; color:var(--texto-oscuro);
+                                    margin-bottom:0.5rem; line-height:1.4;">
+              Asociación Dominicana de Constructores y Promotores de Viviendas
+            </h3>
+            <p style="font-size:0.8rem; color:var(--texto-medio); line-height:1.6; margin-bottom:1.25rem;">
+              Obras civiles, materiales, supervisión técnica e ingeniería para el sector
+              que mueve más del 10% del PIB dominicano.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <a href="/docs/onepager-acoprovi.pdf" target="_blank" rel="noopener"
+                 style="display:flex; align-items:center; justify-content:center; gap:8px;
+                        background:#ea580c; color:#fff; font-size:0.8rem; font-weight:600;
+                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
+                        transition:background 0.2s;"
+                 onmouseover="this.style.background='#c2410c'"
+                 onmouseout="this.style.background='#ea580c'">
+                ↓ Descargar Propuesta
+              </a>
+              <a href="/docs/reporte-muestra-acoprovi.pdf" target="_blank" rel="noopener"
+                 style="display:flex; align-items:center; justify-content:center; gap:8px;
+                        border:1.5px solid #ea580c; color:#ea580c; font-size:0.8rem; font-weight:600;
+                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
+                        transition:background 0.2s;"
+                 onmouseover="this.style.background='#fff7ed'"
+                 onmouseout="this.style.background='transparent'">
+                Ver Reporte de Muestra
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA para otras asociaciones -->
+      <div style="margin-top:2.5rem; background:#fff; border:1px solid var(--crema-borde);
+                  border-radius:16px; padding:1.5rem 2rem;
+                  display:flex; flex-direction:column; gap:1rem;
+                  align-items:flex-start;">
+        <div class="sm:flex sm:items-center sm:justify-between sm:gap-4 w-full">
+          <div>
+            <p style="font-weight:700; color:var(--texto-oscuro); margin-bottom:4px; font-size:0.95rem;">
+              ¿Representas otra asociación empresarial?
+            </p>
+            <p style="font-size:0.85rem; color:var(--texto-medio);">
+              Ofrecemos este servicio gratuito a todas las asociaciones del sector productivo dominicano.
+            </p>
+          </div>
+          <a href="mailto:hola@umbusk.com?subject=Propuesta Reporte Sectorial para mi Asociación"
+             style="flex-shrink:0; background:var(--violeta); color:#fff;
+                    padding:0.75rem 1.5rem; border-radius:8px; font-weight:600; font-size:0.875rem;
+                    text-decoration:none; white-space:nowrap; transition:background 0.2s;
+                    display:inline-block; margin-top:0.5rem;"
+             onmouseover="this.style.background='#4338ca'"
+             onmouseout="this.style.background='var(--violeta)'">
+            Contáctanos →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- FIN ASOCIACIONES -->
 
 <!-- ════════════════════════════════════════
      SECCIÓN 06 · TESTIMONIOS
