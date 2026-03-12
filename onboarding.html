@@ -251,15 +251,16 @@
   <!-- PASO 3: Palabras clave                 -->
   <!-- ═══════════════════════════════════════ -->
   <div id="paso-3" class="paso hidden max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-    <h2 class="text-xl font-bold text-gray-900 mb-1">Afina las palabras clave</h2>
-    <p class="text-sm text-gray-500 mb-4">
-      Basado en tu sector, te sugerimos estas palabras. Haz clic para agregar o quitar.
-      También puedes escribir las tuyas.
-    </p>
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Define descripción y las palabras clave</h2>
+
     <div class="mb-4">
-      <label class="block text-sm font-semibold text-gray-700 mb-2">💡 Sugerencias para tu sector:</label>
-      <div id="chips-sugeridos" class="min-h-12"></div>
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Descripción breve de tu empresa</label>
+      <p class="text-xs text-gray-500 mb-2">La IA usa esto para entender tu perfil y hacer mejores recomendaciones.</p>
+      <textarea id="onb-descripcion" rows="3"
+        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-sm transition resize-none"
+        placeholder="Ej: Empresa dominicana de consultoría en gestión pública con 10 años de experiencia..."></textarea>
     </div>
+
     <div class="mb-4">
       <label class="block text-sm font-semibold text-gray-700 mb-2">
         Tus palabras clave <span class="text-gray-400 font-normal">(separadas por coma)</span>
@@ -268,14 +269,11 @@
         class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-sm transition resize-none"
         placeholder="Ej: consultoría, gestión, sistemas de información..."></textarea>
     </div>
+
     <div class="mb-4">
-      <label class="block text-sm font-semibold text-gray-700 mb-1">
-        Descripción breve de tu empresa <span class="text-gray-400 font-normal">(opcional pero recomendado)</span>
-      </label>
-      <p class="text-xs text-gray-500 mb-2">La IA usa esto para entender tu perfil y hacer mejores recomendaciones.</p>
-      <textarea id="onb-descripcion" rows="3"
-        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-sm transition resize-none"
-        placeholder="Ej: Empresa dominicana de consultoría en gestión pública con 10 años de experiencia..."></textarea>
+      <label class="block text-sm font-semibold text-gray-700 mb-1">💡 Sugerencias para tu(s) sector(es)</label>
+      <p class="text-xs text-gray-500 mb-2">Puedes eliminar haciendo clic en las sugerencias que no hagan match con tu perfil, o agregar más palabras clave arriba en el campo.</p>
+      <div id="chips-sugeridos" class="min-h-12"></div>
     </div>
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
       <p class="text-sm text-green-800 font-medium mb-1">🎯 Con esta configuración podrás:</p>
