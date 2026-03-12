@@ -33,7 +33,10 @@
 					 alt="Logo Compita"
 					 class="h-20">
 			</div>
-                    <a href="/oportunidades.html" class="text-gray-600 hover:text-gray-900">Oportunidades</a>
+				<a href="/oportunidades.html"
+				   class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition text-sm shadow-sm">
+					🔍 Ver Oportunidades
+				</a>
                     <a href="/cuenta.html" class="text-indigo-600 font-semibold">Mi Cuenta</a>
                 </div>
                 <div class="flex items-center gap-4">
@@ -794,8 +797,7 @@ async function guardarPerfil(event) {
         const result = await response.json();
 
         if (response.ok) {
-            alert('✅ ' + result.message);
-            await cargarPerfil();
+            window.location.href = '/oportunidades.html';
         } else {
             alert('Error: ' + result.error);
         }
