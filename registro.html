@@ -97,58 +97,78 @@
             </p>
         </div>
 
-        <!-- Opciones de Pago (oculto inicialmente) -->
-        <div id="opciones-pago" class="hidden bg-white rounded-2xl shadow-xl p-8">
-            <div class="text-center mb-6">
-                <div class="text-4xl mb-4">🎉</div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Casi listo!</h2>
-                <p class="text-gray-600">Suscríbete a uno de los planes ya, o</p>
+<!-- Opciones de Pago (oculto inicialmente) -->
+<div id="opciones-pago" class="hidden bg-white rounded-2xl shadow-xl p-8">
+    <div class="text-center mb-6">
+        <div class="text-4xl mb-4">🎉</div>
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Casi listo!</h2>
+        <p class="text-gray-600">Elige el plan que mejor se adapta a tu empresa</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+        <!-- Plan Gratuito -->
+        <div class="border-2 border-gray-200 rounded-xl p-6 flex flex-col">
+            <div class="mb-4">
+                <h3 class="text-lg font-bold text-gray-900">Plan Gratuito</h3>
+                <p class="text-3xl font-bold text-gray-600 mt-2">$0<span class="text-sm text-gray-500 font-normal">/7 días</span></p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <!-- Plan Estándar -->
-                <div class="border-2 border-indigo-200 rounded-xl p-6">
-                    <div class="mb-4">
-                        <h3 class="text-lg font-bold text-gray-900">Plan Estándar</h3>
-                        <p class="text-3xl font-bold text-indigo-600 mt-2">$10<span class="text-sm text-gray-600 font-normal">/mes</span></p>
-                    </div>
-                    <ul class="space-y-2 mb-4 text-sm">
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>2 categorías UNSPSC</span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Scraping automático diario</span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Análisis inteligente con IA</span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Notificaciones por email</span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Dashboard de oportunidades</span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Historial de 1 mes</span></li>
-                    </ul>
-                    <button onclick="procesarSuscripcion('estandar')"
-                        class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">
-                        💳 Suscribirse
-                    </button>
-                </div>
-                <!-- Plan Business -->
-                <div class="border-2 border-orange-300 rounded-xl p-6 bg-gradient-to-br from-orange-50 to-yellow-50">
-                    <div class="mb-4">
-                        <div class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">MÁS POPULAR</div>
-                        <h3 class="text-lg font-bold text-gray-900">Plan Business</h3>
-                        <p class="text-3xl font-bold text-orange-600 mt-2">$20<span class="text-sm text-gray-600 font-normal">/mes</span></p>
-                    </div>
-                    <ul class="space-y-2 mb-4 text-sm">
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Todo lo del Estándar, más:</strong></span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>5 categorías UNSPSC</strong></span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>PDF del pliego de licitaciones</strong> (10/mes)</span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Análisis de pliego con IA</strong> (5/mes)</span></li>
-                        <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Historial de 3 meses</strong></span></li>
-                    </ul>
-                    <button onclick="procesarSuscripcion('business')"
-                        class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold">
-                        💳 Suscribirse
-                    </button>
-                </div>
-            </div>
+            <!-- CTA arriba — B2 -->
             <button onclick="procesarTrialGratuito()"
-                class="w-full bg-gray-800 text-white px-6 py-4 rounded-lg hover:bg-gray-900 transition font-bold text-lg shadow-lg">
-                Continuar con Prueba Gratuita del Plan Business
+                class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg hover:bg-gray-800 transition font-semibold mb-4">
+                Comenzar gratis
             </button>
+            <ul class="space-y-2 text-sm text-gray-600">
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Acceso completo 7 días</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Sin tarjeta de crédito</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Plan Business incluido</span></li>
+            </ul>
         </div>
+
+        <!-- Plan Estándar -->
+        <div class="border-2 border-indigo-200 rounded-xl p-6 flex flex-col">
+            <div class="mb-4">
+                <h3 class="text-lg font-bold text-gray-900">Plan Estándar</h3>
+                <p class="text-3xl font-bold text-indigo-600 mt-2">$10<span class="text-sm text-gray-600 font-normal">/mes</span></p>
+            </div>
+            <!-- CTA arriba — B2 -->
+            <button onclick="procesarSuscripcion('estandar')"
+                class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold mb-4">
+                💳 Suscribirse
+            </button>
+            <ul class="space-y-2 text-sm">
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>2 categorías UNSPSC</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Scraping automático diario</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Análisis inteligente con IA</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Notificaciones por email</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Dashboard de oportunidades</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Historial de 1 mes</span></li>
+            </ul>
+        </div>
+
+        <!-- Plan Business -->
+        <div class="border-2 border-orange-300 rounded-xl p-6 bg-gradient-to-br from-orange-50 to-yellow-50 flex flex-col">
+            <div class="mb-4">
+                <div class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">MÁS POPULAR</div>
+                <h3 class="text-lg font-bold text-gray-900">Plan Business</h3>
+                <p class="text-3xl font-bold text-orange-600 mt-2">$20<span class="text-sm text-gray-600 font-normal">/mes</span></p>
+            </div>
+            <!-- CTA arriba — B2 -->
+            <button onclick="procesarSuscripcion('business')"
+                class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold mb-4">
+                💳 Suscribirse
+            </button>
+            <ul class="space-y-2 text-sm">
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Todo lo del Estándar, más:</strong></span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>5 categorías UNSPSC</strong></span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>PDF del pliego</strong> (10/mes)</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Análisis con IA</strong> (5/mes)</span></li>
+                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Historial de 3 meses</strong></span></li>
+            </ul>
+        </div>
+
+    </div>
+    <!-- Botón ancho eliminado — B3 ✓ -->
+</div>
 
         <footer class="bg-gray-900 text-gray-400 py-12">
             <div class="container mx-auto px-4">
