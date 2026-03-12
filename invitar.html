@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitar a un colega - Compita</title>
+    <link rel="icon" type="image/png" href="favicon-umbusk.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Compita" class="h-16 mx-auto">
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+            <div class="text-center mb-6">
+                <div class="text-5xl mb-3">🤝</div>
+                <h1 class="text-2xl font-bold text-gray-900 mb-2">Invita a un colega</h1>
+                <p class="text-gray-600 text-sm">
+                    Invita a alguien de <strong>otra empresa</strong> y ambos obtienen
+                    <strong class="text-indigo-600">30 días gratis</strong> en vez de 7.
+                </p>
+                <p class="text-gray-500 text-xs mt-1">
+                    (Si ya tienes plan pago, recibes 1 mes de bono gratis)
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <input
+                    type="email"
+                    id="email-invitado"
+                    placeholder="correo@empresa.com"
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none text-sm transition"
+                >
+                <button
+                    onclick="enviarInvitacion()"
+                    class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold"
+                >
+                    ✉️ Enviar invitación
+                </button>
+                <p id="msg-invitacion" class="text-xs mt-2 hidden text-center"></p>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                <a href="/onboarding.html" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold transition">
+                    Ir a configurar mi empresa →
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Recuperar token guardado por confirmar-email.html
+        const tkn = localStorage.getItem('token');
+
+        async function enviarInvitacion() {
+            const email = document.getElementById('email-invitado').value.trim();
+            const msg   = document.getElementById('msg-invitacion');
+
+            if (!email) {
+                mostrarMsg('⚠️ Por favor ingresa un email', 'text-orange-600');
+                return;
+            }
+
+            if (!tkn) {
+                mostrarMsg('⚠️ Sesión no encontrada. Inicia sesión e invita desde Mi Cuenta.', 'text-orange-600');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${tkn}`
+                    },
+                    body: JSON.stringify({ action: 'invitar', email_invitado: email })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    mostrarMsg('✅ ¡Invitación enviada! Tienen 30 días de prueba.', 'text-green-700 font-semibold');
+                    document.getElementById('email-invitado').value = '';
+                } else {
+                    mostrarMsg('❌ ' + result.error, 'text-red-600');
+                }
+            } catch (error) {
+                mostrarMsg('❌ Error de conexión. Intenta desde Mi Cuenta.', 'text-red-600');
+            }
+        }
+
+        function mostrarMsg(texto, clases) {
+            const msg = document.getElementById('msg-invitacion');
+            msg.textContent = texto;
+            msg.className = `text-xs mt-2 text-center ${clases}`;
+            msg.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
