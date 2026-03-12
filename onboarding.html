@@ -72,12 +72,15 @@
   <!-- ═══════════════════════════════════════ -->
   <div id="paso-1" class="paso max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
     <h2 class="text-xl font-bold text-gray-900 mb-1">¿En qué sector opera tu empresa?</h2>
-    <p class="text-sm text-gray-500 mb-6">
-      Selecciona el sector <strong>principal</strong>. El sistema pre-configurará tus palabras clave
-      y priorizará las licitaciones de ese sector.
+    <p class="text-sm text-gray-500 mb-2">
+      Selecciona <strong>hasta 3 sectores</strong>. El sistema pre-configurará tus palabras clave
+      y priorizará las licitaciones de esos sectores.
     </p>
+    <!-- C2: contador de selecciones -->
+    <p id="contador-sectores" class="text-xs font-semibold text-indigo-600 mb-4">0 de 3 seleccionados</p>
 
-    <div class="grid grid-cols-2 gap-3" id="sectores-grid">
+    <!-- C1: 3 columnas -->
+    <div class="grid grid-cols-3 gap-3" id="sectores-grid">
       <!-- Generado por JS -->
     </div>
 
@@ -87,8 +90,9 @@
     </div>
 
     <div class="flex flex-col gap-3 mt-8">
+      <!-- C3: botón más prominente -->
       <button onclick="irPaso(2)"
-        class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition disabled:opacity-40"
+        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-md"
         id="btn-paso1">
         Siguiente →
       </button>
@@ -147,7 +151,7 @@
         ← Atrás
       </button>
       <button onclick="irPaso(3)"
-        class="flex-1 bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition">
+        class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-md">
         Siguiente →
       </button>
     </div>
@@ -208,7 +212,7 @@
         ← Atrás
       </button>
       <button onclick="guardarOnboarding()" id="btn-guardar"
-        class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition shadow-md">
+        class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-md">
         ✅ Guardar y comenzar
       </button>
     </div>
@@ -268,7 +272,8 @@
     ];
 
     // ─── Estado ────────────────────────────────────────────────────────────
-    let sectorSeleccionado = null;
+    // C2: multi-selección hasta 3
+    let sectoresSeleccionados = new Set();
     let regionesSeleccionadas = new Set();
     let pasoActual = 1;
 
@@ -308,10 +313,21 @@
       `).join('');
     }
 
+    // C2: permite hasta 3 sectores
     function seleccionarSector(id) {
-      sectorSeleccionado = id;
-      document.querySelectorAll('.sector-card').forEach(el => el.classList.remove('selected'));
-      document.getElementById(`sector-${id}`).classList.add('selected');
+      if (sectoresSeleccionados.has(id)) {
+        sectoresSeleccionados.delete(id);
+        document.getElementById(`sector-${id}`).classList.remove('selected');
+      } else {
+        if (sectoresSeleccionados.size >= 3) {
+          alert('Puedes seleccionar máximo 3 sectores.');
+          return;
+        }
+        sectoresSeleccionados.add(id);
+        document.getElementById(`sector-${id}`).classList.add('selected');
+      }
+      document.getElementById('contador-sectores').textContent =
+        `${sectoresSeleccionados.size} de 3 seleccionados`;
     }
 
     function toggleRegion(el, nombre) {
@@ -319,13 +335,11 @@
       if (regionesSeleccionadas.has(nombre)) {
         regionesSeleccionadas.delete(nombre);
       } else {
-        // Si selecciona "Nacional", desmarcar las demás
         if (nombre === 'Nacional (todo el país)') {
           regionesSeleccionadas.clear();
           document.querySelectorAll('.region-pill').forEach(p => p.classList.remove('selected'));
           el.classList.add('selected');
         } else {
-          // Si selecciona una específica, desmarcar "Nacional"
           const pills = document.querySelectorAll('.region-pill');
           pills.forEach(p => {
             if (p.textContent === 'Nacional (todo el país)') {
@@ -344,21 +358,24 @@
 
     // ─── Navegación entre pasos ────────────────────────────────────────────
     function irPaso(n) {
-      if (n === 2 && !sectorSeleccionado) {
-        alert('Por favor selecciona tu sector principal para continuar');
+      // C2: validar al menos 1 sector seleccionado
+      if (n === 2 && sectoresSeleccionados.size === 0) {
+        alert('Por favor selecciona al menos un sector para continuar');
         return;
       }
       if (n === 3) {
         renderChips();
-        // Pre-llenar palabras clave si el campo está vacío
         const kw = document.getElementById('onb-palabras');
-        if (!kw.value && sectorSeleccionado && sectorKeywords[sectorSeleccionado]) {
-          kw.value = sectorKeywords[sectorSeleccionado].join(', ');
+        if (!kw.value && sectoresSeleccionados.size > 0) {
+          // C2: combinar keywords de todos los sectores seleccionados
+          const todasKeywords = [...sectoresSeleccionados]
+            .flatMap(id => sectorKeywords[id] || []);
+          const unicas = [...new Set(todasKeywords)];
+          kw.value = unicas.join(', ');
         }
       }
 
       pasoActual = n;
-      // Ocultar todos los pasos
       document.querySelectorAll('[id^="paso-"]').forEach(el => el.classList.add('hidden'));
       document.getElementById(`paso-${n}`).classList.remove('hidden');
       actualizarProgressBar(n);
@@ -385,10 +402,13 @@
 
     // ─── Chips de sugerencias ──────────────────────────────────────────────
     function renderChips() {
-      if (!sectorSeleccionado) return;
-      const chips = sectorKeywords[sectorSeleccionado] || [];
+      if (sectoresSeleccionados.size === 0) return;
+      // C2: chips de todos los sectores seleccionados
+      const todasKeywords = [...sectoresSeleccionados]
+        .flatMap(id => sectorKeywords[id] || []);
+      const unicas = [...new Set(todasKeywords)];
       const container = document.getElementById('chips-sugeridos');
-      container.innerHTML = chips.map(k => `
+      container.innerHTML = unicas.map(k => `
         <span class="keyword-chip added" onclick="toggleChip(this, '${k}')">${k}</span>
       `).join('');
     }
@@ -406,80 +426,80 @@
     }
 
     // ─── Guardar ──────────────────────────────────────────────────────────
-	async function guardarOnboarding() {
-	  const btn = document.getElementById('btn-guardar');
-	  btn.textContent = 'Guardando...';
-	  btn.disabled = true;
+    async function guardarOnboarding() {
+      const btn = document.getElementById('btn-guardar');
+      btn.textContent = 'Guardando...';
+      btn.disabled = true;
 
-	  const palabrasClave = document.getElementById('onb-palabras').value
-		.split(',').map(s => s.trim()).filter(s => s);
+      const palabrasClave = document.getElementById('onb-palabras').value
+        .split(',').map(s => s.trim()).filter(s => s);
 
-	  const montoRaw = document.getElementById('onb-monto').value;
-	  const monto = parseFloat(montoRaw) || 0;
+      const montoRaw = document.getElementById('onb-monto').value;
+      const monto = parseFloat(montoRaw) || 0;
 
-	  const datos = {
-		sector_principal:      sectorSeleccionado,
-		regiones_interes:      Array.from(regionesSeleccionadas),
-		palabras_clave:        palabrasClave,
-		monto_minimo_alta:     monto,
-		descripcion:           document.getElementById('onb-descripcion').value.trim(),
-		onboarding_completado: true,
-	  };
+      // C2: enviar array de sectores; el primero es el principal
+      const sectoresArray = [...sectoresSeleccionados];
 
-	  try {
-		const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      const datos = {
+        sector_principal:      sectoresArray[0] || null,
+        sectores_adicionales:  sectoresArray.slice(1),
+        regiones_interes:      Array.from(regionesSeleccionadas),
+        palabras_clave:        palabrasClave,
+        monto_minimo_alta:     monto,
+        descripcion:           document.getElementById('onb-descripcion').value.trim(),
+        onboarding_completado: true,
+      };
 
-		const res = await fetch(`${API_BASE}/api/perfil`, {
-		  method: 'POST',
-		  headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
-		  },
-		  body: JSON.stringify(datos)
-		});
+      try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-		if (res.ok) {
-		  // ── FIX: buscar y guardar el objeto user antes de redirigir ──────────
-		  // oportunidades.html requiere TANTO token COMO user en localStorage
-		  try {
-			const userRes = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
-			  headers: { 'Authorization': `Bearer ${token}` }
-			});
-			if (userRes.ok) {
-			  const userData = await userRes.json();
-			  // Guardamos el mismo formato que usa login.html
-			  const userObj = {
-				id:         userData.id,
-				email:      userData.email,
-				rol:        userData.rol,
-				empresa_id: userData.empresa.id
-			  };
-			  localStorage.setItem('user', JSON.stringify(userObj));
-			}
-		  } catch (e) {
-			console.warn('No se pudo guardar user, pero continuamos:', e);
-		  }
-		  // ─────────────────────────────────────────────────────────────────────
+        const res = await fetch(`${API_BASE}/api/perfil`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(datos)
+        });
 
-		  btn.textContent = '¡Listo! Redirigiendo...';
-		  btn.className = btn.className
-			.replace('from-indigo-600 to-purple-600', 'from-green-500 to-green-600')
-			.replace('hover:from-indigo-700 hover:to-purple-700', '');
-		  setTimeout(() => window.location.href = '/oportunidades.html?nuevo=1', 1200);
+        if (res.ok) {
+          try {
+            const userRes = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (userRes.ok) {
+              const userData = await userRes.json();
+              const userObj = {
+                id:         userData.id,
+                email:      userData.email,
+                rol:        userData.rol,
+                empresa_id: userData.empresa.id
+              };
+              localStorage.setItem('user', JSON.stringify(userObj));
+            }
+          } catch (e) {
+            console.warn('No se pudo guardar user, pero continuamos:', e);
+          }
 
-		} else {
-		  const err = await res.json();
-		  alert('Error al guardar: ' + (err.error || 'Intenta de nuevo'));
-		  btn.textContent = '✅ Guardar y comenzar';
-		  btn.disabled = false;
-		}
-	  } catch (e) {
-		console.error(e);
-		alert('Error de conexión. Intenta de nuevo.');
-		btn.textContent = '✅ Guardar y comenzar';
-		btn.disabled = false;
-	  }
-	}
+          btn.textContent = '¡Listo! Redirigiendo...';
+          btn.className = btn.className
+            .replace('from-indigo-600 to-purple-600', 'from-green-500 to-green-600')
+            .replace('hover:from-indigo-700 hover:to-purple-700', '');
+          setTimeout(() => window.location.href = '/oportunidades.html?nuevo=1', 1200);
+
+        } else {
+          const err = await res.json();
+          alert('Error al guardar: ' + (err.error || 'Intenta de nuevo'));
+          btn.textContent = '✅ Guardar y comenzar';
+          btn.disabled = false;
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Error de conexión. Intenta de nuevo.');
+        btn.textContent = '✅ Guardar y comenzar';
+        btn.disabled = false;
+      }
+    }
 
     function saltarOnboarding() {
       window.location.href = '/oportunidades.html';
