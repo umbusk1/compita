@@ -216,40 +216,42 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
       : `<p><strong>Tienes 7 días de prueba gratuita con todas las funciones del Plan Business:</strong></p>`;
 
     try {
-      await resend.emails.send({
+		await resend.emails.send({
         from: 'Compita <noreply@compita.umbusk.com>',
         to: email,
         subject: 'Confirma tu email para activar tu cuenta en Compita',
         html: `
           <h2>¡Bienvenido a Compita!</h2>
-          <p>Hola,</p>
-          <p>Tu empresa <strong>${empresa}</strong> ha sido registrada exitosamente.</p>
-          ${mensajeTrial}
-          <ul>
-            <li>✓ Análisis diario automático de licitaciones</li>
-            <li>✓ Notificaciones por email de oportunidades ALTA y MEDIA</li>
-            <li>✓ Descarga de documentos (10/mes)</li>
-            <li>✓ Análisis profundo con IA (5/mes)</li>
-          </ul>
 
-          <div style="background-color:#EEF2FF; border-left: 4px solid #4F46E5; padding: 12px 16px; margin: 20px 0; border-radius: 4px;">
-		              <p style="margin:0; color:#4F46E5; font-weight:bold;">🎁 ¿Quieres 30 días en vez de 7?</p>
-		              <p style="margin:8px 0 0 0; color:#374151; font-size:14px;">
-		                Al confirmar tu email podrás invitar a alguien de otra empresa. Si acepta, <strong>ambos obtienen 30 días gratis</strong> en vez de 7.
-		              </p>
-          </div>
+          <p>Para activar tu cuenta, confirma tu email haciendo clic aquí:</p>
 
-          <p><strong>Para activar tu cuenta, confirma tu email haciendo clic aquí:</strong></p>
-          <p style="text-align: center; margin: 30px 0;">
+          <p style="margin: 24px 0;">
             <a href="https://compita.umbusk.com/confirmar-email.html?token=${tokenConfirmacion}"
-               style="background-color: #4F46E5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+               style="background-color: #4F46E5; color: white; padding: 12px 30px;
+                      text-decoration: none; border-radius: 8px; font-weight: bold;
+                      display: inline-block;">
               Confirmar mi Email
             </a>
           </p>
+
           <p style="color: #666; font-size: 14px;">
             Si no solicitaste esta cuenta, puedes ignorar este email.<br>
             Este enlace expira en 24 horas.
           </p>
+
+          <div style="background-color:#EEF2FF; border-left: 4px solid #4F46E5;
+                      padding: 12px 16px; margin: 28px 0; border-radius: 4px;">
+            <p style="margin:0; color:#4F46E5; font-weight:bold;">
+              ¿Quieres 30 días de prueba gratis en vez de 7?<br>
+              <span style="font-size:13px; font-weight:normal; color:#374151;">
+                (o un bono de 1 mes gratis si ya te suscribiste a un plan pago)
+              </span>
+            </p>
+            <p style="margin:10px 0 0 0; color:#374151; font-size:14px;">
+              Al confirmar tu email podrás invitar a alguien de otra empresa.
+              Si esa persona acepta suscribirse, obtienen 30 días gratis para cada quien.
+            </p>
+          </div>
         `
       });
       console.log('✅ [REGISTRO] Email de confirmación enviado');
