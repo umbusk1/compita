@@ -1,993 +1,1265 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compita - Tu agente de licitaciones en República Dominicana</title>
-    <meta name="description" content="Compita te encuentra las licitaciones. Tú ganas los contratos. Tu agente de inteligencia comercial revisa el portal del Estado dos veces al día y te entrega solo las oportunidades relevantes para tu empresa. Desde $10/mes.">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="favicon-umbusk.png">
-    <link rel="apple-touch-icon" href="favicon-umbusk.png">
-    <style>
-        .mobile-menu {
-            display: none;
-        }
-        .mobile-menu.active {
-            display: block;
-        }
-        @media (max-width: 768px) {
-            #grafico-diario {
-                height: 300px !important;
-            }
-        }
-    </style>
-    <!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-YBQQM365Q8"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compita — Atención, Análisis, Acción en licitaciones de República Dominicana</title>
+  <meta name="description" content="Compita monitorea cada licitación del Estado dominicano y analiza los pliegos con IA — para que tu empresa llegue primero y llegue lista. Desde $10/mes.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon-umbusk.png">
+  <link rel="apple-touch-icon" href="favicon-umbusk.png">
 
-	  gtag('config', 'G-YBQQM365Q8');
-    </script>
+  <style>
+    /* ── Tipografía base ── */
+    body {
+      font-family: 'Manrope', sans-serif;
+      color: #1a2e2d;
+      background: #f8f6f1;
+    }
+    h1, h2, h3, .lora {
+      font-family: 'Lora', serif;
+    }
 
-    <!-- Meta Pixel Code -->
-	<script>
-	!function(f,b,e,v,n,t,s)
-	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-	n.queue=[];t=b.createElement(e);t.async=!0;
-	t.src=v;s=b.getElementsByTagName(e)[0];
-	s.parentNode.insertBefore(t,s)}(window, document,'script',
-	'https://connect.facebook.net/en_US/fbevents.js');
-	fbq('init', '1335366601961235');
-	fbq('track', 'PageView');
-	</script>
-	<noscript><img height="1" width="1" style="display:none"
-	src="https://www.facebook.com/tr?id=1335366601961235&ev=PageView&noscript=1"
-	/></noscript>
-    <!-- End Meta Pixel Code -->
+    /* ── Paleta Compita ── */
+    :root {
+      --verde-oscuro:  #163332;
+      --violeta:       #5247e4;
+      --verde-cta:     #2bb738;
+      --dorado:        #eaba81;
+      --crema:         #f8f6f1;
+      --crema-borde:   #e5e0d5;
+      --texto-oscuro:  #163332;
+      --texto-medio:   #4a6662;
+      --texto-claro:   #9ab8b0;
+    }
 
+    /* ── Navbar ── */
+    .nav-link {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--texto-medio);
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--violeta); }
+
+    .btn-nav-primary {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background: var(--verde-cta);
+      color: #fff;
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-nav-primary:hover { background: #22a02d; }
+
+    /* ── Menú móvil ── */
+    .mobile-menu { display: none; }
+    .mobile-menu.active { display: block; }
+
+    /* ── Utilidades generales ── */
+    .section-eyebrow {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+  </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBQQM365Q8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YBQQM365Q8');
+  </script>
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1335366601961235');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1335366601961235&ev=PageView&noscript=1"/></noscript>
 </head>
-<body class="bg-white">
 
-<!-- NAVEGACIÓN -->
-<nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
-    <div class="container mx-auto px-4 py-4">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-20">
-            </div>
-            <div class="hidden md:flex gap-6 items-center">
-                <a href="#como-funciona" class="text-gray-600 hover:text-indigo-600 transition">Cómo Funciona</a>
-                <a href="#pricing" class="text-gray-600 hover:text-indigo-600 transition">Precios</a>
-                <a href="#faq" class="text-gray-600 hover:text-indigo-600 transition">FAQ</a>
-                <a href="#reporte" class="text-gray-600 hover:text-indigo-600 transition">Reporte de los Lunes</a>
-                <a href="#asociaciones" class="text-gray-600 hover:text-indigo-600 transition">Asociaciones</a>
-                <a href="/login.html" class="text-indigo-600 hover:text-indigo-800 font-semibold">Iniciar Sesión</a>
-                <a href="/registro.html" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center gap-2">
-                    <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-                    Probar Gratis
-                </a>
-            </div>
-            <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-        <div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
-            <div class="flex flex-col gap-4">
-                <a href="#como-funciona" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">Cómo Funciona</a>
-                <a href="#pricing" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">Precios</a>
-                <a href="#faq" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">FAQ</a>
-                <a href="#asociaciones" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 transition py-2">Asociaciones</a>
-                <a href="/login.html" class="text-indigo-600 hover:text-indigo-800 font-semibold py-2">Iniciar Sesión</a>
-                <a href="/registro.html" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-center flex items-center justify-center gap-2">
-                    <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-                    Probar Gratis
-                </a>
-            </div>
-        </div>
+<body>
+
+<!-- ════════════════════════════════════════
+     NAVEGACIÓN
+════════════════════════════════════════ -->
+<nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm" style="border-bottom: 1px solid var(--crema-borde);">
+  <div class="container mx-auto px-4 py-3">
+    <div class="flex justify-between items-center">
+
+      <!-- Logo -->
+      <a href="/">
+        <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Compita" class="h-16">
+      </a>
+
+      <!-- Links escritorio -->
+      <div class="hidden md:flex gap-6 items-center">
+        <a href="#como-funciona" class="nav-link">Cómo funciona</a>
+        <a href="#pricing"       class="nav-link">Precios</a>
+        <a href="#faq"           class="nav-link">FAQ</a>
+        <a href="#reporte"       class="nav-link">Reporte semanal</a>
+        <a href="#asociaciones"  class="nav-link">Asociaciones</a>
+        <a href="/login.html"    class="nav-link" style="color: var(--violeta); font-weight:600;">Iniciar sesión</a>
+        <a href="/registro.html" class="btn-nav-primary">
+          <img src="https://flagcdn.com/20x15/do.png"
+               srcset="https://flagcdn.com/40x30/do.png 2x"
+               width="20" height="15" alt="RD">
+          Empieza gratis
+        </a>
+      </div>
+
+      <!-- Botón menú móvil -->
+      <button onclick="toggleMobileMenu()"
+              class="md:hidden focus:outline-none"
+              style="color: var(--texto-medio);">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path id="menu-icon"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
     </div>
+
+    <!-- Menú móvil desplegable -->
+    <div id="mobile-menu" class="mobile-menu md:hidden mt-3 pb-4"
+         style="border-top: 1px solid var(--crema-borde);">
+      <div class="flex flex-col gap-3 pt-3">
+        <a href="#como-funciona" onclick="toggleMobileMenu()" class="nav-link py-1">Cómo funciona</a>
+        <a href="#pricing"       onclick="toggleMobileMenu()" class="nav-link py-1">Precios</a>
+        <a href="#faq"           onclick="toggleMobileMenu()" class="nav-link py-1">FAQ</a>
+        <a href="#reporte"       onclick="toggleMobileMenu()" class="nav-link py-1">Reporte semanal</a>
+        <a href="#asociaciones"  onclick="toggleMobileMenu()" class="nav-link py-1">Asociaciones</a>
+        <a href="/login.html"    class="nav-link py-1" style="color:var(--violeta);font-weight:600;">Iniciar sesión</a>
+        <a href="/registro.html" class="btn-nav-primary justify-center py-3 mt-1">
+          <img src="https://flagcdn.com/20x15/do.png"
+               srcset="https://flagcdn.com/40x30/do.png 2x"
+               width="20" height="15" alt="RD">
+          Empieza gratis
+        </a>
+      </div>
+    </div>
+  </div>
 </nav>
 
-<!-- HERO -->
-<section class="pt-32 pb-20 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center">
-            <p class="text-lg text-indigo-600 font-semibold mb-4 flex items-center justify-center gap-2">
-                Tu agente de inteligencia comercial en República Dominicana
-                <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="República Dominicana">
-            </p>
-            <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                Compita te encuentra las licitaciones<br>
-            </h2>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                <span class="text-indigo-600">Tú ganas los contratos</span>
-            </h1>
-            <p class="text-lg md:text-xl text-gray-600 mb-4">
-                Revisa el portal del Estado dos veces al día y te entrega solo las oportunidades que son para tu empresa.<br>
-                <span class="font-semibold text-gray-800">No es una búsqueda. Es un colaborador que toma iniciativa.</span>
-            </p>
-            <p class="text-base text-indigo-700 font-semibold mb-8">
-                El servicio equivalente cuesta $1,000 al año. Compita desde $10/mes.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                <a href="/registro.html" class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
-                    <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
-                    ¡Pruébalo gratis ya!
-                </a>
-                <a href="#demo" class="bg-white text-indigo-600 border-2 border-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition font-semibold text-lg">
-                    ▶️ Ver Promo y Demo
-                </a>
-            </div>
-            <p class="text-sm text-gray-500">
-                ✓ Sin tarjeta de crédito &nbsp;•&nbsp; ✓ 7 días de prueba gratis
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- ESTADÍSTICAS EN TIEMPO REAL -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                    📊 Licitaciones en Tiempo Real
-                </h2>
-                <p class="text-xl text-gray-600">
-                    Datos de licitaciones abiertas para presentar ofertas, actualizados diariamente desde el portal oficial SECP
-                </p>
-            </div>
-            <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-12">
-                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
-                    <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
-                    <div class="h-10 bg-gray-300 rounded w-1/2"></div>
-                </div>
-                <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg shadow p-6 animate-pulse">
-                    <div class="h-4 bg-gray-300 rounded w-3/4 mb-4"></div>
-                    <div class="h-10 bg-gray-300 rounded w-1/2"></div>
-                </div>
-            </div>
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-2xl font-bold text-gray-800 mb-6">Licitaciones Abiertas por Mes/Día</h3>
-                <div class="flex justify-center gap-1 md:gap-2 mb-6 border-b border-gray-200 overflow-x-auto" id="month-tabs"></div>
-                <div id="tab-content">
-                    <canvas id="grafico-diario" height="80"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- EL PROBLEMA -->
-<section class="py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-4xl font-bold text-gray-900 mb-6">
-                ¿Cuántas licitaciones perdiste esta semana porque no las viste a tiempo?
-            </h2>
-            <p class="text-xl text-gray-600 mb-12">
-                El portal del Estado dominicano publica cientos de licitaciones cada semana. La mayoría no son para tu empresa — pero algunas sí lo son, y encontrarlas manualmente toma horas que no tienes. Mientras tanto, tu competencia ya presentó oferta.
-            </p>
-            <div class="grid md:grid-cols-3 gap-6 mt-4">
-                <div class="p-6 bg-red-50 rounded-lg border border-red-100">
-                    <div class="text-4xl mb-4">⏰</div>
-                    <h3 class="font-bold text-gray-800 mb-2">Horas perdidas</h3>
-                    <p class="text-gray-600 text-sm">Revisar licitaciones manualmente toma horas de trabajo rutinario que tu equipo podría dedicar a ganar contratos</p>
-                </div>
-                <div class="p-6 bg-red-50 rounded-lg border border-red-100">
-                    <div class="text-4xl mb-4">😓</div>
-                    <h3 class="font-bold text-gray-800 mb-2">Oportunidades perdidas</h3>
-                    <p class="text-gray-600 text-sm">Las mejores oportunidades se esconden entre cientos de licitaciones que no son para ti</p>
-                </div>
-                <div class="p-6 bg-red-50 rounded-lg border border-red-100">
-                    <div class="text-4xl mb-4">💸</div>
-                    <h3 class="font-bold text-gray-800 mb-2">Recursos desperdiciados</h3>
-                    <p class="text-gray-600 text-sm">Tu empresa incurre en costos de oportunidad cada vez que alguien busca manualmente lo que Compita puede hacer solo</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- VIDEOS PROMO Y DEMO -->
-<section id="demo" class="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
-    <div class="container mx-auto px-4">
-        <div class="max-w-5xl mx-auto">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-900 mb-4">
-                    Compita es un aliado para ti
-                </h2>
-                <p class="text-xl text-gray-600">
-                    No dejes que tus competidores vean esto
-                </p>
-            </div>
-            <div class="bg-gray-900 rounded-2xl shadow-2xl aspect-video flex items-center justify-center">
-                <div class="text-center">
-                    <iframe
-                        class="mx-auto rounded-lg"
-                        width="560"
-                        height="315"
-                        src="https://www.youtube.com/embed/qvMhMCZGqns"
-                        title="Video Promo Compita"
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerpolicy="strict-origin-when-cross-origin"
-                        allowfullscreen>
-                    </iframe>
-                    <p class="text-white text-xl mt-4">Video Promo (22 segundos)</p>
-                </div>
-            </div>
-        </div>
-        <br><br><br>
-		<div class="container mx-auto px-4">
-             <div class="max-w-5xl mx-auto">
-		         <div class="text-center mb-12">
-		                <h2 class="text-4xl font-bold text-gray-900 mb-4">
-		                    Compita funciona como agentificación que trabaja por ti
-		                </h2>
-		                <p class="text-xl text-gray-600">
-		                    Fácil de usar para obtener información con sentido común
-		                </p>
-		            </div>
-		            <div class="bg-gray-900 rounded-2xl shadow-2xl aspect-video flex items-center justify-center">
-		                <div class="text-center">
-		                    <iframe
-		                        class="mx-auto rounded-lg"
-		                        width="560"
-		                        height="315"
-		                        src="https://www.youtube.com/embed/iKrDnUi8-88"
-		                        title="Video Demo Compita"
-		                        frameborder="0"
-		                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-		                        referrerpolicy="strict-origin-when-cross-origin"
-		                        allowfullscreen>
-		                    </iframe>
-		                    <p class="text-white text-xl mt-4">Video Promo (22 segundos)</p>
-		         </div>
-              </div>
-          </div>
-        </div>
-
-    </div>
-</section>
-
-<!-- CÓMO FUNCIONA -->
-<section id="como-funciona" class="py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-4xl font-bold text-gray-900 text-center mb-4">
-                Así trabaja Compita por ti
-            </h2>
-            <p class="text-center text-gray-600 text-lg mb-16">Tres pasos. Tú solo haces el primero.</p>
-
-            <div class="space-y-12">
-                <div class="flex gap-6 items-start">
-                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Configura el perfil de tu empresa</h3>
-                        <p class="text-gray-600 mb-4">Dinos en qué sector opera tu empresa, qué productos o servicios ofreces y qué palabras describen tu negocio. Toma menos de 5 minutos. Compita hace el resto.</p>
-                        <div class="bg-indigo-50 rounded-lg p-4 space-y-3">
-                            <div class="flex gap-3 items-start">
-                                <span class="text-indigo-600 font-bold">1.</span>
-                                <div>
-                                    <strong class="text-gray-900">Categorías UNSPSC</strong>
-                                    <p class="text-gray-600 text-sm">Selecciona las familias de productos/servicios de tu interés (ej: Construcción, Tecnología, Consultoría)</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <span class="text-indigo-600 font-bold">2.</span>
-                                <div>
-                                    <strong class="text-gray-900">Palabras clave</strong>
-                                    <p class="text-gray-600 text-sm">Define términos específicos dentro de esas categorías (ej: "capacitación", "software", "mantenimiento")</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-3 items-start">
-                                <span class="text-indigo-600 font-bold">3.</span>
-                                <div>
-                                    <strong class="text-gray-900">Exclusiones</strong>
-                                    <p class="text-gray-600 text-sm">Descarta automáticamente lo que NO te interesa (ej: "alimentos", "construcción de carreteras")</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex gap-6 items-start">
-                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Compita analiza el portal del Estado — solo</h3>
-                        <p class="text-gray-600">Cada mañana y cada tarde de lunes a viernes, Compita revisa el <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index?currentLanguage=es-DO" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 font-semibold underline">portal SECP</a> completo. Claude AI analiza cada licitación en tres etapas: primero filtra por categorías, luego por palabras clave, y finalmente evalúa la relevancia según el perfil de tu empresa. No es búsqueda de palabras — es comprensión real.</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-6 items-start">
-                    <div class="bg-indigo-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Tú recibes solo lo que importa</h3>
-                        <p class="text-gray-600">Te avisamos por email cuando hay nuevas oportunidades de alta y media relevancia para tu empresa. Entras al dashboard y las encuentras organizadas, claras y listas para evaluar. De 100 licitaciones, solo 3 o 4 son verdaderas oportunidades para ti. Compita ya lo sabe.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- RESULTADOS -->
-<section class="py-20 bg-indigo-600 text-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-12">Lo que Compita hace por tu empresa</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div>
-                    <div class="text-5xl font-bold mb-2">99%</div>
-                    <p class="text-indigo-100">Ahorro de tiempo en monitoreo</p>
-                </div>
-                <div>
-                    <div class="text-2xl font-bold mb-2">de '100' a '3 o 4'<br>que interesan</div>
-                    <p class="text-indigo-100">Licitaciones filtradas con precisión</p>
-                </div>
-                <div>
-                    <div class="text-5xl font-bold mb-2">2x</div>
-                    <p class="text-indigo-100">Al día, de lunes a viernes, sin que hagas nada</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- PLANES -->
-<section id="pricing" class="py-20 bg-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-4xl font-bold text-gray-900 text-center mb-4">Planes transparentes</h2>
-            <p class="text-center text-gray-600 mb-2">Comienza gratis ¡con el Plan Business!</p>
-            <p class="text-center text-indigo-700 font-semibold mb-12">
-                El servicio equivalente en el mercado regional cuesta $1,000 al año. Compita Business son $240 al año.
-            </p>
-
-            <div class="grid md:grid-cols-3 gap-8 mb-16">
-
-                <!-- Plan Estándar -->
-                <div class="border-2 border-gray-200 rounded-2xl p-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Estándar</h3>
-                    <div class="mb-6">
-                        <span class="text-4xl font-bold">$10</span>
-                        <span class="text-gray-600">/mes</span>
-                    </div>
-                    <p class="text-sm text-gray-500 mb-4">Para empresas que quieren estar siempre informadas sobre las licitaciones relevantes en su sector.</p>
-                    <ul class="space-y-3 mb-8 text-sm">
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Perfil empresarial completo</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">2 categorías UNSPSC</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Monitoreo automático 2x/día (L-V)</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Análisis inteligente con IA</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Alertas por email con las oportunidades del día</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Dashboard de oportunidades</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Historial de 1 mes</span>
-                        </li>
-                    </ul>
-                    <a href="/registro.html?plan=estandar" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center justify-center gap-2">
-                        <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-                        Comenzar
-                    </a>
-                </div>
-
-                <!-- Plan Business -->
-                <div class="border-2 border-indigo-600 rounded-2xl p-8 relative shadow-lg">
-                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold">Más Popular</div>
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Business</h3>
-                    <div class="mb-6">
-                        <span class="text-4xl font-bold">$20</span>
-                        <span class="text-gray-600">/mes</span>
-                    </div>
-                    <p class="text-sm text-gray-500 mb-4">Para empresas que no solo quieren encontrar las licitaciones — sino saber si vale la pena presentar oferta.</p>
-                    <ul class="space-y-3 mb-8 text-sm">
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>✨ Prueba gratis de 7 días</strong></span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Todo lo del Plan Estándar</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>5 categorías UNSPSC</strong></span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Descarga de pliegos de condiciones</strong> (PDF)</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Análisis del pliego con IA:</strong> requisitos, riesgos y si tu empresa cumple el perfil</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Historial de 3 meses</strong></span>
-                        </li>
-                    </ul>
-                    <a href="/registro.html" class="block text-center bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold flex items-center justify-center gap-2">
-                        <img src="https://flagcdn.com/20x15/do.png" srcset="https://flagcdn.com/40x30/do.png 2x, https://flagcdn.com/60x45/do.png 3x" width="20" height="15" alt="RD">
-                        Comenzar Prueba Gratis
-                    </a>
-                </div>
-
-                <!-- Plan Enterprise -->
-                <div class="border-2 border-gray-200 rounded-2xl p-8 bg-gradient-to-br from-gray-50 to-white">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
-                    <div class="mb-6">
-                        <span class="text-4xl font-bold">Custom</span>
-                        <span class="text-gray-600 text-base">/año</span>
-                    </div>
-                    <p class="text-sm text-gray-500 mb-4">Para empresas que quieren acompañamiento experto además de la tecnología.</p>
-                    <ul class="space-y-3 mb-8 text-sm">
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700">Todo lo del Plan Business</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Categorías UNSPSC ilimitadas</strong></span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Recomendaciones IA</strong> para preparar ofertas</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Acompañamiento de consultor</strong> especializado</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Revisión de documentos</strong> antes de envío</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-green-600 text-lg">✓</span>
-                            <span class="text-gray-700"><strong>Soporte prioritario</strong></span>
-                        </li>
-                    </ul>
-                    <a href="mailto:sales@umbusk.com?subject=Interés en Plan Enterprise - Compita" class="block text-center bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition font-semibold flex items-center justify-center gap-2">
-                        📧 Contáctanos
-                    </a>
-                </div>
-            </div>
-
-            <!-- Tabla comparativa -->
-            <div class="bg-gray-50 rounded-2xl p-4 md:p-8">
-                <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-6 text-center">Comparación Detallada</h3>
-
-                <div class="hidden lg:block overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="border-b-2 border-gray-300">
-                                <th class="py-3 px-4 font-semibold text-gray-700">Funcionalidad</th>
-                                <th class="py-3 px-4 text-center font-semibold text-indigo-600">Estándar</th>
-                                <th class="py-3 px-4 text-center font-semibold text-gray-700">Business</th>
-                                <th class="py-3 px-4 text-center font-semibold text-gray-700">Enterprise</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm">
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4 font-semibold text-gray-800">Precio</td>
-                                <td class="py-3 px-4 text-center text-indigo-600 font-bold">$10/mes</td>
-                                <td class="py-3 px-4 text-center text-gray-800 font-bold">$20/mes</td>
-                                <td class="py-3 px-4 text-center text-gray-800 font-bold">Custom</td>
-                            </tr>
-                            <tr class="bg-gray-100">
-                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Funcionalidades Base</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Perfil Empresarial</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Categorías UNSPSC</td>
-                                <td class="py-3 px-4 text-center text-gray-600 font-semibold">2</td>
-                                <td class="py-3 px-4 text-center text-gray-800 font-bold">5</td>
-                                <td class="py-3 px-4 text-center text-green-600 font-bold">Ilimitado</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Monitoreo Automático</td>
-                                <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
-                                <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
-                                <td class="py-3 px-4 text-center text-gray-600">2x/día (L-V)</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Análisis con IA</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                            <tr class="bg-gray-100">
-                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Notificaciones</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Alertas por Email</td>
-                                <td class="py-3 px-4 text-center text-gray-600">Resumen básico</td>
-                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
-                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">Análisis completo</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Acceso a Pliegos (PDF)</td>
-                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                            <tr class="bg-gray-100">
-                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Dashboard</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Dashboard de Oportunidades</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Análisis de Pliego con IA</td>
-                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Historial Disponible</td>
-                                <td class="py-3 px-4 text-center text-gray-600">1 mes</td>
-                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
-                                <td class="py-3 px-4 text-center text-gray-800 font-semibold">3 meses</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Filtros y Búsqueda</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                            <tr class="bg-gray-100">
-                                <td colspan="4" class="py-2 px-4 font-bold text-gray-700 text-xs uppercase">Servicios Premium</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Recomendaciones IA para Ofertas</td>
-                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                            <tr class="border-b border-gray-200">
-                                <td class="py-3 px-4">Acompañamiento Consultor</td>
-                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                <td class="py-3 px-4 text-center text-red-500 text-lg">✗</td>
-                                <td class="py-3 px-4 text-center text-green-600 text-lg">✓</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Tabla mobile -->
-                <div class="lg:hidden space-y-6">
-                    <div class="bg-white rounded-lg p-4 shadow">
-                        <h4 class="text-lg font-bold text-indigo-600 mb-3">Plan Estándar - $10/mes</h4>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between py-1 border-b"><span>Categorías UNSPSC</span><span class="text-gray-600 font-semibold">2</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Monitoreo Automático</span><span class="text-gray-600">2x/día (L-V)</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Análisis con IA</span><span class="text-green-600">✓</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Alertas Email</span><span class="text-gray-600">Resumen</span></div>
-                            <div class="flex justify-between py-1"><span>Historial</span><span class="text-gray-600">1 mes</span></div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg p-4 shadow">
-                        <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Business - $20/mes</h4>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between py-1 border-b"><span>Todo lo de Estándar</span><span class="text-green-600">✓</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Prueba Gratuita</span><span class="text-green-600 font-semibold">✓ 7 días</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Categorías UNSPSC</span><span class="text-gray-800 font-bold">5</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Acceso a Pliegos PDF</span><span class="text-green-600">✓</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Análisis de Pliego con IA</span><span class="text-green-600">✓</span></div>
-                            <div class="flex justify-between py-1"><span>Historial</span><span class="text-gray-800 font-semibold">3 meses</span></div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-lg p-4 shadow">
-                        <h4 class="text-lg font-bold text-gray-800 mb-3">Plan Enterprise - Custom</h4>
-                        <div class="space-y-2 text-sm">
-                            <div class="flex justify-between py-1 border-b"><span>Todo lo de Business</span><span class="text-green-600">✓</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Categorías UNSPSC</span><span class="text-green-600 font-bold">Ilimitado</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Recomendaciones IA</span><span class="text-green-600">✓</span></div>
-                            <div class="flex justify-between py-1 border-b"><span>Acompañamiento</span><span class="text-green-600">✓</span></div>
-                            <div class="flex justify-between py-1"><span>Revisión documentos</span><span class="text-green-600">✓</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <p class="text-center text-gray-600 mt-8">
-                💬 ¿Dudas sobre qué plan elegir? <a href="mailto:sales@umbusk.com" class="text-indigo-600 font-semibold hover:text-indigo-800">Escríbenos</a>
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- PROGRAMA DE REFERIDOS -->
-<section class="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
-  <div class="container mx-auto px-4">
-    <div class="max-w-3xl mx-auto text-center">
-
-      <span class="inline-block bg-indigo-100 text-indigo-700 text-sm font-semibold px-4 py-1 rounded-full mb-6 uppercase tracking-wide">
-        Programa de Referidos
-      </span>
-
-      <h2 class="text-4xl font-bold text-gray-900 mb-4">
-        Invita a un colega.<br>
-        <span class="text-indigo-600">Ambos ganan 30 días gratis.</span>
-      </h2>
-
-      <p class="text-xl text-gray-600 mb-10">
-        ¿Conoces a alguien que también busca contratos con el Estado dominicano?
-        Invítalo desde tu cuenta. Cuando se registre, tú y él reciben
-        <strong>30 días de prueba</strong> en lugar de 7.
-      </p>
-
-      <!-- Mecánica en 3 pasos -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0 mb-10">
-        <div class="flex flex-col items-center text-center px-6">
-          <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-2">1</div>
-          <p class="text-sm text-gray-600 max-w-[120px]">Entra a tu cuenta y ve a "Mi Cuenta"</p>
-        </div>
-        <div class="text-indigo-300 text-2xl font-light hidden sm:block">→</div>
-        <div class="flex flex-col items-center text-center px-6">
-          <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-2">2</div>
-          <p class="text-sm text-gray-600 max-w-[120px]">Escribe el email de tu colega en la pestaña 🤝 Invitar</p>
-        </div>
-        <div class="text-indigo-300 text-2xl font-light hidden sm:block">→</div>
-        <div class="flex flex-col items-center text-center px-6">
-          <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-2">3</div>
-          <p class="text-sm text-gray-600 max-w-[120px]">Cuando se registre, ambos obtienen 30 días</p>
-        </div>
-      </div>
-
-      <!-- CTA -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/registro.html"
-           class="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg shadow-lg flex items-center justify-center gap-2">
-          <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x" width="24" height="18" alt="RD">
-          Registrarme y empezar
-        </a>
-        <a href="/login.html"
-           class="bg-white text-indigo-600 border-2 border-indigo-600 px-8 py-4 rounded-lg hover:bg-indigo-50 transition font-semibold text-lg flex items-center justify-center">
-          Ya tengo cuenta → Invitar
-        </a>
-      </div>
-
-      <p class="text-sm text-gray-500 mt-6">
-        Sin límite de invitaciones. Cada colega que se registra suma 30 días a tu cuenta.
-      </p>
-
-    </div>
-  </div>
-</section>
-<!-- FIN PROGRAMA DE REFERIDOS -->
-
-<!-- FAQ -->
-<section id="faq" class="py-20 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-4xl font-bold text-gray-900 text-center mb-12">Preguntas Frecuentes</h2>
-            <div class="space-y-6">
-                <details class="bg-white rounded-lg p-6 shadow-sm">
-                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Necesito tarjeta de crédito para la prueba gratuita?</summary>
-                    <p class="text-gray-600 mt-4">No. La prueba de 7 días es completamente gratuita y no requiere tarjeta de crédito. Solo necesitas un email corporativo válido.</p>
-                </details>
-                <details class="bg-white rounded-lg p-6 shadow-sm">
-                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Funciona con cualquier portal de compras?</summary>
-                    <p class="text-gray-600 mt-4">Actualmente optimizado para el portal de República Dominicana. Próximamente soportaremos otros países de LATAM.</p>
-                </details>
-                <details class="bg-white rounded-lg p-6 shadow-sm">
-                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Cómo funciona la IA de análisis?</summary>
-                    <p class="text-gray-600 mt-4">Usamos Claude AI de Anthropic para leer cada licitación que puede ser relevante según las categorías UNSPSC y palabras clave, entender el contexto de las pre-seleccionadas y evaluar su nivel de relevancia de acuerdo con el perfil de tu empresa. No es búsqueda simple de palabras, es comprensión semántica real de las oportunidades que importan.</p>
-                </details>
-                <details class="bg-white rounded-lg p-6 shadow-sm">
-                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Puedo cancelar en cualquier momento?</summary>
-                    <p class="text-gray-600 mt-4">Sí. Sin contratos ni permanencia mínima. Cancelas cuando quieras desde tu cuenta.</p>
-                </details>
-                <details class="bg-white rounded-lg p-6 shadow-sm">
-                    <summary class="font-semibold text-gray-900 cursor-pointer">¿Mis datos están seguros?</summary>
-                    <p class="text-gray-600 mt-4">Absolutamente. Usamos encriptación end-to-end, base de datos PostgreSQL en Neon con backups diarios, y cumplimos con mejores prácticas de seguridad.</p>
-                </details>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- REPORTE SEMANAL -->
-<section id="reporte" class="py-20 bg-white">
-  <div class="container mx-auto px-4">
-    <div class="max-w-2xl mx-auto text-center">
-      <p class="text-indigo-600 font-semibold text-sm uppercase tracking-wide mb-3">Gratis — sin cuenta requerida</p>
-      <h2 class="text-4xl font-bold text-gray-900 mb-4">
-        El pulso semanal del mercado de licitaciones
-      </h2>
-      <p class="text-xl text-gray-600 mb-8">
-        Cada lunes recibirás un vistazo a este mercado: las oportunidades más grandes y las más pequeñas; las que vencen muy pronto y las que dan más tiempo para ofertar; las más complejas y las más simples. Una radiografía de las compras públicas en República Dominicana en tu bandeja de entrada.
-      </p>
-
-      <div class="bg-indigo-50 rounded-2xl p-8 shadow-sm">
-        <div id="form-suscripcion">
-          <div class="flex flex-col sm:flex-row gap-3 mb-3">
-            <input
-              type="text"
-              id="sub-nombre"
-              placeholder="Tu nombre"
-              class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500 text-gray-800"
-            />
-            <input
-              type="email"
-              id="sub-email"
-              placeholder="Tu email"
-              class="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:border-indigo-500 text-gray-800"
-            />
-          </div>
-          <button
-            onclick="suscribirReporte()"
-            class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-lg"
-          >
-            📋 Suscribirme al Reporte Semanal — es gratis
-          </button>
-          <p id="sub-mensaje" class="mt-3 text-sm text-gray-500 min-h-[20px]"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <script>
-async function suscribirReporte() {
-  const nombre = document.getElementById('sub-nombre').value.trim();
-  const email = document.getElementById('sub-email').value.trim();
-  const mensaje = document.getElementById('sub-mensaje');
-  const boton = document.querySelector('[onclick="suscribirReporte()"]');
-
-  if (!nombre || !email) {
-    mensaje.textContent = '⚠️ Por favor completa tu nombre y email.';
-    mensaje.className = 'mt-3 text-sm text-red-500';
-    return;
-  }
-
-  boton.disabled = true;
-  boton.textContent = 'Procesando...';
-  mensaje.textContent = '';
-
-  try {
-    const res = await fetch('https://compita-reporte-semanal.vercel.app/api/suscribir', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombre, email })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      document.getElementById('form-suscripcion').innerHTML = `
-        <div class="text-center py-4">
-          <div class="text-5xl mb-4">🎉</div>
-          <h3 class="text-2xl font-bold text-indigo-700 mb-2">¡Listo, ${nombre}!</h3>
-          <p class="text-gray-600">Revisa tu bandeja de entrada — ya te enviamos un email de bienvenida.<br>Tu primer reporte llega el próximo lunes.</p>
-        </div>`;
-    } else {
-      mensaje.textContent = '⚠️ Hubo un problema. Intenta de nuevo.';
-      mensaje.className = 'mt-3 text-sm text-red-500';
-      boton.disabled = false;
-      boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
-    }
-  } catch (err) {
-    mensaje.textContent = '⚠️ Error de conexión. Intenta de nuevo.';
-    mensaje.className = 'mt-3 text-sm text-red-500';
-    boton.disabled = false;
-    boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
-  }
+function toggleMobileMenu() {
+  const menu     = document.getElementById('mobile-menu');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon= document.getElementById('close-icon');
+  menu.classList.toggle('active');
+  menuIcon.classList.toggle('hidden');
+  closeIcon.classList.toggle('hidden');
 }
 </script>
 
-<!-- ALIANZAS CON ASOCIACIONES -->
-<section id="asociaciones" class="py-20 bg-gradient-to-br from-slate-50 to-indigo-50">
-  <div class="container mx-auto px-4">
-    <div class="max-w-5xl mx-auto">
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section style="background: var(--crema); padding-top: 6rem;">
 
-      <!-- ENCABEZADO -->
-      <div class="text-center mb-4">
-        <span class="inline-block bg-indigo-100 text-indigo-700 text-sm font-semibold px-4 py-1 rounded-full mb-4 uppercase tracking-wide">
-          Alianzas Sectoriales
-        </span>
-        <h2 class="text-4xl font-bold text-gray-900 mb-4">
-          Compita llega a tu sector<br>a través de tu asociación
+  <!-- Contenido principal: texto + imagen -->
+  <div class="container mx-auto px-4 py-16">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+
+      <!-- Columna izquierda: texto -->
+      <div class="flex-1">
+
+        <!-- Eyebrow -->
+        <p class="section-eyebrow mb-4 flex items-center gap-2"
+           style="color: var(--violeta);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--violeta); border-radius:2px;"></span>
+          Tu agente de inteligencia comercial en República Dominicana
+          <img src="https://flagcdn.com/20x15/do.png"
+               srcset="https://flagcdn.com/40x30/do.png 2x"
+               width="20" height="15" alt="RD">
+        </p>
+
+        <!-- Titular principal -->
+        <h1 class="lora mb-6"
+            style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--texto-oscuro); line-height: 1.2;">
+          Sé el primero en saber.<br>
+          El mejor preparado<br>
+          <span style="color: var(--violeta);">para ganar.</span>
+        </h1>
+
+        <!-- Subtítulo -->
+        <p style="font-size: 1rem; line-height: 1.8; color: var(--texto-medio); max-width: 480px; margin-bottom: 2rem;">
+          Compita monitorea cada licitación del Estado dominicano,
+          filtra las que son para tu empresa y analiza los pliegos con IA
+          — para que llegues antes que tu competencia y llegues listo.
+        </p>
+
+        <!-- Botones CTA -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+          <a href="/registro.html"
+             style="font-family:'Manrope',sans-serif; font-weight:600; font-size:1rem;
+                    background:var(--verde-cta); color:#fff;
+                    padding: 0.875rem 1.75rem; border-radius:8px;
+                    display:inline-flex; align-items:center; gap:8px;
+                    transition: background 0.2s;"
+             onmouseover="this.style.background='#22a02d'"
+             onmouseout="this.style.background='var(--verde-cta)'">
+            <img src="https://flagcdn.com/24x18/do.png"
+                 srcset="https://flagcdn.com/48x36/do.png 2x"
+                 width="24" height="18" alt="RD">
+            Empieza gratis
+          </a>
+          <a href="#demo"
+             style="font-family:'Manrope',sans-serif; font-weight:600; font-size:1rem;
+                    background:transparent; color:var(--texto-oscuro);
+                    border: 1.5px solid var(--crema-borde);
+                    padding: 0.875rem 1.75rem; border-radius:8px;
+                    display:inline-flex; align-items:center; gap:8px;
+                    transition: border-color 0.2s, color 0.2s;"
+             onmouseover="this.style.borderColor='var(--texto-oscuro)'"
+             onmouseout="this.style.borderColor='var(--crema-borde)'">
+            ▶ Ver demo
+          </a>
+        </div>
+
+        <!-- Garantías -->
+        <p style="font-size:0.8rem; color: var(--texto-claro);">
+          Sin tarjeta de crédito &nbsp;·&nbsp; 7 días de prueba gratis &nbsp;·&nbsp; En 5 minutos activo
+        </p>
+
+      </div>
+
+      <!-- Columna derecha: imagen -->
+      <div class="flex-1 flex justify-center md:justify-end">
+        <div style="position:relative; border-radius:16px; overflow:hidden;
+                    max-width:480px; width:100%;
+                    box-shadow: 0 20px 60px rgba(22,51,50,0.15);">
+          <img src="hero-mujer.jpg"
+               alt="Profesional revisando licitaciones con Compita"
+               style="width:100%; height:420px; object-fit:cover; object-position: center top; display:block;">
+          <!-- Overlay sutil en la parte inferior de la imagen -->
+          <div style="position:absolute; bottom:0; left:0; right:0; height:80px;
+                      background: linear-gradient(to top, rgba(22,51,50,0.3), transparent);">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Banda oscura con métricas -->
+  <div style="background: var(--verde-oscuro); padding: 1.5rem 0;">
+    <div class="container mx-auto px-4">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-around gap-6 text-center">
+
+        <div>
+          <div class="lora" style="font-size:1.75rem; font-weight:700; color:var(--dorado);">198+</div>
+          <div style="font-size:0.75rem; font-weight:500; color:var(--texto-claro); margin-top:2px; text-transform:uppercase; letter-spacing:0.06em;">licitaciones monitoreadas cada día</div>
+        </div>
+
+        <!-- Separador visible solo en pantallas medianas+ -->
+        <div class="hidden sm:block" style="width:1px; height:40px; background:rgba(255,255,255,0.1);"></div>
+
+        <div>
+          <div class="lora" style="font-size:1.75rem; font-weight:700; color:var(--dorado);">SECP</div>
+          <div style="font-size:0.75rem; font-weight:500; color:var(--texto-claro); margin-top:2px; text-transform:uppercase; letter-spacing:0.06em;">portal oficial integrado</div>
+        </div>
+
+        <div class="hidden sm:block" style="width:1px; height:40px; background:rgba(255,255,255,0.1);"></div>
+
+        <div>
+          <div class="lora" style="font-size:1.75rem; font-weight:700; color:var(--dorado);">IA</div>
+          <div style="font-size:0.75rem; font-weight:500; color:var(--texto-claro); margin-top:2px; text-transform:uppercase; letter-spacing:0.06em;">análisis de pliegos incluido</div>
+        </div>
+
+        <div class="hidden sm:block" style="width:1px; height:40px; background:rgba(255,255,255,0.1);"></div>
+
+        <div>
+          <div class="lora" style="font-size:1.75rem; font-weight:700; color:var(--dorado);">2×</div>
+          <div style="font-size:0.75rem; font-weight:500; color:var(--texto-claro); margin-top:2px; text-transform:uppercase; letter-spacing:0.06em;">al día · lunes a viernes</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 02 · EL PROBLEMA
+════════════════════════════════════════ -->
+<section style="position:relative; overflow:hidden; padding: 6rem 0;">
+
+  <!-- Fondo: foto corredores B&W con overlay -->
+  <div style="position:absolute; inset:0; z-index:0;">
+    <img src="corredores-bw.jpg"
+         alt=""
+         style="width:100%; height:100%; object-fit:cover; object-position:center; filter:grayscale(100%);">
+    <div style="position:absolute; inset:0; background:rgba(22,51,50,0.82);"></div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="container mx-auto px-4" style="position:relative; z-index:1;">
+    <div class="max-w-4xl mx-auto text-center">
+
+      <p class="section-eyebrow mb-4" style="color:var(--dorado);">
+        <span style="display:inline-block; width:24px; height:2px; background:var(--dorado); border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+        El problema
+      </p>
+
+      <h2 class="lora mb-6"
+          style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                 color:#f5f0e8; line-height:1.25;">
+        Cada día se publican licitaciones<br>que podrían ser tuyas.
+      </h2>
+
+      <p style="font-size:1rem; line-height:1.8; color:var(--texto-claro); max-width:560px; margin:0 auto 3rem;">
+        El portal del Estado dominicano mueve miles de millones de pesos
+        en contratos cada año. La mayoría de las PYMES no llegan a tiempo
+        — o llegan sin preparación. No por falta de capacidad.
+        Por falta de información.
+      </p>
+
+      <!-- Tres tarjetas -->
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+                    border-radius:12px; padding:1.75rem; text-align:left;">
+          <div style="font-size:1.75rem; margin-bottom:1rem;">⏰</div>
+          <h3 class="lora" style="font-size:1.1rem; font-weight:600; color:#f5f0e8; margin-bottom:0.5rem;">
+            Te enteraste tarde
+          </h3>
+          <p style="font-size:0.875rem; line-height:1.7; color:var(--texto-claro);">
+            La licitación que era perfecta para tu empresa ya cerró.
+            Nadie te avisó a tiempo.
+          </p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+                    border-radius:12px; padding:1.75rem; text-align:left;">
+          <div style="font-size:1.75rem; margin-bottom:1rem;">📄</div>
+          <h3 class="lora" style="font-size:1.1rem; font-weight:600; color:#f5f0e8; margin-bottom:0.5rem;">
+            No tuviste tiempo de leer el pliego
+          </h3>
+          <p style="font-size:0.875rem; line-height:1.7; color:var(--texto-claro);">
+            Ciento veinte páginas de condiciones técnicas. Sin tiempo
+            para analizarlas, preferiste no arriesgarte.
+          </p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+                    border-radius:12px; padding:1.75rem; text-align:left;">
+          <div style="font-size:1.75rem; margin-bottom:1rem;">🏆</div>
+          <h3 class="lora" style="font-size:1.1rem; font-weight:600; color:#f5f0e8; margin-bottom:0.5rem;">
+            Tu competencia llegó mejor preparada
+          </h3>
+          <p style="font-size:0.875rem; line-height:1.7; color:var(--texto-claro);">
+            Presentaste oferta, pero ellos tenían más contexto.
+            Ganaron ellos.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 03 · CÓMO FUNCIONA
+════════════════════════════════════════ -->
+<section id="como-funciona" style="background:var(--verde-oscuro); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <div class="text-center mb-16">
+        <p class="section-eyebrow mb-4" style="color:var(--dorado);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--dorado); border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+          Cómo funciona
+        </p>
+        <h2 class="lora"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                   color:#f5f0e8; line-height:1.25; margin-bottom:0.75rem;">
+          Tres pasos. Del aviso a la oferta.
         </h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Trabajamos con las principales asociaciones empresariales de República Dominicana
-          para entregar cada mes un reporte gratuito de licitaciones relevantes
-          directamente a sus miembros.
+        <p style="font-size:1rem; color:var(--texto-claro);">
+          Tú solo haces el primero.
         </p>
       </div>
 
-      <!-- MECÁNICA EN 3 PASOS -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0 mb-14 mt-10">
-        <div class="flex flex-col items-center text-center px-6">
-          <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-2">1</div>
-          <p class="text-sm text-gray-600 max-w-[120px]">Compita filtra las licitaciones del sector</p>
-        </div>
-        <div class="text-indigo-300 text-2xl font-light hidden sm:block">→</div>
-        <div class="flex flex-col items-center text-center px-6">
-          <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-2">2</div>
-          <p class="text-sm text-gray-600 max-w-[120px]">La asociación recibe el reporte co-branded</p>
-        </div>
-        <div class="text-indigo-300 text-2xl font-light hidden sm:block">→</div>
-        <div class="flex flex-col items-center text-center px-6">
-          <div class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-lg mb-2">3</div>
-          <p class="text-sm text-gray-600 max-w-[120px]">Los miembros reciben las oportunidades a tiempo</p>
-        </div>
-      </div>
+      <!-- Pasos -->
+      <div style="display:flex; flex-direction:column; gap:3rem;">
 
-      <!-- 3 TARJETAS DE ASOCIACIONES -->
-      <div class="grid md:grid-cols-3 gap-6">
-
-        <!-- CODOPYME -->
-        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100">
-          <div class="h-2 bg-gradient-to-r from-blue-800 to-blue-500"></div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="bg-blue-50 rounded-lg px-3 py-2">
-                <span class="text-blue-700 font-extrabold text-sm tracking-tight">CODOPYME</span>
-              </div>
-              <span class="text-xs text-gray-400 font-medium uppercase tracking-wide">MIPYMES</span>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">
-              Confederación Dominicana de la Micro, Pequeña y Mediana Empresa
+        <!-- Paso 1 -->
+        <div class="flex gap-6 items-start">
+          <div style="flex-shrink:0; width:48px; height:48px; border-radius:50%;
+                      background:var(--dorado); display:flex; align-items:center;
+                      justify-content:center;">
+            <span style="font-family:'Lora',serif; font-weight:700; font-size:1.1rem;
+                         color:var(--verde-oscuro);">1</span>
+          </div>
+          <div style="flex:1;">
+            <h3 class="lora" style="font-size:1.25rem; font-weight:600; color:#f5f0e8; margin-bottom:0.5rem;">
+              Configuras el perfil de tu empresa
             </h3>
-            <p class="text-sm text-gray-600 mb-5 leading-relaxed">
-              Licitaciones de suministros, servicios profesionales, tecnología y
-              capacitación relevantes para las más de 7,500 empresas miembros.
+            <p style="font-size:0.9rem; line-height:1.8; color:var(--texto-claro); margin-bottom:1rem;">
+              Dinos en qué sector operas, qué productos o servicios ofreces
+              y qué palabras describen tu negocio. Menos de 5 minutos. Una sola vez.
             </p>
-            <div class="flex flex-col gap-2">
-              <a href="/docs/onepager-codopyme.pdf"
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-2 bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-700 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Descargar Propuesta
-              </a>
-              <a href="/docs/reporte-muestra-codopyme.pdf"
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-2 border-2 border-blue-600 text-blue-600 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-50 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Ver Reporte de Muestra
-              </a>
+            <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+                        border-radius:8px; padding:1rem; display:flex; flex-direction:column; gap:0.75rem;">
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <span style="color:var(--dorado); font-weight:700; font-size:0.8rem; margin-top:2px;">→</span>
+                <div>
+                  <strong style="color:#f5f0e8; font-size:0.85rem;">Categorías UNSPSC</strong>
+                  <p style="color:var(--texto-claro); font-size:0.8rem; margin-top:2px;">
+                    Selecciona las familias de productos/servicios de tu interés (ej: Construcción, Tecnología, Consultoría)
+                  </p>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <span style="color:var(--dorado); font-weight:700; font-size:0.8rem; margin-top:2px;">→</span>
+                <div>
+                  <strong style="color:#f5f0e8; font-size:0.85rem;">Palabras clave</strong>
+                  <p style="color:var(--texto-claro); font-size:0.8rem; margin-top:2px;">
+                    Define términos específicos dentro de esas categorías (ej: "capacitación", "software", "mantenimiento")
+                  </p>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; align-items:flex-start;">
+                <span style="color:var(--dorado); font-weight:700; font-size:0.8rem; margin-top:2px;">→</span>
+                <div>
+                  <strong style="color:#f5f0e8; font-size:0.85rem;">Exclusiones</strong>
+                  <p style="color:var(--texto-claro); font-size:0.8rem; margin-top:2px;">
+                    Descarta automáticamente lo que no te interesa (ej: "alimentos", "construcción de carreteras")
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- ASONAHORES -->
-        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100">
-          <div class="h-2 bg-gradient-to-r from-green-800 to-green-500"></div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="bg-green-50 rounded-lg px-3 py-2">
-                <span class="text-green-700 font-extrabold text-sm tracking-tight">ASONAHORES</span>
-              </div>
-              <span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Turismo</span>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">
-              Asociación de Hoteles y Turismo de la República Dominicana
+        <!-- Línea conectora -->
+        <div style="display:flex; gap:6px; align-items:flex-start; padding-left:18px;">
+          <div style="width:2px; height:2rem; background:rgba(234,186,129,0.25); border-radius:2px; margin-left:5px;"></div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="flex gap-6 items-start">
+          <div style="flex-shrink:0; width:48px; height:48px; border-radius:50%;
+                      background:var(--dorado); display:flex; align-items:center;
+                      justify-content:center;">
+            <span style="font-family:'Lora',serif; font-weight:700; font-size:1.1rem;
+                         color:var(--verde-oscuro);">2</span>
+          </div>
+          <div style="flex:1;">
+            <h3 class="lora" style="font-size:1.25rem; font-weight:600; color:#f5f0e8; margin-bottom:0.5rem;">
+              Compita analiza el portal del Estado — solo
             </h3>
-            <p class="text-sm text-gray-600 mb-5 leading-relaxed">
-              Licitaciones de alimentos, equipamiento hotelero, mantenimiento,
-              consultoría turística e infraestructura para el sector de hospitalidad.
+            <p style="font-size:0.9rem; line-height:1.8; color:var(--texto-claro);">
+              Dos veces al día, de lunes a viernes, revisamos el
+              <a href="https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index"
+                 target="_blank" rel="noopener"
+                 style="color:var(--dorado); text-decoration:underline;">portal SECP</a>
+              completo. Claude AI filtra, clasifica y evalúa cada licitación
+              según el perfil de tu empresa. No es búsqueda de palabras
+              — es comprensión real.
             </p>
-            <div class="flex flex-col gap-2">
-              <a href="/docs/onepager-asonahores.pdf"
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-2 bg-green-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-green-700 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Descargar Propuesta
-              </a>
-              <a href="/docs/reporte-muestra-asonahores.pdf"
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-2 border-2 border-green-600 text-green-600 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-green-50 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Ver Reporte de Muestra
-              </a>
-            </div>
           </div>
         </div>
 
-        <!-- ACOPROVI -->
-        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100">
-          <div class="h-2 bg-gradient-to-r from-orange-700 to-orange-400"></div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-4">
-              <div class="bg-orange-50 rounded-lg px-3 py-2">
-                <span class="text-orange-700 font-extrabold text-sm tracking-tight">ACOPROVI</span>
-              </div>
-              <span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Construcción</span>
-            </div>
-            <h3 class="text-lg font-bold text-gray-900 mb-2">
-              Asociación Dominicana de Constructores y Promotores de Viviendas
+        <!-- Línea conectora -->
+        <div style="display:flex; gap:6px; align-items:flex-start; padding-left:18px;">
+          <div style="width:2px; height:2rem; background:rgba(234,186,129,0.25); border-radius:2px; margin-left:5px;"></div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="flex gap-6 items-start">
+          <div style="flex-shrink:0; width:48px; height:48px; border-radius:50%;
+                      background:var(--dorado); display:flex; align-items:center;
+                      justify-content:center;">
+            <span style="font-family:'Lora',serif; font-weight:700; font-size:1.1rem;
+                         color:var(--verde-oscuro);">3</span>
+          </div>
+          <div style="flex:1;">
+            <h3 class="lora" style="font-size:1.25rem; font-weight:600; color:#f5f0e8; margin-bottom:0.5rem;">
+              Tú recibes solo lo que importa
             </h3>
-            <p class="text-sm text-gray-600 mb-5 leading-relaxed">
-              Licitaciones de obras civiles, materiales, supervisión técnica e
-              ingeniería para el sector que mueve más del 10% del PIB dominicano.
+            <p style="font-size:0.9rem; line-height:1.8; color:var(--texto-claro);">
+              De cien licitaciones publicadas, tres o cuatro son verdaderas
+              oportunidades para ti. Compita ya lo sabe. Te las entregamos
+              organizadas, claras y listas para decidir — con imagen de la
+              mujer trabajando al lado, sin ruido.
             </p>
-            <div class="flex flex-col gap-2">
-              <a href="/docs/onepager-acoprovi.pdf"
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-2 bg-orange-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-orange-700 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Descargar Propuesta
-              </a>
-              <a href="/docs/reporte-muestra-acoprovi.pdf"
-                 target="_blank" rel="noopener noreferrer"
-                 class="flex items-center justify-center gap-2 border-2 border-orange-600 text-orange-600 text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-orange-50 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                Ver Reporte de Muestra
-              </a>
-            </div>
           </div>
         </div>
 
       </div>
 
-      <!-- CTA PARA OTRAS ASOCIACIONES -->
-      <div class="mt-10 bg-white border border-indigo-100 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
-        <div>
-          <p class="font-bold text-gray-900 mb-1">¿Representas otra asociación empresarial?</p>
-          <p class="text-sm text-gray-600">Ofrecemos este servicio gratuito a todas las asociaciones del sector productivo dominicano.</p>
+      <!-- Imagen de apoyo: mujer con documentos (Imagen 3) -->
+      <div class="mt-16 flex justify-center">
+        <div style="border-radius:12px; overflow:hidden; max-width:560px; width:100%;
+                    box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+          <img src="mujer-documentos.jpg"
+               alt="Profesional revisando documentos de licitación"
+               style="width:100%; height:320px; object-fit:cover; object-position:center; display:block;">
         </div>
-        <a href="mailto:sales@umbusk.com?subject=Propuesta Reporte Sectorial para mi Asociación"
-           class="flex-shrink-0 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold text-sm whitespace-nowrap">
-          Contáctanos →
-        </a>
       </div>
 
     </div>
   </div>
 </section>
-<!-- FIN ALIANZAS CON ASOCIACIONES -->
 
-<!-- CTA FINAL -->
-<section id="registro" class="py-20 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
-    <div class="container mx-auto px-4">
-        <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-6">
-                Tu próxima licitación ya está publicada.<br>
-                ¿La vas a ver tú o tu competencia?
-            </h2>
-            <p class="text-xl text-indigo-100 mb-8">7 días gratis. Sin tarjeta de crédito. En 5 minutos Compita ya está trabajando para ti.</p>
-            <a href="/registro.html" class="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition font-semibold text-lg shadow-xl">
-                <img src="https://flagcdn.com/24x18/do.png" srcset="https://flagcdn.com/48x36/do.png 2x, https://flagcdn.com/72x54/do.png 3x" width="24" height="18" alt="RD">
-                ¡Pruébalo gratis ya!
-            </a>
-            <p class="text-sm text-indigo-200 mt-6">¿Ya tienes cuenta? <a href="/login.html" class="underline hover:text-white">Iniciar sesión</a></p>
+<!-- ════════════════════════════════════════
+     SECCIÓN 04 · PLANES
+════════════════════════════════════════ -->
+<section id="pricing" style="background: var(--crema); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Encabezado -->
+      <div class="text-center mb-14">
+        <p class="section-eyebrow mb-4" style="color: var(--violeta);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--violeta); border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+          Planes
+        </p>
+        <h2 class="lora mb-4"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                   color: var(--texto-oscuro); line-height:1.25;">
+          Cada plan es un escalón hacia ganar el contrato.
+        </h2>
+        <p style="font-size:1rem; color: var(--texto-medio); max-width:480px; margin:0 auto;">
+          Comienza con la prueba gratuita del
+          <strong style="color: var(--violeta);">Plan Business</strong>
+          — el más completo.
+        </p>
+      </div>
+
+      <!-- Grid de tarjetas -->
+      <div class="grid md:grid-cols-3 gap-6 items-start">
+
+        <!-- ── Plan Estándar ── -->
+        <div style="background:#fff; border:1px solid var(--crema-borde);
+                    border-radius:16px; padding:2.25rem 1.75rem;
+                    display:flex; flex-direction:column; gap:1.5rem;">
+
+          <!-- Etiqueta de escalón -->
+          <div>
+            <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
+                         text-transform:uppercase; background:var(--crema);
+                         color:var(--texto-medio); padding:4px 12px; border-radius:99px;">
+              Paso 1
+            </span>
+          </div>
+
+          <!-- Nombre y precio -->
+          <div>
+            <h3 class="lora" style="font-size:1.25rem; font-weight:700;
+                                    color:var(--texto-oscuro); margin-bottom:0.5rem;">
+              Plan Estándar
+            </h3>
+            <div style="display:flex; align-items:baseline; gap:4px;">
+              <span style="font-size:2.25rem; font-weight:800; color:var(--texto-oscuro);
+                           font-family:'Manrope',sans-serif;">$10</span>
+              <span style="font-size:0.875rem; color:var(--texto-medio); font-weight:500;">/mes</span>
+            </div>
+          </div>
+
+          <hr style="border:none; border-top:1px solid var(--crema-borde);">
+
+          <!-- Promesa -->
+          <div>
+            <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
+                      text-transform:uppercase; color:var(--dorado); margin-bottom:0.5rem;">
+              Atención
+            </p>
+            <p style="font-size:0.9rem; line-height:1.7; color:var(--texto-medio);">
+              Sabes qué hay en el mercado público dominicano y cuándo
+              cierra cada oportunidad — antes que tu competencia.
+            </p>
+          </div>
+
+          <!-- Features -->
+          <ul style="display:flex; flex-direction:column; gap:0.65rem; list-style:none; padding:0; margin:0;">
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Alertas diarias de licitaciones relevantes
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Filtrado por perfil de empresa
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Fechas de cierre y montos visibles
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Hasta 5 categorías UNSPSC
+            </li>
+          </ul>
+
+          <!-- CTA -->
+          <a href="/registro.html"
+             style="display:block; text-align:center; font-family:'Manrope',sans-serif;
+                    font-weight:600; font-size:0.9rem; padding:0.75rem 1rem;
+                    border-radius:8px; border:1.5px solid var(--crema-borde);
+                    color:var(--texto-oscuro); transition:border-color 0.2s;"
+             onmouseover="this.style.borderColor='var(--texto-oscuro)'"
+             onmouseout="this.style.borderColor='var(--crema-borde)'">
+            Probar gratis 7 días
+          </a>
+
         </div>
+
+        <!-- ── Plan Business (destacado) ── -->
+        <div style="background:var(--verde-oscuro);
+                    border-radius:16px; padding:2.25rem 1.75rem;
+                    display:flex; flex-direction:column; gap:1.5rem;
+                    position:relative;
+                    box-shadow: 0 20px 60px rgba(22,51,50,0.25);">
+
+          <!-- Badge recomendado -->
+          <div style="position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+                      background:var(--verde-cta); color:#fff;
+                      font-size:0.65rem; font-weight:700; letter-spacing:0.08em;
+                      text-transform:uppercase; padding:5px 18px; border-radius:99px;
+                      white-space:nowrap; font-family:'Manrope',sans-serif;">
+            ★ Recomendado
+          </div>
+
+          <!-- Etiqueta de escalón -->
+          <div>
+            <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
+                         text-transform:uppercase; background:rgba(234,186,129,0.15);
+                         color:var(--dorado); padding:4px 12px; border-radius:99px;">
+              Paso 2
+            </span>
+          </div>
+
+          <!-- Nombre y precio -->
+          <div>
+            <h3 class="lora" style="font-size:1.25rem; font-weight:700;
+                                    color:#f5f0e8; margin-bottom:0.5rem;">
+              Plan Business
+            </h3>
+            <div style="display:flex; align-items:baseline; gap:4px;">
+              <span style="font-size:2.25rem; font-weight:800; color:var(--dorado);
+                           font-family:'Manrope',sans-serif;">$20</span>
+              <span style="font-size:0.875rem; color:var(--texto-claro); font-weight:500;">/mes</span>
+            </div>
+          </div>
+
+          <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1);">
+
+          <!-- Promesa -->
+          <div>
+            <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
+                      text-transform:uppercase; color:var(--dorado); margin-bottom:0.5rem;">
+              Análisis
+            </p>
+            <p style="font-size:0.9rem; line-height:1.7; color:var(--texto-claro);">
+              Además de saber, entiendes. Descargamos el pliego y Claude
+              lo analiza para que sepas si vale competir antes de invertir
+              un minuto de tu equipo.
+            </p>
+          </div>
+
+          <!-- Features -->
+          <ul style="display:flex; flex-direction:column; gap:0.65rem; list-style:none; padding:0; margin:0;">
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-claro);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Todo lo del Plan Estándar
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-claro);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Descarga automática del pliego PDF
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-claro);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Análisis de pliego con IA (Claude)
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-claro);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Resumen ejecutivo: riesgos, requisitos, plazos
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-claro);">
+              <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
+              Hasta 10 categorías UNSPSC
+            </li>
+          </ul>
+
+          <!-- CTA -->
+          <a href="/registro.html"
+             style="display:block; text-align:center; font-family:'Manrope',sans-serif;
+                    font-weight:700; font-size:0.9rem; padding:0.875rem 1rem;
+                    border-radius:8px; background:var(--verde-cta); color:#fff;
+                    transition:background 0.2s;"
+             onmouseover="this.style.background='#22a02d'"
+             onmouseout="this.style.background='var(--verde-cta)'">
+            <img src="https://flagcdn.com/20x15/do.png"
+                 srcset="https://flagcdn.com/40x30/do.png 2x"
+                 width="20" height="15" alt="RD"
+                 style="vertical-align:middle; margin-right:6px;">
+            Empieza gratis 7 días
+          </a>
+
+          <!-- Garantía bajo botón -->
+          <p style="text-align:center; font-size:0.75rem; color:var(--texto-claro);">
+            Sin tarjeta de crédito
+          </p>
+
+        </div>
+
+        <!-- ── Plan Enterprise ── -->
+        <div style="background:#fff; border:1px solid var(--crema-borde);
+                    border-radius:16px; padding:2.25rem 1.75rem;
+                    display:flex; flex-direction:column; gap:1.5rem;">
+
+          <!-- Etiqueta de escalón -->
+          <div>
+            <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
+                         text-transform:uppercase; background:#ede9fe;
+                         color:#6d28d9; padding:4px 12px; border-radius:99px;">
+              Paso 3
+            </span>
+          </div>
+
+          <!-- Nombre y precio -->
+          <div>
+            <h3 class="lora" style="font-size:1.25rem; font-weight:700;
+                                    color:var(--texto-oscuro); margin-bottom:0.5rem;">
+              Plan Enterprise
+            </h3>
+            <div style="display:flex; align-items:baseline; gap:4px;">
+              <span class="lora" style="font-size:1.75rem; font-weight:700;
+                                        color:#6d28d9;">Custom</span>
+            </div>
+          </div>
+
+          <hr style="border:none; border-top:1px solid var(--crema-borde);">
+
+          <!-- Promesa -->
+          <div>
+            <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
+                      text-transform:uppercase; color:#6d28d9; margin-bottom:0.5rem;">
+              Ejecución
+            </p>
+            <p style="font-size:0.9rem; line-height:1.7; color:var(--texto-medio);">
+              El cronograma del pliego se convierte en un plan de trabajo
+              para tu equipo. Llegas preparado, a tiempo, con todo listo
+              para ganar.
+            </p>
+          </div>
+
+          <!-- Features -->
+          <ul style="display:flex; flex-direction:column; gap:0.65rem; list-style:none; padding:0; margin:0;">
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
+              Todo lo del Plan Business
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
+              Plan de trabajo generado desde el pliego
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
+              Integración con KanbanBonsai
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
+              Consultor dedicado
+            </li>
+            <li style="display:flex; gap:10px; align-items:flex-start;
+                       font-size:0.85rem; color:var(--texto-medio);">
+              <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
+              Categorías y usuarios ilimitados
+            </li>
+          </ul>
+
+          <!-- CTA -->
+          <a href="mailto:hola@umbusk.com"
+             style="display:block; text-align:center; font-family:'Manrope',sans-serif;
+                    font-weight:600; font-size:0.9rem; padding:0.75rem 1rem;
+                    border-radius:8px; border:1.5px solid #c4b5fd;
+                    color:#6d28d9; transition:background 0.2s, border-color 0.2s;"
+             onmouseover="this.style.background='#ede9fe'"
+             onmouseout="this.style.background='transparent'">
+            Conversemos
+          </a>
+
+        </div>
+
+      </div><!-- /grid -->
+
+      <!-- Nota inferior -->
+      <p class="text-center mt-10" style="font-size:0.85rem; color:var(--texto-claro);">
+        ¿Dudas sobre qué plan elegir?
+        <a href="mailto:hola@umbusk.com"
+           style="color:var(--violeta); font-weight:600; text-decoration:none;">
+          Escríbenos
+        </a>
+      </p>
+
     </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 05 · EVIDENCIA
+════════════════════════════════════════ -->
+<section id="evidencia" style="background: var(--verde-oscuro); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Encabezado -->
+      <div class="text-center mb-14">
+        <p class="section-eyebrow mb-4" style="color: var(--dorado);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--dorado);
+                       border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+          Datos en tiempo real
+        </p>
+        <h2 class="lora mb-4"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                   color:#f5f0e8; line-height:1.25;">
+          El mercado público dominicano,<br>en tiempo real.
+        </h2>
+        <p style="font-size:1rem; color: var(--texto-claro); max-width:440px; margin:0 auto;">
+          Datos actualizados diariamente desde el portal oficial SECP.
+        </p>
+      </div>
+
+      <!-- Widget de estadísticas -->
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+                  border-radius:16px; padding:2.5rem 2rem;">
+
+        <!-- Tarjetas KPI -->
+        <div id="stats-kpis"
+             class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          <!-- Rellenadas por JS -->
+          <div class="text-center">
+            <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
+            <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
+                        text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
+              Total 2026
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
+            <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
+                        text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
+              Abiertas hoy
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
+            <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
+                        text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
+              Días activos
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
+            <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
+                        text-transform:uppercase; color:var(--texto-claro); margin-top:4px;">
+              Promedio diario
+            </div>
+          </div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid rgba(255,255,255,0.08); margin-bottom:2rem;">
+
+        <!-- Título del gráfico -->
+        <p class="lora text-center"
+           style="font-size:1rem; font-weight:600; color:#f5f0e8; margin-bottom:1.25rem;">
+          Licitaciones publicadas en 2026 por mes
+        </p>
+
+        <!-- Pestañas de meses -->
+        <div id="pestanas-meses"
+             style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;
+                    margin-bottom:1.5rem;">
+          <!-- Generadas por JS -->
+        </div>
+
+        <!-- Gráfico -->
+        <div style="position:relative; height:220px;">
+          <canvas id="grafico-licitaciones"></canvas>
+        </div>
+
+        <!-- Fuente -->
+        <p class="text-center"
+           style="font-size:0.72rem; color:var(--texto-claro); margin-top:1.25rem;">
+          Fuente: Portal SECP &nbsp;·&nbsp; Actualizado automáticamente dos veces al día &nbsp;·&nbsp; Lunes a viernes
+        </p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Chart.js ── -->
+<!-- NOTA: si ya tienes este <script> más abajo en el archivo, borra esta línea -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+(function () {
+  const MESES_ES   = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                      'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DIAS_X_MES = [31,28,31,30,31,30,31,31,30,31,30,31]; // 2026 no es bisiesto
+
+  let chart    = null;
+  let datosGlobales = null;
+
+  /* ── Carga del JSON ── */
+  async function cargarStats() {
+    try {
+      const res  = await fetch('/stats-2026.json');
+      const data = await res.json();
+      datosGlobales = data;
+      renderKPIs(data);
+      const meses = obtenerMeses(data);
+      renderPestanas(meses);
+      renderGrafico(meses[0], data);
+    } catch (e) {
+      console.error('Error cargando stats-2026.json:', e);
+    }
+  }
+
+  /* ── KPIs ── */
+  function renderKPIs(data) {
+    const el = document.getElementById('stats-kpis');
+    if (!el) return;
+    el.innerHTML = `
+      <div class="text-center">
+        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
+          ${(data.stats?.total || 0).toLocaleString('es-DO')}
+        </div>
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
+                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
+          Total 2026
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
+          ${(data.stats?.por_estado?.abiertas || 0).toLocaleString('es-DO')}
+        </div>
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
+                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
+          Abiertas hoy
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
+          ${data.stats?.dias_activos || 0}
+        </div>
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
+                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
+          Días activos
+        </div>
+      </div>
+      <div class="text-center">
+        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
+          ${Math.round(data.stats?.promedio_diario || 0)}
+        </div>
+        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
+                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
+          Promedio diario
+        </div>
+      </div>
+    `;
+  }
+
+  /* ── Últimos 3 meses con datos ── */
+  function obtenerMeses(data) {
+    return Object.keys(data.por_mes || {}).sort().slice(-3);
+  }
+
+  /* ── Pestañas ── */
+  function renderPestanas(meses) {
+    const cont = document.getElementById('pestanas-meses');
+    if (!cont) return;
+    cont.innerHTML = meses.map((clave, i) => {
+      const mes    = parseInt(clave.split('-')[1]) - 1;
+      const nombre = MESES_ES[mes];
+      const activo = i === 0;
+      return `
+        <button id="tab-${clave}"
+                onclick="window._compitaMes('${clave}')"
+                style="font-family:'Manrope',sans-serif; font-size:0.8rem; font-weight:600;
+                       padding:6px 20px; border-radius:99px; cursor:pointer; border:none;
+                       transition:background 0.2s, color 0.2s;
+                       background:${activo ? 'var(--dorado)' : 'rgba(255,255,255,0.07)'};
+                       color:${activo ? 'var(--verde-oscuro)' : 'var(--texto-claro)'};">
+          ${nombre}
+        </button>`;
+    }).join('');
+  }
+
+  /* ── Cambio de mes (global para onclick) ── */
+  window._compitaMes = function (clave) {
+    if (!datosGlobales) return;
+    obtenerMeses(datosGlobales).forEach(m => {
+      const btn = document.getElementById('tab-' + m);
+      if (!btn) return;
+      const activo = m === clave;
+      btn.style.background = activo ? 'var(--dorado)' : 'rgba(255,255,255,0.07)';
+      btn.style.color       = activo ? 'var(--verde-oscuro)' : 'var(--texto-claro)';
+    });
+    renderGrafico(clave, datosGlobales);
+  };
+
+  /* ── Gráfico ── */
+  function renderGrafico(claveMes, data) {
+    const [anio, mesStr] = claveMes.split('-');
+    const mesIdx  = parseInt(mesStr) - 1;
+    const numDias = DIAS_X_MES[mesIdx];
+    const porDia  = data.por_mes?.[claveMes]?.por_dia || {};
+
+    const labels  = Array.from({length: numDias}, (_, i) => i + 1);
+    const valores = labels.map(d => {
+      const key = `${anio}-${mesStr}-${String(d).padStart(2, '0')}`;
+      return porDia[key] || 0;
+    });
+
+    // Máximo global consistente entre meses
+    const maxGlobal = Math.max(
+      ...Object.values(data.por_mes || {})
+        .flatMap(m => Object.values(m.por_dia || {})),
+      10
+    );
+
+    const ctx = document.getElementById('grafico-licitaciones');
+    if (!ctx) return;
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: valores,
+          backgroundColor: 'rgba(234,186,129,0.75)',
+          borderColor:     'rgba(234,186,129,1)',
+          borderWidth: 1,
+          borderRadius: 3,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            ticks: {
+              color: 'rgba(154,184,176,0.7)',
+              font: { size: 10, family: 'Manrope' },
+              maxRotation: 0,
+              callback: (val, i) => (i % 5 === 0) ? labels[i] : ''
+            },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            min: 0,
+            max: maxGlobal,
+            ticks: {
+              color: 'rgba(154,184,176,0.7)',
+              font: { size: 10, family: 'Manrope' },
+              stepSize: Math.ceil(maxGlobal / 5),
+              precision: 0
+            },
+            grid: { color: 'rgba(255,255,255,0.06)' }
+          }
+        }
+      }
+    });
+  }
+
+  cargarStats();
+})();
+</script>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 06 · TESTIMONIOS
+════════════════════════════════════════ -->
+<section id="testimonios" style="background: var(--crema); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Encabezado -->
+      <div class="text-center mb-14">
+        <p class="section-eyebrow mb-4" style="color: var(--violeta);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--violeta);
+                       border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+          Testimonios
+        </p>
+        <h2 class="lora mb-4"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                   color: var(--texto-oscuro); line-height:1.25;">
+          Lo que dicen quienes ya lo usan.
+        </h2>
+      </div>
+
+      <!-- ── ESTADO BETA: placeholder honesto ── -->
+      <!-- Cuando tengas un testimonio real, reemplaza este bloque
+           por las tarjetas de testimonio que están comentadas abajo -->
+      <div style="background:#fff; border:1px solid var(--crema-borde);
+                  border-radius:16px; padding:3rem 2.5rem; text-align:center;
+                  max-width:640px; margin:0 auto;">
+
+        <!-- Ícono -->
+        <div style="width:56px; height:56px; border-radius:50%;
+                    background:var(--crema); border:1px solid var(--crema-borde);
+                    display:flex; align-items:center; justify-content:center;
+                    margin:0 auto 1.5rem; font-size:1.5rem;">
+          🇩🇴
+        </div>
+
+        <p class="lora"
+           style="font-size:1.15rem; font-weight:600; line-height:1.7;
+                  color:var(--texto-oscuro); margin-bottom:1.25rem;">
+          "Actualmente en fase beta con empresas seleccionadas<br class="hidden md:block">
+          del sector tecnología, construcción y servicios."
+        </p>
+
+        <p style="font-size:0.85rem; color:var(--texto-medio); font-weight:500;">
+          Compita · República Dominicana
+        </p>
+
+      </div>
+
+      <!-- ════════════════════════════════
+           TARJETAS DE TESTIMONIO REAL
+           Descomenta y completa cuando
+           tengas la cita de un beta-tester
+           ════════════════════════════════
+      <div class="grid md:grid-cols-2 gap-6 mt-4">
+
+        <div style="background:#fff; border:1px solid var(--crema-borde);
+                    border-radius:16px; padding:2rem;">
+          <p style="font-size:0.95rem; line-height:1.75; color:var(--texto-medio);
+                    margin-bottom:1.5rem;">
+            "[Cita del testimonio aquí]"
+          </p>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:44px; height:44px; border-radius:50%;
+                        background:var(--crema); border:1px solid var(--crema-borde);
+                        overflow:hidden; flex-shrink:0;">
+              <img src="imagen-reunion.jpg"
+                   alt="Foto"
+                   style="width:100%; height:100%; object-fit:cover;">
+            </div>
+            <div>
+              <p style="font-size:0.875rem; font-weight:700; color:var(--texto-oscuro);">
+                [Nombre del cliente]
+              </p>
+              <p style="font-size:0.8rem; color:var(--texto-medio);">
+                [Cargo] · [Empresa]
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      -->
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SECCIÓN 07 · CTA FINAL
+════════════════════════════════════════ -->
+<section id="cta-final"
+         style="background: var(--violeta); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-2xl mx-auto text-center">
+
+      <!-- Eyebrow -->
+      <p class="section-eyebrow mb-6"
+         style="color: rgba(255,255,255,0.6);">
+        <span style="display:inline-block; width:24px; height:2px;
+                     background:rgba(255,255,255,0.4); border-radius:2px;
+                     vertical-align:middle; margin-right:8px;"></span>
+        Empieza hoy
+      </p>
+
+      <!-- Titular -->
+      <h2 class="lora mb-6"
+          style="font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight:700;
+                 color:#ffffff; line-height:1.2;">
+        Tu próxima licitación<br>ya está publicada.<br>
+        <span style="color: var(--dorado);">¿La vas a ver tú<br class="md:hidden"> o tu competencia?</span>
+      </h2>
+
+      <!-- Subtítulo -->
+      <p style="font-size:1rem; line-height:1.8; color:rgba(255,255,255,0.75);
+                margin-bottom:2.5rem;">
+        7 días gratis. Sin tarjeta de crédito.<br>
+        En 5 minutos Compita ya trabaja para ti.
+      </p>
+
+      <!-- Botón principal -->
+      <a href="/registro.html"
+         style="display:inline-flex; align-items:center; gap:10px;
+                font-family:'Manrope',sans-serif; font-weight:700; font-size:1.05rem;
+                background: var(--verde-cta); color:#fff;
+                padding:1rem 2.25rem; border-radius:10px;
+                transition: background 0.2s, transform 0.15s;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.2);"
+         onmouseover="this.style.background='#22a02d'; this.style.transform='translateY(-2px)'"
+         onmouseout="this.style.background='var(--verde-cta)'; this.style.transform='translateY(0)'">
+        <img src="https://flagcdn.com/24x18/do.png"
+             srcset="https://flagcdn.com/48x36/do.png 2x"
+             width="24" height="18" alt="RD">
+        Empieza gratis ahora
+      </a>
+
+      <!-- Enlace de login -->
+      <p style="margin-top:1.5rem; font-size:0.875rem; color:rgba(255,255,255,0.55);">
+        ¿Ya tienes cuenta?
+        <a href="/login.html"
+           style="color:rgba(255,255,255,0.85); font-weight:600;
+                  text-decoration:underline; text-underline-offset:3px;
+                  transition:color 0.2s;"
+           onmouseover="this.style.color='#ffffff'"
+           onmouseout="this.style.color='rgba(255,255,255,0.85)'">
+          Iniciar sesión
+        </a>
+      </p>
+
+    </div>
+  </div>
 </section>
 
 <!-- FOOTER -->
