@@ -182,7 +182,73 @@ async function procesarEtapa1(oportunidad, empresa) {
   return { pasa_etapa1: true };
 }
 
+// ============================================================================
+// CAMBIO 2 — Nueva función: obtenerRegionLicitacion()
+// Agrégala ANTES de la función analizarConIA()
+// ============================================================================
+
+async function obtenerRegionLicitacion(unidad_compras) {
+  if (!unidad_compras) return null;
+
+  // Primero: buscar en tabla de mapeo directo (instituciones_region)
+  const directa = await pool.query(`
+    SELECT region FROM instituciones_region
+    WHERE unidad_compras = $1
+    LIMIT 1
+  `, [unidad_compras]);
+
+  if (directa.rows.length > 0) {
+    return directa.rows[0].region;
+  }
+
+  // Segundo: buscar por coincidencia de municipio (regiones_rd)
+  const porMunicipio = await pool.query(`
+    SELECT region FROM regiones_rd
+    WHERE $1 ILIKE '%' || municipio || '%'
+    ORDER BY LENGTH(municipio) DESC
+    LIMIT 1
+  `, [unidad_compras]);
+
+  if (porMunicipio.rows.length > 0) {
+    return porMunicipio.rows[0].region;
+  }
+
+  // Sin señal geográfica → institución nacional
+  return null;
+}
+
+// ============================================================================
+// CAMBIO 3 — Reemplaza la función analizarConIA() completa
+// Agrega sección geográfica al prompt cuando la institución es nacional
+// ============================================================================
+
 async function analizarConIA(oportunidad, empresa) {
+
+  // Obtener región de la licitación desde las tablas de referencia
+  const regionLicitacion = await obtenerRegionLicitacion(oportunidad.unidad_compras);
+
+  // Sección geográfica del prompt: solo se incluye si la institución
+  // es nacional (sin región en tablas) Y la empresa tiene preferencias
+  const regionesEmpresa = Array.isArray(empresa.regiones_interes)
+    ? empresa.regiones_interes.filter(r => r !== 'Nacional')
+    : [];
+
+  const seccionGeografica = (!regionLicitacion && regionesEmpresa.length > 0)
+    ? `
+**ANÁLISIS GEOGRÁFICO (solo si aplica):**
+La institución "${oportunidad.unidad_compras}" es de alcance nacional.
+Busca en la descripción cualquier señal geográfica (nombres de municipios,
+provincias, regiones, o frases como "en la provincia de X", "en la zona Y").
+Si encuentras una señal clara, indícala en REGIÓN. Si no hay señal, responde "Nacional".
+Las regiones oficiales de RD son: Ozama, Cibao Norte, Cibao Sur, Cibao Nordeste,
+Cibao Noroeste, Valdesia, El Valle, Enriquillo, Yuma, Higuamo.
+`
+    : '';
+
+  const formatoRegion = (!regionLicitacion && regionesEmpresa.length > 0)
+    ? '\nREGIÓN: [nombre de región oficial o "Nacional"]'
+    : '';
+
   const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
 
 1. **RELEVANCIA**: ¿Qué tan relevante es para el cliente?
@@ -193,8 +259,8 @@ async function analizarConIA(oportunidad, empresa) {
 2. **QUÉ**: Extrae en máximo 5 palabras el objeto principal de la licitación
 3. **QUIÉN**: Extrae la entidad que licita (nombre de la institución/unidad)
 4. **RAZÓN**: Justificación breve (máximo 2 líneas)
-
-**IMPORTANTE**: Evalúa SOLO la relevancia temática. El sistema aplicará filtros adicionales de monto automáticamente.
+${seccionGeografica}
+**IMPORTANTE**: Evalúa SOLO la relevancia temática. El sistema aplicará filtros adicionales de monto y región automáticamente.
 
 **PERFIL DEL CLIENTE:**
 ${empresa.descripcion || 'Cliente sin descripción'}
@@ -213,7 +279,7 @@ ${Array.isArray(empresa.palabras_clave) ? empresa.palabras_clave.join(', ') : em
 RELEVANCIA: [ALTA|MEDIA|BAJA]
 QUÉ: [resumen en 5 palabras]
 QUIÉN: [nombre de la entidad]
-RAZÓN: [tu justificación aquí]`;
+RAZÓN: [tu justificación aquí]${formatoRegion}`;
 
   try {
     const message = await anthropic.messages.create({
@@ -225,26 +291,34 @@ RAZÓN: [tu justificación aquí]`;
     const respuesta = message.content[0].text;
 
     const relevanciaMatch = respuesta.match(/RELEVANCIA:\s*(ALTA|MEDIA|BAJA)/i);
-    const queMatch = respuesta.match(/QUÉ:\s*(.+)/i);
-    const quienMatch = respuesta.match(/QUIÉN:\s*(.+)/i);
-    const razonMatch = respuesta.match(/RAZÓN:\s*(.+)/i);
+    const queMatch       = respuesta.match(/QUÉ:\s*(.+)/i);
+    const quienMatch     = respuesta.match(/QUIÉN:\s*(.+)/i);
+    const razonMatch     = respuesta.match(/RAZÓN:\s*(.+)/i);
+    const regionMatch    = respuesta.match(/REGIÓN:\s*(.+)/i);
+
+    // Región final: la de las tablas tiene prioridad; si no, la que infirió Claude
+    const regionInferida = regionMatch ? regionMatch[1].trim() : null;
+    const regionFinal = regionLicitacion
+      || (regionInferida && regionInferida !== 'Nacional' ? regionInferida : null);
 
     return {
       ...oportunidad,
-      relevancia: relevanciaMatch ? relevanciaMatch[1].toUpperCase() : 'MEDIA',
-      que: queMatch ? queMatch[1].trim() : oportunidad.descripcion?.substring(0, 50) || 'N/A',
-      quien: quienMatch ? quienMatch[1].trim() : oportunidad.unidad_compras || 'N/A',
-      razon: razonMatch ? razonMatch[1].trim() : 'Análisis IA no disponible'
+      relevancia:       relevanciaMatch ? relevanciaMatch[1].toUpperCase() : 'MEDIA',
+      que:              queMatch   ? queMatch[1].trim()   : oportunidad.descripcion?.substring(0, 50) || 'N/A',
+      quien:            quienMatch ? quienMatch[1].trim() : oportunidad.unidad_compras || 'N/A',
+      razon:            razonMatch ? razonMatch[1].trim() : 'Análisis IA no disponible',
+      region_licitacion: regionFinal   // nuevo campo para usar en el paso siguiente
     };
 
   } catch (error) {
     console.error('Error en análisis IA:', error);
     return {
       ...oportunidad,
-      relevancia: 'MEDIA',
-      que: oportunidad.descripcion?.substring(0, 50) || 'N/A',
-      quien: oportunidad.unidad_compras || 'N/A',
-      razon: 'Error en análisis IA'
+      relevancia:        'MEDIA',
+      que:               oportunidad.descripcion?.substring(0, 50) || 'N/A',
+      quien:             oportunidad.unidad_compras || 'N/A',
+      razon:             'Error en análisis IA',
+      region_licitacion: regionLicitacion
     };
   }
 }
@@ -270,6 +344,7 @@ async function analizarDiario() {
         e.monto_minimo_alta,
         e.plan,
         e.familias_unspsc,
+        e.regiones_interes,
         u.email as owner_email,
         u.referido_codigo
       FROM empresas e
@@ -401,12 +476,28 @@ async function analizarDiario() {
 
         const analisis = await analizarConIA(licitacion, empresa);
 
-        const montoMinimo = empresa.monto_minimo_alta || 500000;
+		const montoMinimo = empresa.monto_minimo_alta || 500000;
         const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
 
+        // Degradación por monto (ya existía)
         if (analisis.relevancia === 'ALTA' && montoOportunidad < montoMinimo) {
           analisis.relevancia = 'MEDIA';
           analisis.razon = `Monto ${montoOportunidad.toLocaleString()} DOP menor al mínimo. ${analisis.razon}`;
+        }
+
+        // Degradación por región (nueva)
+        const regionesEmpresa = Array.isArray(empresa.regiones_interes)
+          ? empresa.regiones_interes.filter(r => r !== 'Nacional')
+          : [];
+
+        if (
+          analisis.relevancia === 'ALTA'   // solo degrada ALTA
+          && regionesEmpresa.length > 0    // empresa tiene preferencia regional
+          && analisis.region_licitacion    // conocemos la región de la licitación
+          && !regionesEmpresa.includes(analisis.region_licitacion) // no está en sus regiones
+        ) {
+          analisis.relevancia = 'MEDIA';
+          analisis.razon = `Región ${analisis.region_licitacion} fuera del área de operación. ${analisis.razon}`;
         }
 
         oportunidades.push(analisis);
