@@ -428,18 +428,15 @@ export default async function handler(req, res) {
           continue;
         }
 
-        // C. Criterio de MONTO
+// C. Criterio de MONTO
         const cumpleMonto = monto >= montoMinimoAlta;
 
         // D. Criterio de REGIÓN
         let cumpleRegion = true;
+        let regionLicitacion = 'Nacional';
         if (regionesEmpresa.length > 0) {
-          const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
-          cumpleRegion = regionesEmpresa.includes(regionLicitacion)
-            || (regionLicitacion === 'Nacional' && (incluyeNacional || regionesEmpresa.includes('Ozama')));
-          if (!cumpleRegion) {
-            razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
-          }
+          regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
+          cumpleRegion = regionesEmpresa.includes(regionLicitacion);
         }
 
         // E. ALTA solo si cumple AMBOS: monto Y región
@@ -447,9 +444,24 @@ export default async function handler(req, res) {
         if (cumpleMonto && cumpleRegion) {
           relevancia = 'ALTA';
           contadorAlta++;
+          // Enriquecer razón con los dos criterios que la hacen ALTA
+          const montoFmt = `RD$${monto.toLocaleString()}`;
+          if (regionesEmpresa.length > 0) {
+            razon += `. Monto ${montoFmt} supera mínimo configurado. Región ${regionLicitacion} dentro del área de operación.`;
+          } else {
+            razon += `. Monto ${montoFmt} supera mínimo configurado.`;
+          }
         } else {
           relevancia = 'MEDIA';
           contadorMedia++;
+          // Explicar por qué es MEDIA
+          if (!cumpleMonto && !cumpleRegion) {
+            razon = `Región ${regionLicitacion} fuera del área configurada y monto por debajo del mínimo. ${razon}`;
+          } else if (!cumpleMonto) {
+            razon += `. Monto RD$${monto.toLocaleString()} por debajo del mínimo configurado.`;
+          } else if (!cumpleRegion) {
+            razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
+          }
         }
 
         // F. Guardar o actualizar en resultados
