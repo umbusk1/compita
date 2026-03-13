@@ -2,17 +2,14 @@
 import { neon } from '@neondatabase/serverless';
 
 // ============================================================
-// CAMBIO 1: Pega esta función JUSTO ANTES de la línea:
-//   export default async function handler(req, res) {
+// FUNCIÓN: Inferir región geográfica desde nombre de institución
 // ============================================================
-
 function obtenerRegionLicitacion(unidad_compras) {
   if (!unidad_compras) return 'Nacional';
 
   const texto = unidad_compras.toLowerCase();
 
-  // Palabras clave que indican una institución regional o municipal
-const mapeo = {
+  const mapeo = {
     'Cibao Norte':    ['santiago', 'puerto plata', 'espaillat', 'valverde', 'moca',
                        'cabral y báez', 'del norte', 'edenorte'],
     'Cibao Sur':      ['la vega', 'monseñor nouel', 'sánchez ramírez', 'bonao', 'cotuí'],
@@ -33,7 +30,6 @@ const mapeo = {
     }
   }
 
-  // Si no coincide nada → es una institución nacional (no aplica filtro de región)
   return 'Nacional';
 }
 
@@ -51,228 +47,156 @@ export default async function handler(req, res) {
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-	// ========== OBTENER EMPRESA_ID Y ACCIÓN ==========
-const { empresa_id, tipo, accion, referencia, clave_secreta } = req.body;
+    const { empresa_id, tipo, accion, referencia, clave_secreta } = req.body;
 
-// ====================================================
-// ACCIÓN ESPECIAL: RESETEAR CUPOS MENSUAL (para cron job)
-// Se maneja ANTES de validar empresa_id
-// ====================================================
-if (accion === 'resetear-mensual') {
-  // Verificar clave secreta de autorización
-  if (clave_secreta !== process.env.CRON_SECRET_KEY) {
-    return res.status(401).json({
-      success: false,
-      error: 'No autorizado'
-    });
-  }
+    // ====================================================
+    // ACCIÓN ESPECIAL: RESETEAR CUPOS MENSUAL
+    // ====================================================
+    if (accion === 'resetear-mensual') {
+      if (clave_secreta !== process.env.CRON_SECRET_KEY) {
+        return res.status(401).json({ success: false, error: 'No autorizado' });
+      }
 
-  // Importar Stripe
-  const stripe = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY);
+      const stripe = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY);
 
-  // Obtener mes actual y mes anterior
-  const primerDiaMes = new Date();
-  primerDiaMes.setDate(1);
-  primerDiaMes.setHours(0, 0, 0, 0);
-  const mesActual = primerDiaMes.toISOString().split('T')[0];
+      const primerDiaMes = new Date();
+      primerDiaMes.setDate(1);
+      primerDiaMes.setHours(0, 0, 0, 0);
+      const mesActual = primerDiaMes.toISOString().split('T')[0];
 
-  // Calcular mes anterior
-  const primerDiaMesAnterior = new Date(primerDiaMes);
-  primerDiaMesAnterior.setMonth(primerDiaMesAnterior.getMonth() - 1);
-  const mesAnterior = primerDiaMesAnterior.toISOString().split('T')[0];
+      const primerDiaMesAnterior = new Date(primerDiaMes);
+      primerDiaMesAnterior.setMonth(primerDiaMesAnterior.getMonth() - 1);
+      const mesAnterior = primerDiaMesAnterior.toISOString().split('T')[0];
 
-  // Obtener empresas CON su stripe_subscription_id
-  const empresas = await sql`
-    SELECT id, nombre, plan, stripe_subscription_id,
-           limite_zips_mes, limite_analisis_mes
-    FROM empresas
-    WHERE activo = true
-  `;
+      const empresas = await sql`
+        SELECT id, nombre, plan, stripe_subscription_id,
+               limite_zips_mes, limite_analisis_mes
+        FROM empresas
+        WHERE activo = true
+      `;
 
-  let reseteadas = 0;
-  let desactivadas = 0;
-  let cancelacionesProgramadas = 0; // NUEVO contador
-  let errores = 0;
-  let cuposTransferidos = 0;
+      let reseteadas = 0;
+      let desactivadas = 0;
+      let cancelacionesProgramadas = 0;
+      let errores = 0;
+      let cuposTransferidos = 0;
 
-  // Procesar cada empresa
-  for (const empresa of empresas) {
-    try {
-      // Variables para almacenar el resultado de la validación
-      let suscripcionActiva = false;
-      let zipLimite = 0;
-      let analisisLimite = 0;
-
-      // Si la empresa tiene stripe_subscription_id, validar con Stripe
-      if (empresa.stripe_subscription_id) {
+      for (const empresa of empresas) {
         try {
-          const subscription = await stripe.subscriptions.retrieve(
-            empresa.stripe_subscription_id
-          );
+          let suscripcionActiva = false;
+          let zipLimite = 0;
+          let analisisLimite = 0;
 
-          // Verificar estado de la suscripción
-          if (subscription.status === 'active') {
-            // NUEVO: Detectar cancelaciones programadas
-            if (subscription.cancel_at_period_end === true) {
-              const fechaExpiracion = new Date(subscription.current_period_end * 1000).toISOString();
-              console.log(`⚠️ Empresa ${empresa.nombre} (ID: ${empresa.id}) - Suscripción cancelada, expira el ${fechaExpiracion}`);
+          if (empresa.stripe_subscription_id) {
+            try {
+              const subscription = await stripe.subscriptions.retrieve(
+                empresa.stripe_subscription_id
+              );
 
-              // NO dar cupos para el mes siguiente
-              // La empresa seguirá usando sus cupos actuales hasta que expire
-              await sql`
-                UPDATE empresas
-                SET activo = false
-                WHERE id = ${empresa.id}
-              `;
-              cancelacionesProgramadas++;
-              continue; // Saltar a siguiente empresa
+              if (subscription.status === 'active') {
+                if (subscription.cancel_at_period_end === true) {
+                  await sql`UPDATE empresas SET activo = false WHERE id = ${empresa.id}`;
+                  cancelacionesProgramadas++;
+                  continue;
+                }
+                suscripcionActiva = true;
+                if (empresa.plan === 'business') { zipLimite = 10; analisisLimite = 5; }
+                else if (empresa.plan === 'estandar') { zipLimite = 0; analisisLimite = 0; }
+              } else if (subscription.status === 'trialing') {
+                suscripcionActiva = true;
+                zipLimite = 10;
+                analisisLimite = 5;
+              } else {
+                await sql`UPDATE empresas SET activo = false WHERE id = ${empresa.id}`;
+                desactivadas++;
+                continue;
+              }
+            } catch (stripeError) {
+              console.error(`Error Stripe empresa ${empresa.id}:`, stripeError.message);
+              errores++;
+              continue;
             }
-
-            // Si llegó aquí, la suscripción está activa normalmente
-            suscripcionActiva = true;
-
-            // Asignar límites según el plan
-            if (empresa.plan === 'business') {
-              zipLimite = 10;
-              analisisLimite = 5;
-            } else if (empresa.plan === 'estandar') {
-              zipLimite = 0;
-              analisisLimite = 0;
-            }
-          } else if (subscription.status === 'trialing') {
-            // Empresa en periodo de prueba
-            suscripcionActiva = true;
-            zipLimite = 10;
-            analisisLimite = 5;
           } else {
-            // Estados: past_due, canceled, incomplete, incomplete_expired, unpaid
-            console.log(`❌ Empresa ${empresa.nombre} (ID: ${empresa.id}) - Suscripción ${subscription.status}`);
-
-            // Desactivar la empresa en la BD
-            await sql`
-              UPDATE empresas
-              SET activo = false
-              WHERE id = ${empresa.id}
-            `;
-            desactivadas++;
-            continue; // Saltar a la siguiente empresa
+            suscripcionActiva = true;
+            zipLimite = empresa.limite_zips_mes || 0;
+            analisisLimite = empresa.limite_analisis_mes || 0;
           }
-        } catch (stripeError) {
-          console.error(`Error consultando Stripe para empresa ${empresa.id}:`, stripeError.message);
-          errores++;
-          continue; // Saltar a la siguiente empresa
-        }
-      } else {
-        // Si NO tiene stripe_subscription_id, usar valores de la tabla empresas
-        suscripcionActiva = true;
-        zipLimite = empresa.limite_zips_mes || 0;
-        analisisLimite = empresa.limite_analisis_mes || 0;
-      }
 
-      // Solo crear registro si la suscripción está activa
-      if (suscripcionActiva) {
-        // Verificar si ya existe registro para este mes
-        const existe = await sql`
-          SELECT id FROM uso_mensual
-          WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
-        `;
+          if (suscripcionActiva) {
+            const existe = await sql`
+              SELECT id FROM uso_mensual
+              WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
+            `;
 
-        if (existe.length === 0) {
-          // Obtener cupos sobrantes del mes anterior
-          let zipAdicionalesSobrantes = 0;
-          let analisisAdicionalesSobrantes = 0;
+            if (existe.length === 0) {
+              let zipAdicionalesSobrantes = 0;
+              let analisisAdicionalesSobrantes = 0;
 
-          const mesAnteriorData = await sql`
-            SELECT
-              descargas_zip_usadas,
-              analisis_ia_usados,
-              zip_adicionales,
-              analisis_adicionales,
-              zip_limite_mes,
-              analisis_limite_mes
-            FROM uso_mensual
-            WHERE empresa_id = ${empresa.id} AND mes = ${mesAnterior}
-          `;
+              const mesAnteriorData = await sql`
+                SELECT descargas_zip_usadas, analisis_ia_usados,
+                       zip_adicionales, analisis_adicionales,
+                       zip_limite_mes, analisis_limite_mes
+                FROM uso_mensual
+                WHERE empresa_id = ${empresa.id} AND mes = ${mesAnterior}
+              `;
 
-          if (mesAnteriorData.length > 0) {
-            const anterior = mesAnteriorData[0];
+              if (mesAnteriorData.length > 0) {
+                const anterior = mesAnteriorData[0];
+                const zipAdicionalesUsados = Math.max(0, anterior.descargas_zip_usadas - anterior.zip_limite_mes);
+                zipAdicionalesSobrantes = Math.max(0, anterior.zip_adicionales - zipAdicionalesUsados);
+                const analisisAdicionalesUsados = Math.max(0, anterior.analisis_ia_usados - anterior.analisis_limite_mes);
+                analisisAdicionalesSobrantes = Math.max(0, anterior.analisis_adicionales - analisisAdicionalesUsados);
+                if (zipAdicionalesSobrantes > 0 || analisisAdicionalesSobrantes > 0) cuposTransferidos++;
+              }
 
-            // CALCULAR CUPOS ADICIONALES DE ZIP QUE SOBRARON
-            // ¿Cuántos adicionales usó? = max(0, usados - limite_base)
-            const zipAdicionalesUsados = Math.max(0, anterior.descargas_zip_usadas - anterior.zip_limite_mes);
-            // ¿Cuántos le quedan? = adicionales_que_tenia - adicionales_usados
-            zipAdicionalesSobrantes = Math.max(0, anterior.zip_adicionales - zipAdicionalesUsados);
-
-            // CALCULAR CUPOS ADICIONALES DE ANÁLISIS QUE SOBRARON
-            const analisisAdicionalesUsados = Math.max(0, anterior.analisis_ia_usados - anterior.analisis_limite_mes);
-            analisisAdicionalesSobrantes = Math.max(0, anterior.analisis_adicionales - analisisAdicionalesUsados);
-
-            if (zipAdicionalesSobrantes > 0 || analisisAdicionalesSobrantes > 0) {
-              cuposTransferidos++;
+              await sql`
+                INSERT INTO uso_mensual
+                (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados,
+                 zip_adicionales, analisis_adicionales, zip_limite_mes, analisis_limite_mes)
+                VALUES
+                (${empresa.id}, ${mesActual}, 0, 0,
+                 ${zipAdicionalesSobrantes}, ${analisisAdicionalesSobrantes},
+                 ${zipLimite}, ${analisisLimite})
+              `;
+              reseteadas++;
             }
           }
-
-          // Crear nuevo registro para el mes CON los cupos sobrantes
-          await sql`
-            INSERT INTO uso_mensual
-            (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados,
-             zip_adicionales, analisis_adicionales, zip_limite_mes, analisis_limite_mes)
-            VALUES
-            (${empresa.id}, ${mesActual}, 0, 0,
-             ${zipAdicionalesSobrantes}, ${analisisAdicionalesSobrantes},
-             ${zipLimite}, ${analisisLimite})
-          `;
-          reseteadas++;
+        } catch (error) {
+          console.error(`Error procesando empresa ${empresa.id}:`, error);
+          errores++;
         }
       }
-    } catch (error) {
-      console.error(`Error procesando empresa ${empresa.id}:`, error);
-      errores++;
+
+      return res.status(200).json({
+        success: true,
+        message: 'Reseteo mensual completado',
+        mes: mesActual,
+        empresas_reseteadas: reseteadas,
+        empresas_con_cupos_transferidos: cuposTransferidos,
+        empresas_desactivadas: desactivadas,
+        empresas_cancelacion_programada: cancelacionesProgramadas,
+        errores: errores
+      });
     }
-  }
 
-  // Respuesta con información completa
-  console.log(`✅ Reseteo mensual completado para ${mesActual}`);
-  console.log(`   - ${reseteadas} empresas reseteadas`);
-  console.log(`   - ${cuposTransferidos} empresas con cupos transferidos`);
-  console.log(`   - ${desactivadas} empresas desactivadas`);
-  console.log(`   - ${cancelacionesProgramadas} empresas con cancelación programada`); // NUEVO
-  console.log(`   - ${errores} errores`);
+    // ========== VALIDAR EMPRESA_ID ==========
+    if (!empresa_id) {
+      return res.status(400).json({ success: false, error: 'Falta empresa_id' });
+    }
 
-  return res.status(200).json({
-    success: true,
-    message: 'Reseteo mensual completado',
-    mes: mesActual,
-    empresas_reseteadas: reseteadas,
-    empresas_con_cupos_transferidos: cuposTransferidos,
-    empresas_desactivadas: desactivadas,
-    empresas_cancelacion_programada: cancelacionesProgramadas, // NUEVO
-    errores: errores
-  });
-}
-
-// ========== VALIDAR EMPRESA_ID (para otras acciones) ==========
-if (!empresa_id) {
-  return res.status(400).json({ success: false, error: 'Falta empresa_id' });
-}
-
-// ========== OBTENER DATOS DE LA EMPRESA ==========
-const empresa = await sql`
-  SELECT plan, limite_zips_mes, limite_analisis_mes
-  FROM empresas
-  WHERE id = ${empresa_id}
-  LIMIT 1
-`;
+    const empresa = await sql`
+      SELECT plan, limite_zips_mes, limite_analisis_mes
+      FROM empresas WHERE id = ${empresa_id} LIMIT 1
+    `;
 
     if (empresa.length === 0) {
       return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
     }
 
-        const { plan } = empresa[0];
-	    const limite_zips_mes = empresa[0].limite_zips_mes || 10;
-    	const limite_analisis_mes = empresa[0].limite_analisis_mes || 5;
+    const { plan } = empresa[0];
+    const limite_zips_mes = empresa[0].limite_zips_mes || 10;
+    const limite_analisis_mes = empresa[0].limite_analisis_mes || 5;
 
-    // ========== VERIFICAR QUE SEA PLAN BUSINESS O ENTERPRISE ==========
     if (!['business', 'enterprise', 'free_trial'].includes(plan)) {
       return res.status(403).json({
         success: false,
@@ -281,21 +205,17 @@ const empresa = await sql`
       });
     }
 
-    // ========== OBTENER MES ACTUAL ==========
     const primerDiaMes = new Date();
     primerDiaMes.setDate(1);
     primerDiaMes.setHours(0, 0, 0, 0);
-    const mesActual = primerDiaMes.toISOString().split('T')[0]; // YYYY-MM-01
+    const mesActual = primerDiaMes.toISOString().split('T')[0];
 
-    // ========== OBTENER O CREAR REGISTRO DE USO MENSUAL ==========
     let usoMensual = await sql`
       SELECT * FROM uso_mensual
-      WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
-      LIMIT 1
+      WHERE empresa_id = ${empresa_id} AND mes = ${mesActual} LIMIT 1
     `;
 
     if (usoMensual.length === 0) {
-      // Crear registro para este mes
       usoMensual = await sql`
         INSERT INTO uso_mensual (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados)
         VALUES (${empresa_id}, ${mesActual}, 0, 0)
@@ -305,8 +225,8 @@ const empresa = await sql`
 
     const uso = usoMensual[0];
 
-	// ====================================================
-    // ACCIÓN: VERIFICAR LÍMITES (para widget)
+    // ====================================================
+    // ACCIÓN: VERIFICAR LÍMITES
     // ====================================================
     if (accion === 'verificar-limites') {
       return res.status(200).json({
@@ -323,101 +243,81 @@ const empresa = await sql`
     // ====================================================
     // ACCIÓN: VALIDAR CUPO
     // ====================================================
-if (accion === 'validar') {
-  let cupoDisponible = false;
-  let cuposRestantes = 0;
-  let usados = 0;
-  let limite = 0;
+    if (accion === 'validar') {
+      let cupoDisponible = false;
+      let cuposRestantes = 0;
+      let usados = 0;
+      let limite = 0;
 
-  if (tipo === 'zip') {
-    usados = uso.descargas_zip_usadas;
-    limite = limite_zips_mes + (uso.zip_adicionales || 0);  // ✅ SUMA ADICIONALES
-    cuposRestantes = limite - usados;
-    cupoDisponible = cuposRestantes > 0;
-  } else if (tipo === 'analisis') {
-    usados = uso.analisis_ia_usados;
-    limite = limite_analisis_mes + (uso.analisis_adicionales || 0);  // ✅ SUMA ADICIONALES
-    cuposRestantes = limite - usados;
-    cupoDisponible = cuposRestantes > 0;
-  }
+      if (tipo === 'zip') {
+        usados = uso.descargas_zip_usadas;
+        limite = limite_zips_mes + (uso.zip_adicionales || 0);
+        cuposRestantes = limite - usados;
+        cupoDisponible = cuposRestantes > 0;
+      } else if (tipo === 'analisis') {
+        usados = uso.analisis_ia_usados;
+        limite = limite_analisis_mes + (uso.analisis_adicionales || 0);
+        cuposRestantes = limite - usados;
+        cupoDisponible = cuposRestantes > 0;
+      }
 
-  return res.status(200).json({
-    success: true,
-    permitido: cupoDisponible,
-    cupos_restantes: Math.max(0, cuposRestantes),
-    usados: usados,
-    limite: limite,
-    tipo: tipo
-  });
-}
+      return res.status(200).json({
+        success: true,
+        permitido: cupoDisponible,
+        cupos_restantes: Math.max(0, cuposRestantes),
+        usados: usados,
+        limite: limite,
+        tipo: tipo
+      });
+    }
 
     // ====================================================
-    // ACCIÓN: REGISTRAR USO DE CUPO
+    // ACCIÓN: REGISTRAR USO DE CUPO (ZIP)
     // ====================================================
-if (tipo === 'zip') {
-  const limite_total = limite_zips_mes + (uso.zip_adicionales || 0);  // ✅ INCLUYE ADICIONALES
+    if (tipo === 'zip') {
+      const limite_total = limite_zips_mes + (uso.zip_adicionales || 0);
+      if (uso.descargas_zip_usadas >= limite_total) {
+        return res.status(403).json({ success: false, error: 'Límite alcanzado', cupos_disponibles: 0 });
+      }
+      await sql`
+        UPDATE uso_mensual
+        SET descargas_zip_usadas = descargas_zip_usadas + 1, updated_at = CURRENT_TIMESTAMP
+        WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+      `;
+      return res.status(200).json({
+        success: true,
+        message: 'Descarga ZIP registrada',
+        cupos_restantes: limite_total - uso.descargas_zip_usadas - 1
+      });
+    }
 
-  // Verificar límite
-  if (uso.descargas_zip_usadas >= limite_total) {
-    return res.status(403).json({
-      success: false,
-      error: 'Límite alcanzado',
-      cupos_disponibles: 0
-    });
-  }
+    // ====================================================
+    // ACCIÓN: REGISTRAR USO DE CUPO (ANÁLISIS)
+    // ====================================================
+    if (tipo === 'analisis') {
+      const limite_total = limite_analisis_mes + (uso.analisis_adicionales || 0);
+      if (uso.analisis_ia_usados >= limite_total) {
+        return res.status(403).json({ success: false, error: 'Límite alcanzado', cupos_disponibles: 0 });
+      }
+      await sql`
+        UPDATE uso_mensual
+        SET analisis_ia_usados = analisis_ia_usados + 1, updated_at = CURRENT_TIMESTAMP
+        WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+      `;
+      return res.status(200).json({
+        success: true,
+        message: 'Análisis IA registrado',
+        cupos_restantes: limite_total - uso.analisis_ia_usados - 1
+      });
+    }
 
-  // Incrementar contador
-  await sql`
-    UPDATE uso_mensual
-    SET descargas_zip_usadas = descargas_zip_usadas + 1,
-        updated_at = CURRENT_TIMESTAMP
-    WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
-  `;
-
-  return res.status(200).json({
-    success: true,
-    message: 'Descarga ZIP registrada',
-    cupos_restantes: limite_total - uso.descargas_zip_usadas - 1
-  });
-}
-
-if (tipo === 'analisis') {
-  const limite_total = limite_analisis_mes + (uso.analisis_adicionales || 0);  // ✅ INCLUYE ADICIONALES
-
-  // Verificar límite
-  if (uso.analisis_ia_usados >= limite_total) {
-    return res.status(403).json({
-      success: false,
-      error: 'Límite alcanzado',
-      cupos_disponibles: 0
-    });
-  }
-
-  // Incrementar contador
-  await sql`
-    UPDATE uso_mensual
-    SET analisis_ia_usados = analisis_ia_usados + 1,
-        updated_at = CURRENT_TIMESTAMP
-    WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
-  `;
-
-  return res.status(200).json({
-    success: true,
-    message: 'Análisis IA registrado',
-    cupos_restantes: limite_total - uso.analisis_ia_usados - 1
-  });
-}
-
-// ====================================================
+    // ====================================================
     // ACCIÓN: RE-ANALIZAR OPORTUNIDADES
     // ====================================================
     if (accion === 're-analizar') {
-      // 1. Obtener perfil de empresa (palabras_clave, exclusiones, monto_minimo)
       const perfilEmpresa = await sql`
         SELECT palabras_clave, exclusiones, monto_minimo_alta, regiones_interes
-        FROM empresas
-        WHERE id = ${empresa_id}
-        LIMIT 1
+        FROM empresas WHERE id = ${empresa_id} LIMIT 1
       `;
 
       if (perfilEmpresa.length === 0) {
@@ -429,26 +329,35 @@ if (tipo === 'analisis') {
       const exclusiones = perfil.exclusiones || [];
       const montoMinimoAlta = perfil.monto_minimo_alta || 500000;
 
-      // 2. Obtener familias UNSPSC activas de la empresa
       const familiasActivas = await sql`
-        SELECT familia_codigo
-        FROM empresas_familias_unspsc
+        SELECT familia_codigo FROM empresas_familias_unspsc
         WHERE empresa_id = ${empresa_id} AND activo = true
       `;
       const familiasCodigos = familiasActivas.map(f => f.familia_codigo);
 
-      // 3. Obtener licitaciones ABIERTAS (fecha_presentacion > hoy)
-      const hoy = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      // Parsear regiones (vienen como {Yuma} desde PostgreSQL)
+      let regionesRaw = perfil.regiones_interes;
+      let regionesArr = [];
+      if (Array.isArray(regionesRaw)) {
+        regionesArr = regionesRaw;
+      } else if (typeof regionesRaw === 'string') {
+        const s = regionesRaw.trim();
+        if (s.startsWith('{')) {
+          regionesArr = s.slice(1, -1).split(',')
+            .map(x => x.replace(/^"|"$/g, '').trim())
+            .filter(Boolean);
+        } else if (s.startsWith('[')) {
+          try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
+        }
+      }
+      const regionesEmpresa = regionesArr.filter(
+        r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
+      );
+
+      const hoy = new Date().toISOString().split('T')[0];
       const licitacionesAbiertas = await sql`
-        SELECT
-          id as licitacion_id,
-          referencia,
-          descripcion,
-          monto_estimado,
-          codigo_unspsc,
-          familia_unspsc,
-          fecha_presentacion,
-          unidad_compras
+        SELECT id as licitacion_id, referencia, descripcion, monto_estimado,
+               codigo_unspsc, familia_unspsc, fecha_presentacion, unidad_compras
         FROM licitaciones
         WHERE fecha_presentacion > ${hoy}::timestamp
         ORDER BY fecha_presentacion ASC
@@ -462,26 +371,6 @@ if (tipo === 'analisis') {
         });
       }
 
-// 4. Calcular regiones de la empresa UNA SOLA VEZ (antes del loop)
-      let regionesRaw = perfil.regiones_interes;
-      let regionesArr = [];
-      if (Array.isArray(regionesRaw)) {
-        regionesArr = regionesRaw;
-      } else if (typeof regionesRaw === 'string') {
-        const s = regionesRaw.trim();
-        if (s.startsWith('{')) {
-          regionesArr = s.slice(1,-1).split(',')
-            .map(x => x.replace(/^"|"$/g,'').trim()).filter(Boolean);
-        } else {
-          try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
-        }
-      }
-      const regionesEmpresa = regionesArr.filter(
-        r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
-      );
-      // regionesEmpresa vacío = empresa no configuró regiones = sin filtro regional
-
-      // 5. Re-calcular relevancia para cada licitación
       let contadorAlta = 0;
       let contadorMedia = 0;
       let contadorDescartadas = 0;
@@ -495,26 +384,21 @@ if (tipo === 'analisis') {
         // A. Verificar exclusiones
         let esDescartada = false;
         for (const excl of exclusiones) {
-          if (texto.includes(excl.toLowerCase())) {
-            esDescartada = true;
-            break;
-          }
+          if (texto.includes(excl.toLowerCase())) { esDescartada = true; break; }
         }
         if (esDescartada) {
           await sql`
             DELETE FROM resultados
-            WHERE empresa_id = ${empresa_id}
-            AND licitacion_id = ${lic.licitacion_id}
+            WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id}
           `;
           contadorDescartadas++;
           continue;
         }
 
-        // B. Determinar si hay coincidencia temática (UNSPSC o palabras clave)
+        // B. Verificar coincidencia temática (UNSPSC o palabras clave)
         let coincideTema = false;
         let razon = '';
 
-        // B.1 Familias UNSPSC → coincidencia fuerte
         for (const codigo of familiasCodigos) {
           if (codigoUNSPSC === codigo || familiaUNSPSC === codigo) {
             coincideTema = true;
@@ -523,7 +407,6 @@ if (tipo === 'analisis') {
           }
         }
 
-        // B.2 Palabras clave → coincidencia
         if (!coincideTema) {
           for (const palabra of palabrasClave) {
             if (texto.includes(palabra.toLowerCase())) {
@@ -534,34 +417,28 @@ if (tipo === 'analisis') {
           }
         }
 
-        // Si no hay coincidencia temática, no es relevante
         if (!coincideTema) {
           await sql`
             DELETE FROM resultados
-            WHERE empresa_id = ${empresa_id}
-            AND licitacion_id = ${lic.licitacion_id}
+            WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id}
           `;
           continue;
         }
 
-        // C. Determinar si cumple criterio de MONTO
+        // C. Criterio de MONTO
         const cumpleMonto = monto >= montoMinimoAlta;
 
-        // D. Determinar si cumple criterio de REGIÓN
-        let cumpleRegion = true; // por defecto true si la empresa no configuró regiones
+        // D. Criterio de REGIÓN
+        let cumpleRegion = true;
         if (regionesEmpresa.length > 0) {
           const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
-          // Si la institución es nacional, no se filtra
-          cumpleRegion = regionLicitacion === 'Nacional'
-            || regionesEmpresa.includes(regionLicitacion);
+          cumpleRegion = regionLicitacion === 'Nacional' || regionesEmpresa.includes(regionLicitacion);
           if (!cumpleRegion) {
             razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
           }
         }
 
-        // E. Regla final:
-        // ALTA solo si cumple AMBOS: monto Y región
-        // MEDIA en cualquier otro caso con coincidencia temática
+        // E. ALTA solo si cumple AMBOS: monto Y región
         let relevancia;
         if (cumpleMonto && cumpleRegion) {
           relevancia = 'ALTA';
@@ -574,22 +451,16 @@ if (tipo === 'analisis') {
         // F. Guardar o actualizar en resultados
         const existe = await sql`
           SELECT id FROM resultados
-          WHERE empresa_id = ${empresa_id}
-          AND licitacion_id = ${lic.licitacion_id}
-          LIMIT 1
+          WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id} LIMIT 1
         `;
 
         if (existe.length > 0) {
           await sql`
             UPDATE resultados
-            SET relevancia = ${relevancia},
-                razon = ${razon},
-                razon_inclusion = ${razon},
-                fecha_analisis = CURRENT_TIMESTAMP,
-                compatible = true,
-                origen = 're-analisis'
-            WHERE empresa_id = ${empresa_id}
-            AND licitacion_id = ${lic.licitacion_id}
+            SET relevancia = ${relevancia}, razon = ${razon},
+                razon_inclusion = ${razon}, fecha_analisis = CURRENT_TIMESTAMP,
+                compatible = true, origen = 're-analisis'
+            WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id}
           `;
         } else {
           const queVal = (lic.descripcion || '').substring(0, 99);
@@ -621,11 +492,11 @@ if (tipo === 'analisis') {
         media: contadorMedia,
         descartadas: contadorDescartadas
       });
+    }
 
-    // Si llegamos aquí, falta algún parámetro
     return res.status(400).json({
       success: false,
-      error: 'Parámetros inválidos. Se requiere: empresa_id, tipo (zip/analisis), accion (validar/registrar)'
+      error: 'Parámetros inválidos'
     });
 
   } catch (error) {
