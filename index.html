@@ -1256,9 +1256,10 @@ function toggleMobileMenu() {
       const data = await res.json();
       datosGlobales = data;
       renderKPIs(data);
-      const meses = obtenerMeses(data);
+      const meses = obtenerMeses();
       renderPestanas(meses);
-      renderGrafico(meses[meses.length - 1], data); // mostrar el mes más reciente
+      const mesActual = new Date().toISOString().substring(0, 7); // ej: "2026-03"
+      renderGrafico(mesActual, data); // abrir siempre en el mes actual
     } catch (e) {
       console.error('Error cargando stats-2026.json:', e);
     }
@@ -1308,22 +1309,20 @@ function toggleMobileMenu() {
     `;
   }
 
-  /* ── Extraer meses únicos de la lista plana por_dia ── */
-  function obtenerMeses(data) {
-    const set = new Set(
-      (data.por_dia || []).map(item => item.fecha.substring(0, 7))
-    );
-    return Array.from(set).sort().slice(-3); // últimos 3 meses
+  /* ── 12 meses fijos de 2026 ── */
+  function obtenerMeses() {
+    return ['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06',
+            '2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
   }
 
-  /* ── Pestañas ── */
   function renderPestanas(meses) {
     const cont = document.getElementById('pestanas-meses');
     if (!cont) return;
-    cont.innerHTML = meses.map((clave, i) => {
+    const mesActual = new Date().toISOString().substring(0, 7);
+    cont.innerHTML = meses.map((clave) => {
       const mes    = parseInt(clave.split('-')[1]) - 1;
       const nombre = MESES_ES[mes];
-      const activo = i === meses.length - 1; // activo = mes más reciente
+      const activo = clave === mesActual;
       return `
         <button id="tab-${clave}"
                 onclick="window._compitaMes('${clave}')"
@@ -1340,7 +1339,7 @@ function toggleMobileMenu() {
   /* ── Cambio de mes (global para onclick) ── */
   window._compitaMes = function (clave) {
     if (!datosGlobales) return;
-    obtenerMeses(datosGlobales).forEach(m => {
+    obtenerMeses().forEach(m => {
       const btn = document.getElementById('tab-' + m);
       if (!btn) return;
       const activo = m === clave;
@@ -1362,7 +1361,8 @@ function toggleMobileMenu() {
       .filter(item => item.fecha.startsWith(claveMes))
       .forEach(item => { porDia[item.fecha] = item.cantidad; });
 
-    const labels  = Array.from({length: numDias}, (_, i) => i + 1);
+    // Etiquetas como strings para evitar desalineación en Chart.js
+    const labels  = Array.from({length: numDias}, (_, i) => String(i + 1));
     const valores = labels.map(d => {
       const key = `${anio}-${mesStr}-${String(d).padStart(2, '0')}`;
       return porDia[key] || 0;
@@ -1400,7 +1400,7 @@ function toggleMobileMenu() {
               color: 'rgba(154,184,176,0.7)',
               font: { size: 10, family: 'Manrope' },
               maxRotation: 0,
-              callback: (val, i) => (i % 5 === 0) ? labels[i] : ''
+              callback: (val, i) => (i % 5 === 0) ? val : ''
             },
             grid: { color: 'rgba(255,255,255,0.04)' }
           },
