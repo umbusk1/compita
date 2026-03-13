@@ -1354,7 +1354,7 @@ function renderGrafico(claveMes, data) {
     const mesIdx  = parseInt(mesStr) - 1;
     const numDias = DIAS_X_MES[mesIdx];
 
-    // CORRECCIÓN: convertir lista a diccionario
+    // CORRECCIÓN 1: convertir lista a diccionario
     const porDiaArray = data.por_mes?.[claveMes]?.por_dia || [];
     const porDia = {};
     porDiaArray.forEach(item => { porDia[item.fecha] = item.cantidad; });
@@ -1365,10 +1365,10 @@ function renderGrafico(claveMes, data) {
       return porDia[key] || 0;
     });
 
-    // Máximo global consistente entre meses
+    // CORRECCIÓN 2: maxGlobal ahora lee .cantidad de cada objeto
     const maxGlobal = Math.max(
       ...Object.values(data.por_mes || {})
-        .flatMap(m => Object.values(m.por_dia || {})),
+        .flatMap(m => (m.por_dia || []).map(item => item.cantidad)),
       10
     );
 
