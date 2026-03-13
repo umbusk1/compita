@@ -350,8 +350,11 @@ export default async function handler(req, res) {
           try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
         }
       }
-      const regionesEmpresa = regionesArr.filter(
+	  const regionesEmpresa = regionesArr.filter(
         r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
+      );
+      const incluyeNacional = regionesArr.some(
+        r => r === 'Nacional' || r === 'Nacional (todo el país)'
       );
 
       const hoy = new Date().toISOString().split('T')[0];
@@ -432,7 +435,8 @@ export default async function handler(req, res) {
         let cumpleRegion = true;
         if (regionesEmpresa.length > 0) {
           const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
-          cumpleRegion = regionesEmpresa.includes(regionLicitacion);
+          cumpleRegion = regionesEmpresa.includes(regionLicitacion)
+            || (regionLicitacion === 'Nacional' && (incluyeNacional || regionesEmpresa.includes('Ozama')));
           if (!cumpleRegion) {
             razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
           }
