@@ -1246,7 +1246,7 @@ function toggleMobileMenu() {
                       'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   const DIAS_X_MES = [31,28,31,30,31,30,31,31,30,31,30,31]; // 2026 no es bisiesto
 
-  let chart    = null;
+  let chart         = null;
   let datosGlobales = null;
 
   /* ── Carga del JSON ── */
@@ -1258,7 +1258,7 @@ function toggleMobileMenu() {
       renderKPIs(data);
       const meses = obtenerMeses(data);
       renderPestanas(meses);
-      renderGrafico(meses[0], data);
+      renderGrafico(meses[meses.length - 1], data); // mostrar el mes más reciente
     } catch (e) {
       console.error('Error cargando stats-2026.json:', e);
     }
@@ -1308,9 +1308,12 @@ function toggleMobileMenu() {
     `;
   }
 
-  /* ── Últimos 3 meses con datos ── */
+  /* ── Extraer meses únicos de la lista plana por_dia ── */
   function obtenerMeses(data) {
-    return Object.keys(data.por_mes || {}).sort().slice(-3);
+    const set = new Set(
+      (data.por_dia || []).map(item => item.fecha.substring(0, 7))
+    );
+    return Array.from(set).sort().slice(-3); // últimos 3 meses
   }
 
   /* ── Pestañas ── */
@@ -1320,7 +1323,7 @@ function toggleMobileMenu() {
     cont.innerHTML = meses.map((clave, i) => {
       const mes    = parseInt(clave.split('-')[1]) - 1;
       const nombre = MESES_ES[mes];
-      const activo = i === 0;
+      const activo = i === meses.length - 1; // activo = mes más reciente
       return `
         <button id="tab-${clave}"
                 onclick="window._compitaMes('${clave}')"
@@ -1348,16 +1351,16 @@ function toggleMobileMenu() {
   };
 
   /* ── Gráfico ── */
-
-function renderGrafico(claveMes, data) {
+  function renderGrafico(claveMes, data) {
     const [anio, mesStr] = claveMes.split('-');
     const mesIdx  = parseInt(mesStr) - 1;
     const numDias = DIAS_X_MES[mesIdx];
 
-    // CORRECCIÓN 1: convertir lista a diccionario
-    const porDiaArray = data.por_mes?.[claveMes]?.por_dia || [];
+    // Construir diccionario filtrando la lista plana por el mes seleccionado
     const porDia = {};
-    porDiaArray.forEach(item => { porDia[item.fecha] = item.cantidad; });
+    (data.por_dia || [])
+      .filter(item => item.fecha.startsWith(claveMes))
+      .forEach(item => { porDia[item.fecha] = item.cantidad; });
 
     const labels  = Array.from({length: numDias}, (_, i) => i + 1);
     const valores = labels.map(d => {
@@ -1365,10 +1368,9 @@ function renderGrafico(claveMes, data) {
       return porDia[key] || 0;
     });
 
-    // CORRECCIÓN 2: maxGlobal ahora lee .cantidad de cada objeto
+    // Máximo global sobre toda la lista plana
     const maxGlobal = Math.max(
-      ...Object.values(data.por_mes || {})
-        .flatMap(m => (m.por_dia || []).map(item => item.cantidad)),
+      ...(data.por_dia || []).map(item => item.cantidad),
       10
     );
 
