@@ -1348,11 +1348,16 @@ function toggleMobileMenu() {
   };
 
   /* ── Gráfico ── */
-  function renderGrafico(claveMes, data) {
+
+function renderGrafico(claveMes, data) {
     const [anio, mesStr] = claveMes.split('-');
     const mesIdx  = parseInt(mesStr) - 1;
     const numDias = DIAS_X_MES[mesIdx];
-    const porDia  = data.por_mes?.[claveMes]?.por_dia || {};
+
+    // CORRECCIÓN: convertir lista a diccionario
+    const porDiaArray = data.por_mes?.[claveMes]?.por_dia || [];
+    const porDia = {};
+    porDiaArray.forEach(item => { porDia[item.fecha] = item.cantidad; });
 
     const labels  = Array.from({length: numDias}, (_, i) => i + 1);
     const valores = labels.map(d => {
