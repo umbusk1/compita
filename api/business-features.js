@@ -1,6 +1,40 @@
 // api/business-features.js - Gestión de recursos Business (ZIP y Análisis IA)
 import { neon } from '@neondatabase/serverless';
 
+// ============================================================
+// CAMBIO 1: Pega esta función JUSTO ANTES de la línea:
+//   export default async function handler(req, res) {
+// ============================================================
+
+function obtenerRegionLicitacion(unidad_compras) {
+  if (!unidad_compras) return 'Nacional';
+
+  const texto = unidad_compras.toLowerCase();
+
+  // Palabras clave que indican una institución regional o municipal
+  const mapeo = {
+    'Cibao Norte':    ['santiago', 'puerto plata', 'espaillat', 'valverde', 'moca'],
+    'Cibao Sur':      ['la vega', 'monseñor nouel', 'sánchez ramírez', 'bonao', 'cotuí'],
+    'Cibao Nordeste': ['duarte', 'samaná', 'maría trinidad', 'san francisco de macorís', 'nagua'],
+    'Cibao Noroeste': ['dajabón', 'montecristi', 'santiago rodríguez', 'mao'],
+    'El Valle':       ['elías piña', 'san juan', 'comendador'],
+    'Enriquillo':     ['barahona', 'baoruco', 'independencia', 'pedernales', 'neiba'],
+    'Higuamo':        ['san pedro de macorís', 'el seibo', 'hato mayor'],
+    'Ozama':          ['santo domingo', 'distrito nacional', 'd.n.', 'ozama'],
+    'Valdesia':       ['san cristóbal', 'peravia', 'azua', 'ocoa', 'baní', 'bani'],
+    'Yuma':           ['la romana', 'la altagracia', 'higüey', 'higuey'],
+  };
+
+  for (const [region, palabras] of Object.entries(mapeo)) {
+    for (const palabra of palabras) {
+      if (texto.includes(palabra)) return region;
+    }
+  }
+
+  // Si no coincide nada → es una institución nacional (no aplica filtro de región)
+  return 'Nacional';
+}
+
 export default async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -378,7 +412,7 @@ if (tipo === 'analisis') {
     if (accion === 're-analizar') {
       // 1. Obtener perfil de empresa (palabras_clave, exclusiones, monto_minimo)
       const perfilEmpresa = await sql`
-        SELECT palabras_clave, exclusiones, monto_minimo_alta
+        SELECT palabras_clave, exclusiones, monto_minimo_alta, regiones_interes
         FROM empresas
         WHERE id = ${empresa_id}
         LIMIT 1
@@ -499,7 +533,23 @@ if (tipo === 'analisis') {
           }
         }
 
-        // C. Guardar o actualizar en tabla "resultados"
+        // C. Degradar ALTA → MEDIA si la licitación está fuera del área de operación
+        const regionesEmpresa = Array.isArray(perfil.regiones_interes)
+          ? perfil.regiones_interes.filter(r => r !== 'Nacional')
+          : [];
+
+        if (relevancia === 'ALTA' && regionesEmpresa.length > 0) {
+          const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
+          // Solo degrada si la región es identificable Y no está en las regiones de la empresa
+          if (regionLicitacion !== 'Nacional' && !regionesEmpresa.includes(regionLicitacion)) {
+            relevancia = 'MEDIA';
+            razon = `Región ${regionLicitacion} fuera del área de operación configurada. ${razon}`;
+            contadorAlta--;
+            contadorMedia++;
+          }
+        }
+
+        // D. Guardar o actualizar en tabla "resultados"
         if (relevancia) {
           // Verificar si ya existe un registro
           const existe = await sql`
