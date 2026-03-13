@@ -12,15 +12,17 @@ function obtenerRegionLicitacion(unidad_compras) {
   const texto = unidad_compras.toLowerCase();
 
   // Palabras clave que indican una institución regional o municipal
-  const mapeo = {
-    'Cibao Norte':    ['santiago', 'puerto plata', 'espaillat', 'valverde', 'moca'],
+const mapeo = {
+    'Cibao Norte':    ['santiago', 'puerto plata', 'espaillat', 'valverde', 'moca',
+                       'cabral y báez', 'del norte', 'edenorte'],
     'Cibao Sur':      ['la vega', 'monseñor nouel', 'sánchez ramírez', 'bonao', 'cotuí'],
     'Cibao Nordeste': ['duarte', 'samaná', 'maría trinidad', 'san francisco de macorís', 'nagua'],
     'Cibao Noroeste': ['dajabón', 'montecristi', 'santiago rodríguez', 'mao'],
     'El Valle':       ['elías piña', 'san juan', 'comendador'],
-    'Enriquillo':     ['barahona', 'baoruco', 'independencia', 'pedernales', 'neiba'],
+    'Enriquillo':     ['barahona', 'baoruco', 'independencia', 'pedernales', 'neiba', 'del sur'],
     'Higuamo':        ['san pedro de macorís', 'el seibo', 'hato mayor'],
-    'Ozama':          ['santo domingo', 'distrito nacional', 'd.n.', 'ozama'],
+    'Ozama':          ['santo domingo', 'distrito nacional', 'd.n.', 'ozama', 'del este',
+                       'edeeste', 'edes'],
     'Valdesia':       ['san cristóbal', 'peravia', 'azua', 'ocoa', 'baní', 'bani'],
     'Yuma':           ['la romana', 'la altagracia', 'higüey', 'higuey'],
   };
@@ -539,9 +541,16 @@ if (tipo === 'analisis') {
         if (Array.isArray(regionesRaw)) {
           regionesArr = regionesRaw;
         } else if (typeof regionesRaw === 'string') {
-          try { regionesArr = JSON.parse(regionesRaw); } catch(e) { regionesArr = []; }
+          const s = regionesRaw.trim();
+          if (s.startsWith('{')) {
+            // Formato PostgreSQL: {Yuma} o {"Nacional (todo el país)"}
+            regionesArr = s.slice(1,-1).split(',')
+              .map(x => x.replace(/^"|"$/g,'').trim()).filter(Boolean);
+          } else {
+            try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
+          }
         }
-        const regionesEmpresa = regionesArr.filter(r => r !== 'Nacional');
+        const regionesEmpresa = regionesArr.filter(r => r !== 'Nacional' && r !== 'Nacional (todo el país)');
 
         if (relevancia === 'ALTA' && regionesEmpresa.length > 0) {
           const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
