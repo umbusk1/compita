@@ -1104,7 +1104,7 @@ function toggleMobileMenu() {
       actualizarGraficoEvidencia(datosMes, mesSeleccionado);
     }
 
-    function actualizarGraficoEvidencia(datos, mesInfo) {
+function actualizarGraficoEvidencia(datos, mesInfo) {
       if (chartInstance) chartInstance.destroy();
       var diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
       var hoy = new Date();
@@ -1112,7 +1112,7 @@ function toggleMobileMenu() {
       var mesActual  = hoy.getMonth() + 1;
       var datosPorDia = {};
       datos.forEach(function(d) {
-        datosPorDia[new Date(d.fecha).getDate()] = d.cantidad;
+        datosPorDia[parseInt(d.fecha.split('-')[2])] = d.cantidad; // ← CORRECCIÓN
       });
       var diasCompletos = [], cantidadesAbiertas = [], cantidadesCerradas = [];
       for (var dia = 1; dia <= diasEnMes; dia++) {
@@ -2095,52 +2095,51 @@ function cambiarMes(mesSeleccionado, todosMeses) {
 }
 
 function actualizarGrafico(datos, mesInfo) {
-    if (chartInstance) { chartInstance.destroy(); }
-    const diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
-    const hoy = new Date();
-    const diaActual = hoy.getDate();
-    const mesActual = hoy.getMonth() + 1;
-    const datosPorDia = {};
-    datos.forEach(d => {
-        const fecha = new Date(d.fecha);
-        datosPorDia[fecha.getDate()] = d.cantidad;
-    });
-    const diasCompletos = [], cantidadesAbiertas = [], cantidadesCerradas = [];
-    for (let dia = 1; dia <= diasEnMes; dia++) {
-        diasCompletos.push(dia);
-        const cantidad = datosPorDia[dia] || 0;
-        if (mesInfo.numero < mesActual || (mesInfo.numero === mesActual && dia < diaActual)) {
-            cantidadesCerradas.push(cantidad);
-            cantidadesAbiertas.push(0);
-        } else {
-            cantidadesAbiertas.push(cantidad);
-            cantidadesCerradas.push(0);
-        }
-    }
-    const ctx = document.getElementById('grafico-diario').getContext('2d');
-    chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: diasCompletos,
-            datasets: [
-                { label: 'Abiertas', data: cantidadesAbiertas, backgroundColor: 'rgba(79, 70, 229, 0.8)', borderColor: 'rgba(79, 70, 229, 1)', borderWidth: 1 },
-                { label: 'Cerradas', data: cantidadesCerradas, backgroundColor: 'rgba(209, 213, 219, 0.5)', borderColor: 'rgba(156, 163, 175, 0.8)', borderWidth: 1 }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: window.innerWidth > 768,
-            plugins: {
-                legend: { display: true, position: 'top' },
-                title: { display: true, text: `Licitaciones según fecha tope para presentar ofertas - ${mesInfo.nombreCompleto}`, font: { size: 16, weight: 'bold' } }
-            },
-            scales: {
-                x: { stacked: true, title: { display: true, text: 'Día del Mes' } },
-                y: { stacked: true, beginAtZero: true, max: maxGlobalCalculado, ticks: { stepSize: 5, precision: 0 }, title: { display: true, text: 'Cantidad de Licitaciones' } }
+        if (chartInstance) { chartInstance.destroy(); }
+        const diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
+        const hoy = new Date();
+        const diaActual = hoy.getDate();
+        const mesActual = hoy.getMonth() + 1;
+        const datosPorDia = {};
+        datos.forEach(d => {
+            datosPorDia[parseInt(d.fecha.split('-')[2])] = d.cantidad; // ← CORRECCIÓN
+        });
+        const diasCompletos = [], cantidadesAbiertas = [], cantidadesCerradas = [];
+        for (let dia = 1; dia <= diasEnMes; dia++) {
+            diasCompletos.push(dia);
+            const cantidad = datosPorDia[dia] || 0;
+            if (mesInfo.numero < mesActual || (mesInfo.numero === mesActual && dia < diaActual)) {
+                cantidadesCerradas.push(cantidad);
+                cantidadesAbiertas.push(0);
+            } else {
+                cantidadesAbiertas.push(cantidad);
+                cantidadesCerradas.push(0);
             }
         }
-    });
-}
+        const ctx = document.getElementById('grafico-diario').getContext('2d');
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: diasCompletos,
+                datasets: [
+                    { label: 'Abiertas', data: cantidadesAbiertas, backgroundColor: 'rgba(79, 70, 229, 0.8)', borderColor: 'rgba(79, 70, 229, 1)', borderWidth: 1 },
+                    { label: 'Cerradas', data: cantidadesCerradas, backgroundColor: 'rgba(209, 213, 219, 0.5)', borderColor: 'rgba(156, 163, 175, 0.8)', borderWidth: 1 }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: window.innerWidth > 768,
+                plugins: {
+                    legend: { display: true, position: 'top' },
+                    title: { display: true, text: `Licitaciones según fecha tope para presentar ofertas - ${mesInfo.nombreCompleto}`, font: { size: 16, weight: 'bold' } }
+                },
+                scales: {
+                    x: { stacked: true, title: { display: true, text: 'Día del Mes' } },
+                    y: { stacked: true, beginAtZero: true, max: maxGlobalCalculado, ticks: { stepSize: 5, precision: 0 }, title: { display: true, text: 'Cantidad de Licitaciones' } }
+                }
+            }
+        });
+    }
 
 async function cargarEstadisticas() {
     try {
