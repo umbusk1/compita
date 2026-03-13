@@ -462,7 +462,26 @@ if (tipo === 'analisis') {
         });
       }
 
-      // 4. Re-calcular relevancia para cada licitación
+// 4. Calcular regiones de la empresa UNA SOLA VEZ (antes del loop)
+      let regionesRaw = perfil.regiones_interes;
+      let regionesArr = [];
+      if (Array.isArray(regionesRaw)) {
+        regionesArr = regionesRaw;
+      } else if (typeof regionesRaw === 'string') {
+        const s = regionesRaw.trim();
+        if (s.startsWith('{')) {
+          regionesArr = s.slice(1,-1).split(',')
+            .map(x => x.replace(/^"|"$/g,'').trim()).filter(Boolean);
+        } else {
+          try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
+        }
+      }
+      const regionesEmpresa = regionesArr.filter(
+        r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
+      );
+      // regionesEmpresa vacío = empresa no configuró regiones = sin filtro regional
+
+      // 5. Re-calcular relevancia para cada licitación
       let contadorAlta = 0;
       let contadorMedia = 0;
       let contadorDescartadas = 0;
@@ -473,7 +492,7 @@ if (tipo === 'analisis') {
         const codigoUNSPSC = lic.codigo_unspsc || '';
         const familiaUNSPSC = lic.familia_unspsc || '';
 
-        // A. Verificar exclusiones primero
+        // A. Verificar exclusiones
         let esDescartada = false;
         for (const excl of exclusiones) {
           if (texto.includes(excl.toLowerCase())) {
@@ -481,9 +500,7 @@ if (tipo === 'analisis') {
             break;
           }
         }
-
         if (esDescartada) {
-          // Eliminar de resultados si existe
           await sql`
             DELETE FROM resultados
             WHERE empresa_id = ${empresa_id}
@@ -493,126 +510,105 @@ if (tipo === 'analisis') {
           continue;
         }
 
-        // B. Calcular relevancia
-        let relevancia = null;
+        // B. Determinar si hay coincidencia temática (UNSPSC o palabras clave)
+        let coincideTema = false;
         let razon = '';
 
-        // B.1. Verificar familias UNSPSC (ALTA directa)
-        let coincideFamilia = false;
+        // B.1 Familias UNSPSC → coincidencia fuerte
         for (const codigo of familiasCodigos) {
           if (codigoUNSPSC === codigo || familiaUNSPSC === codigo) {
-            coincideFamilia = true;
+            coincideTema = true;
             razon = `Coincide con categoría UNSPSC ${codigo}`;
             break;
           }
         }
 
-        if (coincideFamilia) {
-          relevancia = 'ALTA';
-          contadorAlta++;
-        } else {
-          // B.2. Verificar palabras clave (MEDIA)
-          let palabraEncontrada = '';
+        // B.2 Palabras clave → coincidencia
+        if (!coincideTema) {
           for (const palabra of palabrasClave) {
             if (texto.includes(palabra.toLowerCase())) {
-              palabraEncontrada = palabra;
+              coincideTema = true;
+              razon = `Coincide con palabra clave "${palabra}"`;
               break;
             }
           }
-
-          if (palabraEncontrada) {
-            relevancia = 'MEDIA';
-            razon = `Coincide con palabra clave "${palabraEncontrada}"`;
-
-            // B.3. Subir a ALTA si monto >= monto_minimo_alta
-            if (monto >= montoMinimoAlta) {
-              relevancia = 'ALTA';
-              razon += `. Monto RD$${monto.toLocaleString()} supera mínimo configurado`;
-              contadorAlta++;
-            } else {
-              contadorMedia++;
-            }
-          }
         }
 
-        // C. Degradar ALTA → MEDIA si la licitación está fuera del área de operación
-		let regionesRaw = perfil.regiones_interes;
-        let regionesArr = [];
-        if (Array.isArray(regionesRaw)) {
-          regionesArr = regionesRaw;
-        } else if (typeof regionesRaw === 'string') {
-          const s = regionesRaw.trim();
-          if (s.startsWith('{')) {
-            // Formato PostgreSQL: {Yuma} o {"Nacional (todo el país)"}
-            regionesArr = s.slice(1,-1).split(',')
-              .map(x => x.replace(/^"|"$/g,'').trim()).filter(Boolean);
-          } else {
-            try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
-          }
-        }
-        const regionesEmpresa = regionesArr.filter(r => r !== 'Nacional' && r !== 'Nacional (todo el país)');
-
-        if (relevancia === 'ALTA' && regionesEmpresa.length > 0) {
-          const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
-          // Solo degrada si la región es identificable Y no está en las regiones de la empresa
-          if (regionLicitacion !== 'Nacional' && !regionesEmpresa.includes(regionLicitacion)) {
-            relevancia = 'MEDIA';
-            razon = `Región ${regionLicitacion} fuera del área de operación configurada. ${razon}`;
-            contadorAlta--;
-            contadorMedia++;
-          }
-        }
-
-        // D. Guardar o actualizar en tabla "resultados"
-        if (relevancia) {
-          // Verificar si ya existe un registro
-          const existe = await sql`
-            SELECT id FROM resultados
-            WHERE empresa_id = ${empresa_id}
-            AND licitacion_id = ${lic.licitacion_id}
-            LIMIT 1
-          `;
-
-          if (existe.length > 0) {
-            // ACTUALIZAR registro existente
-            await sql`
-              UPDATE resultados
-              SET relevancia = ${relevancia},
-                  razon = ${razon},
-                  razon_inclusion = ${razon},
-                  fecha_analisis = CURRENT_TIMESTAMP,
-                  compatible = true,
-                  origen = 're-analisis'
-              WHERE empresa_id = ${empresa_id}
-              AND licitacion_id = ${lic.licitacion_id}
-            `;
-			} else {
-            // Truncar valores para columnas varchar(100)
-            const queVal = (lic.descripcion || '').substring(0, 99);
-            const quienVal = (lic.unidad_compras || '').substring(0, 99);
-            const refVal = (lic.referencia || '').substring(0, 254);
-
-            // INSERTAR nuevo registro
-            await sql`
-              INSERT INTO resultados
-                (empresa_id, licitacion_id, referencia, descripcion, que, quien,
-                 relevancia, razon, razon_inclusion, estado,
-                 monto_estimado, fecha_cierre, fecha_presentacion, unidad_compras,
-                 created_at, fecha_analisis, notificada, compatible, vista, origen, seleccionado)
-              VALUES
-                (${empresa_id}, ${lic.licitacion_id}, ${refVal},
-                 ${lic.descripcion || ''}, ${queVal}, ${quienVal},
-                 ${relevancia}, ${razon}, ${razon}, 'pendiente',
-                 ${lic.monto_estimado}, ${lic.fecha_presentacion}::date, ${lic.fecha_presentacion}::date, ${lic.unidad_compras || ''},
-                 CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, true, false, 're-analisis', false)
-            `;
-          }
-        } else {
-          // No es relevante, eliminar si existe
+        // Si no hay coincidencia temática, no es relevante
+        if (!coincideTema) {
           await sql`
             DELETE FROM resultados
             WHERE empresa_id = ${empresa_id}
             AND licitacion_id = ${lic.licitacion_id}
+          `;
+          continue;
+        }
+
+        // C. Determinar si cumple criterio de MONTO
+        const cumpleMonto = monto >= montoMinimoAlta;
+
+        // D. Determinar si cumple criterio de REGIÓN
+        let cumpleRegion = true; // por defecto true si la empresa no configuró regiones
+        if (regionesEmpresa.length > 0) {
+          const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
+          // Si la institución es nacional, no se filtra
+          cumpleRegion = regionLicitacion === 'Nacional'
+            || regionesEmpresa.includes(regionLicitacion);
+          if (!cumpleRegion) {
+            razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
+          }
+        }
+
+        // E. Regla final:
+        // ALTA solo si cumple AMBOS: monto Y región
+        // MEDIA en cualquier otro caso con coincidencia temática
+        let relevancia;
+        if (cumpleMonto && cumpleRegion) {
+          relevancia = 'ALTA';
+          contadorAlta++;
+        } else {
+          relevancia = 'MEDIA';
+          contadorMedia++;
+        }
+
+        // F. Guardar o actualizar en resultados
+        const existe = await sql`
+          SELECT id FROM resultados
+          WHERE empresa_id = ${empresa_id}
+          AND licitacion_id = ${lic.licitacion_id}
+          LIMIT 1
+        `;
+
+        if (existe.length > 0) {
+          await sql`
+            UPDATE resultados
+            SET relevancia = ${relevancia},
+                razon = ${razon},
+                razon_inclusion = ${razon},
+                fecha_analisis = CURRENT_TIMESTAMP,
+                compatible = true,
+                origen = 're-analisis'
+            WHERE empresa_id = ${empresa_id}
+            AND licitacion_id = ${lic.licitacion_id}
+          `;
+        } else {
+          const queVal = (lic.descripcion || '').substring(0, 99);
+          const quienVal = (lic.unidad_compras || '').substring(0, 99);
+          const refVal = (lic.referencia || '').substring(0, 254);
+
+          await sql`
+            INSERT INTO resultados
+              (empresa_id, licitacion_id, referencia, descripcion, que, quien,
+               relevancia, razon, razon_inclusion, estado,
+               monto_estimado, fecha_cierre, fecha_presentacion, unidad_compras,
+               created_at, fecha_analisis, notificada, compatible, vista, origen, seleccionado)
+            VALUES
+              (${empresa_id}, ${lic.licitacion_id}, ${refVal},
+               ${lic.descripcion || ''}, ${queVal}, ${quienVal},
+               ${relevancia}, ${razon}, ${razon}, 'pendiente',
+               ${lic.monto_estimado}, ${lic.fecha_presentacion}::date,
+               ${lic.fecha_presentacion}::date, ${lic.unidad_compras || ''},
+               CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, true, false, 're-analisis', false)
           `;
         }
       }
@@ -625,7 +621,6 @@ if (tipo === 'analisis') {
         media: contadorMedia,
         descartadas: contadorDescartadas
       });
-    }
 
     // Si llegamos aquí, falta algún parámetro
     return res.status(400).json({
