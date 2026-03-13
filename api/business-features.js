@@ -432,7 +432,7 @@ export default async function handler(req, res) {
         let cumpleRegion = true;
         if (regionesEmpresa.length > 0) {
           const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
-          cumpleRegion = regionLicitacion === 'Nacional' || regionesEmpresa.includes(regionLicitacion);
+          cumpleRegion = regionesEmpresa.includes(regionLicitacion);
           if (!cumpleRegion) {
             razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
           }
