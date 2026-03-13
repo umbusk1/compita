@@ -534,9 +534,14 @@ if (tipo === 'analisis') {
         }
 
         // C. Degradar ALTA → MEDIA si la licitación está fuera del área de operación
-        const regionesEmpresa = Array.isArray(perfil.regiones_interes)
-          ? perfil.regiones_interes.filter(r => r !== 'Nacional')
-          : [];
+		let regionesRaw = perfil.regiones_interes;
+        let regionesArr = [];
+        if (Array.isArray(regionesRaw)) {
+          regionesArr = regionesRaw;
+        } else if (typeof regionesRaw === 'string') {
+          try { regionesArr = JSON.parse(regionesRaw); } catch(e) { regionesArr = []; }
+        }
+        const regionesEmpresa = regionesArr.filter(r => r !== 'Nacional');
 
         if (relevancia === 'ALTA' && regionesEmpresa.length > 0) {
           const regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
