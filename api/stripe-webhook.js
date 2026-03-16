@@ -324,19 +324,12 @@ async function handlePaymentSucceeded(invoice) {
 }
 
 // ============================================================================
-// UTILIDAD: Leer body raw
+// UTILIDAD: Leer body raw  ← REEMPLAZA la función anterior completa
 // ============================================================================
 async function getRawBody(req) {
-  return new Promise((resolve, reject) => {
-    let buffer = '';
-    req.on('data', chunk => {
-      buffer += chunk;
-    });
-    req.on('end', () => {
-      resolve(buffer);
-    });
-    req.on('error', err => {
-      reject(err);
-    });
-  });
+  const chunks = [];
+  for await (const chunk of req) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks);
 }
