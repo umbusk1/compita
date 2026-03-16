@@ -104,6 +104,7 @@
                         <table class="w-full">
                             <thead class="bg-gray-50 border-b border-gray-200">
                                 <tr>
+                                	<th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Empresa</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Plan</th>
@@ -718,6 +719,7 @@
             const html = empresas.map(emp => `
                 <tr class="border-b border-gray-100 hover:bg-gray-50">
                     <td class="px-4 py-4">
+                    	<span class="font-mono text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">#${emp.id}</span>
                         <p class="font-semibold text-gray-900">${emp.nombre}</p>
                         <p class="text-xs text-gray-500">${emp.dominio}</p>
                     </td>
