@@ -136,17 +136,27 @@ async function procesarEtapa1(oportunidad, empresa) {
   const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
 
   let palabraEncontrada = null;
-  const tieneCoincidencia = palabrasClave.some(palabra => {
-    const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
-    const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
-    const encontrada = regex.test(textoCompleto);
+    const tieneCoincidencia = palabrasClave.some(palabra => {
+      const esExpresion = palabra.includes(' ');
+      let regex;
 
-    if (encontrada) {
-      palabraEncontrada = palabra;
-      return true;
-    }
-    return false;
+      if (esExpresion) {
+        // Expresión de múltiples palabras → buscar frase exacta (sin stemming)
+        const expresionEscapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        regex = new RegExp(expresionEscapada, 'i');
+      } else {
+        // Palabra simple → stemming básico (quita la 's' final)
+        const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
+        const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
+      }
+
+      const encontrada = regex.test(textoCompleto);
+      if (encontrada) {
+        palabraEncontrada = palabra;
+        return true;
+      }
+      return false;
   });
 
   if (!tieneCoincidencia) {
