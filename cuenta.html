@@ -194,33 +194,47 @@
                                               d="M321.7 279.8l-2.1-5.6-4.1-4.2 1.1-5.8-1.8-5.5 7.2-3.6 8.1-3.5 15.4-7.5 12.9-9.8 3-7.1 5.4-0.3 6.4 1.3-0.7-7.5 1.8-8.9-3.9-6.9-7.6-2.1-5.9-4.6 1.7-5.3 6.2-1.7 12.4-6.6 13-4.2 5.9 4.4 7.8 0.8 5.5-2.2 5.1-1.1 4.9 12.5 7-1.3 3.6 8.8 5 8.3 6.9 6.7 10.1 0.7 8 12.4 12.3 8.1-0.1-1.1-0.8 0.3 4.6-1.6 4.8 1.4 5.2 0.9 5-0.9 11-0.2 10.8 1.3 7 0.5 6.4 2.9 5.6 2.6 5.8 1.9 7.6 0 8 0.6 6.1 1.9 5.3 3.4-0.9 6.9-2.2 7.3-3.7 16.7-4.3 17-6.9 5.4-8-4-5-0.9-3 4.6-4.4-0.7-5.2-1.1-6.5 1.6-4.7 4.3-10.5 2.5-12.8 2.7-5.1 5.7-1.6 8.2-8.5 4-3.5 7.5-3.3 9.9-9.1-0.2-6.4-4.4-6.6-2.7-5.9 2.2-6.2 0.6-9.9-7.3-10.4-6-3.5 11.5-6.5 8.3-5.2 4.8-3.8 4.2-10.9-0.1-11.2 0.2 3.5-14.9-9.3-11.4-15.1-7.7-10.5-14.3-2.8-24.1-13-8.9z"
                                               onclick="toggleRegionMapa('DO36','Cibao Sur')"/>
                                         </g>
-                                        <!-- Ciudades principales -->
+                                        <!-- Ciudades principales (posicionadas con coordenadas GPS reales) -->
                                         <g id="ciudades" pointer-events="none">
-                                            <circle cx="545" cy="418" r="6" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="545" y="438" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santo Domingo</text>
-                                            <circle cx="375" cy="192" r="6" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="375" y="212" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santiago</text>
-                                            <circle cx="352" cy="88" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="352" y="76" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Puerto Plata</text>
-                                            <circle cx="562" cy="222" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="614" y="212" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">San Francisco</text>
-                                            <text x="614" y="230" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">de Macorís</text>
-                                            <circle cx="212" cy="148" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="248" y="148" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Mao</text>
-                                            <circle cx="632" cy="396" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="632" y="416" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Pedro</text>
-                                            <text x="632" y="434" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">de Macorís</text>
-                                            <circle cx="235" cy="332" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="235" y="318" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Juan de</text>
-                                            <text x="235" y="336" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">la Maguana</text>
-                                            <circle cx="172" cy="508" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="210" y="505" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Barahona</text>
-                                            <circle cx="792" cy="390" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="792" y="410" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Higüey</text>
-                                            <circle cx="900" cy="445" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="900" y="465" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Punta Cana</text>
-                                            <circle cx="468" cy="448" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                            <text x="468" y="468" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Cristóbal</text>
+                                            <!-- Santo Domingo 18.4646, -69.9369 -->
+                                            <circle cx="560" cy="400" r="6" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="560" y="385" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santo Domingo</text>
+                                            <!-- Santiago 19.4528, -70.7022 (punto de calibración) -->
+                                            <circle cx="380" cy="160" r="6" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="380" y="180" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santiago</text>
+                                            <!-- Puerto Plata 19.7833, -70.6891 -->
+                                            <circle cx="383" cy="80" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="395" y="77" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Puerto Plata</text>
+                                            <!-- San Francisco de Macorís 19.2973, -70.2546 -->
+                                            <circle cx="485" cy="198" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="497" y="194" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">San Francisco</text>
+                                            <text x="497" y="212" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">de Macorís</text>
+                                            <!-- Mao 19.5525, -71.0845 -->
+                                            <circle cx="290" cy="136" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="302" y="140" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Mao</text>
+                                            <!-- San Pedro de Macorís 18.4703, -69.3016 -->
+                                            <circle cx="709" cy="399" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="709" y="419" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Pedro</text>
+                                            <text x="709" y="437" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">de Macorís</text>
+                                            <!-- San Juan de la Maguana 18.8042, -71.2313 -->
+                                            <circle cx="256" cy="318" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="256" y="300" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Juan de</text>
+                                            <text x="256" y="316" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">la Maguana</text>
+                                            <!-- Barahona 18.2180, -71.1081 -->
+                                            <circle cx="285" cy="460" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="297" y="464" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Barahona</text>
+                                            <!-- Higüey 18.6153, -68.7237 -->
+                                            <circle cx="845" cy="363" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="845" y="383" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Higüey</text>
+                                            <!-- Punta Cana 18.5565, -68.3738 -->
+                                            <circle cx="928" cy="378" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="916" y="374" font-size="16" font-family="Arial" text-anchor="end" fill="#111827" font-weight="700">Punta Cana</text>
+                                            <!-- San Cristóbal 18.4123, -70.1112 -->
+                                            <circle cx="519" cy="413" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="507" y="432" font-size="16" font-family="Arial" text-anchor="end" fill="#111827" font-weight="700">San Cristóbal</text>
+                                            <!-- La Romana 18.4313, -68.9823 -->
+                                            <circle cx="785" cy="408" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+                                            <text x="785" y="428" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">La Romana</text>
                                         </g>
                                         <g id="labels" pointer-events="none">
                                             <text class="mapa-label" x="188" y="127">Cibao</text>
