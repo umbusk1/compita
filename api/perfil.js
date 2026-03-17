@@ -46,7 +46,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Parámetro "type" requerido: "usuario" o "empresa"' });
     }
   } else if (req.method === 'POST') {
-    return handleUpdateEmpresa(req, res, empresaId);
+    return handleUpdateEmpresa(req, res, empresaId, authHeader);
   } else {
     return res.status(405).json({ error: 'Método no permitido' });
   }
@@ -94,7 +94,6 @@ async function handleGetUsuario(req, res, userId) {
 }
 
 // FUNCIÓN: Obtener perfil de la empresa
-// ── CAMBIO: se añaden sector_principal, regiones_interes, onboarding_completado al SELECT
 async function handleGetEmpresa(req, res, empresaId) {
   try {
     const result = await pool.query(
@@ -119,8 +118,7 @@ async function handleGetEmpresa(req, res, empresaId) {
 }
 
 // FUNCIÓN: Actualizar perfil de la empresa
-// ── CAMBIO: se añaden sector_principal, regiones_interes, onboarding_completado
-async function handleUpdateEmpresa(req, res, empresaId) {
+async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
   try {
     const {
       descripcion,
@@ -173,6 +171,33 @@ async function handleUpdateEmpresa(req, res, empresaId) {
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Empresa no encontrada' });
     }
+
+    // ── Re-evaluar resultados existentes con el nuevo perfil ──────────────────
+    // Se dispara en segundo plano — no bloquea la respuesta al usuario
+    try {
+      const baseUrl = process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : 'https://compita.umbusk.com';
+
+      fetch(`${baseUrl}/api/analisis?action=reanalizar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': authHeader
+        },
+        body: JSON.stringify({ empresa_id: empresaId })
+      }).then(r => {
+        if (r.ok) console.log(`✅ Re-análisis completado para empresa ${empresaId}`);
+        else console.warn(`⚠️ Re-análisis respondió ${r.status}`);
+      }).catch(e => {
+        console.warn('⚠️ Re-análisis no pudo ejecutarse:', e.message);
+      });
+
+    } catch (e) {
+      // No bloquear el guardado si falla el re-análisis
+      console.warn('⚠️ Re-análisis no pudo dispararse:', e.message);
+    }
+    // ── Fin re-análisis ───────────────────────────────────────────────────────
 
     return res.status(200).json({
       message: 'Perfil actualizado exitosamente',
