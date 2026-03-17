@@ -118,20 +118,11 @@ async function procesarEtapa1(oportunidad, empresa) {
     return { pasa_etapa1: false, razon: 'Fecha inválida' };
   }
 
-  const ahora = new Date();
-  if (fechaLimite < ahora) {
-    return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
-  }
-
-  let palabrasClaveStr = empresa.palabras_clave;
-  if (Array.isArray(palabrasClaveStr)) {
-    palabrasClaveStr = palabrasClaveStr.join(', ');
-  }
-
-  const palabrasClave = (palabrasClaveStr || '')
-    .split(',')
-    .map(p => p.trim().toLowerCase())
-    .filter(p => p.length > 0);
+  const palabrasClave = (
+    Array.isArray(empresa.palabras_clave)
+      ? empresa.palabras_clave
+      : (empresa.palabras_clave || '').split(',')
+  ).map(p => p.trim().toLowerCase()).filter(p => p.length > 0);
 
   const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
 
@@ -139,23 +130,18 @@ async function procesarEtapa1(oportunidad, empresa) {
     const tieneCoincidencia = palabrasClave.some(palabra => {
       const esExpresion = palabra.includes(' ');
       let regex;
-
       if (esExpresion) {
-        // Expresión de múltiples palabras → buscar frase exacta (sin stemming)
+        // Expresión multi-palabra → buscar frase exacta sin stemming
         const expresionEscapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         regex = new RegExp(expresionEscapada, 'i');
       } else {
-        // Palabra simple → stemming básico (quita la 's' final)
+        // Palabra simple → stemming básico
         const raiz = palabra.endsWith('s') ? palabra.slice(0, -1) : palabra;
         const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
       }
-
       const encontrada = regex.test(textoCompleto);
-      if (encontrada) {
-        palabraEncontrada = palabra;
-        return true;
-      }
+      if (encontrada) { palabraEncontrada = palabra; return true; }
       return false;
   });
 
@@ -164,25 +150,30 @@ async function procesarEtapa1(oportunidad, empresa) {
   }
 
   if (empresa.exclusiones && empresa.exclusiones.length > 0) {
-    const exclusiones = Array.isArray(empresa.exclusiones)
-      ? empresa.exclusiones
-      : empresa.exclusiones.split(',').map(e => e.trim()).filter(e => e.length > 0);
+    const exclusiones = (
+	      Array.isArray(empresa.exclusiones)
+	        ? empresa.exclusiones
+	        : (empresa.exclusiones || '').split(',')
+	    ).map(e => e.trim().toLowerCase()).filter(e => e.length > 0);
 
-    const exclusionesLower = exclusiones.map(e => e.toLowerCase());
-
-    for (const exclusion of exclusionesLower) {
-      const raiz = exclusion.endsWith('s') ? exclusion.slice(0, -1) : exclusion;
-      const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
-
-      if (regex.test(textoCompleto)) {
-        return {
-          pasa_etapa1: false,
-          razon: `Contiene palabra de exclusión: ${exclusion}`
-        };
-      }
+	    for (const exclusion of exclusiones) {
+	      const esExpresion = exclusion.includes(' ');
+	      let regex;
+	      if (esExpresion) {
+	        const expresionEscapada = exclusion.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	        regex = new RegExp(expresionEscapada, 'i');
+	      } else {
+	        const raiz = exclusion.endsWith('s') ? exclusion.slice(0, -1) : exclusion;
+	        const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	        regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
+	      }
+	      if (regex.test(textoCompleto)) {
+	        return {
+	          pasa_etapa1: false,
+	          razon: `Contiene exclusión: ${exclusion}`
+	        };
+	      }
     }
-  }
 
   const estado = oportunidad.estado || '';
   if (!estado) {
