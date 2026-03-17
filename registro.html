@@ -170,6 +170,21 @@
     <!-- Botón ancho eliminado — B3 ✓ -->
 </div>
 
+<div id="confirmacion-email" class="hidden max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 text-center">
+    <div class="text-6xl mb-4">📬</div>
+    <h2 class="text-2xl font-bold text-gray-900 mb-3">¡Revisa tu correo!</h2>
+    <p class="text-gray-600 mb-2">
+        Te enviamos un email de confirmación a:
+    </p>
+    <p id="email-confirmacion" class="text-indigo-600 font-bold text-lg mb-6"></p>
+    <p class="text-gray-500 text-sm mb-6">
+        Haz clic en el enlace del email para confirmar tu cuenta y comenzar a usar Compita.
+    </p>
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+        ⚠️ Si no lo ves en unos minutos, revisa tu carpeta de <strong>spam o correo no deseado</strong>.
+    </div>
+</div>
+
         <footer class="bg-gray-900 text-gray-400 py-12">
             <div class="container mx-auto px-4">
                 <div class="border-t border-gray-800 pt-8 text-center text-sm">
@@ -312,7 +327,7 @@ async function procesarTrialGratuito() {
         const response = await fetch(`${API_BASE}/api/auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
+            body: JSON.stringify({
                 action: 'registro',
                 email: datosRegistro.email,
                 password: datosRegistro.password,
@@ -326,8 +341,10 @@ async function procesarTrialGratuito() {
 
         if (response.ok) {
             fbq('track', 'CompleteRegistration', { content_name: 'trial' });
-            alert('✅ ' + result.message);
-            window.location.href = '/login.html';
+            // Ocultar opciones de pago y mostrar mensaje de confirmación
+            document.getElementById('opciones-pago').classList.add('hidden');
+            document.getElementById('email-confirmacion').textContent = datosRegistro.email;
+            document.getElementById('confirmacion-email').classList.remove('hidden');
         } else {
             alert('❌ Error: ' + result.error);
             document.getElementById('opciones-pago').classList.add('hidden');
