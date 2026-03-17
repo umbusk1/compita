@@ -179,7 +179,7 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
         ? `https://${process.env.VERCEL_URL}`
         : 'https://compita.umbusk.com';
 
-      fetch(`${baseUrl}/api/analisis?action=reanalizar`, {
+      fetch(`${baseUrl}/api/analizar-notificar-v2?action=reanalizar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
