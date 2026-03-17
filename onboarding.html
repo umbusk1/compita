@@ -38,27 +38,19 @@
     }
     .keyword-chip:hover { background: #e0e7ff; }
     .keyword-chip.added { background: #4f46e5; color: white; border-color: #4f46e5; }
-    /* SVG Map */
     .mapa-region {
-      cursor: pointer;
-      fill: #93c5fd;
-      stroke: #ffffff;
-      stroke-width: 1.5;
-      stroke-linejoin: round;
-      stroke-linecap: round;
+      cursor: pointer; fill: #93c5fd;
+      stroke: #ffffff; stroke-width: 1.5;
+      stroke-linejoin: round; stroke-linecap: round;
       transition: fill 0.15s ease;
     }
     .mapa-region:hover { fill: #60a5fa; }
     .mapa-region.selected { fill: #4f46e5; }
     .mapa-region.selected:hover { fill: #4338ca; }
     .mapa-label {
-      font-size: 22px;
-      font-family: Arial, sans-serif;
-      text-anchor: middle;
-      dominant-baseline: middle;
-      pointer-events: none;
-      font-weight: 700;
-      fill: white;
+      font-size: 22px; font-family: Arial, sans-serif;
+      text-anchor: middle; dominant-baseline: middle;
+      pointer-events: none; font-weight: 700; fill: white;
       text-shadow: 0 1px 3px rgba(0,0,0,0.4);
     }
   </style>
@@ -88,9 +80,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!-- PASO 1: Sectores                       -->
-  <!-- ═══════════════════════════════════════ -->
+  <!-- PASO 1: Sectores -->
   <div id="paso-1" class="paso max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
     <h2 class="text-xl font-bold text-gray-900 mb-1">¿En qué sector opera tu empresa?</h2>
     <p class="text-sm text-gray-500 mb-2">
@@ -114,16 +104,13 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!-- PASO 2: Región + Monto                 -->
-  <!-- ═══════════════════════════════════════ -->
+  <!-- PASO 2: Región + Monto -->
   <div id="paso-2" class="paso hidden max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
     <h2 class="text-xl font-bold text-gray-900 mb-1">¿Dónde y cuánto?</h2>
     <p class="text-sm text-gray-500 mb-6">
       Estas preferencias filtran automáticamente las oportunidades antes de que lleguen a ti.
     </p>
 
-    <!-- Mapa de regiones -->
     <div class="mb-6">
       <label class="block font-semibold text-gray-800 mb-2">Regiones de interés</label>
 
@@ -133,84 +120,107 @@
       </button>
       <p class="text-xs text-gray-500 mb-3">Puedes seleccionar regiones individuales haciendo clic en el mapa.</p>
 
-      <!-- Simplemaps SVG real -->
       <div class="bg-sky-50 rounded-xl overflow-hidden border border-gray-200">
-        <svg baseprofile="tiny" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 1000 686"
-             class="w-full" style="max-height:320px" xmlns="http://www.w3.org/2000/svg">
+        <svg baseprofile="tiny" stroke-linecap="round" stroke-linejoin="round"
+             viewBox="0 0 1000 686" class="w-full" style="max-height:450px"
+             xmlns="http://www.w3.org/2000/svg">
           <g id="features">
             <path class="mapa-region" id="r-DO34"
               d="M240.1 58.3l1.6 8.9 5 7.6 7.7 2.2 7.4 3 8.4 3 8 4 5.5 4.2 6.6 1.7 10.1 3.2 8.3 6.7 9.3 4.7 10.4 1.4-1.6 8.7-3.6 8-6.3 0.9-6.2-4.4 0.5 5.3 1.9 4.7 3.6 1.7 3.7 2.3-0.2 7.2-1.8 7.5 5.7 4.3-1 4.7-10.9 0-10.2-4.4-2.2 2.8-2.3 3.4-3.6 0.5-3.6-0.8-7.2-3.1-6.8-3.8-3.3 4.4-0.5 5.2 3.3 2.4 2.1 2.5-9.5 3.3-8.9 4.2-4.7 0.3-4.6-0.5-3.8 2.5-3.1 3.6-4.5 3.7-3.5 4.8-0.8 7.9-0.7 8.1 0.9 5.5 4.1 3.9 0.3 7.9-1.3 8.2-13.1-0.1-10.7-5.3-10.8-5.8-11.1-5.6-7.6-10.2-10.2-6.6-4.3 4.4-5 3.1-5.9-2-6-1.6-3.1 3.6-1.8 4.8-5.2 1.9-5 3-4.1 3.9-16-7.8-8.2-8.3-1-1.1-4.4-6.2-1.2-5.2 1.6-1.7 6.7-3.8 2.3-1.8 3.1-8 1.4-1.5 2.8-6 0.2-11.7-3-20.5-6.9-16.4-1.1-6 0.4-6.8 0.2-4.2-0.8-4.6-2.2-7.3 4.7 1.1 4.5 2.3-1-5.2-4.4-10.2 0.3-2.5 0-2-6.6-0.4-0.9-2.8 2.7-4.1 3.9-4.3 1.1-0.8 1.3-0.2 2.7 0 1.7-0.7 2.7-3.3 1.5-1.3 3-1.2 2.1-0.6 2.2-1 2.8-2.6-1.6-3.3-0.3-2.9 1.3-2.1 3.2-0.8 1.9 0.3 2.9 1.3 1.9 0.3 0.8-0.6 1.8-2.4 0.9-0.6 25.3-1.9 6.5 0.9 6.3 2.3 23.6 12.3 6.9 1.4 6.6-2.6 5 3.7 3.5 1.6 11 0.4 0.5-0.1z"
               onclick="toggleRegionMapa('DO34','Cibao Noroeste')"/>
-
             <path class="mapa-region" id="r-DO37"
               d="M133.9 219.8l4.1-3.9 5-3 5.2-1.9 1.8-4.8 3.1-3.6 6 1.6 5.9 2 5-3.1 4.3-4.4 10.2 6.6 7.6 10.2 11.1 5.6 10.8 5.8 10.7 5.3 13.1 0.1 9.3 5.5 10.1 5 4.1 2.1 2.1 3.9 0.8 6.5 4.7 4.2 11 7.1 11.1 3.5 5.7-2.8 6-1.3 6.4 2 6.4 2 4.1 4.2 2.1 5.6-2.1 5.6-5.1 2.6-1 5-3.5 3.4-6.1 4.2-3 6.6-1.6 12.9-0.1 13.4-2 4.5-3.3 3.2-3.6-1.5-2.1-4.5-8 2.6 1.5 9.8-0.3 3.3-2.5 3.5 1.6 2.9 0.6 3.3-4.7 2.2-4 1.6-6.6 9.7-10.8 2.9-9-5.1-11.7 3.6-6.8 1.1-6.8-0.7-5.7 1.9-5.3 3.5-12.1-1-11-5.6-12.3-2.5-11.6-4.3-15.5-3.3-15.8-1.3-16.7-2.6-13.7-1.6 6.6-4.1 3.5-2.9 2.9-4.9 1.7-4.4 1.2-4.8 0.4-4.9-2-10.2-0.2-10.6-1.4-4.8-1.8-2.4-5.7-5.2-2.2-2.7-3.5-7.3-2.3-1.9-5.8-0.2-6.1 2.1-4.4 0.7-0.8-4.5 4.3-2.9 12.7-3.4 3.2-2 10.7-11.9 7.4-10.4 3.7-3.4 8.4-6 3.1-4.6 1.3-4.5 1.1-15.6-3.1-1.6z"
               onclick="toggleRegionMapa('DO37','El Valle')"/>
-
             <path class="mapa-region" id="r-DO38"
               d="M101 359.1l13.7 1.6 16.7 2.6 15.8 1.3 15.5 3.3 11.6 4.3 12.3 2.5 11 5.6 12.1 1 5.3-3.5 5.7-1.9 6.8 0.7 6.8-1.1 11.7-3.6 9 5.1 11.7 11.9 15.4 5.4 7.8 1.4 6.6 4.4-0.1 4.6-5.2 2 2.5 4.2 0.8 8.3-5 6.5-7.6 6.6 1.2 2.9 1.2 3.1 2.3 1.7 3.1 1.2 8 2.3 7.2 1.7-0.6 3.8 0.8 5.5 1.9 8.4-3.7 6.2-1.6-2.1-1.3-2.6-1.6-2.3-2.5-2-2.7-1.1-10.7-2.3-4.9-0.1-3.9 1.5-1.5 4-0.6 2.2-2.2 3.8-0.5 2.9 0.5 3.3 1.2 1.8 1.6 1.7 1.8 2.9 4 14.1 1.3 2.4 0 3.1-4.8 7.3-4.1 10.5-23.3 34.2-2.1 5.9-1 2.1-2.3 1.6-5 2.6-3 2.6-2.2 2.5-1.7 3.1-1.5 4.3-1.8-0.6-0.7-0.4-0.8-0.7-0.2-0.2-0.4 1.9-0.4 0.7-0.9 0.8 1.7 0-1 2.2-1.3 1.6-1.6 1.1-1.9 0.4-0.9 1.1-1.7 5.1-0.9 1.9-3 4.4-8.3 24.3-2.6 4.8-10.2 14.3-2.5-1.1-2.1-2.1-0.1-1-2.4-2.1-17-28.1-4.1-4.5-8.4-3.3-19.7 2.7-8.4-2.1 2.4-1.8 7.8-8.2 1.7-3.3-0.3-5.6-1.1-3.9-3.8-7.4-2.7-4.1-0.5-1.5-0.1-3.1 1.6-9.9-1.8-4.5-4.3-5-9-7.5-13.9-5.3 3-7.8 0.9-4.5-0.6-7.6 0.2-4.3-0.6-2.9-2.6-7.4-0.4-2.5 0.7-5.1 1.9-4.9 11-18.9 0.2-0.3 2.9-5-0.6-0.7-2.2-2.1-3.6-2.3-13.2-5-9.4-6.3-2-2.3-3.7-5.5-2.1-1.9-9.6-2.4-3.7-2.1-1.5-4.8 0.9-2.8 1.9-1.1 1.3-1.4-0.6-3.9-1.6-2.5-22.4-23-2.1-4.2 4.2-3.2 9.2-2 18.5 3.4 9.6-3.2 3.2-3.5 5.1-8.7 3.4-3.8 0.6-0.4 1.7-1z m62.4 281.5l2.8-5.1 3.4 1.9 3.6 2.6 6.3 6.1-3.8 1.2-6.2 6.3-4.2 1.5-4.1-2.4-0.1-5.6 2.3-6.5z"
               onclick="toggleRegionMapa('DO38','Enriquillo')"/>
-
             <path class="mapa-region" id="r-DO42"
               d="M887.8 494l2.5 3.4 2.8 5.1 1.8 4.7-0.4 2-3.8-0.8-7.9-3.7-4.2-0.8-4.4 0.5-7.6 2.5-4.2 0.5-8.7-2.3-6.2-5.6-4-7-2.1-6.4 3.6-1.1 4.4 0.9 4.2 2.1 3.7 2.6 2.9 1.1 11.5 1.5 12.8-0.4 3.3 1.2z m-120.2-59.7l-1.2-7.3-3.1-7.5-3-2.5-1.6-3.4 3.2-7 3.9-6.5 1.9-6.8 1.2-6-7.2-0.8-7.8 1.1-7-5.2-6-6.6-4-1.1-4.2 0.4-3.3-2-3.3-2.4 3-9.6 4.3-10 1.1-11.1-3.9-10.5-14.1-14.7-8.9-18.2 14-2.5 20.3 4.8-6.8-12.3 1.2-14.2 0-0.1 0.2-1 9.5 2.6 3.9-0.3 4.6-2.6-1.5-1.9-3.1-1.9 0-2.5 4.4-1.3 3.8 3.5 5.2 8.5 3.4 2 3.7 1.1 3.2 1.4 1.7 2.8 3-2.4 6-2.8 2.8-2.1-1.9-2.1 0.9-0.5 2.3-0.1 2.1-0.7 2.6-2.7 0.7-1.1 1-0.1 8.9 0.5 5.1 1.1 4.7 1.6 4.1 2.3 0.5 0.7 0 1 0.2 1 1 0.9 5 1.8 0.5-0.1 8.8 1.8 5.5 0.3 2.3 0.8 0.4 0.3 2 1.4 2.3 1.3 4.4 0.3 2.5 1 28.7 26.8 10.6 12.8 14.9 11.4 10.6 7.5 3.1 1.4 1.6 1 11.1 10.8 14.1 8.6 6.8 10.4-1.3 10.3-23.2 35.4-1.7 1.4-1.6 1.8-0.7 2.5 0.4 9-0.4 2.6-2.8 4.4-4.1 2.1-5.1 0.6-5.9 0-4.5-1.5-9.8-6.5-3.5-1.1-4.1 2.8 0.6 4.2 1.3 4.9-2.1 5.1-3 4.1-1.9 4.7-3.8 15.1-1.4 2.7-2.8 1-20.9 1.7-4.2-1.5-0.6-9.6-6-12.5-8.2-12.3-7.3-8.4-7.8-5.4-4.9-2.1-5.3-2.3-10.4-1.4-11.9 4.9-18 0.8z"
               onclick="toggleRegionMapa('DO42','Yuma')"/>
-
             <path class="mapa-region" id="r-DO39"
               d="M736.5 271.3l-0.2 1 0 0.1-1.2 14.2 6.8 12.3-20.3-4.8-14 2.5 8.9 18.2 14.1 14.7 3.9 10.5-1.1 11.1-4.3 10-3 9.6 3.3 2.4 3.3 2 4.2-0.4 4 1.1 6 6.6 7 5.2 7.8-1.1 7.2 0.8-1.2 6-1.9 6.8-3.9 6.5-3.2 7 1.6 3.4 3 2.5 3.1 7.5 1.2 7.3-4.6-0.8-10.9-3.7-4.9-0.8-4.2-1.4-7.2-6.1-5.4-1.4-4.8 1-4.8 1.6-4.9 0.4-5-3-5.1 4.8-32.1 2.5-9.6 3.5-5.1 0.1-0.7-0.4 0.9-6.9 1.6-8.3-14.5-2.9-9.8-10.5 4-6.8 5-6.6 0.5-6.6-1.1-6.5-1.3 0.6-1.4-0.1 1.4-4 3.1-3.4-8.9-3.4-8.4 1.8-4.6 3-5.4 1.2-14.4 5.3-11.3 12-2-7.4-5.2-5-1.4-5.2-3.4-4.5-5.6-6.4-6.7-5.3-5.7-0.3-5.8-0.2-3.1 0.1-2.9 1-1.1 2.4-0.7 2.4-10.5 4.8-11.7-2.3-8.1-2.2-7.8-2.9-4.5-8.2-7-2.5-6-4.4-6.4-3.6-4.3-5-4-5.2 1.6-8.2 5.1-5.7 12.8-2.7 10.5-2.5 4.7-4.3 6.5-1.6 5.2 1.1 4.4 0.7 3-4.6 5 0.9 8 4 6.9-5.4 4.3-17 3.7-16.7 6.6 0.2 3.7-5 0.4-4 0.5-2.9 13.2-1.6 16.2 0.6 7 5.4 7.1 5.3 7.8 4.5 7.2 5.4 3.3-7.5 1.5-7.9-0.8-7 0.2-1.9 3.1 2.2 13.6-2.1 4.7 1.7 5.9-1.9 11.6 4.6 6.1-0.7-1.5-1.3-2-1.2-2.3-0.9-2.8-0.3 0-1.8 13.2-0.7 3.9 0.7 4.3 3.2 3.4 8 4.2 3.2 4.2 1.1 8.5 1.1 23 6.2z"
               onclick="toggleRegionMapa('DO39','Higuamo')"/>
-
             <path class="mapa-region" id="r-DO33"
               d="M635.4 250.2l-0.2 1.9 0.8 7-1.5 7.9-3.3 7.5-7.2-5.4-7.8-4.5-7.1-5.3-7-5.4-16.2-0.6-13.2 1.6-0.5 2.9-0.4 4-3.7 5-6.6-0.2 2.2-7.3 0.9-6.9-5.3-3.4-6.1-1.9-8-0.6-7.6 0-5.8-1.9-5.6-2.6-6.4-2.9-7-0.5-10.8-1.3-11 0.2-5 0.9-5.2-0.9-4.8-1.4-4.6 1.6 0.8-0.3 0.1 1.1-12.3-8.1-8-12.4-10.1-0.7-6.9-6.7-5-8.3-3.6-8.8 5.3-15.4 1-14.7-0.1-17.5 8.2-10.2 4.5 1.7 4.1 2 2.9 7 5.8-4 5.1-7.4 7.4-4.3 7.1 6.3 5.7 9.2 2.6 0 2.7 0.5 0.7-7.5 1.5-6.7 5.2-0.4 5.8 0.4 12.2-7.1 4.6-13.6-0.1-1.6 8.1-8.8 4.7-2.2 13.7 0.3 6.7-0.7 3 0.4 3.8 2.2 8.4 9 2.6 6.1-0.1 6.6-4 14.4 4.9 2.1 1.9 4.7-0.1 11.9 0.6 5.2 1.6 4.2 16.4 24.7 7.4 7.2 1 0.9 8.4 3.5 5-0.8 9.6-3.7 4.9-0.9 11.2-0.4 4.9-1.1 5-2 7.3-4.9 2.9-0.7 2.5 0.6 5.2 2.6 3.3 0.6 6-1.5 2.6-0.3 1.4 0 1.3 0.4 1 0.8 0.4 1.5 0.8 1.2 1.7-0.4 2.7-1.7 14.3 5.8 4.3 3.1 2.8-5.7 4.5-4.2 11.2-6.2 7.2-2.2 1.7 3-1.9 6.3-3.6 7.4 4.9 1.8 5.6 0 5.4-1.4 4.5-2.4 1.4 5.8-3.2 4.5-4.4 4.1-2.3 4.5-1 4.7-2.9 4.3-4.3 3.1-5.4 1.3-19.4-3.5-21.2 1.6-5-1.4-9.2-4.6-31.5-3.9-3.5 0.9-1.4 3.5-0.8 12.5-1.8 10.6 0.8 4 2.3 1.7z"
               onclick="toggleRegionMapa('DO33','Cibao Nordeste')"/>
-
             <path class="mapa-region" id="r-DO35"
               d="M237.8 232.3l1.3-8.2-0.3-7.9-4.1-3.9-0.9-5.5 0.7-8.1 0.8-7.9 3.5-4.8 4.5-3.7 3.1-3.6 3.8-2.5 4.6 0.5 4.7-0.3 8.9-4.2 9.5-3.3-2.1-2.5-3.3-2.4 0.5-5.2 3.3-4.4 6.8 3.8 7.2 3.1 3.6 0.8 3.6-0.5 2.3-3.4 2.2-2.8 10.2 4.4 10.9 0 1-4.7-5.7-4.3 1.8-7.5 0.2-7.2-3.7-2.3-3.6-1.7-1.9-4.7-0.5-5.3 6.2 4.4 6.3-0.9 3.6-8 1.6-8.7-10.4-1.4-9.3-4.7-8.3-6.7-10.1-3.2-6.6-1.7-5.5-4.2-8-4-8.4-3-7.4-3-7.7-2.2-5-7.6-1.6-8.9 2.4-0.7 0.6-2 0.2-2.7 1.3-2.7 2.9-1.1 2.1 2.4 2.7 6.9 1.9-1.2 1.5-1.3 1-1.4 0.7-1.8-2.1-0.6-0.5-0.4 0-0.6-0.8-1.8 3.9 1.5 3.2-0.2 3.3-0.8 4-0.5 2.5-2 4.6-8.6 3-2 3.8-0.9 8-4 4.3-0.6 4 1 3.8 2.3 2.1 3.3-1.3 4.2 4.8 1.9 1.8 0-1.2-4-0.6-1.5 11.9 1.9 3.5-0.3 7.3-1.8 2.8 0.2 3.1 2 10.8 13.1 0.9 2.5-1.3 2.4 9.3 0.1 3.6 1.7 9.4 8 9 4.6 9.5 3.3 11 1.7 14.9 0.1 1.2-0.7 1.3-1.8 3-2.1 3.4-1.7 2.4-0.8 9.7 3.1 15 16 9.1 9.6 4.1 2.9 4.5 2.3 5 1.5 11.3 1.2 9.1 3.3 16.5 3.3 3.7-0.1 2.5-0.9 2.2-1.9 0.9-0.9 0.1 1.6-4.6 13.6-12.2 7.1-5.8-0.4-5.2 0.4-1.5 6.7-0.7 7.5-2.7-0.5-2.6 0-5.7-9.2-7.1-6.3-7.4 4.3-5.1 7.4-5.8 4-2.9-7-4.1-2-4.5-1.7-8.2 10.2 0.1 17.5-1 14.7-5.3 15.4-7 1.3-4.9-12.5-5.1 1.1-5.5 2.2-7.8-0.8-5.9-4.4-13 4.2-12.4 6.6-6.2 1.7-1.7 5.3 5.9 4.6 7.6 2.1 3.9 6.9-1.8 8.9 0.7 7.5-6.4-1.3-5.4 0.3-3 7.1-12.9 9.8-15.4 7.5-8.1 3.5-7.2 3.6 1.8 5.5-1.1 5.8-6.4-2-6.4-2-6 1.3-5.7 2.8-11.1-3.5-11-7.1-4.7-4.2-0.8-6.5-2.1-3.9-4.1-2.1-10.1-5-9.3-5.5z"
               onclick="toggleRegionMapa('DO35','Cibao Norte')"/>
-
             <path class="mapa-region" id="r-DO41"
               d="M255 377l10.8-2.9 6.6-9.7 4-1.6 4.7-2.2-0.6-3.3-1.6-2.9 2.5-3.5 0.3-3.3-1.5-9.8 8-2.6 2.1 4.5 3.6 1.5 3.3-3.2 2-4.5 0.1-13.4 1.6-12.9 3-6.6 6.1-4.2 3.5-3.4 1-5 5.1-2.6 2.1-5.6 13 8.9 2.8 24.1 10.5 14.3 15.1 7.7 9.3 11.4-3.5 14.9 11.2-0.2 10.9 0.1 3.8-4.2 5.2-4.8 6.5-8.3 3.5-11.5 10.4 6 9.9 7.3 6.2-0.6 5.9-2.2 6.6 2.7 6.4 4.4 9.1 0.2 3.3-9.9 3.5-7.5 8.5-4 4 5.2 4.3 5 6.4 3.6 6 4.4 0.2 11.7 6.7 10.8-2.2 5.8-1.2 6.4 2.7 9.3 4.6 8.3 6 4.5 4.6 5.6 0.7 4.5 2.8 3 5.6-0.1 5.5 0.2 3.2 4.6 0.2 5.7 0.9 1.6-3.1 1.6-5.5 4.9-4.2 6.6-1.6 7.8-1.3 2.1-5.7 3-1.3 1.9-1 2.9-8.3 7.7-6 7-3.4 2.9-1.5-0.7-0.7 0-5.3 0.1-4.6 0.8-3.1 1.7-4.3-2.7-4.7-0.9-31.6 0.1-5.3 1.7-10.2 5.7-5.7 1.3-17.1 0-4-1.6-0.3-2.3 1.7-1.7 2.4-1.5 1.1-1.6-0.7-2.8-1.7-1.6-1.7-1-1.9-2.5-1.5-1-3.2-2.1-1.1-2.4 0.6-2.6 1.5-1.2 1.6-0.9 1.3-1.8 1.2-5.2 0.1-5.5-0.6-4.8-1.4-3.1-5.4-6.8-3.3-2.4-5.7-2.2-4.9-1.2-6.2-0.4-5.2 1.4-2.3 4.5 0.9 5.5-0.6 2.2-7.4 7.2-2 1.3-2.7 0.8-2.8-0.1-5.2-1.6-2.2-0.2-2 0.7-3.4 2.5-2.3 0.5-3.1-0.4-1.1 0.7-2.5 2.3-0.7 0.9-1.5 3.3-0.3 1.1-0.7 1-3.3 1.1-1.2 0.6-6.6 7.9-3.5 2.1-5.8 0.7-2.4-0.9 3.7-6.2-1.9-8.4-0.8-5.5 0.6-3.8-7.2-1.7-8-2.3-3.1-1.2-2.3-1.7-1.2-3.1-1.2-2.9 7.6-6.6 5-6.5-0.8-8.3-2.5-4.2 5.2-2 0.1-4.6-6.6-4.4-7.8-1.4-15.4-5.4-11.7-11.9z"
               onclick="toggleRegionMapa('DO41','Valdesia')"/>
-
             <path class="mapa-region" id="r-DO40"
               d="M500.5 346.8l7 2.5 4.5 8.2 7.8 2.9 8.1 2.2 11.7 2.3 10.5-4.8 0.7-2.4 1.1-2.4 2.9-1 3.1-0.1 5.8 0.2 5.7 0.3 6.7 5.3 5.6 6.4 3.4 4.5 1.4 5.2 5.2 5 2 7.4 11.3-12 14.4-5.3 5.4-1.2 4.6-3 8.4-1.8 8.9 3.4-3.1 3.4-1.4 4 1.4 0.1 1.3-0.6 1.1 6.5-0.5 6.6-5 6.6-4 6.8 9.8 10.5 14.5 2.9-1.6 8.3-0.9 6.9-12.8-8.9-5.5-3-3.6-0.4-1.5 2.4 0.1 3 0.4 2.9-0.7 2.4-2.2 0.7-3.4 0-3.2-0.6-1.4-0.9-4.2-7.1-1.9-1.9-1.9-0.6-38-4.2-6.9 0.3-1.1 0-4 1.2-7.7 3.8-6.4 4.4-2.4 1.1-3.5 1.1-3.1 1.1-2.6 1.3-0.9-1.6-0.2-5.7-3.2-4.6-5.5-0.2-5.6 0.1-2.8-3-0.7-4.5-4.6-5.6-6-4.5-4.6-8.3-2.7-9.3 1.2-6.4 2.2-5.8-6.7-10.8-0.2-11.7z"
               onclick="toggleRegionMapa('DO40','Ozama')"/>
-
             <path class="mapa-region" id="r-DO36"
               d="M321.7 279.8l-2.1-5.6-4.1-4.2 1.1-5.8-1.8-5.5 7.2-3.6 8.1-3.5 15.4-7.5 12.9-9.8 3-7.1 5.4-0.3 6.4 1.3-0.7-7.5 1.8-8.9-3.9-6.9-7.6-2.1-5.9-4.6 1.7-5.3 6.2-1.7 12.4-6.6 13-4.2 5.9 4.4 7.8 0.8 5.5-2.2 5.1-1.1 4.9 12.5 7-1.3 3.6 8.8 5 8.3 6.9 6.7 10.1 0.7 8 12.4 12.3 8.1-0.1-1.1-0.8 0.3 4.6-1.6 4.8 1.4 5.2 0.9 5-0.9 11-0.2 10.8 1.3 7 0.5 6.4 2.9 5.6 2.6 5.8 1.9 7.6 0 8 0.6 6.1 1.9 5.3 3.4-0.9 6.9-2.2 7.3-3.7 16.7-4.3 17-6.9 5.4-8-4-5-0.9-3 4.6-4.4-0.7-5.2-1.1-6.5 1.6-4.7 4.3-10.5 2.5-12.8 2.7-5.1 5.7-1.6 8.2-8.5 4-3.5 7.5-3.3 9.9-9.1-0.2-6.4-4.4-6.6-2.7-5.9 2.2-6.2 0.6-9.9-7.3-10.4-6-3.5 11.5-6.5 8.3-5.2 4.8-3.8 4.2-10.9-0.1-11.2 0.2 3.5-14.9-9.3-11.4-15.1-7.7-10.5-14.3-2.8-24.1-13-8.9z"
               onclick="toggleRegionMapa('DO36','Cibao Sur')"/>
           </g>
 
-          <!-- Labels blancos sobre cada región, usando coordenadas de label_points del SVG original -->
+          <!-- Ciudades principales (coordenadas GPS calibradas) -->
+          <g id="ciudades" pointer-events="none">
+            <circle cx="560" cy="415" r="6" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="560" y="435" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santo</text>
+            <text x="560" y="453" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Domingo</text>
+
+            <circle cx="380" cy="160" r="6" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="380" y="180" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santiago</text>
+
+            <circle cx="383" cy="80" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="395" y="77" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Puerto Plata</text>
+
+            <circle cx="485" cy="210" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="497" y="214" font-size="14" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">San Francisco de Macorís</text>
+
+            <circle cx="290" cy="148" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="290" y="122" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santa Cruz de</text>
+            <text x="290" y="140" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Mao</text>
+
+            <circle cx="709" cy="415" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="709" y="435" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Pedro</text>
+            <text x="709" y="453" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">de Macorís</text>
+
+            <circle cx="256" cy="328" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="256" y="304" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Juan de</text>
+            <text x="256" y="320" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">la Maguana</text>
+
+            <circle cx="272" cy="435" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="284" y="439" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Barahona</text>
+
+            <circle cx="845" cy="370" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="845" y="352" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Higüey</text>
+
+            <circle cx="925" cy="368" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="925" y="388" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Punta</text>
+            <text x="925" y="406" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Cana</text>
+
+            <circle cx="519" cy="413" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="507" y="432" font-size="16" font-family="Arial" text-anchor="end" fill="#111827" font-weight="700">San Cristóbal</text>
+
+            <circle cx="785" cy="420" r="5" fill="white" stroke="#374151" stroke-width="2"/>
+            <text x="797" y="424" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">La Romana</text>
+          </g>
+
           <g id="labels" pointer-events="none">
             <text class="mapa-label" x="188" y="127">Cibao</text>
             <text class="mapa-label" x="188" y="152">Noroeste</text>
-
             <text class="mapa-label" x="380" y="119">Cibao</text>
             <text class="mapa-label" x="380" y="144">Norte</text>
-
-            <text class="mapa-label" x="528" y="178">Cibao</text>
-            <text class="mapa-label" x="528" y="203">Nordeste</text>
-
+            <text class="mapa-label" x="528" y="158">Cibao</text>
+            <text class="mapa-label" x="528" y="183">Nordeste</text>
             <text class="mapa-label" x="427" y="267">Cibao</text>
             <text class="mapa-label" x="427" y="292">Sur</text>
-
-            <text class="mapa-label" x="201" y="291">El</text>
-            <text class="mapa-label" x="201" y="316">Valle</text>
-
+            <text class="mapa-label" x="110" y="291">El</text>
+            <text class="mapa-label" x="110" y="316">Valle</text>
             <text class="mapa-label" x="192" y="474">Enriquillo</text>
-
             <text class="mapa-label" x="448" y="401">Valdesia</text>
-
             <text class="mapa-label" x="560" y="387">Ozama</text>
-
-            <text class="mapa-label" x="653" y="309">Higuamo</text>
-
-            <text class="mapa-label" x="833" y="356">Yuma</text>
+            <text class="mapa-label" x="610" y="270">Higuamo</text>
+            <text class="mapa-label" x="790" y="330">Yuma</text>
           </g>
         </svg>
       </div>
-      <!-- Atribución requerida por Simplemaps -->
       <p class="text-right text-xs text-gray-300 mt-1">Map © <a href="https://simplemaps.com" target="_blank" class="hover:text-gray-400">simplemaps.com</a></p>
-
       <div id="regiones-display" class="mt-2 min-h-5 text-xs text-indigo-600 font-medium"></div>
     </div>
 
@@ -247,9 +257,7 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════ -->
-  <!-- PASO 3: Palabras clave                 -->
-  <!-- ═══════════════════════════════════════ -->
+  <!-- PASO 3: Palabras clave -->
   <div id="paso-3" class="paso hidden max-w-xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
     <h2 class="text-xl font-bold text-gray-900 mb-4">Define descripción y las palabras clave</h2>
 
@@ -268,6 +276,10 @@
       <textarea id="onb-palabras" rows="3"
         class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-sm transition resize-none"
         placeholder="Ej: consultoría, gestión, sistemas de información..."></textarea>
+      <p class="text-xs text-gray-500 mt-1">💡 Licitaciones con AL MENOS una de estas palabras o expresiones serán clasificadas como MEDIA relevancia.</p>
+      <div class="mt-2 bg-amber-50 border-l-4 border-amber-400 p-3 rounded-r-lg text-xs text-amber-800">
+        ⚠️ <strong>Expresiones de varias palabras:</strong> escríbelas completas separadas por coma, sin coma interna. Por ejemplo: <span class="font-mono bg-amber-100 px-1 rounded">asesoría en recursos humanos, consultoría financiera</span> — cada expresión es una unidad que se busca completa.
+      </div>
     </div>
 
     <div class="mb-4">
@@ -275,6 +287,7 @@
       <p class="text-xs text-gray-500 mb-2">Puedes eliminar haciendo clic en las sugerencias que no hagan match con tu perfil, o agregar más palabras clave arriba en el campo.</p>
       <div id="chips-sugeridos" class="min-h-12"></div>
     </div>
+
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
       <p class="text-sm text-green-800 font-medium mb-1">🎯 Con esta configuración podrás:</p>
       <ul class="text-xs text-green-700 space-y-1">
@@ -283,6 +296,7 @@
         <li>✅ Analizar documentos con IA para decidir si participar</li>
       </ul>
     </div>
+
     <div class="flex gap-3">
       <button onclick="irPaso(2)"
         class="px-5 py-3 border-2 border-gray-200 text-gray-600 rounded-xl font-semibold hover:bg-gray-50 transition">
@@ -331,18 +345,12 @@
       otro:         [],
     };
 
-    // IDs del mapa → nombre de región
     const mapaRegiones = {
-      DO34: 'Cibao Noroeste',
-      DO35: 'Cibao Norte',
-      DO33: 'Cibao Nordeste',
-      DO36: 'Cibao Sur',
-      DO37: 'El Valle',
-      DO38: 'Enriquillo',
-      DO41: 'Valdesia',
-      DO40: 'Ozama',
-      DO39: 'Higuamo',
-      DO42: 'Yuma',
+      DO34: 'Cibao Noroeste', DO35: 'Cibao Norte',
+      DO33: 'Cibao Nordeste', DO36: 'Cibao Sur',
+      DO37: 'El Valle',       DO38: 'Enriquillo',
+      DO41: 'Valdesia',       DO40: 'Ozama',
+      DO39: 'Higuamo',        DO42: 'Yuma',
     };
 
     let sectoresSeleccionados = new Set();
@@ -381,7 +389,6 @@
         `${sectoresSeleccionados.size} de 3 seleccionados`;
     }
 
-    // ─── Mapa ─────────────────────────────────────────────────────────────
     function toggleRegionMapa(id, nombre) {
       const el = document.getElementById(`r-${id}`);
       if (el.classList.contains('selected')) {
@@ -441,7 +448,6 @@
       document.getElementById('onb-monto').value = val || '';
     }
 
-    // ─── Navegación ────────────────────────────────────────────────────────
     function irPaso(n) {
       if (n === 2 && sectoresSeleccionados.size === 0) {
         alert('Por favor selecciona al menos un sector para continuar');
@@ -489,7 +495,6 @@
       kw.value = palabras.join(', ');
     }
 
-    // ─── Guardar ──────────────────────────────────────────────────────────
     async function guardarOnboarding() {
       const btn = document.getElementById('btn-guardar');
       btn.textContent = 'Guardando...'; btn.disabled = true;
@@ -514,10 +519,14 @@
         });
         if (res.ok) {
           try {
-            const userRes = await fetch(`${API_BASE}/api/perfil?type=usuario`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const userRes = await fetch(`${API_BASE}/api/perfil?type=usuario`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (userRes.ok) {
               const ud = await userRes.json();
-              localStorage.setItem('user', JSON.stringify({ id: ud.id, email: ud.email, rol: ud.rol, empresa_id: ud.empresa.id }));
+              localStorage.setItem('user', JSON.stringify({
+                id: ud.id, email: ud.email, rol: ud.rol, empresa_id: ud.empresa.id
+              }));
             }
           } catch(e) {}
           btn.textContent = '¡Listo! Redirigiendo...';
