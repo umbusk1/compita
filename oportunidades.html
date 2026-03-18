@@ -536,6 +536,67 @@
     </div>
 </div>
 
+<!-- ============================================================
+     ADICIÓN A — Pegar justo ANTES del comentario:
+     "Modal: Análisis con IA (NUEVO para Business)"
+     ============================================================ -->
+
+<!-- Modal: Servicio Suspendido -->
+<div id="modal-servicio-suspendido"
+     class="hidden fixed inset-0 bg-black bg-opacity-60 z-[9998] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full">
+
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 rounded-t-2xl">
+            <div class="flex items-start justify-between">
+                <div>
+                    <div class="text-4xl mb-2">⚠️</div>
+                    <h3 class="text-xl font-bold">Servicio Temporalmente Suspendido</h3>
+                </div>
+                <button onclick="cerrarModalSuspension()"
+                        class="text-white hover:text-gray-200 text-3xl leading-none ml-4">
+                    ×
+                </button>
+            </div>
+        </div>
+
+        <!-- Cuerpo -->
+        <div class="p-6 space-y-4">
+            <p class="text-gray-700">
+                El monitoreo automático de licitaciones se encuentra temporalmente suspendido
+                por la siguiente causa:
+            </p>
+
+            <div id="suspension-motivo-detalle"
+                 class="bg-orange-50 border-l-4 border-orange-400 rounded-lg p-4 text-orange-900 font-medium text-sm">
+                <!-- Se llena dinámicamente -->
+            </div>
+
+            <p class="text-gray-600 text-sm">
+                Estamos trabajando para restablecer el servicio a la brevedad.
+                Las oportunidades que ves a continuación corresponden a licitaciones
+                <strong>aún abiertas</strong> de días anteriores.
+                <br><br>
+                Tu suscripción <strong>no se verá afectada</strong> durante este período.
+            </p>
+
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center text-sm text-gray-600">
+                📧 Recibirás un correo en cuanto el servicio sea restablecido.
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-50 px-6 py-4 rounded-b-2xl text-center">
+            <button onclick="cerrarModalSuspension()"
+                    class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700
+                           transition font-semibold">
+                Entendido, ver oportunidades disponibles
+            </button>
+        </div>
+    </div>
+</div>
+<!-- FIN Modal: Servicio Suspendido -->
+
 <!-- Modal: Cómo funciona el análisis -->
 <div id="modal-analisis" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
@@ -985,6 +1046,9 @@ async function cargarCuposBusiness() {
                     const data = await response.json();
                     todasOportunidades = data.oportunidades || [];
                     filtrarOportunidades();
+                    if (data.sistema_activo === false) {
+					    mostrarModalSuspension(data.motivo_suspension);
+             		}
                 } else {
                     mostrarError();
                 }
@@ -2060,6 +2124,33 @@ async function reAnalizarOportunidades() {
         botonActualizar.innerHTML = textoOriginal;
     }
 }
+
+// ============================================================
+// MODAL DE SUSPENSIÓN DEL SERVICIO
+// ============================================================
+
+const DESCRIPCIONES_MOTIVO = {
+    portal_inaccesible:    '🔌 El portal de compras del gobierno (comprasdominicana.gob.do) no está accesible en este momento.',
+    estructura_modificada: '🔧 El portal del gobierno fue modificado y el sistema está siendo adaptado.'
+};
+
+function mostrarModalSuspension(motivo) {
+    const detalle = document.getElementById('suspension-motivo-detalle');
+    detalle.textContent = DESCRIPCIONES_MOTIVO[motivo]
+        || '⚙️ Se presentó una situación técnica fuera de nuestro control.';
+
+    document.getElementById('modal-servicio-suspendido').classList.remove('hidden');
+}
+
+function cerrarModalSuspension() {
+    document.getElementById('modal-servicio-suspendido').classList.add('hidden');
+}
+
+// Cerrar al hacer clic fuera del modal
+document.getElementById('modal-servicio-suspendido')
+    .addEventListener('click', function(e) {
+        if (e.target === this) cerrarModalSuspension();
+    });
 
     </script>
     <!-- Librería para exportar a Excel -->
