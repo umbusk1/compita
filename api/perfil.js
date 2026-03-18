@@ -141,22 +141,6 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
 
     if (result.rows.length === 0) return res.status(404).json({ error: 'Empresa no encontrada' });
 
-    // Re-análisis — con await para que Vercel no mate el proceso antes de terminar
-    try {
-      const baseUrl = process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'https://compita.umbusk.com';
-      const reanalisis = await fetch(`${baseUrl}/api/business-features`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
-        body: JSON.stringify({ empresa_id: empresaId, accion: 're-analizar' })
-      });
-      if (reanalisis.ok) console.log(`✅ Re-análisis completado para empresa ${empresaId}`);
-      else               console.warn(`⚠️ Re-análisis respondió ${reanalisis.status}`);
-    } catch (e) {
-      console.warn('⚠️ Re-análisis no pudo ejecutarse:', e.message);
-    }
-
     return res.status(200).json({
       message: 'Perfil actualizado exitosamente',
       empresa: result.rows[0]
