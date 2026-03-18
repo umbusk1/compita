@@ -19,13 +19,15 @@ jobs:
       
       - name: Instalar dependencias
         run: |
-          pip install playwright psycopg2-binary python-dotenv
+          pip install playwright psycopg2-binary python-dotenv requests
           playwright install chromium
           playwright install-deps
       
       - name: Ejecutar scraping
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL:   ${{ secrets.DATABASE_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ADMIN_EMAIL:    ${{ secrets.ADMIN_EMAIL }}
         run: |
           python scraping_diario.py
       
