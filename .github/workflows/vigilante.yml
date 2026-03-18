@@ -1,0 +1,30 @@
+name: Vigilante de Sistema
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"  # Cada 30 minutos, todos los días
+  workflow_dispatch:          # Permite ejecución manual para pruebas
+
+jobs:
+  vigilante:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: |
+          pip install psycopg2-binary requests
+
+      - name: Ejecutar vigilante
+        env:
+          DATABASE_URL:   ${{ secrets.DATABASE_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          python vigilante.py
