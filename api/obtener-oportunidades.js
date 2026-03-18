@@ -25,10 +25,7 @@ export default async function handler(req, res) {
     // ========== VERIFICAR TOKEN ==========
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({
-        success: false,
-        error: 'No autorizado'
-      });
+      return res.status(401).json({ success: false, error: 'No autorizado' });
     }
 
     const token = authHeader.split(' ')[1];
@@ -37,10 +34,7 @@ export default async function handler(req, res) {
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET || 'compita-secret-2024');
     } catch (error) {
-      return res.status(401).json({
-        success: false,
-        error: 'Token inválido'
-      });
+      return res.status(401).json({ success: false, error: 'Token inválido' });
     }
 
     // ========== OBTENER DATOS DEL USUARIO ==========
@@ -53,29 +47,50 @@ export default async function handler(req, res) {
     `;
 
     if (usuario.length === 0) {
-      return res.status(404).json({
-        success: false,
-        error: 'Usuario no encontrado'
-      });
+      return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
     }
 
     const { empresa_id, plan } = usuario[0];
 
+    // ========== NUEVO: CONSULTAR ESTADO DEL SISTEMA ==========
+    // Se hace junto con las oportunidades para no añadir latencia extra.
+    // Si falla (tabla no existe aún, etc.) el sistema sigue funcionando normalmente.
+    let sistemaSuspendido = false;
+    let motivoSuspension  = null;
+
+    try {
+      const estadoSistema = await sql`
+        SELECT estado, motivo, modal_activo
+        FROM sistema_estado
+        WHERE id = 1
+        LIMIT 1
+      `;
+
+      if (estadoSistema.length > 0) {
+        const { estado, motivo, modal_activo } = estadoSistema[0];
+        // El modal se muestra si el estado es SUSPENDIDO y modal_activo = true
+        if (estado === 'SUSPENDIDO' && modal_activo === true) {
+          sistemaSuspendido = true;
+          motivoSuspension  = motivo;
+        }
+      }
+    } catch (estadoError) {
+      // Si la tabla no existe o falla, no interrumpir el flujo principal
+      console.warn('No se pudo consultar sistema_estado:', estadoError.message);
+    }
+
     // ========== DETERMINAR RANGO DE FECHAS SEGÚN PLAN ==========
     const ahora = new Date();
-    let diasHistorial = 30; // Gratuito y Estándar: 1 mes
+    let diasHistorial = 30;
 
     if (plan === 'business' || plan === 'enterprise') {
-      diasHistorial = 90; // Business y Enterprise: 3 meses
+      diasHistorial = 90;
     }
 
     const fechaLimite = new Date(ahora);
     fechaLimite.setDate(fechaLimite.getDate() - diasHistorial);
 
     // ========== OBTENER OPORTUNIDADES ==========
-    // JOIN entre resultados y licitaciones
-    // Solo traer ALTA y MEDIA
-    // ⭐ NUEVO: Solo licitaciones con fecha_presentacion >= HOY
     const oportunidades = await sql`
       SELECT
         r.id as resultado_id,
@@ -108,7 +123,6 @@ export default async function handler(req, res) {
     `;
 
     // ========== MARCAR OPORTUNIDADES NUEVAS ==========
-    // Nuevas = analizadas en las últimas 48 horas
     const hace48horas = new Date(ahora);
     hace48horas.setHours(hace48horas.getHours() - 48);
 
@@ -124,10 +138,13 @@ export default async function handler(req, res) {
       plan: plan,
       total: oportunidadesConMetadata.length,
       estadisticas: {
-        alta: oportunidadesConMetadata.filter(o => o.relevancia === 'ALTA').length,
-        media: oportunidadesConMetadata.filter(o => o.relevancia === 'MEDIA').length,
+        alta:   oportunidadesConMetadata.filter(o => o.relevancia === 'ALTA').length,
+        media:  oportunidadesConMetadata.filter(o => o.relevancia === 'MEDIA').length,
         nuevas: oportunidadesConMetadata.filter(o => o.es_nuevo).length
-      }
+      },
+      // NUEVO: señal de contingencia para el frontend
+      sistema_activo:    !sistemaSuspendido,
+      motivo_suspension: motivoSuspension
     });
 
   } catch (error) {
