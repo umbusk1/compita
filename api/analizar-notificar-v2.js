@@ -174,6 +174,31 @@ async function handleReanalizar(req, res) {
         nuevaRazon = `Monto ${montoOportunidad.toLocaleString()} DOP menor al mínimo. ${nuevaRazon}`;
       }
 
+      // FIX: chequeo de región en re-evaluación (antes faltaba completamente)
+      const regionesEmpresaReeval = Array.isArray(empresa.regiones_interes)
+        ? empresa.regiones_interes.filter(r => r !== 'Nacional')
+        : [];
+
+      if (regionesEmpresaReeval.length > 0 && nuevaRelevancia === 'ALTA') {
+        const regionRes = await pool.query(`
+          SELECT region FROM instituciones_region
+          WHERE unidad_compras = $1 LIMIT 1
+        `, [resultado.unidad_compras || '']);
+
+        const regionLicitacion = regionRes.rows.length > 0
+          ? regionRes.rows[0].region
+          : null;
+
+        if (
+          regionLicitacion
+          && regionLicitacion !== 'Nacional'
+          && !regionesEmpresaReeval.includes(regionLicitacion)
+        ) {
+          nuevaRelevancia = 'MEDIA';
+          nuevaRazon = `Región ${regionLicitacion} fuera del área configurada. ${nuevaRazon}`;
+        }
+      }
+
       if (nuevaRelevancia !== resultado.relevancia || nuevaRazon !== resultado.razon) {
         await pool.query(`
           UPDATE resultados
@@ -571,10 +596,11 @@ async function analizarDiario() {
           analisis.relevancia === 'ALTA'
           && regionesEmpresa.length > 0
           && analisis.region_licitacion
+          && analisis.region_licitacion !== 'Nacional'   // FIX: Nacional siempre válido
           && !regionesEmpresa.includes(analisis.region_licitacion)
         ) {
           analisis.relevancia = 'MEDIA';
-          analisis.razon = `Región ${analisis.region_licitacion} fuera del área de operación. ${analisis.razon}`;
+          analisis.razon = `Región ${analisis.region_licitacion} fuera del área configurada. ${analisis.razon}`;
         }
 
         oportunidades.push(analisis);
