@@ -9,11 +9,18 @@ FIX 2: Filtro de extracción corregido
   - Antes: filtraba por fecha_presentacion (guardaba licitaciones viejas con plazo futuro)
   - Ahora: filtra por fecha_publicacion == hoy (solo lo de hoy)
 
+NUEVO — Sistema de contingencia:
+  - Detecta dos tipos de falla: portal_inaccesible / estructura_modificada
+  - Actualiza tabla sistema_estado en Neon
+  - Envía email de alerta al Admin vía Resend
+  - Cuando vuelve a funcionar, restaura el estado a NORMAL automáticamente
+
 Fecha: Marzo 2026
 """
 
 import os
 import time
+import requests
 from datetime import datetime, timedelta
 from decimal import Decimal
 import re
@@ -27,7 +34,10 @@ from psycopg2.extras import execute_values
 
 PORTAL_URL = "https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index"
 HEADLESS = True
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL  = os.getenv('DATABASE_URL')
+RESEND_API_KEY = os.getenv('RESEND_API_KEY')
+ADMIN_EMAIL    = os.getenv('ADMIN_EMAIL', 'admin@compita.umbusk.com')
+FROM_EMAIL     = 'Compita Alertas <alertas@compita.umbusk.com>'
 
 # ============================================================================
 # TAXONOMÍA UNSPSC - CLASIFICACIÓN AUTOMÁTICA
@@ -248,16 +258,198 @@ def conectar_base_datos():
         return None
 
 # ============================================================================
+# NUEVO — SISTEMA DE CONTINGENCIA
+# ============================================================================
+
+def registrar_falla_en_db(motivo):
+    """
+    Registra la falla del scraper en sistema_estado.
+    motivo puede ser: 'portal_inaccesible' o 'estructura_modificada'
+    Sólo actúa si el estado actual es NORMAL (evita sobrescribir alertas previas).
+    """
+    print(f"\n🚨 Registrando falla en DB: {motivo}")
+    conn = conectar_base_datos()
+    if not conn:
+        print("⚠️  No se pudo conectar a BD para registrar falla")
+        return
+
+    try:
+        cursor = conn.cursor()
+
+        # Verificar estado actual
+        cursor.execute("SELECT estado FROM sistema_estado WHERE id = 1")
+        row = cursor.fetchone()
+        estado_actual = row[0] if row else 'NORMAL'
+
+        if estado_actual in ('ALERTA_PENDIENTE', 'SUSPENDIDO'):
+            print(f"ℹ️  Sistema ya está en estado {estado_actual} — no se sobreescribe")
+            cursor.close()
+            conn.close()
+            return
+
+        # Registrar la falla
+        cursor.execute("""
+            UPDATE sistema_estado SET
+                estado                        = 'ALERTA_PENDIENTE',
+                motivo                        = %s,
+                fecha_falla                   = NOW(),
+                alerta_admin_enviada          = FALSE,
+                notificacion_usuarios_enviada = FALSE,
+                modal_activo                  = FALSE,
+                abortado_por_admin            = FALSE,
+                actualizado_en                = NOW()
+            WHERE id = 1
+        """, (motivo,))
+        conn.commit()
+        print(f"✅ Estado cambiado a ALERTA_PENDIENTE (motivo: {motivo})")
+
+        # Enviar email al Admin
+        email_enviado = enviar_alerta_admin(motivo)
+
+        # Marcar alerta como enviada
+        if email_enviado:
+            cursor.execute("""
+                UPDATE sistema_estado SET
+                    alerta_admin_enviada = TRUE,
+                    fecha_alerta_admin   = NOW(),
+                    actualizado_en       = NOW()
+                WHERE id = 1
+            """)
+            conn.commit()
+            print("✅ Alerta de Admin marcada como enviada en DB")
+
+        cursor.close()
+        conn.close()
+
+    except Exception as e:
+        print(f"❌ Error registrando falla en DB: {e}")
+        if conn:
+            conn.rollback()
+            conn.close()
+
+
+def registrar_exito_en_db():
+    """
+    Cuando el scraper funciona correctamente, restaura el estado a NORMAL.
+    Si estaba en ALERTA_PENDIENTE o SUSPENDIDO, también apaga el modal.
+    """
+    conn = conectar_base_datos()
+    if not conn:
+        return
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT estado FROM sistema_estado WHERE id = 1")
+        row = cursor.fetchone()
+        estado_actual = row[0] if row else 'NORMAL'
+
+        if estado_actual != 'NORMAL':
+            cursor.execute("""
+                UPDATE sistema_estado SET
+                    estado         = 'NORMAL',
+                    motivo         = NULL,
+                    modal_activo   = FALSE,
+                    actualizado_en = NOW()
+                WHERE id = 1
+            """)
+            conn.commit()
+            print(f"✅ Sistema restaurado a NORMAL (estaba en: {estado_actual})")
+        else:
+            print("✅ Sistema en estado NORMAL — sin cambios")
+
+        cursor.close()
+        conn.close()
+
+    except Exception as e:
+        print(f"❌ Error registrando éxito en DB: {e}")
+        if conn:
+            conn.close()
+
+
+def enviar_alerta_admin(motivo):
+    """
+    Envía email de alerta al Admin vía Resend.
+    Retorna True si fue exitoso, False si no.
+    """
+    if not RESEND_API_KEY:
+        print("⚠️  RESEND_API_KEY no configurado — no se puede enviar alerta por email")
+        return False
+
+    descripciones = {
+        'portal_inaccesible':   '🔌 El portal no respondió (sin conexión o caído)',
+        'estructura_modificada': '🔧 El portal respondió, pero su estructura cambió (datos no reconocidos)'
+    }
+    descripcion = descripciones.get(motivo, motivo)
+    hora_falla  = datetime.now().strftime('%d/%m/%Y %H:%M')
+
+    html_body = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="background: #c0392b; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
+        <h2 style="margin: 0;">⚠️ Alerta de Sistema — Compita</h2>
+      </div>
+      <div style="background: #f9f9f9; padding: 24px; border: 1px solid #ddd; border-radius: 0 0 8px 8px;">
+        <p style="font-size: 16px;">El scraping diario ha <strong>fallado</strong>.</p>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:16px;">
+          <tr style="background:#fff;">
+            <td style="padding:10px; font-weight:bold; width:40%;">Causa:</td>
+            <td style="padding:10px;">{descripcion}</td>
+          </tr>
+          <tr style="background:#f0f0f0;">
+            <td style="padding:10px; font-weight:bold;">Hora de falla:</td>
+            <td style="padding:10px;">{hora_falla} (hora del servidor)</td>
+          </tr>
+        </table>
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+        <p>Tienes <strong>1 hora</strong> para revisar antes de que el sistema:</p>
+        <ul>
+          <li>Notifique a todos los usuarios suscritos</li>
+          <li>Active el aviso de suspensión en la landing y el dashboard</li>
+        </ul>
+        <p>Si la situación no requiere escalar la alerta a usuarios, ve al panel de administración y haz clic en <strong>"Abortar notificación"</strong>.</p>
+        <div style="text-align:center; margin: 24px 0;">
+          <a href="https://compita.umbusk.com/admin"
+             style="background:#c0392b; color:white; padding:14px 28px;
+                    text-decoration:none; border-radius:6px; font-weight:bold;
+                    display:inline-block;">
+            Ir al Panel de Admin
+          </a>
+        </div>
+        <p style="color:#999; font-size:12px;">Este mensaje fue generado automáticamente por el sistema de scraping de Compita.</p>
+      </div>
+    </div>
+    """
+
+    try:
+        response = requests.post(
+            'https://api.resend.com/emails',
+            headers={
+                'Authorization': f'Bearer {RESEND_API_KEY}',
+                'Content-Type':  'application/json'
+            },
+            json={
+                'from':    FROM_EMAIL,
+                'to':      [ADMIN_EMAIL],
+                'subject': f'⚠️ Compita: Scraping falló — {hora_falla}',
+                'html':    html_body
+            },
+            timeout=15
+        )
+        if response.status_code in [200, 201]:
+            print(f"✅ Alerta enviada al Admin: {ADMIN_EMAIL}")
+            return True
+        else:
+            print(f"❌ Error enviando alerta: HTTP {response.status_code} — {response.text}")
+            return False
+    except Exception as e:
+        print(f"❌ Excepción enviando alerta: {e}")
+        return False
+
+
+# ============================================================================
 # FIX 1 — CONTAR licitaciones de HOY en la tabla cargada
-# (reemplaza la lógica de "última fecha" que paraba demasiado pronto)
 # ============================================================================
 
 def contar_licitaciones_hoy(celdas, hoy):
-    """
-    Cuenta cuántas licitaciones en la tabla actual tienen
-    fecha_publicacion == hoy. Se usa para detectar si un
-    nuevo click agregó licitaciones nuevas de hoy o no.
-    """
     count = 0
     for i in range(93, len(celdas) - 9, 10):
         try:
@@ -271,18 +463,13 @@ def contar_licitaciones_hoy(celdas, hoy):
     return count
 
 # ============================================================================
-# CLICK ROBUSTO — funciona en headless GitHub Actions
+# CLICK ROBUSTO
 # ============================================================================
 
 def hacer_click_ver_mas(page):
-    """
-    Intenta hacer click en 'Ver más' usando múltiples estrategias.
-    Retorna True si tuvo éxito, False si no encontró el botón.
-    """
     page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
     time.sleep(2)
 
-    # Estrategia 1: JavaScript directo (más confiable en headless)
     try:
         resultado = page.evaluate("""
             () => {
@@ -304,7 +491,6 @@ def hacer_click_ver_mas(page):
     except:
         pass
 
-    # Estrategia 2: Playwright locator
     selectores = [
         "text='Ver más'", "text='ver más'", "text='VER MÁS'",
         "a:has-text('Ver más')", "button:has-text('Ver más')",
@@ -329,6 +515,12 @@ def hacer_click_ver_mas(page):
 # ============================================================================
 
 def scraping_diario():
+    """
+    Retorna una tupla (licitaciones, exito):
+      - licitaciones: lista de dicts con los datos extraídos
+      - exito: True si el scraping funcionó (aunque no haya licitaciones hoy),
+               False si hubo una falla técnica del portal
+    """
     print("\n" + "="*70)
     print("🚀 COMPITA - SCRAPING DIARIO v3")
     print(f"🕐 Inicio: {datetime.now().strftime('%d/%m/%Y %H:%M')}")
@@ -336,7 +528,6 @@ def scraping_diario():
     print("🎯 Captura TODAS las licitaciones de HOY (parada inteligente mejorada)")
     print("🏷️  Clasificación UNSPSC automática\n")
 
-    # Calcular fecha de hoy en Santo Domingo (UTC-4)
     hoy = (datetime.utcnow() - timedelta(hours=4)).date()
     print(f"📅 Fecha de hoy (Santo Domingo): {hoy.strftime('%d/%m/%Y')}")
     print(f"🛑 Para cuando 2 clicks seguidos no agregan licitaciones nuevas de hoy\n")
@@ -346,34 +537,48 @@ def scraping_diario():
     with sync_playwright() as p:
         print("📱 Iniciando navegador headless...")
         browser = p.chromium.launch(headless=HEADLESS)
-        page = browser.new_page()
+        page    = browser.new_page()
         page.set_default_timeout(30000)
 
         try:
+            # ----------------------------------------------------------------
+            # NUEVO: Detectar portal_inaccesible
+            # Si page.goto() o wait_for_selector fallan, es porque el portal
+            # no está respondiendo o no tiene la tabla esperada.
+            # ----------------------------------------------------------------
             print(f"🌐 Navegando al portal...")
-            page.goto(PORTAL_URL)
+            try:
+                page.goto(PORTAL_URL, timeout=30000)
+            except Exception as e:
+                print(f"❌ FALLA DE CONEXIÓN: No se pudo acceder al portal — {e}")
+                browser.close()
+                registrar_falla_en_db('portal_inaccesible')
+                return [], False
 
             print("⏳ Esperando tabla inicial...")
-            page.wait_for_selector("table tbody tr", timeout=20000)
-            print("✅ Tabla inicial cargada\n")
+            try:
+                page.wait_for_selector("table tbody tr", timeout=20000)
+                print("✅ Tabla inicial cargada\n")
+            except Exception as e:
+                print(f"❌ FALLA DE CONEXIÓN: La tabla no apareció en el portal — {e}")
+                browser.close()
+                registrar_falla_en_db('portal_inaccesible')
+                return [], False
+
             time.sleep(5)
 
-            # ================================================================
-            # FIX 1 — CLICKS CON PARADA INTELIGENTE MEJORADA
-            # Lógica anterior: paraba al primer resultado viejo (bug)
-            # Lógica nueva: para solo cuando 2 clicks seguidos no suman
-            #               ninguna licitación nueva de hoy
-            # ================================================================
+            # ----------------------------------------------------------------
+            # CLICKS CON PARADA INTELIGENTE (sin cambios)
+            # ----------------------------------------------------------------
             print("🔄 Cargando licitaciones de hoy...")
             print("   (para cuando 2 clicks seguidos no agregan nada nuevo de hoy)\n")
 
-            clicks = 0
+            clicks            = 0
             max_clicks_seguridad = 30
-            count_hoy_anterior = 0
-            clicks_sin_nuevas = 0          # FIX: contador de clicks sin progreso
+            count_hoy_anterior   = 0
+            clicks_sin_nuevas    = 0
 
             while clicks < max_clicks_seguridad:
-
                 exito = hacer_click_ver_mas(page)
 
                 if not exito:
@@ -383,7 +588,6 @@ def scraping_diario():
                 clicks += 1
                 print(f"   ✅ Click #{clicks}...")
 
-                # FIX: contar cuántas licitaciones de hoy hay ahora en la tabla
                 try:
                     filas = page.query_selector_all("table tbody tr")
                     for fila in filas:
@@ -393,24 +597,22 @@ def scraping_diario():
                             print(f"   📅 Licitaciones de hoy visibles hasta ahora: {count_hoy_actual}")
 
                             if count_hoy_actual > count_hoy_anterior:
-                                # Hubo progreso — resetear contador
-                                clicks_sin_nuevas = 0
+                                clicks_sin_nuevas  = 0
                                 count_hoy_anterior = count_hoy_actual
                             else:
-                                # Sin progreso en este click
                                 clicks_sin_nuevas += 1
                                 print(f"   ⚠️  Sin nuevas de hoy ({clicks_sin_nuevas}/2)")
                                 if clicks_sin_nuevas >= 2:
-                                    print(f"\n🛑 2 clicks seguidos sin licitaciones nuevas de hoy — deteniendo")
+                                    print(f"\n🛑 2 clicks seguidos sin licitaciones nuevas — deteniendo")
                                     print(f"   ✅ Se hicieron {clicks} clicks en total\n")
-                                    clicks = max_clicks_seguridad  # fuerza salida
+                                    clicks = max_clicks_seguridad
                             break
                 except Exception as e:
                     print(f"   ⚠️  Error revisando conteo: {e}")
 
-            # ================================================================
+            # ----------------------------------------------------------------
             # EXTRACCIÓN DE DATOS
-            # ================================================================
+            # ----------------------------------------------------------------
             print("\n" + "="*70)
             print("📊 EXTRAYENDO LICITACIONES DE HOY...")
             print("="*70 + "\n")
@@ -425,18 +627,25 @@ def scraping_diario():
                     print(f"✅ {len(celdas)} celdas encontradas (~{(len(celdas)-93)//10} licitaciones totales)\n")
                     break
 
+            # ----------------------------------------------------------------
+            # NUEVO: Detectar estructura_modificada
+            # Si la tabla existe pero no tiene la estructura que esperamos,
+            # el portal fue modificado estructuralmente.
+            # ----------------------------------------------------------------
             if not fila_principal:
-                print("❌ No se encontró la tabla de licitaciones")
-                return []
+                print("❌ FALLA DE ESTRUCTURA: Tabla encontrada pero formato no reconocido")
+                browser.close()
+                registrar_falla_en_db('estructura_modificada')
+                return [], False
 
-            total_procesadas = 0
+            total_procesadas    = 0
             omitidas_otra_fecha = 0
 
             for i in range(93, len(fila_principal) - 9, 10):
                 try:
-                    unidad       = fila_principal[i].inner_text().strip()
-                    referencia   = fila_principal[i+1].inner_text().strip()
-                    descripcion  = fila_principal[i+2].inner_text().strip()
+                    unidad         = fila_principal[i].inner_text().strip()
+                    referencia     = fila_principal[i+1].inner_text().strip()
+                    descripcion    = fila_principal[i+2].inner_text().strip()
                     fecha_pub_txt  = fila_principal[i+4].inner_text().strip()
                     fecha_pres_txt = fila_principal[i+5].inner_text().strip()
                     total_estimado = fila_principal[i+6].inner_text().strip()
@@ -451,17 +660,12 @@ def scraping_diario():
                     fecha_publicacion  = convertir_fecha(fecha_pub_limpia)
                     fecha_presentacion = convertir_fecha(fecha_pres_limpia)
 
-                    # --------------------------------------------------------
-                    # FIX 2 — Filtrar por fecha_publicacion == hoy
-                    # Antes filtraba por fecha_presentacion (bug: guardaba
-                    # licitaciones viejas con plazo de presentación futuro)
-                    # --------------------------------------------------------
                     if not fecha_publicacion or fecha_publicacion.date() != hoy:
                         omitidas_otra_fecha += 1
                         continue
 
                     boton_detalle = fila_principal[i+8].query_selector("a")
-                    url_detalle = ""
+                    url_detalle   = ""
                     if boton_detalle:
                         href = boton_detalle.get_attribute("href")
                         if href:
@@ -471,19 +675,19 @@ def scraping_diario():
                     codigo_unspsc, familia_unspsc, segmento_unspsc = clasificar_keywords(descripcion)
 
                     licitaciones_encontradas.append({
-                        'unidad_compras': unidad,
-                        'referencia': referencia,
-                        'descripcion': descripcion,
-                        'fecha_publicacion': fecha_publicacion,
-                        'fecha_presentacion': fecha_presentacion,
+                        'unidad_compras':       unidad,
+                        'referencia':           referencia,
+                        'descripcion':          descripcion,
+                        'fecha_publicacion':    fecha_publicacion,
+                        'fecha_presentacion':   fecha_presentacion,
                         'total_estimado_texto': total_estimado,
-                        'monto_estimado': monto,
-                        'moneda': moneda,
-                        'estado': estado,
-                        'url_detalle': url_detalle,
-                        'codigo_unspsc': codigo_unspsc,
-                        'familia_unspsc': familia_unspsc,
-                        'segmento_unspsc': segmento_unspsc
+                        'monto_estimado':       monto,
+                        'moneda':               moneda,
+                        'estado':               estado,
+                        'url_detalle':          url_detalle,
+                        'codigo_unspsc':        codigo_unspsc,
+                        'familia_unspsc':       familia_unspsc,
+                        'segmento_unspsc':      segmento_unspsc
                     })
 
                     total_procesadas += 1
@@ -494,22 +698,34 @@ def scraping_diario():
                     continue
 
             print(f"\n✅ Extracción completada:")
-            print(f"   📅 Licitaciones de HOY:          {len(licitaciones_encontradas)}")
-            print(f"   ⏭️  Omitidas (otra fecha):        {omitidas_otra_fecha}")
+            print(f"   📅 Licitaciones de HOY:    {len(licitaciones_encontradas)}")
+            print(f"   ⏭️  Omitidas (otra fecha): {omitidas_otra_fecha}")
 
         except Exception as e:
-            print(f"\n❌ Error durante scraping: {e}")
+            # Cualquier error inesperado no capturado antes
+            print(f"\n❌ Error inesperado durante scraping: {e}")
             import traceback
             traceback.print_exc()
+            browser.close()
+            # Intentar clasificar el tipo de error
+            err_str = str(e).lower()
+            if any(p in err_str for p in ['timeout', 'net::', 'connection', 'refused', 'dns', 'socket']):
+                registrar_falla_en_db('portal_inaccesible')
+            else:
+                registrar_falla_en_db('estructura_modificada')
+            return [], False
 
         finally:
-            print("\n🔒 Cerrando navegador...")
-            browser.close()
+            try:
+                print("\n🔒 Cerrando navegador...")
+                browser.close()
+            except:
+                pass
 
-    return licitaciones_encontradas
+    return licitaciones_encontradas, True
 
 # ============================================================================
-# GUARDAR EN BASE DE DATOS
+# GUARDAR EN BASE DE DATOS (sin cambios)
 # ============================================================================
 
 def guardar_en_base_datos(licitaciones):
@@ -519,7 +735,6 @@ def guardar_en_base_datos(licitaciones):
 
     print(f"\n💾 Guardando {len(licitaciones)} licitaciones en BD...")
 
-    # Eliminar duplicados en memoria
     vistas = set()
     unicas = []
     for lic in licitaciones:
@@ -583,16 +798,25 @@ def guardar_en_base_datos(licitaciones):
 if __name__ == "__main__":
     inicio = datetime.now()
 
-    licitaciones = scraping_diario()
+    # scraping_diario() ahora retorna (licitaciones, exito)
+    resultado = scraping_diario()
+    licitaciones, exito = resultado if isinstance(resultado, tuple) else (resultado, True)
 
     print("\n" + "="*70)
     print("📊 RESUMEN FINAL")
     print("="*70)
     print(f"🕐 {datetime.now().strftime('%d/%m/%Y %H:%M')}")
-    print(f"📈 Licitaciones de hoy: {len(licitaciones)}")
 
-    if licitaciones:
-        guardar_en_base_datos(licitaciones)
+    if exito:
+        # Scraping funcionó — restaurar estado NORMAL si era necesario
+        registrar_exito_en_db()
+        print(f"📈 Licitaciones de hoy: {len(licitaciones)}")
+        if licitaciones:
+            guardar_en_base_datos(licitaciones)
+        else:
+            print("ℹ️  Sin licitaciones hoy (posible día festivo o portal sin publicaciones)")
+    else:
+        print("🚨 Scraping falló — alerta registrada en DB y enviada al Admin")
 
     duracion = (datetime.now() - inicio).total_seconds()
     print(f"⏱️  Duración: {duracion:.1f} segundos")
