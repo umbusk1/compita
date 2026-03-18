@@ -804,15 +804,16 @@
                 regiones_interes:      regionesMarcadas,
             };
 
-        try {
+
+try {
             const token = localStorage.getItem('token') || sessionStorage.getItem('token');
 
-            // Cambiar texto del botón para indicar que está procesando
             const btnGuardar = document.querySelector('#form-perfil button[type="submit"]');
             const textoOriginal = btnGuardar.innerHTML;
             btnGuardar.disabled = true;
-            btnGuardar.innerHTML = '⏳ Guardando y re-analizando...';
+            btnGuardar.innerHTML = '⏳ Guardando perfil...';
 
+            // PASO 1: Guardar perfil
             const response = await fetch(`${API_BASE}/api/perfil`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -821,16 +822,33 @@
 
             const result = await response.json();
 
-            if (response.ok) {
-                // Esperar 3 segundos para dar tiempo al re-análisis en segundo plano
-                btnGuardar.innerHTML = '✅ Guardado. Re-analizando oportunidades...';
-                await new Promise(resolve => setTimeout(resolve, 3000));
-                window.location.href = '/oportunidades.html';
-            } else {
+            if (!response.ok) {
                 btnGuardar.disabled = false;
                 btnGuardar.innerHTML = textoOriginal;
                 alert('Error: ' + result.error);
+                return;
             }
+
+            // PASO 2: Re-analizar oportunidades directamente desde el frontend
+            btnGuardar.innerHTML = '🔍 Re-analizando oportunidades...';
+
+            try {
+                await fetch(`${API_BASE}/api/business-features`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({
+                        empresa_id: usuarioActual.empresa_id,
+                        accion: 're-analizar'
+                    })
+                });
+            } catch (e) {
+                console.warn('Re-análisis no pudo ejecutarse:', e.message);
+            }
+
+            // PASO 3: Redirigir — el re-análisis ya terminó
+            btnGuardar.innerHTML = '✅ ¡Listo! Cargando oportunidades...';
+            window.location.href = '/oportunidades.html';
+
         } catch (error) {
             console.error('Error guardando perfil:', error);
             const btnGuardar = document.querySelector('#form-perfil button[type="submit"]');
