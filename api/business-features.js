@@ -378,7 +378,7 @@ export default async function handler(req, res) {
           try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
         }
       }
-	  const regionesEmpresa = regionesArr.filter(
+      const regionesEmpresa = regionesArr.filter(
         r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
       );
       const incluyeNacional = regionesArr.some(
@@ -402,6 +402,13 @@ export default async function handler(req, res) {
         });
       }
 
+      // ── CAMBIO 1: Borrar TODOS los resultados previos de esta empresa ──────
+      await sql`
+        DELETE FROM resultados
+        WHERE empresa_id = ${empresa_id}
+      `;
+      // ────────────────────────────────────────────────────────────────────────
+
       let contadorAlta = 0;
       let contadorMedia = 0;
       let contadorDescartadas = 0;
@@ -419,10 +426,7 @@ export default async function handler(req, res) {
           if (regex.test(texto)) { esDescartada = true; break; }
         }
         if (esDescartada) {
-          await sql`
-            DELETE FROM resultados
-            WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id}
-          `;
+          // ── CAMBIO 2: Ya no hay DELETE individual aquí (ya se borró todo) ──
           contadorDescartadas++;
           continue;
         }
@@ -451,14 +455,11 @@ export default async function handler(req, res) {
         }
 
         if (!coincideTema) {
-          await sql`
-            DELETE FROM resultados
-            WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id}
-          `;
+          // ── CAMBIO 3: Ya no hay DELETE individual aquí (ya se borró todo) ──
           continue;
         }
 
-// C. Criterio de MONTO
+        // C. Criterio de MONTO
         const cumpleMonto = monto >= montoMinimoAlta;
 
         // D. Criterio de REGIÓN
@@ -474,7 +475,6 @@ export default async function handler(req, res) {
         if (cumpleMonto && cumpleRegion) {
           relevancia = 'ALTA';
           contadorAlta++;
-          // Enriquecer razón con los dos criterios que la hacen ALTA
           const montoFmt = `RD$${monto.toLocaleString()}`;
           if (regionesEmpresa.length > 0) {
             razon += `. Monto ${montoFmt} supera mínimo configurado. Región ${regionLicitacion} dentro del área de operación.`;
@@ -484,7 +484,6 @@ export default async function handler(req, res) {
         } else {
           relevancia = 'MEDIA';
           contadorMedia++;
-          // Explicar por qué es MEDIA
           if (!cumpleMonto && !cumpleRegion) {
             razon = `Región ${regionLicitacion} fuera del área configurada y monto por debajo del mínimo. ${razon}`;
           } else if (!cumpleMonto) {
@@ -494,40 +493,25 @@ export default async function handler(req, res) {
           }
         }
 
-        // F. Guardar o actualizar en resultados
-        const existe = await sql`
-          SELECT id FROM resultados
-          WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id} LIMIT 1
+        // F. Solo INSERT (ya no hay UPDATE — la tabla estaba vacía)
+        const queVal = (lic.descripcion || '').substring(0, 99);
+        const quienVal = (lic.unidad_compras || '').substring(0, 99);
+        const refVal = (lic.referencia || '').substring(0, 254);
+
+        await sql`
+          INSERT INTO resultados
+            (empresa_id, licitacion_id, referencia, descripcion, que, quien,
+             relevancia, razon, razon_inclusion, estado,
+             monto_estimado, fecha_cierre, fecha_presentacion, unidad_compras,
+             created_at, fecha_analisis, notificada, compatible, vista, origen, seleccionado)
+          VALUES
+            (${empresa_id}, ${lic.licitacion_id}, ${refVal},
+             ${lic.descripcion || ''}, ${queVal}, ${quienVal},
+             ${relevancia}, ${razon}, ${razon}, 'pendiente',
+             ${lic.monto_estimado}, ${lic.fecha_presentacion}::date,
+             ${lic.fecha_presentacion}::date, ${lic.unidad_compras || ''},
+             CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, true, false, 're-analisis', false)
         `;
-
-        if (existe.length > 0) {
-          await sql`
-            UPDATE resultados
-            SET relevancia = ${relevancia}, razon = ${razon},
-                razon_inclusion = ${razon}, fecha_analisis = CURRENT_TIMESTAMP,
-                compatible = true, origen = 're-analisis'
-            WHERE empresa_id = ${empresa_id} AND licitacion_id = ${lic.licitacion_id}
-          `;
-        } else {
-          const queVal = (lic.descripcion || '').substring(0, 99);
-          const quienVal = (lic.unidad_compras || '').substring(0, 99);
-          const refVal = (lic.referencia || '').substring(0, 254);
-
-          await sql`
-            INSERT INTO resultados
-              (empresa_id, licitacion_id, referencia, descripcion, que, quien,
-               relevancia, razon, razon_inclusion, estado,
-               monto_estimado, fecha_cierre, fecha_presentacion, unidad_compras,
-               created_at, fecha_analisis, notificada, compatible, vista, origen, seleccionado)
-            VALUES
-              (${empresa_id}, ${lic.licitacion_id}, ${refVal},
-               ${lic.descripcion || ''}, ${queVal}, ${quienVal},
-               ${relevancia}, ${razon}, ${razon}, 'pendiente',
-               ${lic.monto_estimado}, ${lic.fecha_presentacion}::date,
-               ${lic.fecha_presentacion}::date, ${lic.unidad_compras || ''},
-               CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, true, false, 're-analisis', false)
-          `;
-        }
       }
 
       return res.status(200).json({
