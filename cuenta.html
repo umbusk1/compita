@@ -581,15 +581,28 @@
         }
 
         // ── Chips de palabras clave ───────────────────────────────────────
-        function renderChipsCuenta() {
-            const todas = [...sectoresSeleccionadosCuenta].flatMap(id => sectorKeywords[id] || []);
-            const chips = document.getElementById('chips-sugeridos-cuenta');
-            if (!chips) return;
-            if (todas.length === 0) { chips.innerHTML = '<p class="text-xs text-gray-400 italic">Selecciona al menos un sector para ver sugerencias.</p>'; return; }
-            chips.innerHTML = [...new Set(todas)].map(k => `
-                <span class="keyword-chip added" onclick="toggleChipCuenta(this,'${k}')">${k}</span>
-            `).join('');
-        }
+
+		function renderChipsCuenta() {
+			const todas = [...sectoresSeleccionadosCuenta].flatMap(id => sectorKeywords[id] || []);
+			const chips = document.getElementById('chips-sugeridos-cuenta');
+			if (!chips) return;
+			if (todas.length === 0) {
+				chips.innerHTML = '<p class="text-xs text-gray-400 italic">Selecciona al menos un sector para ver sugerencias.</p>';
+				return;
+			}
+
+			// Leer qué palabras hay actualmente en el textarea
+			const kw = document.getElementById('empresa-palabras-clave');
+			const actuales = kw
+				? kw.value.split(',').map(s => s.trim()).filter(s => s)
+				: [];
+
+			// Chip activa (added) solo si ya está en el textarea; inactiva si no
+			chips.innerHTML = [...new Set(todas)].map(k => {
+				const estaActiva = actuales.includes(k);
+				return `<span class="keyword-chip ${estaActiva ? 'added' : ''}" onclick="toggleChipCuenta(this,'${k}')">${k}</span>`;
+			}).join('');
+		}
 
         function toggleChipCuenta(el, keyword) {
             el.classList.toggle('added');
