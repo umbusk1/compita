@@ -125,58 +125,82 @@
                     </div>
                 </div>
 
-                <!-- Tab: Sistema -->
-                <div id="content-sistema" class="tab-content hidden">
-                    <h2 class="text-xl font-bold text-gray-900 mb-6">Estado del Sistema</h2>
+<!-- Tab: Sistema — REEMPLAZAR BLOQUE COMPLETO -->
+<div id="content-sistema" class="tab-content hidden">
+    <h2 class="text-xl font-bold text-gray-900 mb-6">Estado del Sistema</h2>
 
-                    <div class="space-y-4">
-                        <!-- Último Scraping -->
-                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-semibold text-gray-700">Último Scraping</p>
-                                    <p class="text-xs text-gray-500 mt-1" id="ultimo-scraping">Cargando...</p>
-                                </div>
-                                <button onclick="forzarScraping()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium">
-                                    🔄 Forzar Scraping
-                                </button>
-                            </div>
-                        </div>
+    <div class="space-y-4">
 
-                        <!-- Último Análisis -->
-                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-semibold text-gray-700">Último Análisis</p>
-                                    <p class="text-xs text-gray-500 mt-1" id="ultimo-analisis">Cargando...</p>
-                                </div>
-                                <button onclick="forzarAnalisis()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
-                                    🤖 Re-analizar Hoy
-                                </button>
-                            </div>
-                        </div>
-
-						<!-- Uso de API -->
-						<div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-							<div class="flex items-center justify-between">
-								<div class="flex-1">
-									<p class="text-sm font-semibold text-gray-700">💎 Uso Total de Claude API</p>
-									<div class="mt-2 space-y-1">
-										<div class="flex items-baseline gap-2">
-											<span class="text-xs text-gray-500">Total acumulado:</span>
-											<span id="tokens-totales" class="text-lg font-bold text-indigo-600 font-mono">Calculando...</span>
-										</div>
-										<div class="flex items-baseline gap-2">
-											<span class="text-xs text-gray-500">Hoy:</span>
-											<span id="tokens-hoy" class="text-sm font-semibold text-gray-700 font-mono">Calculando...</span>
-										</div>
-									</div>
-								</div>
-								<div class="text-4xl opacity-20">🤖</div>
-							</div>
-						</div>
+        <!-- ── NUEVO: Panel de Contingencia ─────────────────────────── -->
+        <div id="panel-contingencia" class="rounded-lg p-5 border-2 border-gray-200 bg-gray-50">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                    <span id="contingencia-icono" class="text-3xl">⏳</span>
+                    <div>
+                        <p class="font-bold text-gray-800" id="contingencia-titulo">Cargando estado...</p>
+                        <p class="text-sm text-gray-500 mt-0.5" id="contingencia-subtitulo"></p>
                     </div>
                 </div>
+                <!-- Botones de acción — se muestran según el estado -->
+                <div class="flex gap-3" id="contingencia-acciones">
+                    <!-- Se inyectan dinámicamente -->
+                </div>
+            </div>
+            <!-- Detalles adicionales (fecha de falla, motivo, etc.) -->
+            <div id="contingencia-detalles" class="hidden mt-3 bg-white rounded-lg p-3 border border-gray-200 text-sm text-gray-700 space-y-1">
+            </div>
+        </div>
+        <!-- ─────────────────────────────────────────────────────────── -->
+
+        <!-- Último Scraping -->
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-semibold text-gray-700">Último Scraping</p>
+                    <p class="text-xs text-gray-500 mt-1" id="ultimo-scraping">Cargando...</p>
+                </div>
+                <button onclick="forzarScraping()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium">
+                    🔄 Forzar Scraping
+                </button>
+            </div>
+        </div>
+
+        <!-- Último Análisis -->
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-semibold text-gray-700">Último Análisis</p>
+                    <p class="text-xs text-gray-500 mt-1" id="ultimo-analisis">Cargando...</p>
+                </div>
+                <button onclick="forzarAnalisis()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
+                    🤖 Re-analizar Hoy
+                </button>
+            </div>
+        </div>
+
+        <!-- Uso de API -->
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-gray-700">💎 Uso Total de Claude API</p>
+                    <div class="mt-2 space-y-1">
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-xs text-gray-500">Total acumulado:</span>
+                            <span id="tokens-totales" class="text-lg font-bold text-indigo-600 font-mono">Calculando...</span>
+                        </div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-xs text-gray-500">Hoy:</span>
+                            <span id="tokens-hoy" class="text-sm font-semibold text-gray-700 font-mono">Calculando...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-4xl opacity-20">🤖</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- FIN Tab: Sistema -->
 
                 <!-- Tab: Admins -->
                 <div id="content-admins" class="tab-content hidden">
@@ -700,6 +724,7 @@
             } catch (error) {
                 console.error('Error cargando estadísticas:', error);
             }
+            await cargarEstadoContingencia();
         }
 
         function cargarTablaEmpresas(empresas) {
@@ -1432,6 +1457,185 @@ async function crearEmpresa(event) {
         alert('❌ Error al crear la empresa. Verifica la conexión.');
     }
 }
+
+// ============================================================
+// CONTINGENCIA — cargar y renderizar panel
+// ============================================================
+async function cargarEstadoContingencia() {
+    try {
+        const token = localStorage.getItem('admin_token');
+        const res   = await fetch(`${API_BASE}/api/admin?action=estado_sistema`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            renderContingencia({ estado: 'ERROR' });
+            return;
+        }
+
+        const data = await res.json();
+        renderContingencia(data);
+
+    } catch (e) {
+        console.error('Error cargando estado contingencia:', e);
+        renderContingencia({ estado: 'ERROR' });
+    }
+}
+
+function renderContingencia(data) {
+    const panel     = document.getElementById('panel-contingencia');
+    const icono     = document.getElementById('contingencia-icono');
+    const titulo    = document.getElementById('contingencia-titulo');
+    const subtitulo = document.getElementById('contingencia-subtitulo');
+    const acciones  = document.getElementById('contingencia-acciones');
+    const detalles  = document.getElementById('contingencia-detalles');
+
+    // Configuración visual por estado
+    const config = {
+        NORMAL: {
+            color:    'border-green-300 bg-green-50',
+            icono:    '✅',
+            titulo:   'Sistema operando con normalidad',
+            subtitulo: 'El scraper funciona correctamente. No hay alertas activas.',
+            botones:  ''
+        },
+        ALERTA_PENDIENTE: {
+            color:    'border-orange-400 bg-orange-50',
+            icono:    '⚠️',
+            titulo:   'ALERTA ACTIVA — Falla de scraping detectada',
+            subtitulo: 'El Admin fue notificado. Tienes ~1 hora antes de que se notifique a los usuarios.',
+            botones: `
+                <button onclick="abortarContingencia()"
+                    class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+                    🛑 Abortar notificación a usuarios
+                </button>`
+        },
+        ABORTADO: {
+            color:    'border-blue-300 bg-blue-50',
+            icono:    '🔕',
+            titulo:   'Notificación abortada por el Admin',
+            subtitulo: 'Los usuarios NO serán notificados. El modal NO aparecerá. Sistema en standby.',
+            botones: `
+                <button onclick="restaurarSistema()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+                    ✅ Marcar como resuelto
+                </button>`
+        },
+        SUSPENDIDO: {
+            color:    'border-red-400 bg-red-50',
+            icono:    '🚨',
+            titulo:   'SERVICIO SUSPENDIDO',
+            subtitulo: 'Los usuarios fueron notificados y el modal está activo en el sitio.',
+            botones: `
+                <button onclick="restaurarSistema()"
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+                    ✅ Restaurar servicio
+                </button>`
+        },
+        ERROR: {
+            color:    'border-gray-300 bg-gray-50',
+            icono:    '❓',
+            titulo:   'No se pudo cargar el estado',
+            subtitulo: 'Error de conexión con la base de datos.',
+            botones:  ''
+        }
+    };
+
+    const estado  = data.estado || 'ERROR';
+    const cfg     = config[estado] || config['ERROR'];
+
+    // Aplicar estilos
+    panel.className = `rounded-lg p-5 border-2 ${cfg.color}`;
+    icono.textContent   = cfg.icono;
+    titulo.textContent  = cfg.titulo;
+    subtitulo.textContent = cfg.subtitulo;
+    acciones.innerHTML  = cfg.botones;
+
+    // Mostrar detalles si hay falla
+    if (['ALERTA_PENDIENTE', 'SUSPENDIDO', 'ABORTADO'].includes(estado)) {
+        const motivoTextos = {
+            portal_inaccesible:    '🔌 Portal no accesible (problema de conexión)',
+            estructura_modificada: '🔧 Estructura del portal modificada (cambio en el HTML)'
+        };
+        const motivo = motivoTextos[data.motivo] || data.motivo || 'No especificado';
+
+        const fechaFalla = data.fecha_falla
+            ? new Date(data.fecha_falla).toLocaleString('es-DO')
+            : 'No disponible';
+
+        const fechaAlerta = data.fecha_alerta_admin
+            ? new Date(data.fecha_alerta_admin).toLocaleString('es-DO')
+            : 'Pendiente';
+
+        // Calcular minutos restantes para notificación a usuarios
+        let tiempoInfo = '';
+        if (estado === 'ALERTA_PENDIENTE' && data.fecha_alerta_admin) {
+            const ahora       = new Date();
+            const fechaAlertaDate = new Date(data.fecha_alerta_admin);
+            const minTranscurridos = Math.floor((ahora - fechaAlertaDate) / 60000);
+            const minRestantes = Math.max(0, 60 - minTranscurridos);
+            tiempoInfo = minRestantes > 0
+                ? `<p>⏱️ <strong>Tiempo restante para notificar usuarios:</strong> ~${minRestantes} min</p>`
+                : `<p>⏱️ <strong>El vigilante notificará en la próxima ejecución</strong> (si hay horario hábil)</p>`;
+        }
+
+        detalles.innerHTML = `
+            <p>🔍 <strong>Motivo:</strong> ${motivo}</p>
+            <p>📅 <strong>Fecha de falla:</strong> ${fechaFalla}</p>
+            <p>📧 <strong>Alerta enviada al Admin:</strong> ${fechaAlerta}</p>
+            ${data.notas ? `<p>📝 <strong>Notas:</strong> ${data.notas}</p>` : ''}
+            ${tiempoInfo}
+        `;
+        detalles.classList.remove('hidden');
+    } else {
+        detalles.classList.add('hidden');
+    }
+}
+
+async function abortarContingencia() {
+    if (!confirm('🛑 ¿Abortar la notificación a usuarios?\n\nEl servicio se registrará como resuelto sin avisar a los suscriptores ni activar el modal.')) {
+        return;
+    }
+    try {
+        const token = localStorage.getItem('admin_token');
+        const res   = await fetch(`${API_BASE}/api/admin?action=abortar_contingencia`, {
+            method:  'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert('✅ ' + data.mensaje);
+            await cargarEstadoContingencia();
+        } else {
+            alert('❌ ' + data.error);
+        }
+    } catch (e) {
+        alert('❌ Error al abortar la contingencia');
+    }
+}
+
+async function restaurarSistema() {
+    if (!confirm('✅ ¿Marcar el sistema como restaurado?\n\nEsto desactivará el modal en el sitio y reiniciará el monitoreo normal.')) {
+        return;
+    }
+    try {
+        const token = localStorage.getItem('admin_token');
+        const res   = await fetch(`${API_BASE}/api/admin?action=restaurar_sistema`, {
+            method:  'POST',
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert('✅ ' + data.mensaje);
+            await cargarEstadoContingencia();
+        } else {
+            alert('❌ ' + data.error);
+        }
+    } catch (e) {
+        alert('❌ Error al restaurar el sistema');
+    }
+}
+
     </script>
 </body>
 </html>
