@@ -56,6 +56,14 @@ export default async function handler(req, res) {
         return await handleEjecutarAnalisis(req, res);
       case 'invitar_admin':
         return await handleInvitarAdmin(req, res);
+      // ── NUEVO: Contingencia ──────────────────────────────────────────────
+      case 'estado_sistema':
+        return await handleEstadoSistema(req, res);
+      case 'abortar_contingencia':
+        return await handleAbortarContingencia(req, res);
+      case 'restaurar_sistema':
+        return await handleRestaurarSistema(req, res);
+      // ────────────────────────────────────────────────────────────────────
       default:
         return res.status(400).json({ error: 'Acción no especificada' });
     }
@@ -130,7 +138,6 @@ async function handleStats(req, res) {
     'SELECT COUNT(*) as total FROM empresas WHERE activo = true'
   );
 
-  // ✅ CORREGIDO: zona horaria Santo Domingo aplicada correctamente
   const licitacionesHoy = await pool.query(
     `SELECT COUNT(*) as total, MAX(scrapeado_en) as ultimo_scraping
      FROM licitaciones
@@ -142,7 +149,6 @@ async function handleStats(req, res) {
     'SELECT COUNT(*) as total FROM resultados'
   );
 
-  // ✅ CORREGIDO: usa created_at y notificada = true
   const emailsHoy = await pool.query(
     `SELECT COUNT(DISTINCT empresa_id) as total FROM resultados
      WHERE notificada = true
@@ -150,7 +156,6 @@ async function handleStats(req, res) {
            (CURRENT_TIMESTAMP AT TIME ZONE 'America/Santo_Domingo')::date`
   );
 
-  // ✅ CORREGIDO: usa created_at
   const analisisHoy = await pool.query(
     `SELECT COUNT(*) as total FROM resultados
      WHERE DATE(created_at AT TIME ZONE 'America/Santo_Domingo') =
@@ -350,18 +355,14 @@ async function handleResetearCuota(req, res) {
       WHERE empresa_id = $1
       AND DATE_TRUNC('month', descargado_en) = DATE_TRUNC('month', CURRENT_DATE)
     `, [empresa_id]);
-
     console.log(`[ADMIN] Cuota de descargas reseteada para empresa ${empresa_id} por admin ${admin.email}`);
-
   } else if (tipo === 'analisis') {
     await pool.query(`
       DELETE FROM analisis_profundos
       WHERE empresa_id = $1
       AND DATE_TRUNC('month', analizado_en) = DATE_TRUNC('month', CURRENT_DATE)
     `, [empresa_id]);
-
     console.log(`[ADMIN] Cuota de análisis IA reseteada para empresa ${empresa_id} por admin ${admin.email}`);
-
   } else {
     return res.status(400).json({ error: 'Tipo inválido. Use "descargas" o "analisis"' });
   }
@@ -398,15 +399,8 @@ async function handleCrearEmpresa(req, res) {
 
     const resultEmpresa = await pool.query(`
       INSERT INTO empresas (
-        nombre,
-        dominio,
-        descripcion,
-        plan,
-        activo,
-        palabras_clave,
-        trial_inicio,
-        trial_fin,
-        max_familias_unspsc
+        nombre, dominio, descripcion, plan, activo, palabras_clave,
+        trial_inicio, trial_fin, max_familias_unspsc
       ) VALUES ($1, $2, $3, $4, true, $5, $6, $7, $8)
       RETURNING id
     `, [
@@ -424,34 +418,18 @@ async function handleCrearEmpresa(req, res) {
     const passwordHash = await bcrypt.hash(password, 10);
 
     await pool.query(`
-      INSERT INTO usuarios (
-        empresa_id,
-        email,
-        empresa,
-        password_hash,
-        rol,
-        activo,
-        email_confirmado
-      ) VALUES ($1, $2, $3, $4, $5, true, true)
-    `, [
-      empresaId,
-      email.toLowerCase(),
-      nombre,
-      passwordHash,
-      'owner'
-    ]);
+      INSERT INTO usuarios (empresa_id, email, empresa, password_hash, rol, activo, email_confirmado)
+      VALUES ($1, $2, $3, $4, $5, true, true)
+    `, [empresaId, email.toLowerCase(), nombre, passwordHash, 'owner']);
 
     console.log(`[ADMIN] Nueva empresa creada: ${nombre} (ID: ${empresaId}) por admin ${admin.email}`);
 
     try {
       const resendApiKey = process.env.RESEND_API_KEY;
       if (resendApiKey) {
-        const emailResponse = await fetch('https://api.resend.com/emails', {
+        await fetch('https://api.resend.com/emails', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${resendApiKey}`
-          },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${resendApiKey}` },
           body: JSON.stringify({
             from: 'Compita <no-reply@compita.umbusk.com>',
             to: [email],
@@ -459,19 +437,12 @@ async function handleCrearEmpresa(req, res) {
             html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🎉 ¡Bienvenido a Compita!</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${contacto_nombre}</strong>,</p><p>Tu cuenta en Compita ha sido creada exitosamente.</p><div style="background:white;border-left:4px solid #667eea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#667eea">📋 Tus credenciales:</h3><p><strong>Usuario:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Plan:</strong> ${plan.toUpperCase()}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/login.html" style="background:#667eea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🚀 Iniciar Sesión</a></div></div></body></html>`
           })
         });
-        if (emailResponse.ok) {
-          console.log(`[EMAIL] Credenciales enviadas a ${email}`);
-        }
       }
     } catch (emailError) {
       console.error('Error enviando email:', emailError);
     }
 
-    return res.json({
-      success: true,
-      empresa_id: empresaId,
-      mensaje: 'Empresa creada exitosamente'
-    });
+    return res.json({ success: true, empresa_id: empresaId, mensaje: 'Empresa creada exitosamente' });
 
   } catch (error) {
     console.error('Error al crear empresa:', error);
@@ -481,303 +452,264 @@ async function handleCrearEmpresa(req, res) {
 
 // DESACTIVAR EMPRESA
 async function handleDesactivarEmpresa(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   const admin = verificarToken(req.headers.authorization);
-  if (!admin) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
   const { empresa_id } = req.body;
-
-  if (!empresa_id) {
-    return res.status(400).json({ error: 'empresa_id es requerido' });
-  }
-
+  if (!empresa_id) return res.status(400).json({ error: 'empresa_id es requerido' });
   try {
     await pool.query('UPDATE empresas SET activo = false WHERE id = $1', [empresa_id]);
     await pool.query('UPDATE usuarios SET activo = false WHERE empresa_id = $1', [empresa_id]);
-
     console.log(`[ADMIN] Empresa ${empresa_id} desactivada por admin ${admin.email}`);
-
     return res.json({ success: true, mensaje: 'Empresa desactivada correctamente' });
   } catch (error) {
-    console.error('Error al desactivar empresa:', error);
     return res.status(500).json({ error: 'Error al desactivar la empresa' });
   }
 }
 
 // REACTIVAR EMPRESA
 async function handleReactivarEmpresa(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   const admin = verificarToken(req.headers.authorization);
-  if (!admin) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
   const { empresa_id } = req.body;
-
-  if (!empresa_id) {
-    return res.status(400).json({ error: 'empresa_id es requerido' });
-  }
-
+  if (!empresa_id) return res.status(400).json({ error: 'empresa_id es requerido' });
   try {
     await pool.query('UPDATE empresas SET activo = true WHERE id = $1', [empresa_id]);
     await pool.query('UPDATE usuarios SET activo = true WHERE empresa_id = $1', [empresa_id]);
-
     console.log(`[ADMIN] Empresa ${empresa_id} reactivada por admin ${admin.email}`);
-
     return res.json({ success: true, mensaje: 'Empresa reactivada correctamente' });
   } catch (error) {
-    console.error('Error al reactivar empresa:', error);
     return res.status(500).json({ error: 'Error al reactivar la empresa' });
   }
 }
 
 // ELIMINAR EMPRESA (HARD DELETE)
 async function handleEliminarEmpresa(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   const admin = verificarToken(req.headers.authorization);
-  if (!admin) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
   const { empresa_id } = req.body;
-
-  if (!empresa_id) {
-    return res.status(400).json({ error: 'empresa_id es requerido' });
-  }
-
+  if (!empresa_id) return res.status(400).json({ error: 'empresa_id es requerido' });
   try {
-    const conteoResultados = await pool.query('SELECT COUNT(*) as total FROM resultados WHERE empresa_id = $1', [empresa_id]);
-    const conteoDescargas = await pool.query('SELECT COUNT(*) as total FROM descargas WHERE empresa_id = $1', [empresa_id]);
-    const conteoAnalisisProfundos = await pool.query('SELECT COUNT(*) as total FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
-    const conteoAnalisis = await pool.query('SELECT COUNT(*) as total FROM analisis WHERE empresa_id = $1', [empresa_id]);
-    const conteoUsuarios = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
-
+    const conteoResultados       = await pool.query('SELECT COUNT(*) as total FROM resultados WHERE empresa_id = $1', [empresa_id]);
+    const conteoDescargas        = await pool.query('SELECT COUNT(*) as total FROM descargas WHERE empresa_id = $1', [empresa_id]);
+    const conteoAnalisisProfundos= await pool.query('SELECT COUNT(*) as total FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
+    const conteoAnalisis         = await pool.query('SELECT COUNT(*) as total FROM analisis WHERE empresa_id = $1', [empresa_id]);
+    const conteoUsuarios         = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
-
-    const usuariosEmpresa = await pool.query(
-      'SELECT id FROM usuarios WHERE empresa_id = $1', [empresa_id]
-    );
+    const usuariosEmpresa = await pool.query('SELECT id FROM usuarios WHERE empresa_id = $1', [empresa_id]);
     for (const u of usuariosEmpresa.rows) {
       await pool.query('DELETE FROM invitaciones_referido WHERE referidor_id = $1', [u.id]);
       await pool.query('DELETE FROM referidos WHERE referidor_id = $1 OR referido_id = $1', [u.id]);
     }
-
     await pool.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
     await pool.query('DELETE FROM empresas WHERE id = $1', [empresa_id]);
-
-    const detalles = `Registros eliminados:
-- ${conteoUsuarios.rows[0].total} usuarios
-- ${conteoResultados.rows[0].total} oportunidades
-- ${conteoDescargas.rows[0].total} descargas
-- ${conteoAnalisisProfundos.rows[0].total} análisis profundos
-- ${conteoAnalisis.rows[0].total} análisis`;
-
+    const detalles = `Registros eliminados:\n- ${conteoUsuarios.rows[0].total} usuarios\n- ${conteoResultados.rows[0].total} oportunidades\n- ${conteoDescargas.rows[0].total} descargas\n- ${conteoAnalisisProfundos.rows[0].total} análisis profundos\n- ${conteoAnalisis.rows[0].total} análisis`;
     console.log(`[ADMIN] Empresa ${empresa_id} ELIMINADA por admin ${admin.email}`);
-    console.log(detalles);
-
-    return res.json({
-      success: true,
-      mensaje: 'Empresa eliminada permanentemente',
-      detalles: detalles
-    });
+    return res.json({ success: true, mensaje: 'Empresa eliminada permanentemente', detalles });
   } catch (error) {
-    console.error('Error al eliminar empresa:', error);
     return res.status(500).json({ error: 'Error al eliminar la empresa' });
   }
 }
 
 // EJECUTAR SCRAPING
 async function handleEjecutarScraping(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   const admin = verificarToken(req.headers.authorization);
-  if (!admin) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
   try {
     const githubToken = process.env.GITHUB_TOKEN;
-    const repo = 'umbusk1/compita';
-    const workflow = 'scraping-diario.yml';
-
     const response = await fetch(
-      `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`,
+      `https://api.github.com/repos/umbusk1/compita/actions/workflows/scraping-diario.yml/dispatches`,
       {
         method: 'POST',
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `Bearer ${githubToken}`,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': `Bearer ${githubToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: 'main' })
       }
     );
-
     if (response.status === 204) {
       console.log(`[ADMIN] Scraping ejecutado manualmente por admin ${admin.email}`);
-      return res.json({
-        success: true,
-        mensaje: 'Scraping iniciado correctamente. Revisa GitHub Actions para ver el progreso.'
-      });
+      return res.json({ success: true, mensaje: 'Scraping iniciado correctamente. Revisa GitHub Actions para ver el progreso.' });
     } else {
-      const error = await response.text();
-      console.error('Error de GitHub:', error);
       return res.status(500).json({ error: 'Error al ejecutar scraping' });
     }
   } catch (error) {
-    console.error('Error ejecutando scraping:', error);
     return res.status(500).json({ error: 'Error al ejecutar scraping' });
   }
 }
 
 // EJECUTAR ANÁLISIS
 async function handleEjecutarAnalisis(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   const admin = verificarToken(req.headers.authorization);
-  if (!admin) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
   try {
     const githubToken = process.env.GITHUB_TOKEN;
-    const repo = 'umbusk1/compita';
-    const workflow = 'analisis-diario.yml';
-
     const response = await fetch(
-      `https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`,
+      `https://api.github.com/repos/umbusk1/compita/actions/workflows/analisis-diario.yml/dispatches`,
       {
         method: 'POST',
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `Bearer ${githubToken}`,
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Accept': 'application/vnd.github.v3+json', 'Authorization': `Bearer ${githubToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ ref: 'main' })
       }
     );
-
     if (response.status === 204) {
       console.log(`[ADMIN] Análisis ejecutado manualmente por admin ${admin.email}`);
-      return res.json({
-        success: true,
-        mensaje: 'Análisis iniciado correctamente. Revisa GitHub Actions para ver el progreso.'
-      });
+      return res.json({ success: true, mensaje: 'Análisis iniciado correctamente. Revisa GitHub Actions para ver el progreso.' });
     } else {
-      const error = await response.text();
-      console.error('Error de GitHub:', error);
       return res.status(500).json({ error: 'Error al ejecutar análisis' });
     }
   } catch (error) {
-    console.error('Error ejecutando análisis:', error);
     return res.status(500).json({ error: 'Error al ejecutar análisis' });
   }
 }
 
 // INVITAR ADMINISTRADOR
 async function handleInvitarAdmin(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   const admin = verificarToken(req.headers.authorization);
-  if (!admin) {
-    return res.status(401).json({ error: 'No autorizado' });
-  }
-
-  if (admin.rol !== 'superadmin') {
-    return res.status(403).json({ error: 'Solo los superadministradores pueden invitar otros administradores' });
-  }
-
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
+  if (admin.rol !== 'superadmin') return res.status(403).json({ error: 'Solo los superadministradores pueden invitar otros administradores' });
   const { nombre, email, password, rol } = req.body;
-
-  if (!nombre || !email || !password || !rol) {
-    return res.status(400).json({ error: 'Faltan campos obligatorios' });
-  }
-
-  if (!['admin', 'superadmin'].includes(rol)) {
-    return res.status(400).json({ error: 'Rol inválido. Use "admin" o "superadmin"' });
-  }
-
+  if (!nombre || !email || !password || !rol) return res.status(400).json({ error: 'Faltan campos obligatorios' });
+  if (!['admin', 'superadmin'].includes(rol)) return res.status(400).json({ error: 'Rol inválido' });
   try {
-    const emailExiste = await pool.query(
-      'SELECT id FROM administradores WHERE email = $1',
-      [email.toLowerCase()]
-    );
-
-    if (emailExiste.rows.length > 0) {
-      return res.status(400).json({ error: 'Este email ya está registrado como administrador' });
-    }
-
+    const emailExiste = await pool.query('SELECT id FROM administradores WHERE email = $1', [email.toLowerCase()]);
+    if (emailExiste.rows.length > 0) return res.status(400).json({ error: 'Este email ya está registrado como administrador' });
     const passwordHash = await bcrypt.hash(password, 10);
-
     const result = await pool.query(`
-      INSERT INTO administradores (
-        nombre,
-        email,
-        password_hash,
-        rol,
-        activo,
-        invitado_por
-      ) VALUES ($1, $2, $3, $4, true, $5)
-      RETURNING id
+      INSERT INTO administradores (nombre, email, password_hash, rol, activo, invitado_por)
+      VALUES ($1, $2, $3, $4, true, $5) RETURNING id
     `, [nombre, email.toLowerCase(), passwordHash, rol, admin.id]);
-
     const nuevoAdminId = result.rows[0].id;
-
     console.log(`[ADMIN] Nuevo administrador creado: ${nombre} (${rol}) por ${admin.email}`);
-
     try {
       const resendApiKey = process.env.RESEND_API_KEY;
       if (resendApiKey) {
-        const emailResponse = await fetch('https://api.resend.com/emails', {
+        await fetch('https://api.resend.com/emails', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${resendApiKey}`
-          },
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${resendApiKey}` },
           body: JSON.stringify({
             from: 'Compita <no-reply@compita.umbusk.com>',
             to: [email],
             subject: '🔐 Acceso al Dashboard Admin de Compita',
-            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#9333ea 0%,#7c3aed 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🔐 Acceso Admin - Compita</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${nombre}</strong>,</p><p>Has sido invitado como <strong>${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</strong> del sistema Compita.</p><div style="background:white;border-left:4px solid #9333ea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#9333ea">📋 Tus credenciales:</h3><p><strong>Email:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Rol:</strong> ${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/admin-login.html" style="background:#9333ea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🔐 Acceder al Dashboard</a></div><div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:15px;margin:20px 0;border-radius:5px"><p style="margin:0;font-size:14px"><strong>⚠️ Importante:</strong> Cambia tu contraseña en el primer inicio de sesión.</p></div></div></body></html>`
+            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#9333ea 0%,#7c3aed 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🔐 Acceso Admin - Compita</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${nombre}</strong>,</p><p>Has sido invitado como <strong>${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</strong> del sistema Compita.</p><div style="background:white;border-left:4px solid #9333ea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#9333ea">📋 Tus credenciales:</h3><p><strong>Email:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Rol:</strong> ${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/admin-login.html" style="background:#9333ea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🔐 Acceder al Dashboard</a></div></div></body></html>`
           })
         });
-
-        if (emailResponse.ok) {
-          console.log(`[EMAIL] Credenciales de admin enviadas a ${email}`);
-        }
       }
     } catch (emailError) {
       console.error('Error enviando email:', emailError);
     }
+    return res.json({ success: true, admin_id: nuevoAdminId, mensaje: 'Administrador invitado exitosamente' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Error al invitar administrador' });
+  }
+}
+
+// ============================================================================
+// NUEVO — CONTINGENCIA: LEER ESTADO DEL SISTEMA
+// ============================================================================
+async function handleEstadoSistema(req, res) {
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Método no permitido' });
+  const admin = verificarToken(req.headers.authorization);
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const result = await pool.query(`
+      SELECT
+        estado, motivo, notas,
+        fecha_falla, fecha_alerta_admin,
+        fecha_notificacion_usuarios,
+        alerta_admin_enviada,
+        notificacion_usuarios_enviada,
+        modal_activo, abortado_por_admin,
+        actualizado_en
+      FROM sistema_estado
+      WHERE id = 1
+    `);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'No se encontró registro de sistema_estado' });
+    }
+
+    return res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error leyendo sistema_estado:', error);
+    return res.status(500).json({ error: 'Error al leer el estado del sistema' });
+  }
+}
+
+// ============================================================================
+// NUEVO — CONTINGENCIA: ABORTAR NOTIFICACIÓN A USUARIOS
+// ============================================================================
+async function handleAbortarContingencia(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
+  const admin = verificarToken(req.headers.authorization);
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    // Solo se puede abortar si está en ALERTA_PENDIENTE
+    const check = await pool.query('SELECT estado FROM sistema_estado WHERE id = 1');
+    const estado = check.rows[0]?.estado;
+
+    if (estado !== 'ALERTA_PENDIENTE') {
+      return res.status(400).json({
+        error: `No se puede abortar: el estado actual es "${estado}". Solo se puede abortar en estado ALERTA_PENDIENTE.`
+      });
+    }
+
+    await pool.query(`
+      UPDATE sistema_estado SET
+        abortado_por_admin = TRUE,
+        notas              = $1,
+        actualizado_en     = NOW()
+      WHERE id = 1
+    `, [`Abortado por ${admin.email} el ${new Date().toLocaleString('es-DO')}`]);
+
+    console.log(`[ADMIN] Contingencia ABORTADA por admin ${admin.email}`);
 
     return res.json({
       success: true,
-      admin_id: nuevoAdminId,
-      mensaje: 'Administrador invitado exitosamente'
+      mensaje: 'Notificación a usuarios abortada correctamente. El sistema permanece en monitoreo.'
     });
-
   } catch (error) {
-    console.error('Error al invitar administrador:', error);
-    return res.status(500).json({ error: 'Error al invitar administrador' });
+    console.error('Error abortando contingencia:', error);
+    return res.status(500).json({ error: 'Error al abortar la contingencia' });
+  }
+}
+
+// ============================================================================
+// NUEVO — CONTINGENCIA: RESTAURAR SISTEMA MANUALMENTE
+// ============================================================================
+async function handleRestaurarSistema(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
+  const admin = verificarToken(req.headers.authorization);
+  if (!admin) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    await pool.query(`
+      UPDATE sistema_estado SET
+        estado             = 'NORMAL',
+        motivo             = NULL,
+        modal_activo       = FALSE,
+        abortado_por_admin = FALSE,
+        notas              = $1,
+        actualizado_en     = NOW()
+      WHERE id = 1
+    `, [`Restaurado manualmente por ${admin.email} el ${new Date().toLocaleString('es-DO')}`]);
+
+    console.log(`[ADMIN] Sistema restaurado a NORMAL manualmente por admin ${admin.email}`);
+
+    return res.json({
+      success: true,
+      mensaje: 'Sistema restaurado a NORMAL. El modal ha sido desactivado.'
+    });
+  } catch (error) {
+    console.error('Error restaurando sistema:', error);
+    return res.status(500).json({ error: 'Error al restaurar el sistema' });
   }
 }
