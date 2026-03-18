@@ -585,6 +585,87 @@
             </div>
         </div>
 
+<!-- ============================================================
+     ADICIÓN A — Modal de suspensión
+     Pegar justo ANTES de la etiqueta <footer>
+     ============================================================ -->
+
+<!-- Modal: Servicio Suspendido (landing pública) -->
+<div id="modal-servicio-suspendido"
+     class="hidden fixed inset-0 z-[9998] flex items-center justify-center p-4"
+     style="background: rgba(22,51,50,0.75); backdrop-filter: blur(4px);">
+  <div style="background:#fff; border-radius:20px; max-width:540px; width:100%;
+              box-shadow: 0 32px 80px rgba(22,51,50,0.3); overflow:hidden;">
+
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #e07b39, #c0392b);
+                color:#fff; padding:1.75rem 2rem;">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+        <div>
+          <div style="font-size:2.5rem; margin-bottom:0.5rem;">⚠️</div>
+          <h3 style="font-family:'Lora',serif; font-size:1.25rem; font-weight:700; margin:0;">
+            Servicio Temporalmente Suspendido
+          </h3>
+        </div>
+        <button onclick="cerrarModalSuspensionLanding()"
+                style="background:none; border:none; color:rgba(255,255,255,0.8);
+                       font-size:1.75rem; cursor:pointer; line-height:1; flex-shrink:0;
+                       padding:0; margin-top:4px;"
+                aria-label="Cerrar">×</button>
+      </div>
+    </div>
+
+    <!-- Cuerpo -->
+    <div style="padding:1.75rem 2rem;">
+      <p style="font-family:'Manrope',sans-serif; font-size:0.95rem;
+                line-height:1.7; color:#4a6662; margin-bottom:1.25rem;">
+        El monitoreo automático de licitaciones se encuentra
+        temporalmente suspendido por la siguiente causa:
+      </p>
+
+      <div id="suspension-motivo-landing"
+           style="background:#fff8f0; border-left:4px solid #e07b39;
+                  border-radius:0 8px 8px 0; padding:1rem 1.25rem;
+                  font-family:'Manrope',sans-serif; font-size:0.9rem;
+                  font-weight:600; color:#92400e; margin-bottom:1.25rem;">
+        <!-- Se llena dinámicamente -->
+      </div>
+
+      <p style="font-family:'Manrope',sans-serif; font-size:0.875rem;
+                line-height:1.7; color:#4a6662; margin-bottom:1.25rem;">
+        Estamos trabajando para restablecer el servicio a la brevedad.
+        Los usuarios activos recibirán un correo cuando el servicio
+        sea restablecido.
+        <br><br>
+        Las suscripciones activas <strong>no se verán afectadas</strong>
+        durante este período.
+      </p>
+
+      <div style="background:#f0f9f0; border:1px solid #c6e8c9; border-radius:8px;
+                  padding:0.875rem 1rem; font-family:'Manrope',sans-serif;
+                  font-size:0.8rem; color:#2e7d32; text-align:center;">
+        📧 Notificaremos a todos los usuarios cuando el servicio esté disponible.
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="background:#f8f6f1; padding:1rem 2rem; text-align:center;
+                border-top:1px solid #e5e0d5;">
+      <button onclick="cerrarModalSuspensionLanding()"
+              style="font-family:'Manrope',sans-serif; font-weight:600;
+                     font-size:0.9rem; background:var(--violeta); color:#fff;
+                     border:none; padding:0.75rem 2rem; border-radius:8px;
+                     cursor:pointer; transition:background 0.2s;"
+              onmouseover="this.style.background='#4338ca'"
+              onmouseout="this.style.background='var(--violeta)'">
+        Entendido
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- FIN Modal: Servicio Suspendido -->
+
         <!-- Footer -->
         <div class="bg-gray-50 px-6 py-4 rounded-b-2xl text-center">
             <button onclick="cerrarModalSuspension()"
@@ -2220,5 +2301,55 @@ document.getElementById('modal-servicio-suspendido')
   </div>
 </a>
 <!-- Fin botón flotante de WhatsApp -->
+
+<!-- ============================================================
+     ADICIÓN B — JavaScript
+     Pegar justo ANTES del cierre </body>
+     ============================================================ -->
+<script>
+(function () {
+  var DESCRIPCIONES_MOTIVO = {
+    portal_inaccesible:    '🔌 El portal del gobierno (comprasdominicana.gob.do) no está accesible en este momento.',
+    estructura_modificada: '🔧 El portal del gobierno fue modificado y el sistema está siendo adaptado.'
+  };
+
+  function cerrarModalSuspensionLanding() {
+    document.getElementById('modal-servicio-suspendido').classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  // Exponer para el onclick del botón
+  window.cerrarModalSuspensionLanding = cerrarModalSuspensionLanding;
+
+  // Cerrar al hacer clic fuera
+  document.getElementById('modal-servicio-suspendido')
+    .addEventListener('click', function (e) {
+      if (e.target === this) cerrarModalSuspensionLanding();
+    });
+
+  async function verificarEstadoSistema() {
+    try {
+      var res  = await fetch('/api/obtener-oportunidades?action=estado_publico');
+      var data = await res.json();
+
+      if (data.sistema_activo === false) {
+        var motivo = data.motivo_suspension;
+        var detalle = document.getElementById('suspension-motivo-landing');
+        detalle.textContent = DESCRIPCIONES_MOTIVO[motivo]
+          || '⚙️ Se presentó una situación técnica fuera de nuestro control.';
+
+        document.getElementById('modal-servicio-suspendido').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+    } catch (e) {
+      // Si falla la consulta, no mostrar nada — la landing sigue funcionando
+      console.warn('No se pudo verificar estado del sistema:', e.message);
+    }
+  }
+
+  // Verificar cuando carga la página
+  document.addEventListener('DOMContentLoaded', verificarEstadoSistema);
+})();
+</script>
+
 </body>
 </html>
