@@ -19,6 +19,27 @@ export default async function handler(req, res) {
     });
   }
 
+  // ── NUEVO: acción pública sin autenticación ──────────────────────────────
+  // Usada por la landing page para mostrar el modal de suspensión.
+  // No expone datos de usuarios ni licitaciones.
+  if (req.query.action === 'estado_publico') {
+    try {
+      const estadoPublico = await sql`
+        SELECT estado, motivo, modal_activo
+        FROM sistema_estado WHERE id = 1 LIMIT 1
+      `;
+      const fila = estadoPublico[0] || {};
+      return res.status(200).json({
+        sistema_activo:    !(fila.estado === 'SUSPENDIDO' && fila.modal_activo === true),
+        motivo_suspension: fila.motivo || null
+      });
+    } catch (e) {
+      // Si falla, devolvemos activo=true para no bloquear la landing
+      return res.status(200).json({ sistema_activo: true, motivo_suspension: null });
+    }
+  }
+  // ────────────────────────────────────────────────────────────────────────
+
   const sql = neon(process.env.DATABASE_URL);
 
   try {
