@@ -1,6 +1,34 @@
 // api/business-features.js - Gestión de recursos Business (ZIP y Análisis IA)
 import { neon } from '@neondatabase/serverless';
 
+
+// ============================================================
+// Añadir esta función auxiliar al inicio del archivo,
+// justo ANTES de la función obtenerRegionLicitacion()
+// ============================================================
+
+function construirRegex(palabra) {
+  const esExpresion = palabra.includes(' ');
+  const escapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  if (esExpresion) {
+    // Expresión multi-palabra → coincidencia exacta de la frase
+    return new RegExp(escapada, 'i');
+  }
+
+  // Palabra simple → stemming seguro (igual que analizar-notificar-v2.js)
+  // No stemizar si termina en vocal+s (recursos, cursos, sistemas...)
+  const raiz = (/[aeiouáéíóúü]s$/i.test(palabra) || palabra.length <= 4)
+    ? palabra
+    : (palabra.endsWith('s') ? palabra.slice(0, -1) : palabra);
+
+  const raizEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  return raiz !== palabra
+    ? new RegExp('\\b' + raizEscapada + 's?\\b', 'i')   // con stemming: acepta con/sin s
+    : new RegExp('\\b' + raizEscapada + '\\b', 'i');     // sin stemming: coincidencia exacta
+}
+
 // ============================================================
 // FUNCIÓN: Inferir región geográfica desde nombre de institución
 // ============================================================
@@ -387,7 +415,8 @@ export default async function handler(req, res) {
         // A. Verificar exclusiones
         let esDescartada = false;
         for (const excl of exclusiones) {
-          if (texto.includes(excl.toLowerCase())) { esDescartada = true; break; }
+          const regex = construirRegex(excl.toLowerCase());
+          if (regex.test(texto)) { esDescartada = true; break; }
         }
         if (esDescartada) {
           await sql`
@@ -412,7 +441,8 @@ export default async function handler(req, res) {
 
         if (!coincideTema) {
           for (const palabra of palabrasClave) {
-            if (texto.includes(palabra.toLowerCase())) {
+            const regex = construirRegex(palabra.toLowerCase());
+            if (regex.test(texto)) {
               coincideTema = true;
               razon = `Coincide con palabra clave "${palabra}"`;
               break;
