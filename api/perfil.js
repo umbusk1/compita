@@ -146,10 +146,10 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
       const baseUrl = process.env.VERCEL_URL
         ? `https://${process.env.VERCEL_URL}`
         : 'https://compita.umbusk.com';
-      fetch(`${baseUrl}/api/analizar-notificar-v2?action=reanalizar`, {
+      fetch(`${baseUrl}/api/business-features`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': authHeader },
-        body: JSON.stringify({ empresa_id: empresaId })
+        body: JSON.stringify({ empresa_id: empresaId, accion: 're-analizar' })
       }).then(r => {
         if (r.ok) console.log(`✅ Re-análisis completado para empresa ${empresaId}`);
         else      console.warn(`⚠️ Re-análisis respondió ${r.status}`);
