@@ -354,10 +354,10 @@
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
                         onchange="filtrarOportunidades()"
                     >
+                        <option value="reciente">Más recientes</option>
                         <option value="relevancia">Relevancia</option>
                         <option value="fecha">Fecha cierre</option>
                         <option value="monto">Monto</option>
-                        <option value="reciente">Más recientes</option>
                     </select>
                 </div>
             </div>
@@ -1125,7 +1125,13 @@ async function cargarCuposBusiness() {
 
                 if (response.ok) {
                     const data = await response.json();
-                    todasOportunidades = data.oportunidades || [];
+                    todasOportunidades = (data.oportunidades || []).map(op => {
+					    const hace48h = new Date(Date.now() - 48 * 60 * 60 * 1000);
+					    return {
+					        ...op,
+					        es_nuevo: op.es_nuevo || (op.fecha_analisis && new Date(op.fecha_analisis) > hace48h)
+					    };
+					});
                     filtrarOportunidades();
                     if (data.sistema_activo === false) {
 					    mostrarModalSuspension(data.motivo_suspension);
@@ -1240,7 +1246,7 @@ if (planActual === 'business' || planActual === 'enterprise') {
                     }">
                         ${op.relevancia} RELEVANCIA
                     </span>
-                    ${op.es_nuevo ? '<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-semibold ml-2">NUEVO</span>' : ''}
+                    ${op.es_nuevo ? '<span class="px-2 py-1 bg-indigo-600 text-white rounded text-xs font-bold ml-2">NUEVA</span>' : ''}
                 </div>
             </div>
 
