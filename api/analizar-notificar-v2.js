@@ -509,11 +509,11 @@ async function analizarDiario() {
 
       let licitaciones;
       if (esEmpresaNueva) {
-        console.log('   🆕 Empresa nueva - Analizando últimas 100 licitaciones abiertas');
+        console.log('   🆕 Empresa nueva - Analizando mas recientes 400 licitaciones abiertas');
         const r = await pool.query(`
           SELECT * FROM licitaciones
           WHERE fecha_presentacion > NOW()
-          ORDER BY scrapeado_en DESC LIMIT 100
+          ORDER BY scrapeado_en DESC LIMIT 400
         `);
         licitaciones = r.rows;
       } else {
