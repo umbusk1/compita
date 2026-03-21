@@ -110,7 +110,7 @@ async function handleReanalizar(req, res) {
     // Obtener perfil actualizado de la empresa
     const empresaRes = await pool.query(`
       SELECT e.id, e.nombre, e.descripcion, e.palabras_clave, e.exclusiones,
-             e.monto_minimo_alta, e.plan, e.familias_unspsc, e.regiones_interes
+             e.monto_minimo_alta, e.plan, e.familias_unspsc, e.regiones_interes, e.website
       FROM empresas e
       WHERE e.id = $1
     `, [empresa_id]);
@@ -391,7 +391,7 @@ Cibao Noroeste, Valdesia, El Valle, Enriquillo, Yuma, Higuamo.
     ? '\nREGIÓN: [nombre de región oficial o "Nacional"]'
     : '';
 
-  const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
+const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
 
 1. **RELEVANCIA**: ¿Qué tan relevante es para el cliente?
    - ALTA: Coincidencia directa y fuerte con servicios/productos principales del cliente
@@ -402,13 +402,17 @@ Cibao Noroeste, Valdesia, El Valle, Enriquillo, Yuma, Higuamo.
 3. **QUIÉN**: Extrae la entidad que licita (nombre de la institución/unidad)
 4. **RAZÓN**: Justificación breve (máximo 2 líneas)
 ${seccionGeografica}
+**REGLA ANTI-FALSO-POSITIVO (crítica):**
+NO clasifiques como ALTA una licitación basándote solo en palabras genéricas como "equipos", "instrumentos", "materiales", "suministros" o "servicios". Exige que la licitación describa específicamente el tipo de producto o servicio que el cliente distribuye o presta. Si la coincidencia es solo por una palabra genérica y el contexto real de la licitación apunta a otro sector (tecnología de oficina, construcción, industria alimentaria, textiles, etc.), clasifica como BAJA.
+
 **IMPORTANTE**: Evalúa SOLO la relevancia temática. El sistema aplicará filtros adicionales de monto y región automáticamente.
 
 **PERFIL DEL CLIENTE:**
 ${empresa.descripcion || 'Cliente sin descripción'}
+${empresa.website ? `Sitio web: ${empresa.website}` : ''}
 
 **PALABRAS CLAVE DEL CLIENTE:**
-${Array.isArray(empresa.palabras_clave) ? empresa.palabras_clave.join(', ') : empresa.palabras_clave || 'Sin palabras clave'}
+${Array.isArray(empresa.palabras_clave) ? empresa.palabras_clave.join(', ') : empresa.palabras_clave || 'Sin palabras clave'}|| 'Sin palabras clave'}
 
 **OPORTUNIDAD:**
 - Referencia: ${oportunidad.referencia || 'N/A'}
@@ -474,7 +478,7 @@ async function analizarDiario() {
   try {
     const empresasRes = await pool.query(`
       SELECT e.id, e.nombre, e.descripcion, e.palabras_clave, e.exclusiones,
-             e.monto_minimo_alta, e.plan, e.familias_unspsc, e.regiones_interes,
+             e.monto_minimo_alta, e.plan, e.familias_unspsc, e.regiones_interes, e.website,
              u.email as owner_email, u.referido_codigo
       FROM empresas e
       JOIN usuarios u ON u.empresa_id = e.id
