@@ -78,7 +78,7 @@ async function handleGetEmpresa(req, res, empresaId) {
       `SELECT id, nombre, dominio, descripcion, palabras_clave, exclusiones,
               monto_minimo_alta, plan, trial_inicio, trial_fin, activo,
               sector_principal, sectores_adicionales,   -- FIX: añadido
-              regiones_interes, onboarding_completado
+              regiones_interes, onboarding_completado, website
        FROM empresas
        WHERE id = $1`,
       [empresaId]
@@ -102,7 +102,8 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
       sector_principal,
       sectores_adicionales,    // FIX: añadido
       regiones_interes,
-      onboarding_completado
+      onboarding_completado,
+      website
     } = req.body;
 
     // Validaciones
@@ -121,11 +122,12 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
            sector_principal      = COALESCE($5,  sector_principal),
            sectores_adicionales  = COALESCE($6,  sectores_adicionales),   -- FIX: añadido
            regiones_interes      = COALESCE($7,  regiones_interes),
-           onboarding_completado = COALESCE($8,  onboarding_completado)
-       WHERE id = $9
+           onboarding_completado = COALESCE($8,  onboarding_completado),
+           website               = COALESCE($9,  website)
+       WHERE id = $10
        RETURNING id, nombre, descripcion, palabras_clave, exclusiones,
                  monto_minimo_alta, sector_principal, sectores_adicionales,
-                 regiones_interes, onboarding_completado`,
+                 regiones_interes, onboarding_completado, website`,
       [
         descripcion             ?? null,
         palabras_clave          ?? null,
@@ -135,6 +137,7 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
         sectores_adicionales    ?? null,   // FIX: añadido
         regiones_interes        ?? null,
         onboarding_completado   !== undefined ? onboarding_completado : null,
+        website                 ?? null,
         empresaId
       ]
     );
