@@ -1310,7 +1310,7 @@ ${esBusiness ? `
 
                     <div>
                         <button
-                            onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0})"
+                            onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0}, '${op.fecha_presentacion || ''}')"
                             class="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
                         >
                             <span>🤖</span>
@@ -1537,7 +1537,7 @@ async function descargarDocumentos(referencia) {
 // ============================================
         // BOTÓN 2: ANALIZAR PLIEGO CON IA
         // ============================================
-async function analizarConIA(referencia, titulo, descripcion, monto) {
+async function analizarConIA(referencia, titulo, descripcion, monto, fecha_presentacion) {
     // ✅ CAPTURAR BOTÓN ANTES DEL TRY/CATCH
     const botonAnalisis = event.target.closest('button') || event.target;
     const contenedorBoton = botonAnalisis.parentElement;
@@ -1621,7 +1621,8 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
                 monto: monto,
                 empresa_id: empresaId,
                 empresa_descripcion: datosEmpresa.descripcion || '',
-                empresa_website: datosEmpresa.website || ''
+                empresa_website: datosEmpresa.website || '',
+                fecha_presentacion: fecha_presentacion || ''
             }),
             signal: AbortSignal.timeout(180000)
         });
