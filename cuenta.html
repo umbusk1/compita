@@ -726,7 +726,8 @@
                 });
                 if (perfilResponse.ok) {
                     const perfilData = await perfilResponse.json();
-                    document.getElementById('nombre-empresa').textContent = perfilData.empresa.nombre;
+					document.getElementById('nombre-empresa').textContent = perfilData.empresa.nombre;
+					document.getElementById('nombre-empresa-mobile').textContent = perfilData.empresa.nombre;
                 }
                 showTab('perfil');
             } catch (error) {
