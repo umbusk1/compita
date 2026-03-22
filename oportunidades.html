@@ -1376,7 +1376,7 @@ function mostrarAlertaConfiguracion() {
                                 📝 Optimizar mi configuración
                             </a>
                             <a
-                                href="mailto:soporte@umbusk.com?subject=Ayuda con configuración Compita&body=Hola, necesito ayuda para optimizar mi configuración en Compita porque no estoy viendo oportunidades."
+                                href="mailto:sales@umbusk.com?subject=Ayuda con configuración Compita&body=Hola, necesito ayuda para optimizar mi configuración en Compita porque no estoy viendo oportunidades."
                                 class="inline-block bg-white text-yellow-700 border-2 border-yellow-600 px-6 py-3 rounded-lg hover:bg-yellow-50 transition font-semibold"
                             >
                                 💬 Solicitar ayuda
@@ -1662,7 +1662,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
             if (previo) previo.remove();
 
             const linkReporte = document.createElement('a');
-            linkReporte.href = `mailto:soporte@umbusk.com?subject=Error análisis ${referencia}&body=No se pudo analizar el pliego de la licitación ${referencia}`;
+            linkReporte.href = `mailto:sales@umbusk.com?subject=Error análisis ${referencia}&body=No se pudo analizar el pliego de la licitación ${referencia}`;
             linkReporte.className = 'link-reporte block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
             linkReporte.textContent = 'Reportar falla a Compita';
             contenedorBoton.appendChild(linkReporte);
@@ -1721,7 +1721,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
         if (previo) previo.remove();
 
         const linkReporte = document.createElement('a');
-        linkReporte.href = `mailto:soporte@umbusk.com?subject=Error análisis ${referencia}&body=Error: ${error.message}`;
+        linkReporte.href = `mailto:sales@umbusk.com?subject=Error análisis ${referencia}&body=Error: ${error.message}`;
         linkReporte.className = 'link-reporte block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
         linkReporte.textContent = 'Reportar falla a Compita';
         contenedorBoton.appendChild(linkReporte);
