@@ -71,13 +71,24 @@
             </div>
         </div>
 
-        <!-- Mobile: logo + botón hamburguesa (cuenta.html no tiene menú móvil complejo) -->
+        <!-- Mobile: logo + botón hamburguesa -->
         <div class="flex md:hidden justify-between items-center">
             <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-16">
-            <div class="flex items-center gap-4">
-                <a href="/oportunidades.html" class="text-gray-600 hover:text-indigo-600 text-sm font-medium">Oportunidades</a>
-                <span class="text-sm text-gray-600" id="nombre-empresa-mobile">Cargando...</span>
-                <button onclick="cerrarSesion()" class="text-sm text-red-600">Salir</button>
+            <button onclick="toggleMobileMenuCuenta()" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menu-icon-cuenta" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path id="close-icon-cuenta" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu desplegable -->
+        <div id="mobile-menu-cuenta" class="hidden md:hidden mt-4 pb-4">
+            <div class="flex flex-col gap-4">
+                <a href="/oportunidades.html" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 py-2 text-sm">Oportunidades</a>
+                <span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm inline-block">Mi Cuenta</span>
+                <span class="text-sm text-gray-600 py-2" id="nombre-empresa-mobile">Cargando...</span>
+                <button onclick="cerrarSesion()" class="text-left text-sm text-gray-600 hover:text-red-600 hover:font-semibold hover:underline transition-all duration-150 py-2">Salir</button>
             </div>
         </div>
 
@@ -1201,6 +1212,16 @@ try {
                 alert('Error al iniciar upgrade');
             }
         }
+
+        function toggleMobileMenuCuenta() {
+		    const menu = document.getElementById('mobile-menu-cuenta');
+		    const menuIcon = document.getElementById('menu-icon-cuenta');
+		    const closeIcon = document.getElementById('close-icon-cuenta');
+		    menu.classList.toggle('hidden');
+		    menuIcon.classList.toggle('hidden');
+		    closeIcon.classList.toggle('hidden');
+		}
+
     </script>
 
     <!-- Botón flotante de WhatsApp -->
