@@ -277,17 +277,17 @@
                                     <div class="flex">
                                         <div class="flex-shrink-0"><span class="text-2xl">💡</span></div>
                                         <div class="ml-3">
-                                            <h3 class="text-sm font-medium text-blue-800 mb-2">Usa palabras GENÉRICAS, no marcas o modelos específicos</h3>
+                                            <h3 class="text-sm font-medium text-blue-800 mb-2">Puedes usar palabras genéricas; o también marcas o modelos específicos. Depende de lo que quieras que Compita busque por ti.</h3>
                                             <div class="text-xs text-blue-700 space-y-2">
                                                 <div>
-                                                    <strong class="text-green-700">✅ Palabras efectivas:</strong>
+                                                    <strong class="text-green-700">✅ Palabras efectivas para generar resultados variados:</strong>
                                                     <div class="mt-1 font-mono bg-green-50 px-2 py-1 rounded">mantenimiento, equipos, servicios, consultoría, capacitación, sistemas, suministro</div>
                                                 </div>
                                                 <div>
-                                                    <strong class="text-red-700">❌ Evita palabras muy específicas:</strong>
-                                                    <div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Guardian Z-Series, Kopr-Kote, modelo XYZ-2000, marca específica</div>
+                                                    <strong class="text-green-700">✅ Palabras muy específicas para obtener resultados focalizados:</strong>
+                                                    <div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Guardian Z-Series, Kopr-Kote, modelo XYZ-2000, cualquier marca específica</div>
                                                 </div>
-                                                <p class="mt-2 text-blue-600 italic">Las licitaciones usan lenguaje genérico. Palabras muy técnicas pueden resultar en 0 oportunidades detectadas.</p>
+                                                <p class="mt-2 text-blue-600 italic">Las descripciones básicas de las licitaciones usadas en el primer filtro están generalmente en lenguaje genérico. Palabras muy técnicas pueden resultar en 0 oportunidades detectadas.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -295,15 +295,15 @@
                                 <textarea id="empresa-palabras-clave" rows="3"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none"
                                     placeholder="Ejemplo: mantenimiento, equipos, lubricación, filtración, servicios industriales, capacitación"></textarea>
-                                <p class="text-xs text-gray-500 mt-1">💡 Licitaciones con AL MENOS una de estas palabras o expresiones serán clasificadas como MEDIA relevancia.</p>
+                                <p class="text-xs text-gray-500 mt-1">💡 Licitaciones con descripciones que tengan AL MENOS una de estas palabras o expresiones serán clasificadas como de MEDIA relevancia.</p>
                                 <div class="mt-2 bg-amber-50 border-l-4 border-amber-400 p-3 rounded-r-lg text-xs text-amber-800">
-                                    ⚠️ <strong>Expresiones de varias palabras:</strong> escríbelas completas separadas por coma, sin coma interna. Por ejemplo: <span class="font-mono bg-amber-100 px-1 rounded">asesoría en recursos humanos, consultoría financiera</span> — cada expresión es una unidad que se busca completa.
+                                    ⚠️ <strong>Puedes usar expresiones que incluyan varias palabras:</strong> Escríbelas completas separadas por coma, sin ninguna coma interna. Por ejemplo: <span class="font-mono bg-amber-100 px-1 rounded">asesoría en recursos humanos, consultoría financiera</span> — cada expresión es una unidad que se busca completa.
                                 </div>
 
                                 <!-- Chips sugeridos por sector -->
                                 <div class="mt-3">
-                                    <p class="text-xs font-semibold text-gray-700 mb-1">💡 Sugerencias según tu(s) sector(es)</p>
-                                    <p class="text-xs text-gray-500 mb-2">Haz clic para agregar o quitar palabras clave de tu perfil.</p>
+                                    <p class="text-xs font-semibold text-gray-700 mb-1">💡 Sugerencias de palabras clave según tu(s) sector(es) escogido(s):</p>
+                                    <p class="text-xs text-gray-500 mb-2">Haz clic en las palabras clave sugeridas para agregarlas o quitarlas de tu perfil.</p>
                                     <div id="chips-sugeridos-cuenta" class="min-h-8"></div>
                                 </div>
                             </div>
@@ -314,15 +314,15 @@
                                 <textarea id="empresa-exclusiones" rows="2"
                                     class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none"
                                     placeholder="construcción, materiales, alimentos"></textarea>
-                                <p class="text-xs text-gray-500 mt-1">🚫 Licitaciones con estas palabras serán descartadas automáticamente.</p>
+                                <p class="text-xs text-gray-500 mt-1">🚫 Licitaciones que incluyan una o más de estas palabras serán descartadas automáticamente.</p>
                             </div>
 
                             <!-- Monto Mínimo -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Monto Mínimo para ALTA Relevancia <span class="text-gray-400 font-normal">(DOP)</span>
+                                    Monto Mínimo para indicar que una licitación es de ALTA Relevancia:<span class="text-gray-400 font-normal">(RD$)</span>
                                 </label>
-                                <p class="text-xs text-gray-500 mb-2">Selecciona el monto por encima del cual una licitación es de ALTA prioridad para ti.</p>
+                                <p class="text-xs text-gray-500 mb-2">Mientras menor sea el monto, más licitaciones de ALTA relevancia aparecerán. Selecciona el monto.</p>
                                 <div class="relative">
                                     <span class="absolute left-3 top-3.5 text-gray-400 font-semibold text-sm">RD$</span>
                                     <input type="number" id="empresa-monto-minimo" step="1" min="0"
