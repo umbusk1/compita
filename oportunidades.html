@@ -1740,52 +1740,118 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
         // FUNCIÓN AUXILIAR: MOSTRAR ANÁLISIS EN MODAL
         // ============================================
         function mostrarAnalisisEnModal(analisis, pliegoAnalizado) {
-            const htmlAnalisis = `
-                <div class="space-y-6">
-                    ${pliegoAnalizado ?
-                        '<div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">✓ Análisis basado en el pliego completo</div>' :
-                        '<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">⚠️ Análisis preliminar (pliego no disponible)</div>'
-                    }
+const htmlAnalisis = `
+            <div class="space-y-6">
+                ${pliegoAnalizado ?
+                    '<div class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-800">✓ Análisis basado en el pliego completo</div>' :
+                    '<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">⚠️ Análisis preliminar (pliego no disponible)</div>'
+                }
 
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">📊 Síntesis Ejecutiva</h3>
-                        <p class="text-gray-700">${analisis.sintesis}</p>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">📊 Síntesis Ejecutiva</h3>
+                    <p class="text-gray-700">${analisis.sintesis}</p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">✅ Oportunidades</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        ${analisis.oportunidades.map(op => `<li>${op}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">⚠️ Riesgos y Desafíos</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        ${analisis.riesgos.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">🎯 Requisitos Clave</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700">
+                        ${analisis.requisitos.map(req => `<li>${req}</li>`).join('')}
+                    </ul>
+                </div>
+
+                ${analisis.tiempos ? `
+                <div class="border rounded-lg overflow-hidden">
+                    <div class="px-4 py-3 flex items-center gap-3 ${
+                        analisis.tiempos.alerta === 'MUY AJUSTADO' ? 'bg-red-50 border-b border-red-200' :
+                        analisis.tiempos.alerta === 'AJUSTADO' ? 'bg-yellow-50 border-b border-yellow-200' :
+                        'bg-green-50 border-b border-green-200'
+                    }">
+                        <h3 class="text-base font-semibold text-gray-900">⏱️ Tiempos</h3>
+                        <span class="text-xs font-bold px-2 py-1 rounded ${
+                            analisis.tiempos.alerta === 'MUY AJUSTADO' ? 'bg-red-100 text-red-800' :
+                            analisis.tiempos.alerta === 'AJUSTADO' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-green-100 text-green-800'
+                        }">${analisis.tiempos.alerta}</span>
                     </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">✅ Oportunidades</h3>
-                        <ul class="list-disc list-inside space-y-1 text-gray-700">
-                            ${analisis.oportunidades.map(op => `<li>${op}</li>`).join('')}
-                        </ul>
+                    <div class="p-4 space-y-2 text-sm text-gray-700">
+                        <p><strong>Fecha límite de oferta:</strong> ${analisis.tiempos.fecha_limite_oferta}</p>
+                        <p><strong>Días restantes:</strong> ${analisis.tiempos.dias_calendario_restantes}</p>
+                        ${analisis.tiempos.fechas_clave && analisis.tiempos.fechas_clave.length > 0 ? `
+                            <div>
+                                <p class="font-semibold mb-1">Fechas clave:</p>
+                                <ul class="list-disc list-inside space-y-1">
+                                    ${analisis.tiempos.fechas_clave.map(f => `<li>${f}</li>`).join('')}
+                                </ul>
+                            </div>` : ''}
+                        ${analisis.tiempos.advertencia ? `
+                            <div class="mt-2 p-3 bg-red-50 border border-red-200 rounded text-red-800 text-xs">
+                                ⚠️ ${analisis.tiempos.advertencia}
+                            </div>` : ''}
                     </div>
+                </div>` : ''}
 
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">⚠️ Riesgos y Desafíos</h3>
-                        <ul class="list-disc list-inside space-y-1 text-gray-700">
-                            ${analisis.riesgos.map(r => `<li>${r}</li>`).join('')}
-                        </ul>
+                ${analisis.viabilidad ? `
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center gap-3 mb-3">
+                        <h3 class="text-base font-semibold text-gray-900">🔍 Viabilidad</h3>
+                        <span class="text-xs font-bold px-2 py-1 rounded ${
+                            analisis.viabilidad.veredicto === 'VIABLE' ? 'bg-green-100 text-green-800' :
+                            analisis.viabilidad.veredicto === 'VIABLE CON RIESGOS' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                        }">${analisis.viabilidad.veredicto}</span>
                     </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-2">🎯 Requisitos Clave</h3>
-                        <ul class="list-disc list-inside space-y-1 text-gray-700">
-                            ${analisis.requisitos.map(req => `<li>${req}</li>`).join('')}
-                        </ul>
+                    <div class="space-y-2 text-sm text-gray-700">
+                        <p><strong>🔒 Garantías:</strong> ${analisis.viabilidad.garantias}</p>
+                        <p><strong>📋 Experiencia:</strong> ${analisis.viabilidad.experiencia_previa}</p>
+                        <p><strong>⚙️ Especificaciones:</strong> ${analisis.viabilidad.especificaciones_tecnicas}</p>
                     </div>
+                </div>` : ''}
 
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <h3 class="text-lg font-semibold text-blue-900 mb-2">💡 Recomendación</h3>
-                        <p class="text-blue-800">${analisis.recomendacion}</p>
+                ${analisis.evaluacion ? `
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
+                        <h3 class="text-base font-semibold text-gray-900">⚖️ Evaluación</h3>
                     </div>
-
-                    <div class="text-center">
-                        <div class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full px-6 py-3">
-                            <span class="text-2xl font-bold">${analisis.puntuacion}/100</span>
-                            <span class="text-sm ml-2">Puntuación</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                        <div class="p-4">
+                            <p class="text-sm font-bold text-green-700 mb-2">✅ A Favor</p>
+                            <ul class="space-y-2">
+                                ${analisis.evaluacion.a_favor.map(p => `
+                                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                                        <span class="text-green-500 mt-0.5 flex-shrink-0">▸</span>
+                                        <span>${p}</span>
+                                    </li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm font-bold text-red-700 mb-2">❌ En Contra</p>
+                            <ul class="space-y-2">
+                                ${analisis.evaluacion.en_contra.map(p => `
+                                    <li class="flex items-start gap-2 text-sm text-gray-700">
+                                        <span class="text-red-400 mt-0.5 flex-shrink-0">▸</span>
+                                        <span>${p}</span>
+                                    </li>`).join('')}
+                            </ul>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>` : ''}
+
+            </div>
+        `;
 
             const modal = document.createElement('div');
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
