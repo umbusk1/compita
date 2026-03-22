@@ -111,45 +111,55 @@
 <body class="bg-gray-50">
 <!-- Contenedor de toasts (notificaciones) -->
     <div class="toast-container" id="toast-container"></div>
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-			<!-- Logo -->
-			<div class="flex items-center gap-2">
-				<img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png"
-					 alt="Logo Compita"
-					 class="h-20">
+	<!-- Navbar -->
+	<nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+		<div class="container mx-auto px-4 py-3">
+
+			<!-- Desktop: grid de 3 columnas -->
+			<div class="hidden md:grid grid-cols-3 items-center">
+				<!-- Columna 1: Logo -->
+				<div class="flex items-center justify-start">
+					<img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png"
+						 alt="Logo Compita"
+						 class="h-20">
+				</div>
+				<!-- Columna 2: Navegación -->
+				<div class="flex items-center justify-center gap-6">
+					<span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">Oportunidades</span>
+					<a href="/cuenta.html" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Mi Cuenta</a>
+				</div>
+				<!-- Columna 3: Usuario + Salir -->
+				<div class="flex items-center justify-end gap-4">
+					<span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
+					<button onclick="cerrarSesion()" class="text-sm text-gray-600 hover:text-red-600 hover:font-semibold hover:underline transition-all duration-150">Salir</button>
+				</div>
 			</div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center gap-6">
-				<span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">Oportunidades</span>
-				<a href="/cuenta.html" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Mi Cuenta</a>
-				<span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
-                <button onclick="cerrarSesion()" class="text-sm text-gray-600 hover:text-red-600">Salir</button>
-                </div>
+			<!-- Mobile: logo + botón hamburguesa -->
+			<div class="flex md:hidden justify-between items-center">
+				<img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png"
+					 alt="Logo Compita"
+					 class="h-16">
+				<button onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
+					<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+						<path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+					</svg>
+				</button>
+			</div>
 
-                <!-- Mobile Menu Button -->
-                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-600 hover:text-indigo-600 focus:outline-none">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
-                <div class="flex flex-col gap-4">
+			<!-- Mobile Menu desplegable -->
+			<div id="mobile-menu" class="mobile-menu md:hidden mt-4 pb-4">
+				<div class="flex flex-col gap-4">
 					<span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm inline-block">Oportunidades</span>
-					<a href="/cuenta.html" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Mi Cuenta</a>
+					<a href="/cuenta.html" onclick="toggleMobileMenu()" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 py-2 text-sm">Mi Cuenta</a>
 					<span class="text-sm text-gray-600 py-2" id="nombre-empresa-mobile">Cargando...</span>
-                    <button onclick="cerrarSesion()" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Salir</button>
-                </div>
-            </div>
-        </div>
-    </nav>
+					<button onclick="cerrarSesion()" class="text-left text-sm text-gray-600 hover:text-red-600 hover:font-semibold hover:underline transition-all duration-150 py-2">Salir</button>
+				</div>
+			</div>
+
+		</div>
+	</nav>
 
     <div class="container mx-auto px-4 py-6">
         <!-- Header con Banner integrado -->

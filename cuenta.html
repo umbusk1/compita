@@ -49,24 +49,40 @@
     </script>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-6">
-                    <div class="flex items-center gap-2">
-                        <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-20">
-                    </div>
-				<a href="/oportunidades.html" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Oportunidades</a>
-				<span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">Mi Cuenta</span>
-				</div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
-                    <button onclick="cerrarSesion()" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Salir</button>
-                </div>
+<!-- Navbar -->
+<nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3">
+
+        <!-- Desktop: grid de 3 columnas -->
+        <div class="hidden md:grid grid-cols-3 items-center">
+            <!-- Columna 1: Logo -->
+            <div class="flex items-center justify-start">
+                <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-20">
+            </div>
+            <!-- Columna 2: Navegación -->
+            <div class="flex items-center justify-center gap-6">
+                <a href="/oportunidades.html" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Oportunidades</a>
+                <span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">Mi Cuenta</span>
+            </div>
+            <!-- Columna 3: Usuario + Salir -->
+            <div class="flex items-center justify-end gap-4">
+                <span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
+                <button onclick="cerrarSesion()" class="text-sm text-gray-600 hover:text-red-600 hover:font-semibold hover:underline transition-all duration-150">Salir</button>
             </div>
         </div>
-    </nav>
+
+        <!-- Mobile: logo + botón hamburguesa (cuenta.html no tiene menú móvil complejo) -->
+        <div class="flex md:hidden justify-between items-center">
+            <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-16">
+            <div class="flex items-center gap-4">
+                <a href="/oportunidades.html" class="text-gray-600 hover:text-indigo-600 text-sm font-medium">Oportunidades</a>
+                <span class="text-sm text-gray-600" id="nombre-empresa-mobile">Cargando...</span>
+                <button onclick="cerrarSesion()" class="text-sm text-red-600">Salir</button>
+            </div>
+        </div>
+
+    </div>
+</nav>
 
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
