@@ -1622,8 +1622,8 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
                 empresa_id: empresaId,
                 empresa_descripcion: datosEmpresa.descripcion || '',
                 empresa_website: datosEmpresa.website || '',
-                fecha_presentacion: fecha_presentacion
-				    ? new Date(fecha_presentacion + 'T12:00:00').toLocaleDateString('es-DO', {day: 'numeric', month: 'long', year: 'numeric'})
+			fecha_presentacion: fecha_presentacion
+                    ? new Date(fecha_presentacion.substring(0, 10) + 'T12:00:00').toLocaleDateString('es-DO', {day: 'numeric', month: 'long', year: 'numeric'})
                     : ''
             }),
             signal: AbortSignal.timeout(180000)
