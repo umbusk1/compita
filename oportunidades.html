@@ -1622,13 +1622,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
                 empresa_id: empresaId,
                 empresa_descripcion: datosEmpresa.descripcion || '',
                 empresa_website: datosEmpresa.website || '',
-			fecha_presentacion: fecha_presentacion
-                    ? (() => {
-                        const p = fecha_presentacion.substring(0, 10).split('-');
-                        const m = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-                        return `${parseInt(p[2])} de ${m[parseInt(p[1])-1]} de ${p[0]}`;
-                    })()
-                    : ''
+		fecha_presentacion: fecha_presentacion ? formatearFecha(fecha_presentacion) : ''
             }),
             signal: AbortSignal.timeout(180000)
         });
