@@ -1709,13 +1709,21 @@ async function analizarConIA(referencia, titulo, descripcion, monto) {
         botonAnalisis.innerHTML = '<span>🤖</span><span>Analizar Pliego con IA</span>';
         botonAnalisis.disabled = false;
 
-        if (error.name === 'AbortError') {
+	    if (error.name === 'AbortError') {
             mostrarMensaje('El análisis tardó más de 3 minutos.<br>Esto suele pasar con documentos grandes. Puede intentarlo de nuevo más tarde.', 'warning', 8000);
         } else if (error.name === 'TypeError') {
             mostrarMensaje('Problema de conexión.<br>Revisa tu internet y vuelve a intentar.', 'error');
         } else {
             mostrarMensaje('Error al analizar: ' + error.message, 'error');
         }
+
+        const previo2 = contenedorBoton.querySelector('.link-reporte');
+        if (previo2) previo2.remove();
+        const linkReporte2 = document.createElement('a');
+        linkReporte2.href = `mailto:sales@umbusk.com?subject=Error análisis ${referencia}&body=Error: ${error.message}`;
+        linkReporte2.className = 'link-reporte block text-center text-sm text-red-600 hover:text-red-800 underline mt-2';
+        linkReporte2.textContent = 'Reportar problema a Compita';
+        contenedorBoton.appendChild(linkReporte2);
 
         const previo = contenedorBoton.querySelector('.link-reporte');
         if (previo) previo.remove();
