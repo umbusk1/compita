@@ -1278,10 +1278,22 @@ if (planActual === 'business' || planActual === 'enterprise') {
                 </div>
             </div>
 
-            <!-- Análisis preliminar de IA -->
+<!-- Análisis preliminar de IA -->
             <div class="bg-gray-50 rounded-lg p-4 mb-4">
                 <p class="text-sm font-bold text-gray-900 mb-2">Análisis preliminar de IA</p>
                 <p class="text-sm text-gray-800">${op.razon}</p>
+            </div>
+
+            <!-- Botón descartar -->
+            <div class="flex justify-end mb-2">
+                <button
+                    onclick="descartarOportunidad(${op.resultado_id}, this)"
+                    class="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition"
+                    title="Descartar esta oportunidad"
+                >
+                    <span>🗑️</span>
+                    <span>Descartar</span>
+                </button>
             </div>
 
 ${esBusiness ? `
@@ -2442,6 +2454,57 @@ document.getElementById('modal-servicio-suspendido')
   // Verificar cuando carga la página
   document.addEventListener('DOMContentLoaded', verificarEstadoSistema);
 })();
+
+async function descartarOportunidad(resultadoId, boton) {
+    const confirmar = await mostrarConfirmacion(
+        '🗑️ Descartar oportunidad',
+        'Esta oportunidad no aparecerá más en tu dashboard.<br><br>' +
+        'Puedes restaurarla desde el filtro de descartadas si cambias de opinión.',
+        'Sí, descartar',
+        'Cancelar',
+        'bg-red-600 hover:bg-red-700'
+    );
+
+    if (!confirmar) return;
+
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/obtener-oportunidades`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                resultado_id: resultadoId,
+                descartar: true
+            })
+        });
+
+        if (response.ok) {
+            // Animar y remover la card
+            const card = boton.closest('.bg-white.rounded-lg.shadow-sm');
+            card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'translateX(20px)';
+            setTimeout(() => {
+                card.remove();
+                // Actualizar contadores
+                todasOportunidades = todasOportunidades.filter(
+                    op => op.resultado_id !== resultadoId
+                );
+                actualizarEstadisticas();
+                mostrarMensaje('Oportunidad descartada', 'success', 2000);
+            }, 300);
+        } else {
+            mostrarMensaje('Error al descartar. Vuelve a intentar.', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarMensaje('Error de conexión.', 'error');
+    }
+}
+
 </script>
 
 </body>
