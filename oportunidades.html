@@ -1771,7 +1771,11 @@ const htmlAnalisis = `
                 }
 
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">📊 Síntesis Ejecutiva</h3>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">SÍNTESIS</h3>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">📊 Descripción</h3>
                     <p class="text-gray-700">${analisis.sintesis}</p>
                 </div>
 
@@ -1848,7 +1852,7 @@ const htmlAnalisis = `
                 ${analisis.viabilidad ? `
                 <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
                     <div class="flex items-center gap-3 mb-3">
-                        <h3 class="text-base font-semibold text-gray-900">🔍 Viabilidad</h3>
+                        <h3 class="text-base font-semibold text-gray-900">VIABILIDAD</h3>
                         <span class="text-xs font-bold px-2 py-1 rounded ${
                             analisis.viabilidad.veredicto === 'VIABLE' ? 'bg-green-100 text-green-800' :
                             analisis.viabilidad.veredicto === 'VIABLE CON RIESGOS' ? 'bg-yellow-100 text-yellow-800' :
@@ -1865,7 +1869,7 @@ const htmlAnalisis = `
                 ${analisis.evaluacion ? `
                 <div class="border border-gray-200 rounded-lg overflow-hidden">
                     <div class="bg-gray-100 px-4 py-3 border-b border-gray-200">
-                        <h3 class="text-base font-semibold text-gray-900">⚖️ Evaluación</h3>
+                        <h3 class="text-base font-semibold text-gray-900">EVALUACIÓN</h3>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
                         <div class="p-4">
