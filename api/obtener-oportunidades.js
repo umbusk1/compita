@@ -5,11 +5,15 @@ import jwt from 'jsonwebtoken';
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  if (req.method === 'POST') {
+    return await handleDescartar(req, res);
   }
 
   if (req.method !== 'GET') {
@@ -134,6 +138,7 @@ export default async function handler(req, res) {
         AND r.relevancia IN ('ALTA', 'MEDIA')
         AND r.fecha_analisis >= ${fechaLimite.toISOString()}
         AND l.fecha_presentacion >= CURRENT_DATE
+        AND (r.descartada IS NULL OR r.descartada = FALSE)
       ORDER BY
         CASE r.relevancia
           WHEN 'ALTA' THEN 1
@@ -174,6 +179,54 @@ export default async function handler(req, res) {
       success: false,
       error: 'Error al cargar oportunidades'
     });
+  }
+}
+
+async function handleDescartar(req, res) {
+  const sql = neon(process.env.DATABASE_URL);
+
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, error: 'No autorizado' });
+    }
+
+    const token = authHeader.split(' ')[1];
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET || 'compita-secret-2024');
+    } catch {
+      return res.status(401).json({ success: false, error: 'Token inválido' });
+    }
+
+    const { resultado_id, descartar } = req.body;
+    if (!resultado_id) {
+      return res.status(400).json({ success: false, error: 'resultado_id requerido' });
+    }
+
+    // Verificar que el resultado pertenece a la empresa del usuario
+    const usuario = await sql`
+      SELECT u.empresa_id FROM usuarios u
+      WHERE u.email = ${decoded.email} LIMIT 1
+    `;
+    if (usuario.length === 0) {
+      return res.status(404).json({ success: false, error: 'Usuario no encontrado' });
+    }
+
+    const empresa_id = usuario[0].empresa_id;
+
+    await sql`
+      UPDATE resultados
+      SET descartada = ${descartar !== false}
+      WHERE id = ${resultado_id}
+        AND empresa_id = ${empresa_id}
+    `;
+
+    return res.status(200).json({ success: true });
+
+  } catch (error) {
+    console.error('Error al descartar:', error);
+    return res.status(500).json({ success: false, error: 'Error al descartar' });
   }
 }
 
