@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-03-27 18:09:29",
+  "ultima_actualizacion": "2026-03-27 21:25:08",
   "stats": {
-    "total": 14221,
+    "total": 14357,
     "por_estado": {
-      "abiertas": 14221,
+      "abiertas": 14357,
       "todas": {
         "Suspended": 2,
         "NonAwarded": 9,
         "Canceled": 26,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 2796,
-        "ClosedForReplies": 3301,
+        "Awarded": 2836,
+        "ClosedForReplies": 3319,
         "Proceso publicado": 510,
-        "Published": 5178,
+        "Published": 5256,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 161.6
+    "promedio_diario": 163.1
   },
   "por_dia": [
     {
@@ -248,39 +248,39 @@
     },
     {
       "fecha": "2026-03-27",
-      "cantidad": 258
+      "cantidad": 312
     },
     {
       "fecha": "2026-03-30",
-      "cantidad": 85
+      "cantidad": 97
     },
     {
       "fecha": "2026-03-31",
-      "cantidad": 78
+      "cantidad": 87
     },
     {
       "fecha": "2026-04-01",
-      "cantidad": 60
+      "cantidad": 93
     },
     {
       "fecha": "2026-04-02",
-      "cantidad": 11
+      "cantidad": 19
     },
     {
       "fecha": "2026-04-06",
-      "cantidad": 26
+      "cantidad": 30
     },
     {
       "fecha": "2026-04-07",
-      "cantidad": 27
+      "cantidad": 33
     },
     {
       "fecha": "2026-04-08",
-      "cantidad": 13
+      "cantidad": 15
     },
     {
       "fecha": "2026-04-09",
-      "cantidad": 9
+      "cantidad": 10
     },
     {
       "fecha": "2026-04-10",
@@ -288,15 +288,15 @@
     },
     {
       "fecha": "2026-04-13",
-      "cantidad": 5
+      "cantidad": 6
     },
     {
       "fecha": "2026-04-14",
-      "cantidad": 7
+      "cantidad": 9
     },
     {
       "fecha": "2026-04-15",
-      "cantidad": 1
+      "cantidad": 2
     },
     {
       "fecha": "2026-04-17",
@@ -364,7 +364,7 @@
     },
     {
       "fecha": "2026-05-13",
-      "cantidad": 5
+      "cantidad": 8
     },
     {
       "fecha": "2026-05-14",
