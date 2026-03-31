@@ -4,6 +4,7 @@ COMPITA - Análisis Diario y Notificaciones (Endpoint Vercel)
 ✨ ACTUALIZACIÓN: Filtro por familias UNSPSC para optimizar costos de Claude AI
 ✨ ACTUALIZACIÓN: Fix stemming español (no stemizar vocal+s)
 ✨ ACTUALIZACIÓN: Re-evaluación automática al cambiar palabras clave/exclusiones
+✨ ACTUALIZACIÓN: Exclusión PEPU/PEEX + feedback de descartes para afinar IA
 */
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -35,8 +36,6 @@ export default async function handler(req, res) {
   // ── Re-evaluación al cambiar perfil (llamado desde perfil.js) ──────────────
   if (req.method === 'POST' && req.query.action === 'reanalizar') {
     const authHeader = req.headers.authorization;
-    const expectedToken = process.env.CRON_SECRET;
-    // Acepta tanto el token de cron como el JWT del usuario (perfil.js lo envía)
     if (!authHeader) return res.status(403).json({ error: 'No autorizado' });
     return await handleReanalizar(req, res);
   }
@@ -55,7 +54,6 @@ export default async function handler(req, res) {
   }
 
   const inicioTotal = Date.now();
-
   console.log('\n🔄 COMPITA - ANÁLISIS Y NOTIFICACIONES DIARIAS\n');
 
   try {
@@ -107,12 +105,10 @@ async function handleReanalizar(req, res) {
   }
 
   try {
-    // Obtener perfil actualizado de la empresa
     const empresaRes = await pool.query(`
       SELECT e.id, e.nombre, e.descripcion, e.palabras_clave, e.exclusiones,
              e.monto_minimo_alta, e.plan, e.familias_unspsc, e.regiones_interes, e.website
-      FROM empresas e
-      WHERE e.id = $1
+      FROM empresas e WHERE e.id = $1
     `, [empresa_id]);
 
     if (empresaRes.rows.length === 0) {
@@ -121,7 +117,6 @@ async function handleReanalizar(req, res) {
 
     const empresa = empresaRes.rows[0];
 
-    // Obtener todos los resultados existentes de la empresa que aún no han vencido
     const resultadosRes = await pool.query(`
       SELECT r.id, r.referencia, r.descripcion, r.fecha_presentacion,
              r.monto_estimado, r.estado, r.relevancia, r.unidad_compras,
@@ -134,11 +129,9 @@ async function handleReanalizar(req, res) {
     const resultados = resultadosRes.rows;
     console.log(`🔄 Re-evaluando ${resultados.length} resultados para ${empresa.nombre}`);
 
-    let actualizados = 0;
-    let descartados = 0;
+    let actualizados = 0, descartados = 0;
 
     for (const resultado of resultados) {
-      // Re-ejecutar etapa 1 (keywords + exclusiones) con el perfil actualizado
       const licitacionSimulada = {
         descripcion:        resultado.descripcion,
         fecha_presentacion: resultado.fecha_presentacion,
@@ -151,18 +144,13 @@ async function handleReanalizar(req, res) {
       const etapa1 = await procesarEtapa1(licitacionSimulada, empresa);
 
       if (!etapa1.pasa_etapa1) {
-        // Ya no pasa el filtro → marcar como DESCARTADA
         await pool.query(`
-          UPDATE resultados
-          SET relevancia = 'DESCARTADA',
-              razon = $1
-          WHERE id = $2
+          UPDATE resultados SET relevancia = 'DESCARTADA', razon = $1 WHERE id = $2
         `, [`Re-evaluado: ${etapa1.razon}`, resultado.id]);
         descartados++;
         continue;
       }
 
-      // Pasa etapa 1 → re-aplicar lógica de monto y región
       let nuevaRelevancia = resultado.relevancia === 'DESCARTADA' ? 'MEDIA' : resultado.relevancia;
       let nuevaRazon = resultado.razon;
 
@@ -174,26 +162,19 @@ async function handleReanalizar(req, res) {
         nuevaRazon = `Monto ${montoOportunidad.toLocaleString()} DOP menor al mínimo. ${nuevaRazon}`;
       }
 
-      // FIX: chequeo de región en re-evaluación (antes faltaba completamente)
       const regionesEmpresaReeval = Array.isArray(empresa.regiones_interes)
         ? empresa.regiones_interes.filter(r => r !== 'Nacional')
         : [];
 
       if (regionesEmpresaReeval.length > 0 && nuevaRelevancia === 'ALTA') {
         const regionRes = await pool.query(`
-          SELECT region FROM instituciones_region
-          WHERE unidad_compras = $1 LIMIT 1
+          SELECT region FROM instituciones_region WHERE unidad_compras = $1 LIMIT 1
         `, [resultado.unidad_compras || '']);
 
-        const regionLicitacion = regionRes.rows.length > 0
-          ? regionRes.rows[0].region
-          : null;
+        const regionLicitacion = regionRes.rows.length > 0 ? regionRes.rows[0].region : null;
 
-        if (
-          regionLicitacion
-          && regionLicitacion !== 'Nacional'
-          && !regionesEmpresaReeval.includes(regionLicitacion)
-        ) {
+        if (regionLicitacion && regionLicitacion !== 'Nacional'
+            && !regionesEmpresaReeval.includes(regionLicitacion)) {
           nuevaRelevancia = 'MEDIA';
           nuevaRazon = `Región ${regionLicitacion} fuera del área configurada. ${nuevaRazon}`;
         }
@@ -201,9 +182,7 @@ async function handleReanalizar(req, res) {
 
       if (nuevaRelevancia !== resultado.relevancia || nuevaRazon !== resultado.razon) {
         await pool.query(`
-          UPDATE resultados
-          SET relevancia = $1, razon = $2
-          WHERE id = $3
+          UPDATE resultados SET relevancia = $1, razon = $2 WHERE id = $3
         `, [nuevaRelevancia, nuevaRazon, resultado.id]);
         actualizados++;
       }
@@ -212,11 +191,8 @@ async function handleReanalizar(req, res) {
     console.log(`✅ Re-evaluación completada: ${actualizados} actualizados, ${descartados} descartados`);
 
     return res.status(200).json({
-      success: true,
-      mensaje: `Re-evaluación completada`,
-      actualizados,
-      descartados,
-      total: resultados.length
+      success: true, mensaje: 'Re-evaluación completada',
+      actualizados, descartados, total: resultados.length
     });
 
   } catch (error) {
@@ -227,14 +203,12 @@ async function handleReanalizar(req, res) {
 
 // ============================================================================
 // UTILIDAD: Stemming seguro para español
-// No stemiza palabras que terminan en vocal+s (cursos, recursos, sistemas...)
-// Solo stemiza si termina en consonante+s (análisis no aplica por longitud)
 // ============================================================================
 
 function obtenerRaiz(palabra) {
-  if (palabra.length <= 4) return palabra; // palabras muy cortas: sin stemming
-  if (/[aeiouáéíóúü]s$/i.test(palabra)) return palabra; // vocal+s: sin stemming
-  if (palabra.endsWith('s')) return palabra.slice(0, -1); // consonante+s: stemming
+  if (palabra.length <= 4) return palabra;
+  if (/[aeiouáéíóúü]s$/i.test(palabra)) return palabra;
+  if (palabra.endsWith('s')) return palabra.slice(0, -1);
   return palabra;
 }
 
@@ -262,7 +236,6 @@ async function procesarEtapa1(oportunidad, empresa) {
     return { pasa_etapa1: false, razon: 'Fecha de presentación vencida' };
   }
 
-  // ── Parsing de palabras clave (usa array nativo de PostgreSQL) ─────────────
   const palabrasClave = (
     Array.isArray(empresa.palabras_clave)
       ? empresa.palabras_clave
@@ -271,26 +244,20 @@ async function procesarEtapa1(oportunidad, empresa) {
 
   const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
 
-  // ── Matching con stemming seguro ───────────────────────────────────────────
   let palabraEncontrada = null;
   const tieneCoincidencia = palabrasClave.some(palabra => {
     const esExpresion = palabra.includes(' ');
     let regex;
-
     if (esExpresion) {
-      // Expresión multi-palabra → búsqueda exacta de la frase completa
       const expresionEscapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       regex = new RegExp(expresionEscapada, 'i');
     } else {
-      // Palabra simple → stemming seguro
       const raiz = obtenerRaiz(palabra);
       const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      // Si hubo stemming, acepta con o sin s final; si no, coincidencia exacta
       regex = raiz !== palabra
         ? new RegExp('\\b' + palabraEscapada + 's?\\b', 'i')
         : new RegExp('\\b' + palabraEscapada + '\\b', 'i');
     }
-
     const encontrada = regex.test(textoCompleto);
     if (encontrada) { palabraEncontrada = palabra; return true; }
     return false;
@@ -300,7 +267,6 @@ async function procesarEtapa1(oportunidad, empresa) {
     return { pasa_etapa1: false, razon: 'No contiene palabras clave relevantes' };
   }
 
-  // ── Exclusiones con la misma lógica ───────────────────────────────────────
   if (empresa.exclusiones && empresa.exclusiones.length > 0) {
     const exclusiones = (
       Array.isArray(empresa.exclusiones)
@@ -311,7 +277,6 @@ async function procesarEtapa1(oportunidad, empresa) {
     for (const exclusion of exclusiones) {
       const esExpresion = exclusion.includes(' ');
       let regex;
-
       if (esExpresion) {
         const expresionEscapada = exclusion.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         regex = new RegExp(expresionEscapada, 'i');
@@ -322,12 +287,8 @@ async function procesarEtapa1(oportunidad, empresa) {
           ? new RegExp('\\b' + palabraEscapada + 's?\\b', 'i')
           : new RegExp('\\b' + palabraEscapada + '\\b', 'i');
       }
-
       if (regex.test(textoCompleto)) {
-        return {
-          pasa_etapa1: false,
-          razon: `Contiene exclusión: ${exclusion}`
-        };
+        return { pasa_etapa1: false, razon: `Contiene exclusión: ${exclusion}` };
       }
     }
   }
@@ -348,10 +309,8 @@ async function obtenerRegionLicitacion(unidad_compras) {
   if (!unidad_compras) return null;
 
   const directa = await pool.query(`
-    SELECT region FROM instituciones_region
-    WHERE unidad_compras = $1 LIMIT 1
+    SELECT region FROM instituciones_region WHERE unidad_compras = $1 LIMIT 1
   `, [unidad_compras]);
-
   if (directa.rows.length > 0) return directa.rows[0].region;
 
   const porMunicipio = await pool.query(`
@@ -359,7 +318,6 @@ async function obtenerRegionLicitacion(unidad_compras) {
     WHERE $1 ILIKE '%' || municipio || '%'
     ORDER BY LENGTH(municipio) DESC LIMIT 1
   `, [unidad_compras]);
-
   if (porMunicipio.rows.length > 0) return porMunicipio.rows[0].region;
 
   return null;
@@ -369,14 +327,15 @@ async function obtenerRegionLicitacion(unidad_compras) {
 // ANÁLISIS CON IA (Claude)
 // ============================================================================
 
-async function analizarConIA(oportunidad, empresa) {
+async function analizarConIA(oportunidad, empresa, descartadasRecientes = []) {
   const regionLicitacion = await obtenerRegionLicitacion(oportunidad.unidad_compras);
 
   const regionesEmpresa = Array.isArray(empresa.regiones_interes)
     ? empresa.regiones_interes.filter(r => r !== 'Nacional')
     : [];
 
-const seccionFeedback = descartadasRecientes.length > 0 ? `
+  // Feedback negativo: licitaciones que el cliente rechazó
+  const seccionFeedback = descartadasRecientes.length > 0 ? `
 
 **LICITACIONES QUE ESTE CLIENTE RECHAZÓ — no clasificar similares como ALTA:**
 ${descartadasRecientes.slice(0, 5).map((d, i) => `${i + 1}. ${(d || '').substring(0, 120)}`).join('\n')}
@@ -398,7 +357,7 @@ Cibao Noroeste, Valdesia, El Valle, Enriquillo, Yuma, Higuamo.
     ? '\nREGIÓN: [nombre de región oficial o "Nacional"]'
     : '';
 
-const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
+  const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta oportunidad para determinar:
 
 1. **RELEVANCIA**: ¿Qué tan relevante es para el cliente?
    - ALTA: Coincidencia directa y fuerte con servicios/productos principales del cliente
@@ -420,7 +379,7 @@ ${empresa.descripcion || 'Cliente sin descripción'}
 ${empresa.website ? `Sitio web: ${empresa.website}` : ''}
 
 **PALABRAS CLAVE DEL CLIENTE:**
-${Array.isArray(empresa.palabras_clave) ? empresa.palabras_clave.join(', ') : empresa.palabras_clave || 'Sin palabras clave'}|| 'Sin palabras clave'}
+${Array.isArray(empresa.palabras_clave) ? empresa.palabras_clave.join(', ') : empresa.palabras_clave || 'Sin palabras clave'}
 
 **OPORTUNIDAD:**
 - Referencia: ${oportunidad.referencia || 'N/A'}
@@ -539,11 +498,12 @@ async function analizarDiario() {
       }
 
       console.log(`   📊 Total a revisar: ${licitaciones.length}`);
+
       // Excluir procedimientos de excepción no competitivos (PEPU y PEEX)
-	        const antePepuPeex = licitaciones.length;
-	        licitaciones = licitaciones.filter(l => !/-(PEPU|PEEX)-/i.test(l.referencia || ''));
-	        if (licitaciones.length < antePepuPeex) {
-	          console.log(`   🚫 Excluidas PEPU/PEEX: ${antePepuPeex - licitaciones.length}`);
+      const antePepuPeex = licitaciones.length;
+      licitaciones = licitaciones.filter(l => !/-(PEPU|PEEX)-/i.test(l.referencia || ''));
+      if (licitaciones.length < antePepuPeex) {
+        console.log(`   🚫 Excluidas PEPU/PEEX: ${antePepuPeex - licitaciones.length}`);
       }
 
       if (empresa.familias_unspsc && empresa.familias_unspsc.length > 0) {
@@ -579,14 +539,14 @@ async function analizarDiario() {
         continue;
       }
 
-      // Recopilar ejemplos de licitaciones que este cliente rechazó (feedback negativo)
-	        const descartadasFeedbackRes = await pool.query(`
-	          SELECT l.descripcion FROM resultados r
-	          JOIN licitaciones l ON r.licitacion_id = l.id
-	          WHERE r.empresa_id = $1 AND r.descartada = TRUE
-	          ORDER BY r.created_at DESC LIMIT 8
-	        `, [empresa.id]);
-	        const ejemplosDescartados = descartadasFeedbackRes.rows
+      // Recopilar feedback negativo: licitaciones que este cliente rechazó
+      const descartadasFeedbackRes = await pool.query(`
+        SELECT l.descripcion FROM resultados r
+        JOIN licitaciones l ON r.licitacion_id = l.id
+        WHERE r.empresa_id = $1 AND r.descartada = TRUE
+        ORDER BY r.created_at DESC LIMIT 8
+      `, [empresa.id]);
+      const ejemplosDescartados = descartadasFeedbackRes.rows
         .map(r => r.descripcion).filter(Boolean);
 
       const paraAnalizarIA = [];
@@ -606,7 +566,8 @@ async function analizarDiario() {
         const licitacion = paraAnalizarIA[i];
         process.stdout.write(`   [${i+1}/${paraAnalizarIA.length}]\r`);
 
-        async function analizarConIA(oportunidad, empresa, descartadasRecientes = []) {
+        // Pasar feedback de descartes a Claude
+        const analisis = await analizarConIA(licitacion, empresa, ejemplosDescartados);
 
         const montoMinimo = empresa.monto_minimo_alta || 500000;
         const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
@@ -624,7 +585,7 @@ async function analizarDiario() {
           analisis.relevancia === 'ALTA'
           && regionesEmpresa.length > 0
           && analisis.region_licitacion
-          && analisis.region_licitacion !== 'Nacional'   // FIX: Nacional siempre válido
+          && analisis.region_licitacion !== 'Nacional'
           && !regionesEmpresa.includes(analisis.region_licitacion)
         ) {
           analisis.relevancia = 'MEDIA';
@@ -701,13 +662,13 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
       }
 
       // No insertar si el usuario descartó esta licitación
-	        const descartadaCheck = await pool.query(
-	          'SELECT id FROM resultados WHERE empresa_id = $1 AND licitacion_id = $2 AND descartada = TRUE LIMIT 1',
-	          [empresaId, licitacionId]
-	        );
-	        if (descartadaCheck.rows.length > 0) {
-	          console.log(`   ⏭️  Saltando ${oportunidad.referencia} (descartada por usuario)`);
-	          continue;
+      const descartadaCheck = await pool.query(
+        'SELECT id FROM resultados WHERE empresa_id = $1 AND licitacion_id = $2 AND descartada = TRUE LIMIT 1',
+        [empresaId, licitacionId]
+      );
+      if (descartadaCheck.rows.length > 0) {
+        console.log(`   ⏭️  Saltando ${oportunidad.referencia} (descartada por usuario)`);
+        continue;
       }
 
       await pool.query(`
@@ -753,7 +714,6 @@ async function enviarNotificaciones(resultados) {
       console.log(`   ⏭️  ${nombre}: Sin oportunidades relevantes`);
       continue;
     }
-
     if (!email) {
       console.log(`   ⚠️  ${nombre}: Sin email registrado`);
       continue;
