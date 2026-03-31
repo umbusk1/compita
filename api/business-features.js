@@ -1,42 +1,22 @@
 // api/business-features.js - Gestión de recursos Business (ZIP y Análisis IA)
 import { neon } from '@neondatabase/serverless';
 
-
-// ============================================================
-// Añadir esta función auxiliar al inicio del archivo,
-// justo ANTES de la función obtenerRegionLicitacion()
-// ============================================================
-
 function construirRegex(palabra) {
   const esExpresion = palabra.includes(' ');
   const escapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-  if (esExpresion) {
-    // Expresión multi-palabra → coincidencia exacta de la frase
-    return new RegExp(escapada, 'i');
-  }
-
-  // Palabra simple → stemming seguro (igual que analizar-notificar-v2.js)
-  // No stemizar si termina en vocal+s (recursos, cursos, sistemas...)
+  if (esExpresion) return new RegExp(escapada, 'i');
   const raiz = (/[aeiouáéíóúü]s$/i.test(palabra) || palabra.length <= 4)
     ? palabra
     : (palabra.endsWith('s') ? palabra.slice(0, -1) : palabra);
-
   const raizEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
   return raiz !== palabra
-    ? new RegExp('\\b' + raizEscapada + 's?\\b', 'i')   // con stemming: acepta con/sin s
-    : new RegExp('\\b' + raizEscapada + '\\b', 'i');     // sin stemming: coincidencia exacta
+    ? new RegExp('\\b' + raizEscapada + 's?\\b', 'i')
+    : new RegExp('\\b' + raizEscapada + '\\b', 'i');
 }
 
-// ============================================================
-// FUNCIÓN: Inferir región geográfica desde nombre de institución
-// ============================================================
 function obtenerRegionLicitacion(unidad_compras) {
   if (!unidad_compras) return 'Nacional';
-
   const texto = unidad_compras.toLowerCase();
-
   const mapeo = {
     'Cibao Norte':    ['santiago', 'puerto plata', 'espaillat', 'valverde', 'moca',
                        'cabral y báez', 'del norte', 'edenorte'],
@@ -51,26 +31,21 @@ function obtenerRegionLicitacion(unidad_compras) {
     'Valdesia':       ['san cristóbal', 'peravia', 'azua', 'ocoa', 'baní', 'bani'],
     'Yuma':           ['la romana', 'la altagracia', 'higüey', 'higuey'],
   };
-
   for (const [region, palabras] of Object.entries(mapeo)) {
     for (const palabra of palabras) {
       if (texto.includes(palabra)) return region;
     }
   }
-
   return 'Nacional';
 }
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   const sql = neon(process.env.DATABASE_URL);
 
@@ -84,107 +59,76 @@ export default async function handler(req, res) {
       if (clave_secreta !== process.env.CRON_SECRET_KEY) {
         return res.status(401).json({ success: false, error: 'No autorizado' });
       }
-
       const stripe = (await import('stripe')).default(process.env.STRIPE_SECRET_KEY);
-
       const primerDiaMes = new Date();
       primerDiaMes.setDate(1);
       primerDiaMes.setHours(0, 0, 0, 0);
       const mesActual = primerDiaMes.toISOString().split('T')[0];
-
       const primerDiaMesAnterior = new Date(primerDiaMes);
       primerDiaMesAnterior.setMonth(primerDiaMesAnterior.getMonth() - 1);
       const mesAnterior = primerDiaMesAnterior.toISOString().split('T')[0];
-
       const empresas = await sql`
         SELECT id, nombre, plan, stripe_subscription_id,
                limite_zips_mes, limite_analisis_mes
-        FROM empresas
-        WHERE activo = true
+        FROM empresas WHERE activo = true
       `;
-
-      let reseteadas = 0;
-      let desactivadas = 0;
-      let cancelacionesProgramadas = 0;
-      let errores = 0;
-      let cuposTransferidos = 0;
-
+      let reseteadas = 0, desactivadas = 0, cancelacionesProgramadas = 0,
+          errores = 0, cuposTransferidos = 0;
       for (const empresa of empresas) {
         try {
-          let suscripcionActiva = false;
-          let zipLimite = 0;
-          let analisisLimite = 0;
-
+          let suscripcionActiva = false, zipLimite = 0, analisisLimite = 0;
           if (empresa.stripe_subscription_id) {
             try {
-              const subscription = await stripe.subscriptions.retrieve(
-                empresa.stripe_subscription_id
-              );
-
+              const subscription = await stripe.subscriptions.retrieve(empresa.stripe_subscription_id);
               if (subscription.status === 'active') {
                 if (subscription.cancel_at_period_end === true) {
                   await sql`UPDATE empresas SET activo = false WHERE id = ${empresa.id}`;
-                  cancelacionesProgramadas++;
-                  continue;
+                  cancelacionesProgramadas++; continue;
                 }
                 suscripcionActiva = true;
-                if (empresa.plan === 'business') { zipLimite = 10; analisisLimite = 5; }
+                if (empresa.plan === 'business')  { zipLimite = 10; analisisLimite = 5; }
                 else if (empresa.plan === 'estandar') { zipLimite = 0; analisisLimite = 0; }
               } else if (subscription.status === 'trialing') {
-                suscripcionActiva = true;
-                zipLimite = 10;
-                analisisLimite = 5;
+                suscripcionActiva = true; zipLimite = 10; analisisLimite = 5;
               } else {
                 await sql`UPDATE empresas SET activo = false WHERE id = ${empresa.id}`;
-                desactivadas++;
-                continue;
+                desactivadas++; continue;
               }
             } catch (stripeError) {
               console.error(`Error Stripe empresa ${empresa.id}:`, stripeError.message);
-              errores++;
-              continue;
+              errores++; continue;
             }
           } else {
             suscripcionActiva = true;
             zipLimite = empresa.limite_zips_mes || 0;
             analisisLimite = empresa.limite_analisis_mes || 0;
           }
-
           if (suscripcionActiva) {
             const existe = await sql`
-              SELECT id FROM uso_mensual
-              WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
+              SELECT id FROM uso_mensual WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
             `;
-
             if (existe.length === 0) {
-              let zipAdicionalesSobrantes = 0;
-              let analisisAdicionalesSobrantes = 0;
-
-              const mesAnteriorData = await sql`
+              let zipSobrantes = 0, analisisSobrantes = 0;
+              const anterior = await sql`
                 SELECT descargas_zip_usadas, analisis_ia_usados,
                        zip_adicionales, analisis_adicionales,
                        zip_limite_mes, analisis_limite_mes
-                FROM uso_mensual
-                WHERE empresa_id = ${empresa.id} AND mes = ${mesAnterior}
+                FROM uso_mensual WHERE empresa_id = ${empresa.id} AND mes = ${mesAnterior}
               `;
-
-              if (mesAnteriorData.length > 0) {
-                const anterior = mesAnteriorData[0];
-                const zipAdicionalesUsados = Math.max(0, anterior.descargas_zip_usadas - anterior.zip_limite_mes);
-                zipAdicionalesSobrantes = Math.max(0, anterior.zip_adicionales - zipAdicionalesUsados);
-                const analisisAdicionalesUsados = Math.max(0, anterior.analisis_ia_usados - anterior.analisis_limite_mes);
-                analisisAdicionalesSobrantes = Math.max(0, anterior.analisis_adicionales - analisisAdicionalesUsados);
-                if (zipAdicionalesSobrantes > 0 || analisisAdicionalesSobrantes > 0) cuposTransferidos++;
+              if (anterior.length > 0) {
+                const a = anterior[0];
+                const zipUsadosExtra = Math.max(0, a.descargas_zip_usadas - a.zip_limite_mes);
+                zipSobrantes = Math.max(0, a.zip_adicionales - zipUsadosExtra);
+                const analisisUsadosExtra = Math.max(0, a.analisis_ia_usados - a.analisis_limite_mes);
+                analisisSobrantes = Math.max(0, a.analisis_adicionales - analisisUsadosExtra);
+                if (zipSobrantes > 0 || analisisSobrantes > 0) cuposTransferidos++;
               }
-
               await sql`
                 INSERT INTO uso_mensual
                 (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados,
                  zip_adicionales, analisis_adicionales, zip_limite_mes, analisis_limite_mes)
-                VALUES
-                (${empresa.id}, ${mesActual}, 0, 0,
-                 ${zipAdicionalesSobrantes}, ${analisisAdicionalesSobrantes},
-                 ${zipLimite}, ${analisisLimite})
+                VALUES (${empresa.id}, ${mesActual}, 0, 0,
+                 ${zipSobrantes}, ${analisisSobrantes}, ${zipLimite}, ${analisisLimite})
               `;
               reseteadas++;
             }
@@ -194,32 +138,23 @@ export default async function handler(req, res) {
           errores++;
         }
       }
-
       return res.status(200).json({
-        success: true,
-        message: 'Reseteo mensual completado',
-        mes: mesActual,
+        success: true, message: 'Reseteo mensual completado', mes: mesActual,
         empresas_reseteadas: reseteadas,
         empresas_con_cupos_transferidos: cuposTransferidos,
         empresas_desactivadas: desactivadas,
         empresas_cancelacion_programada: cancelacionesProgramadas,
-        errores: errores
+        errores
       });
     }
 
     // ========== VALIDAR EMPRESA_ID ==========
-    if (!empresa_id) {
-      return res.status(400).json({ success: false, error: 'Falta empresa_id' });
-    }
+    if (!empresa_id) return res.status(400).json({ success: false, error: 'Falta empresa_id' });
 
     const empresa = await sql`
-      SELECT plan, limite_zips_mes, limite_analisis_mes
-      FROM empresas WHERE id = ${empresa_id} LIMIT 1
+      SELECT plan, limite_zips_mes, limite_analisis_mes FROM empresas WHERE id = ${empresa_id} LIMIT 1
     `;
-
-    if (empresa.length === 0) {
-      return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
-    }
+    if (empresa.length === 0) return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
 
     const { plan } = empresa[0];
     const limite_zips_mes = empresa[0].limite_zips_mes || 10;
@@ -239,18 +174,14 @@ export default async function handler(req, res) {
     const mesActual = primerDiaMes.toISOString().split('T')[0];
 
     let usoMensual = await sql`
-      SELECT * FROM uso_mensual
-      WHERE empresa_id = ${empresa_id} AND mes = ${mesActual} LIMIT 1
+      SELECT * FROM uso_mensual WHERE empresa_id = ${empresa_id} AND mes = ${mesActual} LIMIT 1
     `;
-
     if (usoMensual.length === 0) {
       usoMensual = await sql`
         INSERT INTO uso_mensual (empresa_id, mes, descargas_zip_usadas, analisis_ia_usados)
-        VALUES (${empresa_id}, ${mesActual}, 0, 0)
-        RETURNING *
+        VALUES (${empresa_id}, ${mesActual}, 0, 0) RETURNING *
       `;
     }
-
     const uso = usoMensual[0];
 
     // ====================================================
@@ -259,11 +190,9 @@ export default async function handler(req, res) {
     if (accion === 'verificar-limites') {
       return res.status(200).json({
         success: true,
-        zip_usados: uso.descargas_zip_usadas,
-        zip_limite: limite_zips_mes,
+        zip_usados: uso.descargas_zip_usadas,        zip_limite: limite_zips_mes,
         zip_disponibles: Math.max(0, limite_zips_mes - uso.descargas_zip_usadas),
-        analisis_usados: uso.analisis_ia_usados,
-        analisis_limite: limite_analisis_mes,
+        analisis_usados: uso.analisis_ia_usados,     analisis_limite: limite_analisis_mes,
         analisis_disponibles: Math.max(0, limite_analisis_mes - uso.analisis_ia_usados)
       });
     }
@@ -272,11 +201,7 @@ export default async function handler(req, res) {
     // ACCIÓN: VALIDAR CUPO
     // ====================================================
     if (accion === 'validar') {
-      let cupoDisponible = false;
-      let cuposRestantes = 0;
-      let usados = 0;
-      let limite = 0;
-
+      let cupoDisponible = false, cuposRestantes = 0, usados = 0, limite = 0;
       if (tipo === 'zip') {
         usados = uso.descargas_zip_usadas;
         limite = limite_zips_mes + (uso.zip_adicionales || 0);
@@ -288,14 +213,9 @@ export default async function handler(req, res) {
         cuposRestantes = limite - usados;
         cupoDisponible = cuposRestantes > 0;
       }
-
       return res.status(200).json({
-        success: true,
-        permitido: cupoDisponible,
-        cupos_restantes: Math.max(0, cuposRestantes),
-        usados: usados,
-        limite: limite,
-        tipo: tipo
+        success: true, permitido: cupoDisponible,
+        cupos_restantes: Math.max(0, cuposRestantes), usados, limite, tipo
       });
     }
 
@@ -308,13 +228,11 @@ export default async function handler(req, res) {
         return res.status(403).json({ success: false, error: 'Límite alcanzado', cupos_disponibles: 0 });
       }
       await sql`
-        UPDATE uso_mensual
-        SET descargas_zip_usadas = descargas_zip_usadas + 1, updated_at = CURRENT_TIMESTAMP
-        WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+        UPDATE uso_mensual SET descargas_zip_usadas = descargas_zip_usadas + 1,
+        updated_at = CURRENT_TIMESTAMP WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
       `;
       return res.status(200).json({
-        success: true,
-        message: 'Descarga ZIP registrada',
+        success: true, message: 'Descarga ZIP registrada',
         cupos_restantes: limite_total - uso.descargas_zip_usadas - 1
       });
     }
@@ -328,33 +246,30 @@ export default async function handler(req, res) {
         return res.status(403).json({ success: false, error: 'Límite alcanzado', cupos_disponibles: 0 });
       }
       await sql`
-        UPDATE uso_mensual
-        SET analisis_ia_usados = analisis_ia_usados + 1, updated_at = CURRENT_TIMESTAMP
-        WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+        UPDATE uso_mensual SET analisis_ia_usados = analisis_ia_usados + 1,
+        updated_at = CURRENT_TIMESTAMP WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
       `;
       return res.status(200).json({
-        success: true,
-        message: 'Análisis IA registrado',
+        success: true, message: 'Análisis IA registrado',
         cupos_restantes: limite_total - uso.analisis_ia_usados - 1
       });
     }
 
     // ====================================================
-    // ACCIÓN: RE-ANALIZAR OPORTUNIDADES
+    // ACCIÓN: RE-ANALIZAR OPORTUNIDADES  ← CAMBIOS AQUÍ
     // ====================================================
     if (accion === 're-analizar') {
       const perfilEmpresa = await sql`
         SELECT palabras_clave, exclusiones, monto_minimo_alta, regiones_interes
         FROM empresas WHERE id = ${empresa_id} LIMIT 1
       `;
-
       if (perfilEmpresa.length === 0) {
         return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
       }
 
       const perfil = perfilEmpresa[0];
       const palabrasClave = perfil.palabras_clave || [];
-      const exclusiones = perfil.exclusiones || [];
+      const exclusiones   = perfil.exclusiones   || [];
       const montoMinimoAlta = perfil.monto_minimo_alta || 500000;
 
       const familiasActivas = await sql`
@@ -363,7 +278,7 @@ export default async function handler(req, res) {
       `;
       const familiasCodigos = familiasActivas.map(f => f.familia_codigo);
 
-      // Parsear regiones (vienen como {Yuma} desde PostgreSQL)
+      // Parsear regiones
       let regionesRaw = perfil.regiones_interes;
       let regionesArr = [];
       if (Array.isArray(regionesRaw)) {
@@ -372,8 +287,7 @@ export default async function handler(req, res) {
         const s = regionesRaw.trim();
         if (s.startsWith('{')) {
           regionesArr = s.slice(1, -1).split(',')
-            .map(x => x.replace(/^"|"$/g, '').trim())
-            .filter(Boolean);
+            .map(x => x.replace(/^"|"$/g, '').trim()).filter(Boolean);
         } else if (s.startsWith('[')) {
           try { regionesArr = JSON.parse(s); } catch(e) { regionesArr = []; }
         }
@@ -381,9 +295,17 @@ export default async function handler(req, res) {
       const regionesEmpresa = regionesArr.filter(
         r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
       );
-      const incluyeNacional = regionesArr.some(
-        r => r === 'Nacional' || r === 'Nacional (todo el país)'
-      );
+
+      // ── NUEVO: Memorizar qué licitaciones descartó el usuario ───────────────
+      // Estas NO se borran y NO se reinsertarán en el dashboard
+      const descartadasRows = await sql`
+        SELECT licitacion_id FROM resultados
+        WHERE empresa_id = ${empresa_id}
+          AND descartada = TRUE
+          AND licitacion_id IS NOT NULL
+      `;
+      const idsDescartados = new Set(descartadasRows.map(d => d.licitacion_id));
+      // ────────────────────────────────────────────────────────────────────────
 
       const hoy = new Date().toISOString().split('T')[0];
       const licitacionesAbiertas = await sql`
@@ -396,24 +318,39 @@ export default async function handler(req, res) {
 
       if (licitacionesAbiertas.length === 0) {
         return res.status(200).json({
-          success: true,
-          message: 'No hay licitaciones abiertas para analizar',
+          success: true, message: 'No hay licitaciones abiertas para analizar',
           analizadas: 0, alta: 0, media: 0, descartadas: 0
         });
       }
 
-      // ── CAMBIO 1: Borrar TODOS los resultados previos de esta empresa ──────
+      // ── CAMBIO CLAVE: Solo borrar resultados NO descartados ─────────────────
+      // Los resultados con descartada = TRUE quedan intactos en la BD
       await sql`
         DELETE FROM resultados
         WHERE empresa_id = ${empresa_id}
+          AND (descartada IS NULL OR descartada = FALSE)
       `;
       // ────────────────────────────────────────────────────────────────────────
 
-      let contadorAlta = 0;
-      let contadorMedia = 0;
-      let contadorDescartadas = 0;
+      let contadorAlta = 0, contadorMedia = 0,
+          contadorDescartadas = 0, contadorPepuPeex = 0;
 
       for (const lic of licitacionesAbiertas) {
+
+        // ── NUEVO: Excluir PEPU y PEEX (procedimientos de excepción no competitivos) ──
+        if (/-(PEPU|PEEX)-/i.test(lic.referencia || '')) {
+          contadorPepuPeex++;
+          continue;
+        }
+        // ─────────────────────────────────────────────────────────────────────
+
+        // ── NUEVO: Saltar las que el usuario descartó (no reactivar) ─────────
+        if (idsDescartados.has(lic.licitacion_id)) {
+          contadorDescartadas++;
+          continue;
+        }
+        // ─────────────────────────────────────────────────────────────────────
+
         const texto = `${lic.referencia} ${lic.descripcion}`.toLowerCase();
         const monto = parseFloat(lic.monto_estimado) || 0;
         const codigoUNSPSC = lic.codigo_unspsc || '';
@@ -425,16 +362,10 @@ export default async function handler(req, res) {
           const regex = construirRegex(excl.toLowerCase());
           if (regex.test(texto)) { esDescartada = true; break; }
         }
-        if (esDescartada) {
-          // ── CAMBIO 2: Ya no hay DELETE individual aquí (ya se borró todo) ──
-          contadorDescartadas++;
-          continue;
-        }
+        if (esDescartada) { contadorDescartadas++; continue; }
 
         // B. Verificar coincidencia temática (UNSPSC o palabras clave)
-        let coincideTema = false;
-        let razon = '';
-
+        let coincideTema = false, razon = '';
         for (const codigo of familiasCodigos) {
           if (codigoUNSPSC === codigo || familiaUNSPSC === codigo) {
             coincideTema = true;
@@ -442,7 +373,6 @@ export default async function handler(req, res) {
             break;
           }
         }
-
         if (!coincideTema) {
           for (const palabra of palabrasClave) {
             const regex = construirRegex(palabra.toLowerCase());
@@ -453,34 +383,27 @@ export default async function handler(req, res) {
             }
           }
         }
-
-        if (!coincideTema) {
-          // ── CAMBIO 3: Ya no hay DELETE individual aquí (ya se borró todo) ──
-          continue;
-        }
+        if (!coincideTema) continue;
 
         // C. Criterio de MONTO
         const cumpleMonto = monto >= montoMinimoAlta;
 
         // D. Criterio de REGIÓN
-        let cumpleRegion = true;
-        let regionLicitacion = 'Nacional';
+        let cumpleRegion = true, regionLicitacion = 'Nacional';
         if (regionesEmpresa.length > 0) {
           regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
           cumpleRegion = regionesEmpresa.includes(regionLicitacion);
         }
 
-        // E. ALTA solo si cumple AMBOS: monto Y región
+        // E. Clasificar relevancia
         let relevancia;
         if (cumpleMonto && cumpleRegion) {
           relevancia = 'ALTA';
           contadorAlta++;
           const montoFmt = `RD$${monto.toLocaleString()}`;
-          if (regionesEmpresa.length > 0) {
-            razon += `. Monto ${montoFmt} supera mínimo configurado. Región ${regionLicitacion} dentro del área de operación.`;
-          } else {
-            razon += `. Monto ${montoFmt} supera mínimo configurado.`;
-          }
+          razon += regionesEmpresa.length > 0
+            ? `. Monto ${montoFmt} supera mínimo configurado. Región ${regionLicitacion} dentro del área de operación.`
+            : `. Monto ${montoFmt} supera mínimo configurado.`;
         } else {
           relevancia = 'MEDIA';
           contadorMedia++;
@@ -488,15 +411,15 @@ export default async function handler(req, res) {
             razon = `Región ${regionLicitacion} fuera del área configurada y monto por debajo del mínimo. ${razon}`;
           } else if (!cumpleMonto) {
             razon += `. Monto RD$${monto.toLocaleString()} por debajo del mínimo configurado.`;
-          } else if (!cumpleRegion) {
+          } else {
             razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
           }
         }
 
-        // F. Solo INSERT (ya no hay UPDATE — la tabla estaba vacía)
-        const queVal = (lic.descripcion || '').substring(0, 99);
+        // F. INSERT (los descartados ya están preservados separados)
+        const queVal  = (lic.descripcion   || '').substring(0, 99);
         const quienVal = (lic.unidad_compras || '').substring(0, 99);
-        const refVal = (lic.referencia || '').substring(0, 254);
+        const refVal   = (lic.referencia    || '').substring(0, 254);
 
         await sql`
           INSERT INTO resultados
@@ -520,25 +443,19 @@ export default async function handler(req, res) {
         analizadas: licitacionesAbiertas.length,
         alta: contadorAlta,
         media: contadorMedia,
-        descartadas: contadorDescartadas
+        descartadas: contadorDescartadas,
+        excluidas_pepu_peex: contadorPepuPeex
       });
     }
 
-    return res.status(400).json({
-      success: false,
-      error: 'Parámetros inválidos'
-    });
+    return res.status(400).json({ success: false, error: 'Parámetros inválidos' });
 
   } catch (error) {
     console.error('Error en business-features:', error);
     return res.status(500).json({
-      success: false,
-      error: 'Error al procesar solicitud',
-      detalles: error.message
+      success: false, error: 'Error al procesar solicitud', detalles: error.message
     });
   }
 }
 
-export const config = {
-  maxDuration: 30,
-};
+export const config = { maxDuration: 30 };
