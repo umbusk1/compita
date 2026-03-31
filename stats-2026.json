@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-03-30 21:32:09",
+  "ultima_actualizacion": "2026-03-31 18:12:34",
   "stats": {
-    "total": 14639,
+    "total": 14834,
     "por_estado": {
-      "abiertas": 14639,
+      "abiertas": 14834,
       "todas": {
         "Suspended": 2,
         "NonAwarded": 9,
-        "Canceled": 26,
+        "Canceled": 27,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 2917,
-        "ClosedForReplies": 3403,
+        "Awarded": 2964,
+        "ClosedForReplies": 3460,
         "Proceso publicado": 510,
-        "Published": 5373,
+        "Published": 5463,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 162.7
+    "promedio_diario": 161.2
   },
   "por_dia": [
     {
@@ -256,47 +256,51 @@
     },
     {
       "fecha": "2026-03-31",
-      "cantidad": 102
+      "cantidad": 214
     },
     {
       "fecha": "2026-04-01",
-      "cantidad": 98
+      "cantidad": 104
     },
     {
       "fecha": "2026-04-02",
-      "cantidad": 64
+      "cantidad": 65
     },
     {
       "fecha": "2026-04-06",
-      "cantidad": 50
+      "cantidad": 86
     },
     {
       "fecha": "2026-04-07",
-      "cantidad": 39
+      "cantidad": 54
     },
     {
       "fecha": "2026-04-08",
-      "cantidad": 26
+      "cantidad": 28
     },
     {
       "fecha": "2026-04-09",
-      "cantidad": 12
+      "cantidad": 19
     },
     {
       "fecha": "2026-04-10",
-      "cantidad": 9
-    },
-    {
-      "fecha": "2026-04-13",
-      "cantidad": 6
-    },
-    {
-      "fecha": "2026-04-14",
       "cantidad": 11
     },
     {
+      "fecha": "2026-04-13",
+      "cantidad": 7
+    },
+    {
+      "fecha": "2026-04-14",
+      "cantidad": 12
+    },
+    {
       "fecha": "2026-04-15",
-      "cantidad": 4
+      "cantidad": 6
+    },
+    {
+      "fecha": "2026-04-16",
+      "cantidad": 1
     },
     {
       "fecha": "2026-04-17",
@@ -312,11 +316,11 @@
     },
     {
       "fecha": "2026-04-22",
-      "cantidad": 2
+      "cantidad": 3
     },
     {
       "fecha": "2026-04-23",
-      "cantidad": 2
+      "cantidad": 3
     },
     {
       "fecha": "2026-04-24",
@@ -332,7 +336,7 @@
     },
     {
       "fecha": "2026-04-29",
-      "cantidad": 4
+      "cantidad": 5
     },
     {
       "fecha": "2026-04-30",
@@ -372,7 +376,11 @@
     },
     {
       "fecha": "2026-05-15",
-      "cantidad": 1
+      "cantidad": 3
+    },
+    {
+      "fecha": "2026-05-18",
+      "cantidad": 2
     },
     {
       "fecha": "2026-05-19",
@@ -380,7 +388,7 @@
     },
     {
       "fecha": "2026-05-20",
-      "cantidad": 1
+      "cantidad": 3
     }
   ]
 }
