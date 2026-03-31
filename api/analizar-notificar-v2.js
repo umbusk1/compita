@@ -380,7 +380,7 @@ const seccionFeedback = descartadasRecientes.length > 0 ? `
 
 **LICITACIONES QUE ESTE CLIENTE RECHAZÓ — no clasificar similares como ALTA:**
 ${descartadasRecientes.slice(0, 5).map((d, i) => `${i + 1}. ${(d || '').substring(0, 120)}`).join('\n')}
-Si la licitación actual es temáticamente similar a alguna de las anteriores, clasifícala como BAJA o MEDIA.
+Si la licitación actual es temáticamente similar a alguna de las anteriores, clasifícala como BAJA.
 ` : '';
 
   const seccionGeografica = (!regionLicitacion && regionesEmpresa.length > 0)
