@@ -255,6 +255,18 @@
                 </div>
             </div>
 
+            <!-- Tabs principales: Oportunidades / Historial -->
+			<div class="flex gap-2 mb-6">
+			    <button id="tab-oportunidades" onclick="cambiarVista('oportunidades')"
+			        class="px-5 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition shadow-sm">
+			        🎯 Oportunidades activas
+			    </button>
+			    <button id="tab-historial" onclick="cambiarVista('historial')"
+			        class="px-5 py-2 rounded-lg text-sm font-semibold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition shadow-sm">
+			        📁 Historial
+			    </button>
+			</div>
+
             <!-- Mobile Layout -->
             <div class="md:hidden space-y-4">
                 <!-- Título -->
@@ -313,7 +325,8 @@
             </div>
         </div>
 
-        <!-- Contadores y Filtros -->
+      <div id="seccion-oportunidades">
+		<!-- Contadores y Filtros -->
         <div class="space-y-4 mb-6">
             <!-- Contadores -->
             <div class="flex gap-4">
@@ -391,6 +404,44 @@
                 Verificar tu perfil empresarial
             </a>
         </div>
+      </div><!-- fin seccion-oportunidades -->
+
+      <!-- Historial de Licitaciones -->
+	  <div id="seccion-historial" class="hidden">
+
+	      <!-- Sub-tabs del historial -->
+	      <div class="bg-white rounded-lg shadow-sm p-4 mb-4">
+	          <div class="flex gap-2 flex-wrap">
+	              <button id="htab-actividad" onclick="filtrarHistorial('actividad')"
+	                  class="px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 text-white transition">
+	                  📄 Con actividad
+	              </button>
+	              <button id="htab-descartadas" onclick="filtrarHistorial('descartadas')"
+	                  class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition">
+	                  🗑️ Descartadas
+	              </button>
+	              <button id="htab-ignoradas" onclick="filtrarHistorial('ignoradas')"
+	                  class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 transition">
+	                  ⏭️ Ignoradas
+	              </button>
+	          </div>
+	          <p class="text-xs text-gray-400 mt-2">
+	              <strong>Con actividad:</strong> bajaste el pliego o pediste análisis IA. &nbsp;
+	              <strong>Descartadas:</strong> las que rechazaste. &nbsp;
+	              <strong>Ignoradas:</strong> vencidas sin que hayas interactuado con ellas.
+	          </p>
+	      </div>
+
+	      <!-- Lista del historial (se llena dinámicamente) -->
+	      <div id="historial-lista">
+	          <div class="text-center py-12 text-gray-400">
+	              <div class="text-4xl mb-3">📁</div>
+	              <p>Selecciona una categoría de historial.</p>
+	          </div>
+	      </div>
+
+		</div><!-- fin seccion-historial -->
+
     </div>
 
 <!-- Modal: Análisis con IA (NUEVO para Business) -->
@@ -1318,7 +1369,7 @@ ${esBusiness ? `
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
                         <button
-                            onclick="descargarDocumentos('${op.referencia}')"
+                            onclick="descargarDocumentos('${op.referencia}', ${op.resultado_id})"
                             class="w-full flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition font-medium text-sm"
                         >
                             <span>📄</span>
@@ -1332,7 +1383,7 @@ ${esBusiness ? `
 
                     <div>
                         <button
-                            onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0}, '${op.fecha_presentacion || ''}')"
+                            onclick="analizarConIA('${op.referencia}', '${escapeHtml(op.que)}', '${escapeHtml(op.quien)}', ${op.monto_estimado || 0}, '${op.fecha_presentacion || ''}', ${op.resultado_id})"
                             class="w-full flex items-center justify-center gap-2 bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-medium text-sm"
                         >
                             <span>🤖</span>
@@ -1416,7 +1467,7 @@ function mostrarAlertaConfiguracion() {
 		// ============================================
         // BOTÓN 1: DESCARGAR DOCUMENTO (PDF)
         // ============================================
-async function descargarDocumentos(referencia) {
+async function descargarDocumentos(referencia, resultado_id) {
     const botonDescarga = event.target.closest('button') || event.target;
     const textoOriginal = botonDescarga.innerHTML;
     try {
@@ -1494,7 +1545,7 @@ async function descargarDocumentos(referencia) {
 
         const blob = await scraperResponse.blob();
 
-		// 3. Registrar uso del cupo
+		// 3a. Registrar uso del cupo
 		await fetch(`${API_BASE}/api/business-features`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -1505,6 +1556,9 @@ async function descargarDocumentos(referencia) {
 				referencia: referencia
 			})
 		});
+
+		// 3b. Marcar actividad para historial
+        await marcarActividadResultado(resultado_id, 'bajo_pliego');
 
         // 4. Descargar archivo al navegador del usuario
         const url = window.URL.createObjectURL(blob);
@@ -1559,7 +1613,8 @@ async function descargarDocumentos(referencia) {
 // ============================================
         // BOTÓN 2: ANALIZAR PLIEGO CON IA
         // ============================================
-async function analizarConIA(referencia, titulo, descripcion, monto, fecha_presentacion) {
+async function analizarConIA(referencia, titulo, descripcion, monto, fecha_presentacion, resultado_id) {
+
     // ✅ CAPTURAR BOTÓN ANTES DEL TRY/CATCH
     const botonAnalisis = event.target.closest('button') || event.target;
     const contenedorBoton = botonAnalisis.parentElement;
@@ -1705,6 +1760,9 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
         });
 
         await actualizarContadorCupos();
+
+        // Marcar actividad para historial
+        await marcarActividadResultado(resultado_id, 'solicito_analisis_ia');
 
         // Guardar análisis en localStorage
         const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
@@ -2525,6 +2583,151 @@ async function descartarOportunidad(resultadoId, boton) {
         console.error('Error:', error);
         mostrarMensaje('Error de conexión.', 'error');
     }
+}
+
+/* ── NUEVAS FUNCIONES: pegar al final del script principal ─────────────────── */
+
+// Helper: marca bajo_pliego o solicito_analisis_ia en la BD (silencioso)
+async function marcarActividadResultado(resultado_id, tipo) {
+    if (!resultado_id) return;
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        await fetch(`${API_BASE}/api/obtener-oportunidades`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ accion: 'marcar_actividad', resultado_id, tipo })
+        });
+    } catch(e) { /* no bloquear el flujo principal */ }
+}
+
+// Cambiar entre vista de oportunidades activas e historial
+function cambiarVista(vista) {
+    const secOport = document.getElementById('seccion-oportunidades');
+    const secHist  = document.getElementById('seccion-historial');
+    const btnOport = document.getElementById('tab-oportunidades');
+    const btnHist  = document.getElementById('tab-historial');
+
+    const activo   = 'bg-indigo-600 text-white shadow-sm';
+    const inactivo = 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
+
+    if (vista === 'historial') {
+        secOport.classList.add('hidden');
+        secHist.classList.remove('hidden');
+        btnOport.className = btnOport.className.replace(activo, inactivo);
+        btnHist.className  = btnHist.className.replace(inactivo, activo);
+        cargarHistorial();
+    } else {
+        secHist.classList.add('hidden');
+        secOport.classList.remove('hidden');
+        btnHist.className  = btnHist.className.replace(activo, inactivo);
+        btnOport.className = btnOport.className.replace(inactivo, activo);
+    }
+}
+
+// Carga las tres listas del historial desde el servidor
+async function cargarHistorial() {
+    const container = document.getElementById('historial-lista');
+    container.innerHTML = `
+        <div class="text-center py-8">
+            <div class="spinner mx-auto mb-3"></div>
+            <p class="text-gray-500 text-sm">Cargando historial...</p>
+        </div>`;
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/obtener-oportunidades?action=historial`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            window._historialData = await response.json();
+            filtrarHistorial('actividad');
+        } else {
+            container.innerHTML = `<p class="text-red-600 text-center py-8">Error cargando historial.</p>`;
+        }
+    } catch(e) {
+        container.innerHTML = `<p class="text-red-600 text-center py-8">Error de conexión.</p>`;
+    }
+}
+
+// Activa un sub-tab y renderiza la lista correspondiente
+function filtrarHistorial(tipo) {
+    const tabs = { actividad: 'htab-actividad', descartadas: 'htab-descartadas', ignoradas: 'htab-ignoradas' };
+    const activo   = 'bg-indigo-600 text-white';
+    const inactivo = 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50';
+
+    for (const [t, id] of Object.entries(tabs)) {
+        const btn = document.getElementById(id);
+        if (t === tipo) {
+            btn.className = btn.className.replace(inactivo, activo);
+        } else {
+            btn.className = btn.className.replace(activo, inactivo);
+        }
+    }
+
+    const data = window._historialData;
+    if (!data) return;
+
+    const cfg = {
+        actividad:   { lista: data.con_actividad, msg: 'Aún no has descargado pliegos ni solicitado análisis IA.' },
+        descartadas: { lista: data.descartadas,   msg: 'No has descartado ninguna licitación.' },
+        ignoradas:   { lista: data.ignoradas,     msg: 'No hay licitaciones vencidas sin interacción.' }
+    };
+    renderizarHistorial(cfg[tipo].lista, cfg[tipo].msg, tipo);
+}
+
+// Renderiza las cards del historial
+function renderizarHistorial(lista, emptyMsg, tipo) {
+    const container = document.getElementById('historial-lista');
+
+    if (!lista || lista.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-12 text-gray-400">
+                <div class="text-4xl mb-3">📭</div>
+                <p>${emptyMsg}</p>
+            </div>`;
+        return;
+    }
+
+    const colorBorde = tipo === 'actividad'   ? 'border-blue-400'
+                     : tipo === 'descartadas' ? 'border-red-300'
+                     : 'border-gray-300';
+
+    const html = lista.map(op => {
+        const badges = [
+            op.bajo_pliego          ? '<span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs font-medium">📄 Pliego descargado</span>' : '',
+            op.solicito_analisis_ia ? '<span class="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">🤖 Análisis IA solicitado</span>' : '',
+            op.descartada           ? '<span class="px-2 py-0.5 bg-red-100 text-red-600 rounded text-xs font-medium">🗑️ Descartada</span>' : ''
+        ].filter(Boolean).join(' ');
+
+        const badgeRelevancia = op.relevancia === 'ALTA'
+            ? '<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-semibold">ALTA</span>'
+            : op.relevancia === 'MEDIA'
+            ? '<span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded text-xs font-semibold">MEDIA</span>'
+            : '';
+
+        return `
+        <div class="bg-white rounded-lg shadow-sm p-4 mb-3 border-l-4 ${colorBorde}">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-bold text-gray-900 text-sm">${op.referencia}</span>
+                    ${badgeRelevancia}
+                    ${badges}
+                </div>
+                <span class="text-xs text-gray-400 flex-shrink-0">
+                    Cierre: ${formatearFecha(op.fecha_presentacion)}
+                </span>
+            </div>
+            <p class="text-sm text-gray-700 mb-1">${op.que || ''}</p>
+            <p class="text-xs text-gray-500">${op.quien || ''}</p>
+            <p class="text-sm font-semibold text-gray-800 mt-1">${formatearMonto(op.monto_estimado)}</p>
+        </div>`;
+    }).join('');
+
+    container.innerHTML = `
+        <p class="text-xs text-gray-500 mb-3">${lista.length} licitación${lista.length !== 1 ? 'es' : ''}</p>
+        ${html}`;
 }
 
 </script>
