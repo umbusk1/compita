@@ -376,6 +376,13 @@ async function analizarConIA(oportunidad, empresa) {
     ? empresa.regiones_interes.filter(r => r !== 'Nacional')
     : [];
 
+const seccionFeedback = descartadasRecientes.length > 0 ? `
+
+**LICITACIONES QUE ESTE CLIENTE RECHAZÓ — no clasificar similares como ALTA:**
+${descartadasRecientes.slice(0, 5).map((d, i) => `${i + 1}. ${(d || '').substring(0, 120)}`).join('\n')}
+Si la licitación actual es temáticamente similar a alguna de las anteriores, clasifícala como BAJA o MEDIA.
+` : '';
+
   const seccionGeografica = (!regionLicitacion && regionesEmpresa.length > 0)
     ? `
 **ANÁLISIS GEOGRÁFICO (solo si aplica):**
@@ -401,6 +408,7 @@ const prompt = `Eres un analista experto en licitaciones públicas. Analiza esta
 2. **QUÉ**: Extrae en máximo 5 palabras el objeto principal de la licitación
 3. **QUIÉN**: Extrae la entidad que licita (nombre de la institución/unidad)
 4. **RAZÓN**: Justificación breve (máximo 2 líneas)
+${seccionFeedback}
 ${seccionGeografica}
 **REGLA ANTI-FALSO-POSITIVO (crítica):**
 NO clasifiques como ALTA una licitación basándote solo en palabras genéricas como "equipos", "instrumentos", "materiales", "suministros" o "servicios". Exige que la licitación describa específicamente el tipo de producto o servicio que el cliente distribuye o presta. Si la coincidencia es solo por una palabra genérica y el contexto real de la licitación apunta a otro sector (tecnología de oficina, construcción, industria alimentaria, textiles, etc.), clasifica como BAJA.
@@ -531,6 +539,12 @@ async function analizarDiario() {
       }
 
       console.log(`   📊 Total a revisar: ${licitaciones.length}`);
+      // Excluir procedimientos de excepción no competitivos (PEPU y PEEX)
+	        const antePepuPeex = licitaciones.length;
+	        licitaciones = licitaciones.filter(l => !/-(PEPU|PEEX)-/i.test(l.referencia || ''));
+	        if (licitaciones.length < antePepuPeex) {
+	          console.log(`   🚫 Excluidas PEPU/PEEX: ${antePepuPeex - licitaciones.length}`);
+      }
 
       if (empresa.familias_unspsc && empresa.familias_unspsc.length > 0) {
         const antes = licitaciones.length;
@@ -565,6 +579,16 @@ async function analizarDiario() {
         continue;
       }
 
+      // Recopilar ejemplos de licitaciones que este cliente rechazó (feedback negativo)
+	        const descartadasFeedbackRes = await pool.query(`
+	          SELECT l.descripcion FROM resultados r
+	          JOIN licitaciones l ON r.licitacion_id = l.id
+	          WHERE r.empresa_id = $1 AND r.descartada = TRUE
+	          ORDER BY r.created_at DESC LIMIT 8
+	        `, [empresa.id]);
+	        const ejemplosDescartados = descartadasFeedbackRes.rows
+        .map(r => r.descripcion).filter(Boolean);
+
       const paraAnalizarIA = [];
       for (const licitacion of licitacionesPorAnalizar) {
         const resultado = await procesarEtapa1(licitacion, empresa);
@@ -582,7 +606,7 @@ async function analizarDiario() {
         const licitacion = paraAnalizarIA[i];
         process.stdout.write(`   [${i+1}/${paraAnalizarIA.length}]\r`);
 
-        const analisis = await analizarConIA(licitacion, empresa);
+        async function analizarConIA(oportunidad, empresa, descartadasRecientes = []) {
 
         const montoMinimo = empresa.monto_minimo_alta || 500000;
         const montoOportunidad = parseFloat(analisis.monto_estimado || 0);
@@ -674,6 +698,16 @@ async function guardarAnalisisEnBD(empresaId, licitaciones, oportunidades) {
       if (!licitacionId) {
         console.warn(`⚠️  No se encontró licitacion_id para: ${oportunidad.referencia}`);
         continue;
+      }
+
+      // No insertar si el usuario descartó esta licitación
+	        const descartadaCheck = await pool.query(
+	          'SELECT id FROM resultados WHERE empresa_id = $1 AND licitacion_id = $2 AND descartada = TRUE LIMIT 1',
+	          [empresaId, licitacionId]
+	        );
+	        if (descartadaCheck.rows.length > 0) {
+	          console.log(`   ⏭️  Saltando ${oportunidad.referencia} (descartada por usuario)`);
+	          continue;
       }
 
       await pool.query(`
