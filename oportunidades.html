@@ -2366,15 +2366,16 @@ async function reAnalizarOportunidades() {
         const resultado = await response.json();
 
         if (response.ok && resultado.success) {
-                mostrarMensaje(
-			        `<strong>Re-análisis completado</strong><br><br>` +
-			        `📊 Analizadas: ${resultado.analizadas} &nbsp;` +
-			        `🟢 ALTA: ${resultado.alta} &nbsp;` +
-			        `🟡 MEDIA: ${resultado.media} &nbsp;` +
-			        `⚪ Descartadas: ${resultado.descartadas}`,
-			        'success',
-			        8000
-    );
+			mostrarMensaje(
+				`<strong>Re-análisis completado</strong><br><br>` +
+				`📊 Analizadas: ${resultado.analizadas} &nbsp;` +
+				`🟢 ALTA: ${resultado.alta} &nbsp;` +
+				`🟡 MEDIA: ${resultado.media} &nbsp;` +
+				`⚪ Descartadas: ${resultado.descartadas}` +
+				(resultado.excluidas_pepu_peex > 0 ? ` &nbsp;🚫 PEPU/PEEX: ${resultado.excluidas_pepu_peex}` : ''),
+				'success',
+				8000
+			);
 
             // Recargar oportunidades
             await cargarOportunidades();
