@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-04-03 21:22:33",
+  "ultima_actualizacion": "2026-04-06 18:10:43",
   "stats": {
-    "total": 15235,
+    "total": 15359,
     "por_estado": {
-      "abiertas": 15235,
+      "abiertas": 15359,
       "todas": {
         "Suspended": 2,
         "NonAwarded": 10,
         "Canceled": 30,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 3077,
-        "ClosedForReplies": 3516,
+        "Awarded": 3098,
+        "ClosedForReplies": 3546,
         "Proceso publicado": 510,
-        "Published": 5691,
+        "Published": 5764,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 165.6
+    "promedio_diario": 165.2
   },
   "por_dia": [
     {
@@ -268,27 +268,27 @@
     },
     {
       "fecha": "2026-04-06",
-      "cantidad": 131
+      "cantidad": 191
     },
     {
       "fecha": "2026-04-07",
-      "cantidad": 144
+      "cantidad": 150
     },
     {
       "fecha": "2026-04-08",
-      "cantidad": 49
+      "cantidad": 50
     },
     {
       "fecha": "2026-04-09",
-      "cantidad": 39
+      "cantidad": 82
     },
     {
       "fecha": "2026-04-10",
-      "cantidad": 27
+      "cantidad": 34
     },
     {
       "fecha": "2026-04-13",
-      "cantidad": 9
+      "cantidad": 13
     },
     {
       "fecha": "2026-04-14",
@@ -296,7 +296,7 @@
     },
     {
       "fecha": "2026-04-15",
-      "cantidad": 7
+      "cantidad": 8
     },
     {
       "fecha": "2026-04-16",
@@ -388,7 +388,11 @@
     },
     {
       "fecha": "2026-05-20",
-      "cantidad": 5
+      "cantidad": 6
+    },
+    {
+      "fecha": "2026-05-22",
+      "cantidad": 1
     }
   ]
 }
