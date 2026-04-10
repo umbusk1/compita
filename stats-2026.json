@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-04-10 18:07:29",
+  "ultima_actualizacion": "2026-04-10 21:25:17",
   "stats": {
-    "total": 16277,
+    "total": 16389,
     "por_estado": {
-      "abiertas": 16277,
+      "abiertas": 16389,
       "todas": {
         "Suspended": 2,
         "NonAwarded": 11,
         "Canceled": 32,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 3361,
-        "ClosedForReplies": 3797,
+        "Awarded": 3409,
+        "ClosedForReplies": 3806,
         "Proceso publicado": 510,
-        "Published": 6165,
+        "Published": 6220,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 166.1
+    "promedio_diario": 165.5
   },
   "por_dia": [
     {
@@ -284,39 +284,39 @@
     },
     {
       "fecha": "2026-04-10",
-      "cantidad": 224
+      "cantidad": 277
     },
     {
       "fecha": "2026-04-13",
-      "cantidad": 75
+      "cantidad": 82
     },
     {
       "fecha": "2026-04-14",
-      "cantidad": 92
+      "cantidad": 98
     },
     {
       "fecha": "2026-04-15",
-      "cantidad": 54
+      "cantidad": 76
     },
     {
       "fecha": "2026-04-16",
-      "cantidad": 9
+      "cantidad": 18
     },
     {
       "fecha": "2026-04-17",
-      "cantidad": 15
+      "cantidad": 17
     },
     {
       "fecha": "2026-04-20",
-      "cantidad": 13
+      "cantidad": 20
     },
     {
       "fecha": "2026-04-21",
-      "cantidad": 13
+      "cantidad": 15
     },
     {
       "fecha": "2026-04-22",
-      "cantidad": 4
+      "cantidad": 5
     },
     {
       "fecha": "2026-04-23",
@@ -332,7 +332,7 @@
     },
     {
       "fecha": "2026-04-28",
-      "cantidad": 3
+      "cantidad": 4
     },
     {
       "fecha": "2026-04-29",
@@ -408,7 +408,11 @@
     },
     {
       "fecha": "2026-05-27",
-      "cantidad": 4
+      "cantidad": 5
+    },
+    {
+      "fecha": "2026-05-28",
+      "cantidad": 1
     },
     {
       "fecha": "2026-07-07",
