@@ -242,6 +242,11 @@
                     </div>
                 </div>
 
+                <!-- Badge de plan activo -->
+				<div id="badge-plan" class="hidden flex items-center">
+				    <span id="texto-plan" class="text-2xl font-bold text-indigo-700"></span>
+				</div>
+
                 <!-- Botones a la derecha -->
                 <div class="flex gap-3">
                     <button onclick="exportarAExcel()" class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium">
@@ -1058,6 +1063,19 @@ async function cargarDatosUsuario() {
             document.getElementById('nombre-empresa-mobile').textContent = data.empresa.nombre;
 
             planActual = data.empresa.plan;
+
+			// Mostrar badge de plan en el header
+			const badgePlan = document.getElementById('badge-plan');
+			const textoPlan = document.getElementById('texto-plan');
+			const nombres = {
+				'estandar': 'Plan Estándar',
+				'business': 'Plan Business',
+				'enterprise': 'Plan Enterprise'
+			};
+			if (nombres[planActual]) {
+				textoPlan.textContent = nombres[planActual];
+				badgePlan.classList.remove('hidden');
+			}
 
             // ===== NUEVO: Detectar trial expirado =====
             if (planActual === 'free_trial') {
