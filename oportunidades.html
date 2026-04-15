@@ -2488,7 +2488,7 @@ async function generarF033(referencia) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ referencia }),
-            signal: AbortSignal.timeout(180000)
+            signal: AbortSignal.timeout(300000)
         });
 
         if (!response.ok) {
