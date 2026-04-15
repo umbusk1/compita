@@ -1369,7 +1369,7 @@ ${esBusiness ? `
 <!-- FUNCIONALIDAD PREMIUM -->
             <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg p-4">
                 <p class="text-sm font-bold text-gray-900 mb-3">
-                    🚀 FUNCIONALIDAD PREMIUM DEL PLAN BUSINESS:
+                    ${planActual === 'enterprise' ? '🤖 AGENTE 033 — PLAN ENTERPRISE:' : '🚀 FUNCIONALIDAD PREMIUM DEL PLAN BUSINESS:'}
                     <span class="font-normal text-xs">
                         📄 Descargas PDF: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.zip_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.zip_limite : '?'}</span>
                         &nbsp;•&nbsp;
@@ -1414,6 +1414,35 @@ ${esBusiness ? `
                             </a>
                         </div>
                     </div>
+
+                    ${planActual === 'enterprise' ? `
+					<div class="md:col-span-2">
+					    <button
+					        onclick="generarF033('${op.referencia}')"
+					        class="w-full flex items-center justify-center gap-2 bg-indigo-700 text-white px-4 py-3 rounded-lg hover:bg-indigo-800 transition font-medium text-sm"
+					    >
+					        <span>📋</span>
+					        <span>Generar F033 pre-llenado (Agente 033)</span>
+					    </button>
+					    <div id="mensaje-f033-${op.referencia}" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">
+					        ✅ F033 generado y descargado correctamente.
+					    </div>
+
+					${planActual === 'enterprise' ? `
+					<div class="md:col-span-2 mt-2">
+					    <button
+					        onclick="mostrarMensaje('🔨 Agente Sprint está en desarrollo. Estará disponible próximamente.', 'info', 5000)"
+					        class="w-full flex items-center justify-center gap-2 bg-gray-400 text-white px-4 py-3 rounded-lg cursor-not-allowed font-medium text-sm"
+					        disabled
+					    >
+					        <span>🗂️</span>
+					        <span>Generar Sprint tipo KanbanBonsai (Agente Sprint) — En desarrollo</span>
+					    </button>
+
+					  </div>` : ''}
+
+					</div>` : ''}
+
                 </div>
             </div>
             ` : ''}
