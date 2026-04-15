@@ -1384,7 +1384,7 @@ ${esBusiness ? `
                     </span>
                 </p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                     <div>
                         <button
                             onclick="descargarDocumentos('${op.referencia}', ${op.resultado_id})"
@@ -1416,7 +1416,7 @@ ${esBusiness ? `
                     </div>
 
                     ${planActual === 'enterprise' ? `
-					<div class="md:col-span-2">
+					<div>
 					    <button
 					        onclick="generarF033('${op.referencia}')"
 					        class="w-full flex items-center justify-center gap-2 bg-indigo-700 text-white px-4 py-3 rounded-lg hover:bg-indigo-800 transition font-medium text-sm"
@@ -1429,7 +1429,7 @@ ${esBusiness ? `
 					    </div>
 
 					${planActual === 'enterprise' ? `
-					<div class="md:col-span-2 mt-2">
+					<div class="md:col-span-2">
 					    <button
 					        onclick="mostrarMensaje('🔨 Agente Sprint está en desarrollo. Estará disponible próximamente.', 'info', 5000)"
 					        class="w-full flex items-center justify-center gap-2 bg-gray-400 text-white px-4 py-3 rounded-lg cursor-not-allowed font-medium text-sm"
