@@ -1341,105 +1341,101 @@ try {
 // ════════════════════════════════════════════════════════════════
 // PERFIL DE PLAN
 // ════════════════════════════════════════════════════════════════
-		function cargarPerfilPlan(plan) {
-			const config = {
-				free_trial: {
-					nombre: 'Prueba Gratuita',
-					subtitulo: 'Acceso completo al Plan Estándar por 7 días',
-					features: [
-						'Análisis diario automático de licitaciones',
-						'Notificaciones por email de oportunidades ALTA y MEDIA',
-						'Dashboard con todas tus oportunidades',
-						'Filtros por relevancia, fecha y monto',
-						'Perfil empresarial personalizable',
-						'Descarga de pliegos PDF (10/mes)',
-						'Análisis del pliego con IA (5/mes)',
-					],
-					cupos: [
-						{ label: 'Descargas PDF', valor: '10', periodo: 'mes' },
-						{ label: 'Análisis IA', valor: '5', periodo: 'mes' },
-						{ label: 'Familias UNSPSC', valor: '5', periodo: '' },
-					]
-				},
-				estandar: {
-					nombre: 'Plan Estándar',
-					subtitulo: '$10 / mes — renovación automática',
-					features: [
-						'Análisis diario automático de licitaciones',
-						'Notificaciones por email de oportunidades ALTA y MEDIA',
-						'Dashboard con todas tus oportunidades',
-						'Filtros por relevancia, fecha y monto',
-						'Perfil empresarial personalizable',
-						'Soporte por email',
-					],
-					cupos: [
-						{ label: 'Descargas PDF', valor: 'No incluido', periodo: '' },
-						{ label: 'Análisis IA', valor: 'No incluido', periodo: '' },
-						{ label: 'Familias UNSPSC', valor: '5', periodo: '' },
-					]
-				},
-				business: {
-					nombre: 'Plan Business',
-					subtitulo: '$20 / mes — renovación automática',
-					features: [
-						'Todo lo del Plan Estándar',
-						'Descarga de pliegos PDF (10/mes)',
-						'Análisis profundo del pliego con IA (5/mes)',
-						'Reportes ejecutivos con recomendaciones estratégicas',
-						'Exportación a Excel de oportunidades',
-						'Soporte prioritario por email y chat',
-					],
-					cupos: [
-						{ label: 'Descargas PDF', valor: '10', periodo: 'mes' },
-						{ label: 'Análisis IA', valor: '5', periodo: 'mes' },
-						{ label: 'Familias UNSPSC', valor: '10', periodo: '' },
-					]
-				},
-				enterprise: {
-					nombre: 'Plan Enterprise',
-					subtitulo: 'Plan piloto — condiciones especiales',
-					features: [
-						'Todo lo del Plan Business',
-						'Agente 033: genera el Formulario F033 pre-llenado (1/semana)',
-						'Agente Sprint: genera plan de trabajo en KanbanBonsai (1/semana)',
-						'Detección automática de política de ITBIS por licitación',
-						'Soporte dedicado por WhatsApp',
-						'Acceso anticipado a nuevas funcionalidades',
-					],
-					cupos: [
-						{ label: 'Descargas PDF', valor: '10', periodo: 'mes' },
-						{ label: 'Análisis IA', valor: '5', periodo: 'mes' },
-						{ label: 'Familias UNSPSC', valor: '20', periodo: '' },
-					]
-				}
-			};
+function cargarPerfilPlan(plan) {
+    const featuresEstandar = [
+        'Análisis diario automático de licitaciones',
+        'Notificaciones por email de oportunidades ALTA y MEDIA',
+        'Dashboard con todas tus oportunidades',
+        'Filtros por relevancia, fecha y monto',
+        'Perfil empresarial personalizable (sectores, regiones, palabras clave)',
+        'Hasta 5 familias UNSPSC para filtrado automático',
+        'Soporte por email',
+    ];
 
-			const c = config[plan] || config['estandar'];
+    const featuresBusiness = [
+        ...featuresEstandar,
+        '📄 Descargar pliego en PDF directamente desde el SECP (10/mes)',
+        '🤖 Análisis profundo del pliego con IA: síntesis, riesgos, viabilidad, tiempos, certificaciones (5/mes)',
+        'Exportación a Excel de todas tus oportunidades',
+        'Soporte prioritario por email y chat',
+    ];
 
-			document.getElementById('plan-nombre-display').textContent = c.nombre;
-			document.getElementById('plan-subtitulo-display').textContent = c.subtitulo;
+    const config = {
+        free_trial: {
+            nombre: 'Prueba Gratuita',
+            subtitulo: 'Acceso completo al Plan Estándar por 7 días',
+            features: featuresEstandar,
+            mostrarAgentes: false,
+        },
+        estandar: {
+            nombre: 'Plan Estándar',
+            subtitulo: '$10 / mes — renovación automática',
+            features: featuresEstandar,
+            mostrarAgentes: false,
+        },
+        business: {
+            nombre: 'Plan Business',
+            subtitulo: '$20 / mes — renovación automática',
+            features: featuresBusiness,
+            mostrarAgentes: false,
+        },
+        enterprise: {
+            nombre: 'Plan Enterprise',
+            subtitulo: 'Plan piloto — condiciones especiales',
+            features: [
+                ...featuresBusiness,
+                '📋 Agente 033: genera el Formulario F033 pre-llenado con ítems, unidades y política de ITBIS (1/semana)',
+                '🗂️ Agente Sprint: genera un plan de trabajo en KanbanBonsai desde el pliego (1/semana)',
+                'Detección automática de política de ITBIS por licitación',
+                'Soporte dedicado por WhatsApp',
+                'Acceso anticipado a nuevas funcionalidades',
+            ],
+            mostrarAgentes: true,
+        }
+    };
 
-			document.getElementById('plan-features-display').innerHTML = c.features.map(f => `
-				<div class="flex items-start gap-2">
-					<span class="text-green-600 font-bold flex-shrink-0">✓</span>
-					<span class="text-gray-700 text-sm">${f}</span>
-				</div>
-			`).join('');
+    const c = config[plan] || config['estandar'];
 
-			document.getElementById('plan-cupos-display').innerHTML = c.cupos.map(q => `
-				<div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-					<p class="text-xs text-gray-500 mb-1">${q.label}</p>
-					<p class="text-2xl font-bold text-indigo-700">${q.valor}</p>
-					${q.periodo ? `<p class="text-xs text-gray-400">por ${q.periodo}</p>` : ''}
-				</div>
-			`).join('');
+    document.getElementById('plan-nombre-display').textContent = c.nombre;
+    document.getElementById('plan-subtitulo-display').textContent = c.subtitulo;
 
-			// Mostrar/ocultar seccion de agentes segun plan
-			const seccionAgentes = document.querySelector('.bg-indigo-50.border.border-indigo-200');
-			if (seccionAgentes) {
-				seccionAgentes.style.display = plan === 'enterprise' ? 'block' : 'none';
-			}
-		}
+    document.getElementById('plan-features-display').innerHTML = c.features.map(f => `
+        <div class="flex items-start gap-2">
+            <span class="text-green-600 font-bold flex-shrink-0">✓</span>
+            <span class="text-gray-700 text-sm">${f}</span>
+        </div>
+    `).join('');
+
+    // Cupos en una sola fila de 4 columnas
+    const cuposEnterprise = [
+        { emoji: '📄', label: 'Descargar Pliego (PDF)', valor: '10', periodo: 'mes' },
+        { emoji: '🤖', label: 'Analizar Pliego con IA', valor: '5',  periodo: 'mes' },
+        { emoji: '📋', label: 'Generar F033 (Agente 033)', valor: '1', periodo: 'semana' },
+        { emoji: '🗂️', label: 'Plan para ofertar (Agente Sprint)', valor: '1', periodo: 'semana' },
+    ];
+    const cuposOtros = [
+        { emoji: '📄', label: 'Descargar Pliego (PDF)', valor: plan === 'estandar' || plan === 'free_trial' ? '—' : '10', periodo: plan === 'business' ? 'mes' : '' },
+        { emoji: '🤖', label: 'Analizar Pliego con IA', valor: plan === 'estandar' || plan === 'free_trial' ? '—' : '5', periodo: plan === 'business' ? 'mes' : '' },
+        { emoji: '📋', label: 'Generar F033 (Agente 033)', valor: '—', periodo: '' },
+        { emoji: '🗂️', label: 'Plan para ofertar (Agente Sprint)', valor: '—', periodo: '' },
+    ];
+    const cupos = plan === 'enterprise' ? cuposEnterprise : cuposOtros;
+
+    document.getElementById('plan-cupos-display').innerHTML = cupos.map(q => `
+        <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
+            <p class="text-xl mb-1">${q.emoji}</p>
+            <p class="text-xs text-gray-500 mb-1 leading-tight">${q.label}</p>
+            <p class="text-xl font-bold ${q.valor === '—' ? 'text-gray-300' : 'text-indigo-700'}">${q.valor}</p>
+            ${q.periodo ? `<p class="text-xs text-gray-400">x ${q.periodo}</p>` : ''}
+        </div>
+    `).join('');
+
+    // Paquetes extra — solo para Enterprise
+    const seccionAgentes = document.getElementById('seccion-agentes-cupos');
+    if (seccionAgentes) {
+        seccionAgentes.style.display = c.mostrarAgentes ? 'block' : 'none';
+    }
+}
 
     </script>
 
