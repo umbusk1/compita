@@ -1144,15 +1144,15 @@ try {
                         'business': 'Business ($20/mes)', 'cancelado': 'Cancelado'
                     };
                     document.getElementById('plan-actual').textContent = planNombres[data.empresa.plan] || data.empresa.plan;
-                    const nombres = {
-					    'estandar': 'Plan Estándar',
-					    'business': 'Plan Business',
-					    'enterprise': 'Plan Enterprise'
+					const nombresPlan = {
+						'estandar': 'Plan Estándar',
+						'business': 'Plan Business',
+						'enterprise': 'Plan Enterprise'
 					};
-					const badge = document.getElementById('badge-plan-cuenta');
-					if (badge && nombres[data.empresa.plan]) {
-					    badge.textContent = nombres[data.empresa.plan];
-					    badge.classList.remove('hidden');
+					const badgePlanCuenta = document.getElementById('badge-plan-cuenta');
+					if (badgePlanCuenta && nombresPlan[data.empresa.plan]) {
+						badgePlanCuenta.textContent = nombresPlan[data.empresa.plan];
+						badgePlanCuenta.classList.remove('hidden');
 					}
                     if (data.empresa.plan === 'free_trial') {
                         const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
