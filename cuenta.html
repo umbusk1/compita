@@ -65,8 +65,9 @@
                 <span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">Mi Cuenta</span>
             </div>
             <!-- Columna 3: Usuario + Salir -->
-            <div class="flex items-center justify-end gap-4">
-                <span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
+			<div class="flex items-center justify-end gap-4">
+				<span id="badge-plan-cuenta" class="hidden text-sm font-bold text-indigo-700"></span>
+				<span class="text-sm text-gray-600" id="nombre-empresa">Cargando...</span>
                 <button onclick="cerrarSesion()" class="text-sm text-gray-600 hover:text-red-600 hover:font-semibold hover:underline transition-all duration-150">Salir</button>
             </div>
         </div>
@@ -1143,6 +1144,16 @@ try {
                         'business': 'Business ($20/mes)', 'cancelado': 'Cancelado'
                     };
                     document.getElementById('plan-actual').textContent = planNombres[data.empresa.plan] || data.empresa.plan;
+                    const nombres = {
+					    'estandar': 'Plan Estándar',
+					    'business': 'Plan Business',
+					    'enterprise': 'Plan Enterprise'
+					};
+					const badge = document.getElementById('badge-plan-cuenta');
+					if (badge && nombres[data.empresa.plan]) {
+					    badge.textContent = nombres[data.empresa.plan];
+					    badge.classList.remove('hidden');
+					}
                     if (data.empresa.plan === 'free_trial') {
                         const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
                         document.getElementById('estado-plan').textContent = `${diasRestantes} días restantes de prueba`;
