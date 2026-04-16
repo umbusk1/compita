@@ -1417,29 +1417,45 @@ function cargarPerfilPlan(plan) {
         </div>
     `;
 
-    // Cupos en una sola fila de 4 columnas
     const cuposEnterprise = [
-        { emoji: '📄', label: 'Descargar Pliego (PDF)', valor: '10', periodo: 'mes' },
+        { emoji: '📄', label: 'Descargar Pliego (PDF)',          valor: '10', periodo: 'mes'    },
+        { emoji: '🤖', label: 'Analizar Pliego con IA',          valor: '5',  periodo: 'mes'    },
+        { emoji: '📋', label: 'Generar F033 (Agente 033)',        valor: '1',  periodo: 'semana' },
+        { emoji: '🗂️', label: 'Plan para ofertar (Agente Sprint)', valor: '1',  periodo: 'semana' },
+    ];
+    const cuposBusiness = [
+        { emoji: '📄', label: 'Descargar Pliego (PDF)',  valor: '10', periodo: 'mes' },
         { emoji: '🤖', label: 'Analizar Pliego con IA', valor: '5',  periodo: 'mes' },
-        { emoji: '📋', label: 'Generar F033 (Agente 033)', valor: '1', periodo: 'semana' },
-        { emoji: '🗂️', label: 'Plan para ofertar (Agente Sprint)', valor: '1', periodo: 'semana' },
     ];
-    const cuposOtros = [
-        { emoji: '📄', label: 'Descargar Pliego (PDF)', valor: plan === 'estandar' || plan === 'free_trial' ? '—' : '10', periodo: plan === 'business' ? 'mes' : '' },
-        { emoji: '🤖', label: 'Analizar Pliego con IA', valor: plan === 'estandar' || plan === 'free_trial' ? '—' : '5', periodo: plan === 'business' ? 'mes' : '' },
-        { emoji: '📋', label: 'Generar F033 (Agente 033)', valor: '—', periodo: '' },
-        { emoji: '🗂️', label: 'Plan para ofertar (Agente Sprint)', valor: '—', periodo: '' },
-    ];
-    const cupos = plan === 'enterprise' ? cuposEnterprise : cuposOtros;
 
-    document.getElementById('plan-cupos-display').innerHTML = cupos.map(q => `
-        <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
-            <p class="text-xl mb-1">${q.emoji}</p>
-            <p class="text-xs text-gray-500 mb-1 leading-tight">${q.label}</p>
-            <p class="text-xl font-bold ${q.valor === '—' ? 'text-gray-300' : 'text-indigo-700'}">${q.valor}</p>
-            ${q.periodo ? `<p class="text-xs text-gray-400">x ${q.periodo}</p>` : ''}
-        </div>
-    `).join('');
+    const seccionCupos = document.getElementById('seccion-cupos-incluidos');
+    const cuposEl = document.getElementById('plan-cupos-display');
+
+    if (plan === 'enterprise') {
+        if (seccionCupos) seccionCupos.style.display = 'block';
+        cuposEl.innerHTML = cuposEnterprise.map(q => `
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
+                <p class="text-xl mb-1">${q.emoji}</p>
+                <p class="text-xs text-gray-500 mb-1 leading-tight">${q.label}</p>
+                <p class="text-xl font-bold text-indigo-700">${q.valor}</p>
+                <p class="text-xs text-gray-400">x ${q.periodo}</p>
+            </div>
+        `).join('');
+    } else if (plan === 'business' || plan === 'free_trial') {
+        if (seccionCupos) seccionCupos.style.display = 'block';
+        cuposEl.className = 'grid grid-cols-2 gap-3';
+        cuposEl.innerHTML = cuposBusiness.map(q => `
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center">
+                <p class="text-xl mb-1">${q.emoji}</p>
+                <p class="text-xs text-gray-500 mb-1 leading-tight">${q.label}</p>
+                <p class="text-xl font-bold text-indigo-700">${q.valor}</p>
+                <p class="text-xs text-gray-400">x ${q.periodo}</p>
+            </div>
+        `).join('');
+    } else {
+        // Estandar — sin cupos de descarga ni IA
+        if (seccionCupos) seccionCupos.style.display = 'none';
+    }
 
     // Paquetes extra — solo para Enterprise
     const seccionAgentes = document.getElementById('seccion-agentes-cupos');
