@@ -1399,12 +1399,23 @@ function cargarPerfilPlan(plan) {
     document.getElementById('plan-nombre-display').textContent = c.nombre;
     document.getElementById('plan-subtitulo-display').textContent = c.subtitulo;
 
-    document.getElementById('plan-features-display').innerHTML = c.features.map(f => `
+    const mitad = Math.ceil(c.features.length / 2);
+    const col1 = c.features.slice(0, mitad);
+    const col2 = c.features.slice(mitad);
+
+    const renderCol = items => items.map(f => `
         <div class="flex items-start gap-2">
             <span class="text-green-600 font-bold flex-shrink-0">✓</span>
             <span class="text-gray-700 text-sm">${f}</span>
         </div>
     `).join('');
+
+    document.getElementById('plan-features-display').innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
+            <div class="space-y-3">${renderCol(col1)}</div>
+            <div class="space-y-3">${renderCol(col2)}</div>
+        </div>
+    `;
 
     // Cupos en una sola fila de 4 columnas
     const cuposEnterprise = [
