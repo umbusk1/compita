@@ -1284,19 +1284,8 @@ ${esBusiness ? `
             &nbsp;•&nbsp;
             🤖 Análisis IA: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.analisis_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.analisis_limite : '?'}</span>
             &nbsp;•&nbsp;
-            Reinicia: <span class="font-semibold">${(() => {
-                const hoy = new Date();
-                const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1);
-                return proximoMes.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-            })()}</span>
-            ${planActual === 'enterprise' ? `
-            &nbsp;•&nbsp;
-            📋 Agente 033: <span class="font-semibold">1/sem</span>
-            &nbsp;•&nbsp;
-            🗂️ Agente Sprint: <span class="font-semibold">1/sem</span>
-            &nbsp;•&nbsp;
-            Agentes reinician: <span class="font-semibold">lunes</span>
-            ` : ''}
+            Reinicia: <span class="font-semibold">${(() => { const hoy = new Date(); const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1); return proximoMes.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }); })()}</span>
+            ${planActual === 'enterprise' ? '&nbsp;•&nbsp; 📋 Agente 033: <span class="font-semibold">1/sem</span> &nbsp;•&nbsp; 🗂️ Agente Sprint: <span class="font-semibold">1/sem</span> &nbsp;•&nbsp; Agentes reinician: <span class="font-semibold">lunes</span>' : ''}
         </span>
     </p>
 
@@ -1329,29 +1318,21 @@ ${esBusiness ? `
         </div>
 
         <!-- Botones 3 y 4: solo Enterprise -->
-        ${planActual === 'enterprise' ? `
-
-        <!-- Botón 3: Generar F033 (Agente 033) -->
-        <div>
-            <button onclick="generarF033('${op.referencia}')"
-                class="w-full flex items-center justify-center gap-2 bg-indigo-700 text-white px-4 py-3 rounded-lg hover:bg-indigo-800 transition font-medium text-sm">
-                <span>📋</span><span>Generar F033 (Agente 033)</span>
-            </button>
-            <div id="mensaje-f033-${op.referencia}" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">
-                ✅ F033 generado y descargado.
-            </div>
-        </div>
-
-        <!-- Botón 4: Agente Sprint (próximamente) -->
-        <div title="Próximamente disponible">
-            <button disabled
-                class="w-full flex items-center justify-center gap-2 bg-gray-300 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed font-medium text-sm">
-                <span>🗂️</span><span>Plan para ofertar (Agente Sprint)</span>
-            </button>
-            <p class="text-xs text-center text-gray-400 mt-1">Próximamente</p>
-        </div>
-
-        ` : ''}
+        ${(() => {
+            if (planActual !== 'enterprise') return '';
+            return '<div>'
+                + '<button onclick="generarF033(\'' + op.referencia + '\')" class="w-full flex items-center justify-center gap-2 bg-indigo-700 text-white px-4 py-3 rounded-lg hover:bg-indigo-800 transition font-medium text-sm">'
+                + '<span>📋</span><span>Generar F033 (Agente 033)</span>'
+                + '</button>'
+                + '<div id="mensaje-f033-' + op.referencia + '" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">✅ F033 generado y descargado.</div>'
+                + '</div>'
+                + '<div title="Próximamente disponible">'
+                + '<button disabled class="w-full flex items-center justify-center gap-2 bg-gray-300 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed font-medium text-sm">'
+                + '<span>🗂️</span><span>Plan para ofertar (Agente Sprint)</span>'
+                + '</button>'
+                + '<p class="text-xs text-center text-gray-400 mt-1">Próximamente</p>'
+                + '</div>';
+        })()}
 
     </div>
 </div>
