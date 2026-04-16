@@ -2105,6 +2105,16 @@ async function comprarCuposAdicionales(tipo) {
                     mensajeDiv.style.display = 'block';
                 }
             }
+
+            // Cargar F033 generados
+		    const f033Guardados = JSON.parse(localStorage.getItem('compita_f033') || '{}');
+		    for (const referencia in f033Guardados) {
+		        const mensajeDiv = document.getElementById(`mensaje-f033-${referencia}`);
+		        if (mensajeDiv) {
+		            mensajeDiv.style.display = 'block';
+		        }
+            }
+
         }
 
         // ============================================
@@ -2511,6 +2521,11 @@ async function generarF033(referencia) {
 
         const mensajeDiv = document.getElementById(`mensaje-f033-${referencia}`);
         if (mensajeDiv) mensajeDiv.style.display = 'block';
+
+        // Guardar en localStorage para persistir tras recarga
+        const f033Guardados = JSON.parse(localStorage.getItem('compita_f033') || '{}');
+        f033Guardados[referencia] = true;
+        localStorage.setItem('compita_f033', JSON.stringify(f033Guardados));
 
         setTimeout(() => {
             boton.innerHTML = textoOriginal;
