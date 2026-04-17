@@ -228,21 +228,240 @@ def descargar_zip(referencia: str, carpeta: str) -> str | None:
 
 # ── PASO 3: Extraer PDFs de 3_Ofertas/ ───────────────────────────────────────
 
+# Palabras que indican que el PDF SÍ es una oferta económica
+_INCLUIR = ['oferta', 'cotiz', 'econom', 'precio', 'propuesta']
+
+# Palabras que indican que el PDF NO es una oferta económica
+_EXCLUIR = [
+    'registro', 'mercantil', 'tss', 'dgii', 'constancia',
+    'tecnic', 'rpe', 'rnc', 'cedula', 'pasaporte',
+    'balance', 'estado financ', 'declaracion'
+]
+
+def es_oferta_economica(nombre_pdf: str) -> bool:
+    """
+    Decide si un PDF de la carpeta 3_Ofertas/ es una oferta económica
+    (y no un documento de habilitación como registro mercantil, TSS, etc.).
+    """
+    n = nombre_pdf.lower()
+
+    # Los archivos DO1_RANL_ son resúmenes del portal, no ofertas
+    if 'ranl' in n:
+        return False
+
+    # Si contiene alguna palabra de exclusión → descartar
+    for palabra in _EXCLUIR:
+        if palabra in n:
+            return False
+
+    # Si contiene alguna palabra de inclusión → aceptar
+    for palabra in _INCLUIR:
+        if palabra in n:
+            return True
+
+    # Nombre genérico como "Ofertas.pdf" → aceptar (es el compilado del portal)
+    if re.match(r'^ofertas?\.pdf
+
+# ── PASO 4: Parsear PDF de oferta con Claude ──────────────────────────────────
+
+PROMPT_PARSEO = """Eres un extractor de datos de ofertas económicas de licitaciones públicas dominicanas.
+Extrae TODOS los ítems de la tabla de precios y devuelve ÚNICAMENTE JSON válido, sin texto adicional:
+
+{
+  "ofertante": "Nombre completo de la empresa ofertante",
+  "items": [
+    {
+      "item_numero": "1",
+      "descripcion": "Descripción completa del ítem",
+      "unidad_medida": "Unidad",
+      "cantidad": 10,
+      "precio_unitario": 1500.00,
+      "itbis": 270.00,
+      "precio_total": 15000.00,
+      "moneda": "DOP"
+    }
+  ]
+}
+
+Si un campo no está disponible, usa null. Si la moneda no está indicada, asume "DOP"."""
+
+
+def parsear_oferta(nombre_pdf: str, pdf_bytes: bytes) -> dict | None:
+    """Extrae texto del PDF y lo envía a Claude para parsear los precios."""
+    try:
+        reader = PdfReader(io.BytesIO(pdf_bytes))
+        if reader.is_encrypted:
+            print(f"    ⚠️ PDF protegido: {nombre_pdf}")
+            return None
+
+        texto = ""
+        for pg in reader.pages:
+            try:
+                t = pg.extract_text()
+                if t:
+                    texto += t + "\n"
+            except:
+                continue
+
+        if not texto.strip():
+            print(f"    ⚠️ PDF sin texto extraíble: {nombre_pdf}")
+            return None
+
+        headers = {
+            "Content-Type": "application/json",
+            "x-api-key": ANTHROPIC_API_KEY,
+            "anthropic-version": "2023-06-01"
+        }
+        payload = {
+            "model": "claude-sonnet-4-20250514",
+            "max_tokens": 4000,
+            "messages": [{
+                "role": "user",
+                "content": f"{PROMPT_PARSEO}\n\nDocumento:\n{texto[:80000]}"
+            }]
+        }
+        resp = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers=headers, json=payload, timeout=120
+        )
+        if resp.status_code != 200:
+            print(f"    ⚠️ Claude API error {resp.status_code}")
+            return None
+
+        texto_resp = resp.json()['content'][0]['text']
+        texto_resp = texto_resp.replace('```json', '').replace('```', '').strip()
+        inicio = texto_resp.find('{')
+        fin    = texto_resp.rfind('}')
+        if inicio == -1 or fin == -1:
+            return None
+        return json.loads(texto_resp[inicio:fin+1])
+
+    except Exception as e:
+        print(f"    ⚠️ Error parseando {nombre_pdf}: {e}")
+        return None
+
+# ── PASO 5: Guardar en Neon ───────────────────────────────────────────────────
+
+def guardar_items(lid: int, referencia: str, descripcion: str,
+                  datos: dict, nombre_pdf: str) -> int:
+    """Inserta los ítems de una oferta en precios_referencia. Devuelve cuántos insertó."""
+    if not datos or not datos.get("items"):
+        return 0
+
+    conn = psycopg2.connect(DATABASE_URL)
+    cur  = conn.cursor()
+    n    = 0
+
+    for item in datos["items"]:
+        try:
+            cur.execute("""
+                INSERT INTO precios_referencia
+                    (licitacion_id, numero_procedimiento, nombre_procedimiento,
+                     ofertante, item_numero, descripcion, unidad_medida,
+                     cantidad, precio_unitario, itbis, precio_total,
+                     moneda, fuente_pdf)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            """, (
+                lid, referencia, descripcion,
+                datos.get("ofertante"),
+                item.get("item_numero"),
+                item.get("descripcion"),
+                item.get("unidad_medida"),
+                item.get("cantidad"),
+                item.get("precio_unitario"),
+                item.get("itbis"),
+                item.get("precio_total"),
+                item.get("moneda", "DOP"),
+                nombre_pdf
+            ))
+            n += 1
+        except Exception as e:
+            print(f"      ⚠️ Error insertando ítem: {e}")
+            conn.rollback()
+
+    conn.commit()
+    cur.close()
+    conn.close()
+    return n
+
+# ── ORQUESTADOR ───────────────────────────────────────────────────────────────
+
+def main():
+    pendientes   = obtener_pendientes()
+    total_items  = 0
+    total_ok     = 0
+    total_error  = 0
+
+    for (lid, referencia, descripcion) in pendientes:
+        print(f"\n🔍 [{lid}] {referencia} — {(descripcion or '')[:60]}")
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Descargar ZIP
+            zip_path = descargar_zip(referencia, tmpdir)
+            if not zip_path:
+                total_error += 1
+                continue
+
+            # Extraer PDFs de ofertas
+            pdfs = extraer_pdfs_ofertas(zip_path)
+            if not pdfs:
+                print(f"  ⚠️ Sin PDFs de ofertas — licitación omitida")
+                total_error += 1
+                continue
+
+            # Parsear cada PDF y guardar
+            items_licitacion = 0
+            for nombre_pdf, pdf_bytes in pdfs:
+                print(f"  📊 {nombre_pdf}")
+                datos = parsear_oferta(nombre_pdf, pdf_bytes)
+                if datos:
+                    n = guardar_items(lid, referencia, descripcion, datos, nombre_pdf)
+                    items_licitacion += n
+                    print(f"    ✅ {n} ítems guardados")
+
+            total_items += items_licitacion
+            total_ok    += 1
+
+    print(f"""
+══════════════════════════════════════
+BACKFILL COMPLETADO
+  Licitaciones procesadas : {total_ok}
+  Licitaciones con error  : {total_error}
+  Ítems insertados        : {total_items}
+══════════════════════════════════════""")
+
+if __name__ == "__main__":
+    main()
+, n):
+        return True
+
+    # En caso de duda, incluir (Claude descartará si no tiene precios)
+    return True
+
+
 def extraer_pdfs_ofertas(zip_path: str) -> list[tuple[str, bytes]]:
     """
-    Devuelve lista de (nombre_pdf, bytes) para cada PDF
-    encontrado en la carpeta 3_Ofertas/ del ZIP.
+    Devuelve lista de (nombre_pdf, bytes) solo para los PDFs
+    de 3_Ofertas/ que parecen ser ofertas económicas.
     """
-    resultados = []
+    todos = []
+    filtrados = []
     try:
         with zipfile.ZipFile(zip_path, 'r') as zf:
             for nombre in zf.namelist():
                 if re.search(r'3_Ofer', nombre, re.IGNORECASE) and nombre.lower().endswith('.pdf'):
-                    resultados.append((os.path.basename(nombre), zf.read(nombre)))
+                    base = os.path.basename(nombre)
+                    todos.append(base)
+                    if es_oferta_economica(base):
+                        filtrados.append((base, zf.read(nombre)))
     except Exception as e:
         print(f"  ❌ Error abriendo ZIP: {e}")
-    print(f"  📄 PDFs en 3_Ofertas/: {len(resultados)}")
-    return resultados
+
+    print(f"  📄 PDFs en 3_Ofertas/: {len(todos)} total → {len(filtrados)} ofertas económicas")
+    descartados = [n for n in todos if n not in [f[0] for f in filtrados]]
+    if descartados:
+        print(f"  🗑️  Descartados: {', '.join(descartados)}")
+    return filtrados
 
 # ── PASO 4: Parsear PDF de oferta con Claude ──────────────────────────────────
 
