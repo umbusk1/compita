@@ -1,0 +1,47 @@
+name: Backfill Precios Históricos
+
+on:
+  # ── Disparo manual desde la pestaña Actions ──────────────────────────────
+  workflow_dispatch:
+    inputs:
+      lote_size:
+        description: 'Licitaciones a procesar en este lote'
+        required: false
+        default: '50'
+
+  # ── Disparo automático: domingos a las 3 AM (hora RD) ────────────────────
+  # Descomenta estas líneas cuando quieras que corra solo:
+  # schedule:
+  #   - cron: '0 7 * * 0'   # 7 UTC = 3 AM hora RD (UTC-4)
+
+jobs:
+  backfill:
+    name: Procesar ofertas económicas
+    runs-on: ubuntu-latest
+    timeout-minutes: 360     # máximo 6 horas por lote
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias Python
+        run: |
+          pip install --upgrade pip
+          pip install playwright pypdf psycopg2-binary requests
+
+      - name: Instalar Chromium para Playwright
+        run: |
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Ejecutar backfill
+        env:
+          DATABASE_URL:      ${{ secrets.DATABASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LOTE_SIZE:         ${{ github.event.inputs.lote_size || '50' }}
+        run: python backfill_precios.py
