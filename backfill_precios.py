@@ -57,6 +57,7 @@ def descargar_zip(referencia: str, carpeta: str) -> str | None:
     Navega el portal SECP, busca la licitación por referencia,
     descarga el ZIP completo del procedimiento y lo guarda en `carpeta`.
     Devuelve la ruta del ZIP o None si falla.
+    Lógica idéntica a la función descargar_pliego() de main.py (probada en producción).
     """
     zip_path = os.path.join(carpeta, "procedimiento.zip")
 
@@ -70,24 +71,35 @@ def descargar_zip(referencia: str, carpeta: str) -> str | None:
             url = "https://comunidad.comprasdominicana.gob.do/Public/Tendering/ContractNoticeManagement/Index"
             page.goto(url, timeout=90000)
             page.wait_for_timeout(5000)
+            print(f"  Portal cargado")
 
-            # Buscar por referencia
             campo = page.locator('#txtAllWords2Search')
             campo.wait_for(state='visible', timeout=10000)
             campo.clear()
             campo.fill(referencia)
 
-            # Clic en Buscar
+            boton_encontrado = False
             for selector in ['input[type="button"][value="Buscar"]', 'input[value="Buscar"]']:
                 try:
                     btn = page.locator(selector).first
-                    if btn.is_visible(timeout=4000):
+                    if btn.is_visible(timeout=5000):
                         btn.click()
+                        boton_encontrado = True
                         break
                 except:
                     pass
-            else:
+            if not boton_encontrado:
                 campo.press('Enter')
+
+            page.wait_for_timeout(3000)
+
+            # Confirmar que el filtro se aplicó
+            for selector in ['text=Buscar resultados por', 'a:has-text("Borrar")']:
+                try:
+                    if page.locator(selector).first.is_visible(timeout=10000):
+                        break
+                except:
+                    pass
 
             page.wait_for_timeout(3000)
 
@@ -95,11 +107,13 @@ def descargar_zip(referencia: str, carpeta: str) -> str | None:
             resultado = None
             for xpath in [
                 f'//td[contains(text(), "{referencia}")]',
+                f'//td[text()="{referencia}"]',
                 f'//*[contains(text(), "{referencia}")]',
+                f'//td[normalize-space(text())="{referencia}"]',
             ]:
                 try:
                     loc = page.locator(f'xpath={xpath}').first
-                    if loc.is_visible(timeout=8000):
+                    if loc.is_visible(timeout=10000):
                         resultado = loc
                         break
                 except:
@@ -112,17 +126,26 @@ def descargar_zip(referencia: str, carpeta: str) -> str | None:
 
             # Clic en Detalle
             fila = resultado.locator('xpath=ancestor::tr')
-            for sel in ['a[title="Detalle"]', 'a:has-text("Detalle")', 'xpath=.//a[@title="Detalle"]']:
+            boton_detalle = None
+            for sel in ['a[title="Detalle"]', 'a[id*="lnkDetailLink"]',
+                        'xpath=.//a[@title="Detalle"]', 'xpath=.//a[text()="Detalle"]',
+                        'a:has-text("Detalle")', '*:has-text("Detalle")']:
                 try:
                     btn = fila.locator(sel).first
                     if btn.count() > 0:
-                        btn.scroll_into_view_if_needed()
-                        page.wait_for_timeout(1000)
-                        btn.click()
+                        boton_detalle = btn
                         break
                 except:
                     continue
 
+            if not boton_detalle:
+                print(f"  ❌ Botón Detalle no encontrado: {referencia}")
+                browser.close()
+                return None
+
+            boton_detalle.scroll_into_view_if_needed()
+            page.wait_for_timeout(2000)
+            boton_detalle.click()
             page.wait_for_timeout(5000)
 
             # Cambiar a nueva pestaña si se abrió
@@ -131,27 +154,43 @@ def descargar_zip(referencia: str, carpeta: str) -> str | None:
                 page = pages[-1]
 
             page.wait_for_timeout(3000)
+            print(f"  Buscando iframe... ({len(page.frames)} frames)")
 
-            # Encontrar iframe con botón de descarga
+            # Buscar iframe con botón de descarga — intento 1: por ID del botón
             iframe_ok = None
             for frame in page.frames:
                 try:
                     if frame.locator('#tbToolBar_btnTbDownload').count() > 0:
                         iframe_ok = frame
+                        print(f"  iframe encontrado por botón")
                         break
                 except:
                     continue
+
+            # Intento 2: por contenido de texto (referencia)
+            if not iframe_ok:
+                for frame in page.frames:
+                    try:
+                        body = frame.locator('body').text_content(timeout=5000)
+                        if body and referencia in body:
+                            iframe_ok = frame
+                            print(f"  iframe encontrado por contenido de texto")
+                            break
+                    except:
+                        continue
 
             if not iframe_ok:
                 print(f"  ❌ No se encontró iframe de descarga: {referencia}")
                 browser.close()
                 return None
 
-            # Descargar ZIP
+            # Encontrar botón de descarga
             boton = None
             for sel in ['#tbToolBar_btnTbDownload',
+                        'input[id="tbToolBar_btnTbDownload"]',
                         'input[title="Descargar procedimiento"]',
-                        'input[value="Descargar procedimiento"]']:
+                        'input[value="Descargar procedimiento"]',
+                        'input[type="button"][value="Descargar procedimiento"]']:
                 try:
                     b = iframe_ok.locator(sel).first
                     if b.count() > 0:
