@@ -215,7 +215,7 @@ def main():
 
         # Guardar precios
         n = guardar_precios(lid, referencia, nombre_proc, datos, nombre_pdf)
-        print(f"  ✅ {n} ítems guardados — ofertante: {datos.get('ofertante', '?')[:50]}")
+        print(f"  ✅ {n} ítems guardados — ofertante: {(datos.get('ofertante') or '?')[:50]}")
         total_items += n
         total_ok    += 1
 
