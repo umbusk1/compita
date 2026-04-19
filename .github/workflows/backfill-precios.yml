@@ -1,24 +1,22 @@
 name: Backfill Precios Históricos
 
 on:
-  # ── Disparo manual desde la pestaña Actions ──────────────────────────────
   workflow_dispatch:
     inputs:
-      lote_size:
-        description: 'Licitaciones a procesar en este lote'
+      etapa:
+        description: 'Etapa a ejecutar: parsear'
         required: false
-        default: '50'
-
-  # ── Disparo automático: domingos a las 3 AM (hora RD) ────────────────────
-  # Descomenta estas líneas cuando quieras que corra solo:
-  # schedule:
-  #   - cron: '0 7 * * 0'   # 7 UTC = 3 AM hora RD (UTC-4)
+        default: 'parsear'
+      lote_size:
+        description: 'PDFs a procesar en este lote'
+        required: false
+        default: '100'
 
 jobs:
   backfill:
-    name: Procesar ofertas económicas
+    name: Parsear ofertas económicas
     runs-on: ubuntu-latest
-    timeout-minutes: 360     # máximo 6 horas por lote
+    timeout-minutes: 360
 
     steps:
       - name: Checkout del código
@@ -29,19 +27,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar dependencias Python
+      - name: Instalar dependencias
         run: |
           pip install --upgrade pip
-          pip install playwright pypdf psycopg2-binary requests
+          pip install pypdf psycopg2-binary requests
 
-      - name: Instalar Chromium para Playwright
-        run: |
-          playwright install chromium
-          playwright install-deps chromium
-
-      - name: Ejecutar backfill
+      - name: Parsear PDFs con Claude
         env:
           DATABASE_URL:      ${{ secrets.DATABASE_URL }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          LOTE_SIZE:         ${{ github.event.inputs.lote_size || '50' }}
-        run: python backfill_precios.py
+          LOTE_SIZE:         ${{ github.event.inputs.lote_size || '100' }}
+        run: python backfill_parsear.py
