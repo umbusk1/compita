@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compita — Perfil Licitador (Prototipo)</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;background:#f8f8f6;color:#1a1a1a}
+  /* Nav */
+  nav{background:#fff;border-bottom:1px solid #e8e8e6;padding:0 2rem;display:flex;align-items:center;gap:1rem;height:56px}
+  .logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;color:#1a1a1a;text-decoration:none}
+  .logo-icon{width:32px;height:32px}
+  .nav-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:#EAF3DE;color:#3B6D11;margin-left:4px}
+  /* Hero */
+  .hero{background:#fff;border-bottom:1px solid #e8e8e6;padding:2rem 2rem 1.75rem}
+  .hero-inner{max-width:860px;margin:0 auto}
+  .hero h1{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:6px}
+  .hero p{font-size:15px;color:#555;line-height:1.6;max-width:680px}
+  .hero-meta{margin-top:1rem;font-size:12px;color:#999;display:flex;gap:1.5rem;flex-wrap:wrap}
+  /* Preguntas */
+  .preguntas{max-width:860px;margin:1.5rem auto;padding:0 2rem}
+  .pq-card{background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:1.25rem 1.5rem}
+  .pq-title{font-size:13px;font-weight:700;color:#4F46E5;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem}
+  .pq-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .pq-list li{display:flex;gap:10px;font-size:13px;color:#333;line-height:1.5}
+  .pq-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#4F46E5;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  /* Mockup */
+  .mockup-wrap{max-width:860px;margin:0 auto 2rem;padding:0 2rem}
+  .mockup-label{font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px}
+  .page-inner{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:1.5rem}
+  /* Top bar */
+  .top-bar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;flex-wrap:wrap}
+  .page-title{font-size:20px;font-weight:700;color:#1a1a1a}
+  .page-sub{font-size:12px;color:#888;margin-top:3px}
+  .estado-card{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;border:1px solid #e0e0e0;background:#fafaf8;white-space:nowrap}
+  .estado-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+  .estado-label{font-size:11px;color:#aaa}
+  .estado-value{font-size:13px;font-weight:700}
+  /* Tabla */
+  .tbl-wrap{border:1px solid #e8e8e6;border-radius:10px;overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  thead th{padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:#999;background:#f5f5f3;border-bottom:1px solid #e8e8e6;white-space:nowrap;text-transform:uppercase;letter-spacing:0.05em}
+  tbody tr{border-bottom:1px solid #f2f2f0}
+  tbody tr:last-child{border-bottom:none}
+  tbody td{padding:8px 10px;vertical-align:middle}
+  .gh td{background:#f9f9f7;border-top:1px solid #e8e8e6;border-bottom:1px solid #e8e8e6}
+  .gh-inner{display:flex;align-items:center;justify-content:space-between}
+  .gh-label{font-size:10px;font-weight:700;color:#666;letter-spacing:0.05em;text-transform:uppercase}
+  .cod{font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;background:#efefed;color:#777}
+  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;white-space:nowrap}
+  .b-v{background:#EAF3DE;color:#3B6D11}
+  .b-a{background:#FAEEDA;color:#854F0B}
+  .b-r{background:#FCEBEB;color:#A32D2D}
+  .b-g{background:#F1EFE8;color:#5F5E5A}
+  .b-p{background:#E6F1FB;color:#185FA5}
+  input[type=date]{font-size:11px;padding:3px 6px;border:1px solid #ddd;border-radius:5px;color:#1a1a1a;background:#fff;width:125px}
+  .doc-name{font-size:12px;color:#1a1a1a}
+  .emisor{font-size:11px;color:#999}
+  .vig{font-size:11px;color:#bbb}
+  .add-btn{font-size:11px;padding:3px 9px;border:1px solid #ccc;border-radius:5px;background:#fff;color:#666;cursor:pointer}
+  .add-btn:hover{background:#f5f5f3}
+  .note-ico{font-size:13px;color:#ddd;cursor:pointer}
+  /* Leyenda */
+  .leyenda{margin-top:10px;font-size:11px;color:#bbb;display:flex;gap:1.25rem;flex-wrap:wrap}
+  .ley-item{display:flex;align-items:center;gap:5px}
+  .dot-s{width:8px;height:8px;border-radius:50%;display:inline-block}
+  /* Footer */
+  footer{text-align:center;padding:2rem;font-size:11px;color:#ccc;border-top:1px solid #eee;margin-top:1rem}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">
+    <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="18" width="6" height="12" rx="2" fill="#4F46E5"/>
+      <rect x="10" y="12" width="6" height="18" rx="2" fill="#7C3AED"/>
+      <rect x="18" y="6" width="6" height="24" rx="2" fill="#059669"/>
+      <rect x="26" y="2" width="4" height="28" rx="2" fill="#D97706"/>
+    </svg>
+    Compita
+  </a>
+  <span class="nav-badge">Prototipo — Para validación</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Perfil Licitador — Vista previa del diseño</h1>
+    <p>Estamos diseñando el <strong>Agente Sprint</strong> de Compita Enterprise, una nueva feature que ayuda a las empresas a gestionar su documentación licitatoria y decidir con inteligencia cuándo competir. Esta página muestra el primer módulo: el <strong>Perfil Licitador</strong>.</p>
+    <div class="hero-meta">
+      <span>📋 Prototipo interactivo — puedes editar las fechas</span>
+      <span>🎯 Solicitamos validación de Wilkin Encarnación, BDC Serrallés</span>
+      <span>📅 Abril 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="preguntas">
+  <div class="pq-card">
+    <div class="pq-title">Preguntas para tu validación, Wilkin</div>
+    <ul class="pq-list">
+      <li><span class="pq-num">1</span>¿Hay algún documento que tu equipo necesite frecuentemente para licitar en RD y que no aparezca en esta lista?</li>
+      <li><span class="pq-num">2</span>¿Hay documentos de la lista que en tu experiencia raramente se solicitan y podrían eliminarse?</li>
+      <li><span class="pq-num">3</span>¿Los plazos de vigencia indicados coinciden con lo que encuentran en la práctica? (Especialmente los Paz y Salvo de DGII y TSS)</li>
+      <li><span class="pq-num">4</span>¿Qué documentos adicionales mantiene BDC de forma permanente porque algunas instituciones los piden recurrentemente?</li>
+    </ul>
+  </div>
+</div>
+
+<div class="mockup-wrap">
+  <div class="mockup-label">Así se vería en Compita →</div>
+  <div class="page-inner">
+
+    <div class="top-bar">
+      <div>
+        <div class="page-title">Perfil Licitador</div>
+        <div class="page-sub">Documentos y certificaciones para licitaciones públicas en la República Dominicana</div>
+      </div>
+      <div class="estado-card">
+        <div class="estado-dot" id="estadoDot" style="background:#E24B4A"></div>
+        <div>
+          <div class="estado-label">Estado de la empresa</div>
+          <div class="estado-value" id="estadoVal">Tiene brechas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:46px">Cód.</th>
+            <th>Documento</th>
+            <th style="width:160px">Emisor</th>
+            <th style="width:95px">Vigencia</th>
+            <th style="width:135px">Fecha vence</th>
+            <th style="width:105px">Estado</th>
+            <th style="width:28px"></th>
+          </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+      </table>
+    </div>
+
+    <div class="leyenda">
+      <div class="ley-item"><span class="dot-s" style="background:#639922"></span> Vigente (+30 días)</div>
+      <div class="ley-item"><span class="dot-s" style="background:#EF9F27"></span> Por vencer (≤30 días)</div>
+      <div class="ley-item"><span class="dot-s" style="background:#E24B4A"></span> Vencido</div>
+      <div class="ley-item"><span class="dot-s" style="background:#aaa"></span> Sin registrar</div>
+      <div class="ley-item"><span class="dot-s" style="background:#185FA5"></span> Permanente</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>Compita — Umbusk LLC · Prototipo para validación · Abril 2026</footer>
+
+<script>
+const hoy=new Date();hoy.setHours(0,0,0,0);
+function ad(n){const d=new Date(hoy);d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
+const grupos=[
+  {id:'A',label:'A — Existencia legal de la empresa',fijo:true,docs:[
+    {cod:'A1',doc:'RNC activo',emisor:'DGII',vig:'Permanente',fecha:'',perm:true},
+    {cod:'A2',doc:'Registro Mercantil',emisor:'Cámara de Comercio',vig:'Anual',fecha:ad(45)},
+    {cod:'A3',doc:'Acta Constitutiva y Estatutos',emisor:'Notaría / Reg. Mercantil',vig:'Permanente',fecha:'',perm:true},
+    {cod:'A4',doc:'Nómina de accionistas notarizada',emisor:'Notaría',vig:'~90 días',fecha:ad(-5)},
+    {cod:'A5',doc:'Poder notarial del representante legal',emisor:'Notaría',vig:'Según instrumento',fecha:ad(120)},
+  ]},
+  {id:'B',label:'B — Cumplimiento tributario y laboral',fijo:true,docs:[
+    {cod:'B1',doc:'Paz y Salvo DGII',emisor:'DGII',vig:'30 días',fecha:ad(18)},
+    {cod:'B2',doc:'Paz y Salvo TSS',emisor:'TSS',vig:'30 días',fecha:''},
+    {cod:'B3',doc:'Certificación de cumplimiento laboral',emisor:'Ministerio de Trabajo',vig:'30–60 días',fecha:ad(55)},
+  ]},
+  {id:'C',label:'C — Habilitación para el Estado',fijo:true,docs:[
+    {cod:'C1',doc:'RPE — Registro de Proveedores del Estado',emisor:'DGCP',vig:'Anual',fecha:ad(200)},
+    {cod:'C2',doc:'Declaración jurada de no inhabilitación',emisor:'Notaría',vig:'Por oferta',fecha:'',perm:true},
+  ]},
+  {id:'D',label:'D — Capacidad financiera',fijo:false,docs:[
+    {cod:'D1',doc:'Estados financieros auditados',emisor:'Firma auditora',vig:'Anual',fecha:ad(90)},
+    {cod:'D2',doc:'Certificación bancaria de solvencia',emisor:'Banco',vig:'30–60 días',fecha:''},
+  ]},
+  {id:'E',label:'E — Situacional (certificaciones propias e institucionales)',fijo:false,docs:[]},
+];
+function est(f,p){
+  if(p)return 'perm';if(!f)return 'sin';
+  const diff=Math.round((new Date(f)-hoy)/86400000);
+  if(diff<0)return 'vencido';if(diff<=30)return 'porvencer';return 'vigente';
+}
+function badge(e){
+  const m={vigente:['b-v','Vigente'],porvencer:['b-a','Por vencer'],vencido:['b-r','Vencido'],sin:['b-g','Sin registrar'],perm:['b-p','Permanente']};
+  return`<span class="badge ${m[e][0]}">${m[e][1]}</span>`;
+}
+function agregado(){
+  let brechas=false,atencion=false;
+  ['A','B','C'].forEach(gid=>{
+    grupos.find(g=>g.id===gid).docs.forEach(d=>{
+      if(d.perm)return;
+      const inp=document.querySelector(`input[data-cod="${d.cod}"]`);
+      const f=inp?inp.value:d.fecha;
+      const e=est(f,false);
+      if(e==='vencido'||e==='sin')brechas=true;
+      else if(e==='porvencer')atencion=true;
+    });
+  });
+  const dot=document.getElementById('estadoDot'),val=document.getElementById('estadoVal');
+  if(brechas){dot.style.background='#E24B4A';val.textContent='Tiene brechas';}
+  else if(atencion){dot.style.background='#EF9F27';val.textContent='Atención requerida';}
+  else{dot.style.background='#639922';val.textContent='Lista para licitar';}
+}
+function addRow(gid){
+  const g=grupos.find(x=>x.id===gid);
+  g.docs.push({cod:`${gid}${g.docs.length+1}`,doc:'Nuevo documento',emisor:'',vig:'',fecha:''});
+  render();
+}
+function render(){
+  const body=document.getElementById('tblBody');body.innerHTML='';
+  grupos.forEach(g=>{
+    const hr=document.createElement('tr');hr.className='gh';
+    hr.innerHTML=`<td colspan="7"><div class="gh-inner"><span class="gh-label">${g.label}</span>${!g.fijo?`<button class="add-btn" onclick="addRow('${g.id}')">+ Agregar</button>`:''}</div></td>`;
+    body.appendChild(hr);
+    if(!g.docs.length){
+      const er=document.createElement('tr');
+      er.innerHTML=`<td colspan="7" style="padding:12px 10px;font-size:11px;color:#ccc;font-style:italic">Sin documentos registrados — usa "Agregar" para añadir certificaciones propias o requisitos institucionales frecuentes.</td>`;
+      body.appendChild(er);
+    }
+    g.docs.forEach(d=>{
+      const e=est(d.fecha,d.perm);
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td><span class="cod">${d.cod}</span></td>
+        <td><span class="doc-name">${d.doc}</span></td>
+        <td><span class="emisor">${d.emisor||'—'}</span></td>
+        <td><span class="vig">${d.vig||'—'}</span></td>
+        <td>${d.perm?'<span style="font-size:11px;color:#ddd">—</span>':`<input type="date" data-cod="${d.cod}" value="${d.fecha}" onchange="onChange(this,'${d.cod}')">`}</td>
+        <td id="est-${d.cod}">${badge(e)}</td>
+        <td><span class="note-ico" title="Notas">✎</span></td>`;
+      body.appendChild(tr);
+    });
+  });
+  agregado();
+}
+function onChange(el,cod){
+  const d=grupos.flatMap(g=>g.docs).find(x=>x.cod===cod);
+  if(d)d.fecha=el.value;
+  document.getElementById('est-'+cod).innerHTML=badge(est(el.value,false));
+  agregado();
+}
+render();
+</script>
+</body>
+</html>
