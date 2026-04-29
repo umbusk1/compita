@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-04-28 21:48:24",
+  "ultima_actualizacion": "2026-04-29 18:54:54",
   "stats": {
-    "total": 20355,
+    "total": 20577,
     "por_estado": {
-      "abiertas": 20355,
+      "abiertas": 20577,
       "todas": {
         "Suspended": 2,
         "NonAwarded": 17,
-        "Canceled": 42,
+        "Canceled": 43,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 4474,
-        "ClosedForReplies": 4975,
+        "Awarded": 4538,
+        "ClosedForReplies": 5047,
         "Proceso publicado": 510,
-        "Published": 7936,
+        "Published": 8021,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 178.6
+    "promedio_diario": 177.4
   },
   "por_dia": [
     {
@@ -336,31 +336,31 @@
     },
     {
       "fecha": "2026-04-29",
-      "cantidad": 110
+      "cantidad": 253
     },
     {
       "fecha": "2026-04-30",
-      "cantidad": 109
+      "cantidad": 120
     },
     {
       "fecha": "2026-05-01",
-      "cantidad": 139
+      "cantidad": 144
     },
     {
       "fecha": "2026-05-05",
-      "cantidad": 113
+      "cantidad": 114
     },
     {
       "fecha": "2026-05-06",
-      "cantidad": 25
+      "cantidad": 69
     },
     {
       "fecha": "2026-05-07",
-      "cantidad": 17
+      "cantidad": 21
     },
     {
       "fecha": "2026-05-08",
-      "cantidad": 10
+      "cantidad": 15
     },
     {
       "fecha": "2026-05-11",
@@ -368,15 +368,15 @@
     },
     {
       "fecha": "2026-05-12",
-      "cantidad": 8
+      "cantidad": 9
     },
     {
       "fecha": "2026-05-13",
-      "cantidad": 10
+      "cantidad": 11
     },
     {
       "fecha": "2026-05-14",
-      "cantidad": 4
+      "cantidad": 5
     },
     {
       "fecha": "2026-05-15",
@@ -460,6 +460,14 @@
     },
     {
       "fecha": "2026-06-15",
+      "cantidad": 4
+    },
+    {
+      "fecha": "2026-06-16",
+      "cantidad": 2
+    },
+    {
+      "fecha": "2026-06-17",
       "cantidad": 2
     },
     {
