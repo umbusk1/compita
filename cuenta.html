@@ -8,34 +8,32 @@
     <link rel="apple-touch-icon" href="favicon-umbusk.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      .mapa-region { cursor: pointer; fill: #93c5fd; stroke: #ffffff; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; transition: fill 0.15s ease; }
-      .mapa-region:hover { fill: #60a5fa; }
-      .mapa-region.selected { fill: #4f46e5; }
-      .mapa-region.selected:hover { fill: #4338ca; }
-      .mapa-label { font-size: 22px; font-family: Arial, sans-serif; text-anchor: middle; dominant-baseline: middle; pointer-events: none; font-weight: 700; fill: white; }
-      .sector-card { transition: all 0.2s ease; cursor: pointer; }
-      .sector-card:hover { transform: translateY(-2px); }
-      .sector-card.selected { border-color: #4f46e5; background: #eef2ff; }
-      .keyword-chip { display: inline-block; background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe; border-radius: 9999px; padding: 4px 12px; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; margin: 3px; }
-      .keyword-chip:hover { background: #e0e7ff; }
-      .keyword-chip.added { background: #4f46e5; color: white; border-color: #4f46e5; }
+      .mapa-region{cursor:pointer;fill:#93c5fd;stroke:#fff;stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;transition:fill .15s}
+      .mapa-region:hover{fill:#60a5fa}
+      .mapa-region.selected{fill:#4f46e5}
+      .mapa-region.selected:hover{fill:#4338ca}
+      .mapa-label{font-size:22px;font-family:Arial,sans-serif;text-anchor:middle;dominant-baseline:middle;pointer-events:none;font-weight:700;fill:white}
+      .sector-card{transition:all .2s;cursor:pointer}
+      .sector-card:hover{transform:translateY(-2px)}
+      .sector-card.selected{border-color:#4f46e5;background:#eef2ff}
+      .keyword-chip{display:inline-block;background:#eef2ff;color:#4f46e5;border:1px solid #c7d2fe;border-radius:9999px;padding:4px 12px;font-size:.8rem;cursor:pointer;transition:all .15s;margin:3px}
+      .keyword-chip:hover{background:#e0e7ff}
+      .keyword-chip.added{background:#4f46e5;color:white;border-color:#4f46e5}
+      /* Sub-tabs */
+      .subtab-btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:none;white-space:nowrap}
+      .subtab-btn.active{background:#4f46e5;color:#fff}
+      .subtab-btn:not(.active){background:#f3f4f6;color:#6b7280}
+      .subtab-btn:not(.active):hover{background:#e5e7eb}
     </style>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBQQM365Q8"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-YBQQM365Q8');
-    </script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-YBQQM365Q8');</script>
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen">
 
 <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
     <div class="container mx-auto px-4 py-3">
         <div class="hidden md:grid grid-cols-3 items-center">
-            <div class="flex items-center justify-start">
-                <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-20">
-            </div>
+            <div class="flex items-center justify-start"><img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-20"></div>
             <div class="flex items-center justify-center gap-6">
                 <a href="/oportunidades.html" class="text-gray-600 hover:text-indigo-600 hover:font-semibold hover:underline transition-all duration-150 text-sm">Oportunidades</a>
                 <span class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm">Mi Cuenta</span>
@@ -50,8 +48,8 @@
             <img src="LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Logo Compita" class="h-16">
             <button onclick="toggleMobileMenuCuenta()" class="text-gray-600 hover:text-indigo-600 focus:outline-none">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path id="menu-icon-cuenta" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    <path id="close-icon-cuenta" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    <path id="menu-icon-cuenta" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    <path id="close-icon-cuenta" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
@@ -69,267 +67,259 @@
 <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <div id="banner-onboarding" class="hidden mb-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-5 text-white shadow-md">
-        <div class="flex items-center justify-between gap-4 flex-wrap">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🚀</span>
-                <div>
-                    <p class="font-bold text-base">Completa la configuración de tu empresa</p>
-                    <p class="text-sm text-indigo-100 mt-0.5">Un perfil bien configurado mejora la precisión de tus alertas y reduce el ruido.</p>
-                </div>
-            </div>
+        <div class="flex items-center gap-3"><span class="text-3xl">🚀</span>
+            <div><p class="font-bold text-base">Completa la configuración de tu empresa</p><p class="text-sm text-indigo-100 mt-0.5">Un perfil bien configurado mejora la precisión de tus alertas y reduce el ruido.</p></div>
         </div>
     </div>
 
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-        <!-- Tabs -->
+
+        <!-- ══ TABS PRINCIPALES (3 siempre + 1 Enterprise) ══ -->
         <div class="flex border-b overflow-x-auto">
-            <button onclick="showTab('perfil')" id="tab-perfil" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🏢 Perfil de Empresa</button>
-            <button onclick="showTab('plan')" id="tab-plan" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📋 Perfil de Plan</button>
-            <button onclick="showTab('familias')" id="tab-familias" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🏷️ Familias UNSPSC</button>
-            <button onclick="showTab('seguridad')" id="tab-seguridad" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🔒 Seguridad</button>
-            <button onclick="showTab('invitar')" id="tab-invitar" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🤝 Invitar</button>
+            <button onclick="showTab('perfil')" id="tab-perfil" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🏢 Mi Empresa</button>
+            <button onclick="showTab('plan')" id="tab-plan" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📋 Mi Plan</button>
             <button onclick="showTab('facturacion')" id="tab-facturacion" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">💳 Facturación</button>
-            <!-- NUEVO: solo visible para Enterprise -->
-            <button onclick="showTab('perfil-licitador')" id="tab-perfil-licitador" class="tab-button hidden flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📋 Perfil Licitador</button>
+            <button onclick="showTab('perfil-licitador')" id="tab-perfil-licitador" class="tab-button hidden flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📄 Perfil Licitador</button>
         </div>
 
         <div class="p-8">
 
-            <!-- TAB: Perfil de Empresa -->
+            <!-- ══════════════════════════════════════════════════════ -->
+            <!-- TAB: MI EMPRESA (con sub-tabs: Datos / Familias / Seguridad) -->
+            <!-- ══════════════════════════════════════════════════════ -->
             <div id="content-perfil" class="tab-content hidden">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Perfil de Empresa</h2>
-                <form id="form-perfil" onsubmit="guardarPerfil(event)">
-                    <div class="space-y-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Empresa *</label>
-                            <input type="text" id="empresa-nombre" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition" placeholder="Ej: Consultores ABC">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Descripción de la Empresa</label>
-                            <textarea id="empresa-descripcion" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="Ej: Empresa dominicana de consultoría en gestión pública con 10 años de experiencia..."></textarea>
-                            <p class="text-xs text-gray-500 mt-1">La IA usa esto para entender tu perfil y hacer mejores recomendaciones.</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Sitio web <span class="text-gray-400 font-normal">(opcional)</span></label>
-                            <input type="url" id="empresa-website" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition" placeholder="https://www.tuempresa.com">
-                            <p class="text-xs text-gray-500 mt-1">La IA lo usa para entender mejor qué vende tu empresa y evitar falsos positivos.</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">¿En qué sector(es) opera tu empresa? <span class="text-gray-400 font-normal">(hasta 3)</span></label>
-                            <p id="contador-sectores-cuenta" class="text-xs font-semibold text-indigo-600 mb-3">0 de 3 seleccionados</p>
-                            <div class="grid grid-cols-3 gap-3" id="sectores-grid-cuenta"></div>
-                            <p class="text-xs text-gray-500 mt-2">El sector ayuda a la IA a priorizar las licitaciones más relevantes para ti.</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Regiones de Interés</label>
-                            <p class="text-xs text-gray-500 mb-3">Haz clic en las regiones donde puedes ejecutar contratos. Las licitaciones de instituciones fuera de estas regiones bajarán de ALTA a MEDIA relevancia.</p>
-                            <button type="button" onclick="toggleTodasRegiones()" id="btn-todas-regiones" class="mb-3 px-4 py-2 border-2 border-indigo-300 text-indigo-700 bg-white rounded-lg text-sm font-semibold hover:bg-indigo-50 transition">🗺️ Todas las regiones</button>
-                            <p class="text-xs text-gray-500 mb-3">Puedes seleccionar regiones individuales haciendo clic en el mapa.</p>
-                            <div class="bg-sky-50 rounded-xl overflow-hidden border border-gray-200">
-                                <svg baseprofile="tiny" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 1000 686" class="w-full" style="max-height:450px" xmlns="http://www.w3.org/2000/svg">
-                                    <g id="features">
-                                        <path class="mapa-region" id="r-DO34" d="M240.1 58.3l1.6 8.9 5 7.6 7.7 2.2 7.4 3 8.4 3 8 4 5.5 4.2 6.6 1.7 10.1 3.2 8.3 6.7 9.3 4.7 10.4 1.4-1.6 8.7-3.6 8-6.3 0.9-6.2-4.4 0.5 5.3 1.9 4.7 3.6 1.7 3.7 2.3-0.2 7.2-1.8 7.5 5.7 4.3-1 4.7-10.9 0-10.2-4.4-2.2 2.8-2.3 3.4-3.6 0.5-3.6-0.8-7.2-3.1-6.8-3.8-3.3 4.4-0.5 5.2 3.3 2.4 2.1 2.5-9.5 3.3-8.9 4.2-4.7 0.3-4.6-0.5-3.8 2.5-3.1 3.6-4.5 3.7-3.5 4.8-0.8 7.9-0.7 8.1 0.9 5.5 4.1 3.9 0.3 7.9-1.3 8.2-13.1-0.1-10.7-5.3-10.8-5.8-11.1-5.6-7.6-10.2-10.2-6.6-4.3 4.4-5 3.1-5.9-2-6-1.6-3.1 3.6-1.8 4.8-5.2 1.9-5 3-4.1 3.9-16-7.8-8.2-8.3-1-1.1-4.4-6.2-1.2-5.2 1.6-1.7 6.7-3.8 2.3-1.8 3.1-8 1.4-1.5 2.8-6 0.2-11.7-3-20.5-6.9-16.4-1.1-6 0.4-6.8 0.2-4.2-0.8-4.6-2.2-7.3 4.7 1.1 4.5 2.3-1-5.2-4.4-10.2 0.3-2.5 0-2-6.6-0.4-0.9-2.8 2.7-4.1 3.9-4.3 1.1-0.8 1.3-0.2 2.7 0 1.7-0.7 2.7-3.3 1.5-1.3 3-1.2 2.1-0.6 2.2-1 2.8-2.6-1.6-3.3-0.3-2.9 1.3-2.1 3.2-0.8 1.9 0.3 2.9 1.3 1.9 0.3 0.8-0.6 1.8-2.4 0.9-0.6 25.3-1.9 6.5 0.9 6.3 2.3 23.6 12.3 6.9 1.4 6.6-2.6 5 3.7 3.5 1.6 11 0.4 0.5-0.1z" onclick="toggleRegionMapa('DO34','Cibao Noroeste')"/>
-                                        <path class="mapa-region" id="r-DO37" d="M133.9 219.8l4.1-3.9 5-3 5.2-1.9 1.8-4.8 3.1-3.6 6 1.6 5.9 2 5-3.1 4.3-4.4 10.2 6.6 7.6 10.2 11.1 5.6 10.8 5.8 10.7 5.3 13.1 0.1 9.3 5.5 10.1 5 4.1 2.1 2.1 3.9 0.8 6.5 4.7 4.2 11 7.1 11.1 3.5 5.7-2.8 6-1.3 6.4 2 6.4 2 4.1 4.2 2.1 5.6-2.1 5.6-5.1 2.6-1 5-3.5 3.4-6.1 4.2-3 6.6-1.6 12.9-0.1 13.4-2 4.5-3.3 3.2-3.6-1.5-2.1-4.5-8 2.6 1.5 9.8-0.3 3.3-2.5 3.5 1.6 2.9 0.6 3.3-4.7 2.2-4 1.6-6.6 9.7-10.8 2.9-9-5.1-11.7 3.6-6.8 1.1-6.8-0.7-5.7 1.9-5.3 3.5-12.1-1-11-5.6-12.3-2.5-11.6-4.3-15.5-3.3-15.8-1.3-16.7-2.6-13.7-1.6 6.6-4.1 3.5-2.9 2.9-4.9 1.7-4.4 1.2-4.8 0.4-4.9-2-10.2-0.2-10.6-1.4-4.8-1.8-2.4-5.7-5.2-2.2-2.7-3.5-7.3-2.3-1.9-5.8-0.2-6.1 2.1-4.4 0.7-0.8-4.5 4.3-2.9 12.7-3.4 3.2-2 10.7-11.9 7.4-10.4 3.7-3.4 8.4-6 3.1-4.6 1.3-4.5 1.1-15.6-3.1-1.6z" onclick="toggleRegionMapa('DO37','El Valle')"/>
-                                        <path class="mapa-region" id="r-DO38" d="M101 359.1l13.7 1.6 16.7 2.6 15.8 1.3 15.5 3.3 11.6 4.3 12.3 2.5 11 5.6 12.1 1 5.3-3.5 5.7-1.9 6.8 0.7 6.8-1.1 11.7-3.6 9 5.1 11.7 11.9 15.4 5.4 7.8 1.4 6.6 4.4-0.1 4.6-5.2 2 2.5 4.2 0.8 8.3-5 6.5-7.6 6.6 1.2 2.9 1.2 3.1 2.3 1.7 3.1 1.2 8 2.3 7.2 1.7-0.6 3.8 0.8 5.5 1.9 8.4-3.7 6.2-1.6-2.1-1.3-2.6-1.6-2.3-2.5-2-2.7-1.1-10.7-2.3-4.9-0.1-3.9 1.5-1.5 4-0.6 2.2-2.2 3.8-0.5 2.9 0.5 3.3 1.2 1.8 1.6 1.7 1.8 2.9 4 14.1 1.3 2.4 0 3.1-4.8 7.3-4.1 10.5-23.3 34.2-2.1 5.9-1 2.1-2.3 1.6-5 2.6-3 2.6-2.2 2.5-1.7 3.1-1.5 4.3-1.8-0.6-0.7-0.4-0.8-0.7-0.2-0.2-0.4 1.9-0.4 0.7-0.9 0.8 1.7 0-1 2.2-1.3 1.6-1.6 1.1-1.9 0.4-0.9 1.1-1.7 5.1-0.9 1.9-3 4.4-8.3 24.3-2.6 4.8-10.2 14.3-2.5-1.1-2.1-2.1-0.1-1-2.4-2.1-17-28.1-4.1-4.5-8.4-3.3-19.7 2.7-8.4-2.1 2.4-1.8 7.8-8.2 1.7-3.3-0.3-5.6-1.1-3.9-3.8-7.4-2.7-4.1-0.5-1.5-0.1-3.1 1.6-9.9-1.8-4.5-4.3-5-9-7.5-13.9-5.3 3-7.8 0.9-4.5-0.6-7.6 0.2-4.3-0.6-2.9-2.6-7.4-0.4-2.5 0.7-5.1 1.9-4.9 11-18.9 0.2-0.3 2.9-5-0.6-0.7-2.2-2.1-3.6-2.3-13.2-5-9.4-6.3-2-2.3-3.7-5.5-2.1-1.9-9.6-2.4-3.7-2.1-1.5-4.8 0.9-2.8 1.9-1.1 1.3-1.4-0.6-3.9-1.6-2.5-22.4-23-2.1-4.2 4.2-3.2 9.2-2 18.5 3.4 9.6-3.2 3.2-3.5 5.1-8.7 3.4-3.8 0.6-0.4 1.7-1z m62.4 281.5l2.8-5.1 3.4 1.9 3.6 2.6 6.3 6.1-3.8 1.2-6.2 6.3-4.2 1.5-4.1-2.4-0.1-5.6 2.3-6.5z" onclick="toggleRegionMapa('DO38','Enriquillo')"/>
-                                        <path class="mapa-region" id="r-DO42" d="M887.8 494l2.5 3.4 2.8 5.1 1.8 4.7-0.4 2-3.8-0.8-7.9-3.7-4.2-0.8-4.4 0.5-7.6 2.5-4.2 0.5-8.7-2.3-6.2-5.6-4-7-2.1-6.4 3.6-1.1 4.4 0.9 4.2 2.1 3.7 2.6 2.9 1.1 11.5 1.5 12.8-0.4 3.3 1.2z m-120.2-59.7l-1.2-7.3-3.1-7.5-3-2.5-1.6-3.4 3.2-7 3.9-6.5 1.9-6.8 1.2-6-7.2-0.8-7.8 1.1-7-5.2-6-6.6-4-1.1-4.2 0.4-3.3-2-3.3-2.4 3-9.6 4.3-10 1.1-11.1-3.9-10.5-14.1-14.7-8.9-18.2 14-2.5 20.3 4.8-6.8-12.3 1.2-14.2 0-0.1 0.2-1 9.5 2.6 3.9-0.3 4.6-2.6-1.5-1.9-3.1-1.9 0-2.5 4.4-1.3 3.8 3.5 5.2 8.5 3.4 2 3.7 1.1 3.2 1.4 1.7 2.8 3-2.4 6-2.8 2.8-2.1-1.9-2.1 0.9-0.5 2.3-0.1 2.1-0.7 2.6-2.7 0.7-1.1 1-0.1 8.9 0.5 5.1 1.1 4.7 1.6 4.1 2.3 0.5 0.7 0 1 0.2 1 1 0.9 5 1.8 0.5-0.1 8.8 1.8 5.5 0.3 2.3 0.8 0.4 0.3 2 1.4 2.3 1.3 4.4 0.3 2.5 1 28.7 26.8 10.6 12.8 14.9 11.4 10.6 7.5 3.1 1.4 1.6 1 11.1 10.8 14.1 8.6 6.8 10.4-1.3 10.3-23.2 35.4-1.7 1.4-1.6 1.8-0.7 2.5 0.4 9-0.4 2.6-2.8 4.4-4.1 2.1-5.1 0.6-5.9 0-4.5-1.5-9.8-6.5-3.5-1.1-4.1 2.8 0.6 4.2 1.3 4.9-2.1 5.1-3 4.1-1.9 4.7-3.8 15.1-1.4 2.7-2.8 1-20.9 1.7-4.2-1.5-0.6-9.6-6-12.5-8.2-12.3-7.3-8.4-7.8-5.4-4.9-2.1-5.3-2.3-10.4-1.4-11.9 4.9-18 0.8z" onclick="toggleRegionMapa('DO42','Yuma')"/>
-                                        <path class="mapa-region" id="r-DO39" d="M736.5 271.3l-0.2 1 0 0.1-1.2 14.2 6.8 12.3-20.3-4.8-14 2.5 8.9 18.2 14.1 14.7 3.9 10.5-1.1 11.1-4.3 10-3 9.6 3.3 2.4 3.3 2 4.2-0.4 4 1.1 6 6.6 7 5.2 7.8-1.1 7.2 0.8-1.2 6-1.9 6.8-3.9 6.5-3.2 7 1.6 3.4 3 2.5 3.1 7.5 1.2 7.3-4.6-0.8-10.9-3.7-4.9-0.8-4.2-1.4-7.2-6.1-5.4-1.4-4.8 1-4.8 1.6-4.9 0.4-5-3-5.1 4.8-32.1 2.5-9.6 3.5-5.1 0.1-0.7-0.4 0.9-6.9 1.6-8.3-14.5-2.9-9.8-10.5 4-6.8 5-6.6 0.5-6.6-1.1-6.5-1.3 0.6-1.4-0.1 1.4-4 3.1-3.4-8.9-3.4-8.4 1.8-4.6 3-5.4 1.2-14.4 5.3-11.3 12-2-7.4-5.2-5-1.4-5.2-3.4-4.5-5.6-6.4-6.7-5.3-5.7-0.3-5.8-0.2-3.1 0.1-2.9 1-1.1 2.4-0.7 2.4-10.5 4.8-11.7-2.3-8.1-2.2-7.8-2.9-4.5-8.2-7-2.5-6-4.4-6.4-3.6-4.3-5-4-5.2 1.6-8.2 5.1-5.7 12.8-2.7 10.5-2.5 4.7-4.3 6.5-1.6 5.2 1.1 4.4 0.7 3-4.6 5 0.9 8 4 6.9-5.4 4.3-17 3.7-16.7 6.6 0.2 3.7-5 0.4-4 0.5-2.9 13.2-1.6 16.2 0.6 7 5.4 7.1 5.3 7.8 4.5 7.2 5.4 3.3-7.5 1.5-7.9-0.8-7 0.2-1.9 3.1 2.2 13.6-2.1 4.7 1.7 5.9-1.9 11.6 4.6 6.1-0.7-1.5-1.3-2-1.2-2.3-0.9-2.8-0.3 0-1.8 13.2-0.7 3.9 0.7 4.3 3.2 3.4 8 4.2 3.2 4.2 1.1 8.5 1.1 23 6.2z" onclick="toggleRegionMapa('DO39','Higuamo')"/>
-                                        <path class="mapa-region" id="r-DO33" d="M635.4 250.2l-0.2 1.9 0.8 7-1.5 7.9-3.3 7.5-7.2-5.4-7.8-4.5-7.1-5.3-7-5.4-16.2-0.6-13.2 1.6-0.5 2.9-0.4 4-3.7 5-6.6-0.2 2.2-7.3 0.9-6.9-5.3-3.4-6.1-1.9-8-0.6-7.6 0-5.8-1.9-5.6-2.6-6.4-2.9-7-0.5-10.8-1.3-11 0.2-5 0.9-5.2-0.9-4.8-1.4-4.6 1.6 0.8-0.3 0.1 1.1-12.3-8.1-8-12.4-10.1-0.7-6.9-6.7-5-8.3-3.6-8.8 5.3-15.4 1-14.7-0.1-17.5 8.2-10.2 4.5 1.7 4.1 2 2.9 7 5.8-4 5.1-7.4 7.4-4.3 7.1 6.3 5.7 9.2 2.6 0 2.7 0.5 0.7-7.5 1.5-6.7 5.2-0.4 5.8 0.4 12.2-7.1 4.6-13.6-0.1-1.6 8.1-8.8 4.7-2.2 13.7 0.3 6.7-0.7 3 0.4 3.8 2.2 8.4 9 2.6 6.1-0.1 6.6-4 14.4 4.9 2.1 1.9 4.7-0.1 11.9 0.6 5.2 1.6 4.2 16.4 24.7 7.4 7.2 1 0.9 8.4 3.5 5-0.8 9.6-3.7 4.9-0.9 11.2-0.4 4.9-1.1 5-2 7.3-4.9 2.9-0.7 2.5 0.6 5.2 2.6 3.3 0.6 6-1.5 2.6-0.3 1.4 0 1.3 0.4 1 0.8 0.4 1.5 0.8 1.2 1.7-0.4 2.7-1.7 14.3 5.8 4.3 3.1 2.8-5.7 4.5-4.2 11.2-6.2 7.2-2.2 1.7 3-1.9 6.3-3.6 7.4 4.9 1.8 5.6 0 5.4-1.4 4.5-2.4 1.4 5.8-3.2 4.5-4.4 4.1-2.3 4.5-1 4.7-2.9 4.3-4.3 3.1-5.4 1.3-19.4-3.5-21.2 1.6-5-1.4-9.2-4.6-31.5-3.9-3.5 0.9-1.4 3.5-0.8 12.5-1.8 10.6 0.8 4 2.3 1.7z" onclick="toggleRegionMapa('DO33','Cibao Nordeste')"/>
-                                        <path class="mapa-region" id="r-DO35" d="M237.8 232.3l1.3-8.2-0.3-7.9-4.1-3.9-0.9-5.5 0.7-8.1 0.8-7.9 3.5-4.8 4.5-3.7 3.1-3.6 3.8-2.5 4.6 0.5 4.7-0.3 8.9-4.2 9.5-3.3-2.1-2.5-3.3-2.4 0.5-5.2 3.3-4.4 6.8 3.8 7.2 3.1 3.6 0.8 3.6-0.5 2.3-3.4 2.2-2.8 10.2 4.4 10.9 0 1-4.7-5.7-4.3 1.8-7.5 0.2-7.2-3.7-2.3-3.6-1.7-1.9-4.7-0.5-5.3 6.2 4.4 6.3-0.9 3.6-8 1.6-8.7-10.4-1.4-9.3-4.7-8.3-6.7-10.1-3.2-6.6-1.7-5.5-4.2-8-4-8.4-3-7.4-3-7.7-2.2-5-7.6-1.6-8.9 2.4-0.7 0.6-2 0.2-2.7 1.3-2.7 2.9-1.1 2.1 2.4 2.7 6.9 1.9-1.2 1.5-1.3 1-1.4 0.7-1.8-2.1-0.6-0.5-0.4 0-0.6-0.8-1.8 3.9 1.5 3.2-0.2 3.3-0.8 4-0.5 2.5-2 4.6-8.6 3-2 3.8-0.9 8-4 4.3-0.6 4 1 3.8 2.3 2.1 3.3-1.3 4.2 4.8 1.9 1.8 0-1.2-4-0.6-1.5 11.9 1.9 3.5-0.3 7.3-1.8 2.8 0.2 3.1 2 10.8 13.1 0.9 2.5-1.3 2.4 9.3 0.1 3.6 1.7 9.4 8 9 4.6 9.5 3.3 11 1.7 14.9 0.1 1.2-0.7 1.3-1.8 3-2.1 3.4-1.7 2.4-0.8 9.7 3.1 15 16 9.1 9.6 4.1 2.9 4.5 2.3 5 1.5 11.3 1.2 9.1 3.3 16.5 3.3 3.7-0.1 2.5-0.9 2.2-1.9 0.9-0.9 0.1 1.6-4.6 13.6-12.2 7.1-5.8-0.4-5.2 0.4-1.5 6.7-0.7 7.5-2.7-0.5-2.6 0-5.7-9.2-7.1-6.3-7.4 4.3-5.1 7.4-5.8 4-2.9-7-4.1-2-4.5-1.7-8.2 10.2 0.1 17.5-1 14.7-5.3 15.4-7 1.3-4.9-12.5-5.1 1.1-5.5 2.2-7.8-0.8-5.9-4.4-13 4.2-12.4 6.6-6.2 1.7-1.7 5.3 5.9 4.6 7.6 2.1 3.9 6.9-1.8 8.9 0.7 7.5-6.4-1.3-5.4 0.3-3 7.1-12.9 9.8-15.4 7.5-8.1 3.5-7.2 3.6 1.8 5.5-1.1 5.8-6.4-2-6.4-2-6 1.3-5.7 2.8-11.1-3.5-11-7.1-4.7-4.2-0.8-6.5-2.1-3.9-4.1-2.1-10.1-5-9.3-5.5z" onclick="toggleRegionMapa('DO35','Cibao Norte')"/>
-                                        <path class="mapa-region" id="r-DO41" d="M255 377l10.8-2.9 6.6-9.7 4-1.6 4.7-2.2-0.6-3.3-1.6-2.9 2.5-3.5 0.3-3.3-1.5-9.8 8-2.6 2.1 4.5 3.6 1.5 3.3-3.2 2-4.5 0.1-13.4 1.6-12.9 3-6.6 6.1-4.2 3.5-3.4 1-5 5.1-2.6 2.1-5.6 13 8.9 2.8 24.1 10.5 14.3 15.1 7.7 9.3 11.4-3.5 14.9 11.2-0.2 10.9 0.1 3.8-4.2 5.2-4.8 6.5-8.3 3.5-11.5 10.4 6 9.9 7.3 6.2-0.6 5.9-2.2 6.6 2.7 6.4 4.4 9.1 0.2 3.3-9.9 3.5-7.5 8.5-4 4 5.2 4.3 5 6.4 3.6 6 4.4 0.2 11.7 6.7 10.8-2.2 5.8-1.2 6.4 2.7 9.3 4.6 8.3 6 4.5 4.6 5.6 0.7 4.5 2.8 3 5.6-0.1 5.5 0.2 3.2 4.6 0.2 5.7 0.9 1.6-3.1 1.6-5.5 4.9-4.2 6.6-1.6 7.8-1.3 2.1-5.7 3-1.3 1.9-1 2.9-8.3 7.7-6 7-3.4 2.9-1.5-0.7-0.7 0-5.3 0.1-4.6 0.8-3.1 1.7-4.3-2.7-4.7-0.9-31.6 0.1-5.3 1.7-10.2 5.7-5.7 1.3-17.1 0-4-1.6-0.3-2.3 1.7-1.7 2.4-1.5 1.1-1.6-0.7-2.8-1.7-1.6-1.7-1-1.9-2.5-1.5-1-3.2-2.1-1.1-2.4 0.6-2.6 1.5-1.2 1.6-0.9 1.3-1.8 1.2-5.2 0.1-5.5-0.6-4.8-1.4-3.1-5.4-6.8-3.3-2.4-5.7-2.2-4.9-1.2-6.2-0.4-5.2 1.4-2.3 4.5 0.9 5.5-0.6 2.2-7.4 7.2-2 1.3-2.7 0.8-2.8-0.1-5.2-1.6-2.2-0.2-2 0.7-3.4 2.5-2.3 0.5-3.1-0.4-1.1 0.7-2.5 2.3-0.7 0.9-1.5 3.3-0.3 1.1-0.7 1-3.3 1.1-1.2 0.6-6.6 7.9-3.5 2.1-5.8 0.7-2.4-0.9 3.7-6.2-1.9-8.4-0.8-5.5 0.6-3.8-7.2-1.7-8-2.3-3.1-1.2-2.3-1.7-1.2-3.1-1.2-2.9 7.6-6.6 5-6.5-0.8-8.3-2.5-4.2 5.2-2 0.1-4.6-6.6-4.4-7.8-1.4-15.4-5.4-11.7-11.9z" onclick="toggleRegionMapa('DO41','Valdesia')"/>
-                                        <path class="mapa-region" id="r-DO40" d="M500.5 346.8l7 2.5 4.5 8.2 7.8 2.9 8.1 2.2 11.7 2.3 10.5-4.8 0.7-2.4 1.1-2.4 2.9-1 3.1-0.1 5.8 0.2 5.7 0.3 6.7 5.3 5.6 6.4 3.4 4.5 1.4 5.2 5.2 5 2 7.4 11.3-12 14.4-5.3 5.4-1.2 4.6-3 8.4-1.8 8.9 3.4-3.1 3.4-1.4 4 1.4 0.1 1.3-0.6 1.1 6.5-0.5 6.6-5 6.6-4 6.8 9.8 10.5 14.5 2.9-1.6 8.3-0.9 6.9-12.8-8.9-5.5-3-3.6-0.4-1.5 2.4 0.1 3 0.4 2.9-0.7 2.4-2.2 0.7-3.4 0-3.2-0.6-1.4-0.9-4.2-7.1-1.9-1.9-1.9-0.6-38-4.2-6.9 0.3-1.1 0-4 1.2-7.7 3.8-6.4 4.4-2.4 1.1-3.5 1.1-3.1 1.1-2.6 1.3-0.9-1.6-0.2-5.7-3.2-4.6-5.5-0.2-5.6 0.1-2.8-3-0.7-4.5-4.6-5.6-6-4.5-4.6-8.3-2.7-9.3 1.2-6.4 2.2-5.8-6.7-10.8-0.2-11.7z" onclick="toggleRegionMapa('DO40','Ozama')"/>
-                                        <path class="mapa-region" id="r-DO36" d="M321.7 279.8l-2.1-5.6-4.1-4.2 1.1-5.8-1.8-5.5 7.2-3.6 8.1-3.5 15.4-7.5 12.9-9.8 3-7.1 5.4-0.3 6.4 1.3-0.7-7.5 1.8-8.9-3.9-6.9-7.6-2.1-5.9-4.6 1.7-5.3 6.2-1.7 12.4-6.6 13-4.2 5.9 4.4 7.8 0.8 5.5-2.2 5.1-1.1 4.9 12.5 7-1.3 3.6 8.8 5 8.3 6.9 6.7 10.1 0.7 8 12.4 12.3 8.1-0.1-1.1-0.8 0.3 4.6-1.6 4.8 1.4 5.2 0.9 5-0.9 11-0.2 10.8 1.3 7 0.5 6.4 2.9 5.6 2.6 5.8 1.9 7.6 0 8 0.6 6.1 1.9 5.3 3.4-0.9 6.9-2.2 7.3-3.7 16.7-4.3 17-6.9 5.4-8-4-5-0.9-3 4.6-4.4-0.7-5.2-1.1-6.5 1.6-4.7 4.3-10.5 2.5-12.8 2.7-5.1 5.7-1.6 8.2-8.5 4-3.5 7.5-3.3 9.9-9.1-0.2-6.4-4.4-6.6-2.7-5.9 2.2-6.2 0.6-9.9-7.3-10.4-6-3.5 11.5-6.5 8.3-5.2 4.8-3.8 4.2-10.9-0.1-11.2 0.2 3.5-14.9-9.3-11.4-15.1-7.7-10.5-14.3-2.8-24.1-13-8.9z" onclick="toggleRegionMapa('DO36','Cibao Sur')"/>
-                                    </g>
-                                    <g id="ciudades" pointer-events="none">
-                                        <circle cx="560" cy="415" r="6" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="560" y="435" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santo</text>
-                                        <text x="560" y="453" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Domingo</text>
-                                        <circle cx="380" cy="160" r="6" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="380" y="180" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santiago</text>
-                                        <circle cx="383" cy="80" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="395" y="77" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Puerto Plata</text>
-                                        <circle cx="485" cy="210" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="497" y="214" font-size="14" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">San Francisco de Macorís</text>
-                                        <circle cx="290" cy="148" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="290" y="122" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santa Cruz de</text>
-                                        <text x="290" y="140" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Mao</text>
-                                        <circle cx="709" cy="415" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="709" y="435" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Pedro</text>
-                                        <text x="709" y="453" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">de Macorís</text>
-                                        <circle cx="256" cy="328" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="256" y="304" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Juan de</text>
-                                        <text x="256" y="320" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">la Maguana</text>
-                                        <circle cx="272" cy="435" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="284" y="439" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Barahona</text>
-                                        <circle cx="845" cy="370" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="845" y="352" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Higüey</text>
-                                        <circle cx="925" cy="368" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="925" y="388" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Punta</text>
-                                        <text x="925" y="406" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Cana</text>
-                                        <circle cx="519" cy="413" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="507" y="432" font-size="16" font-family="Arial" text-anchor="end" fill="#111827" font-weight="700">San Cristóbal</text>
-                                        <circle cx="785" cy="420" r="5" fill="white" stroke="#374151" stroke-width="2"/>
-                                        <text x="797" y="424" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">La Romana</text>
-                                    </g>
-                                    <g id="labels" pointer-events="none">
-                                        <text class="mapa-label" x="188" y="127">Cibao</text><text class="mapa-label" x="188" y="152">Noroeste</text>
-                                        <text class="mapa-label" x="380" y="119">Cibao</text><text class="mapa-label" x="380" y="144">Norte</text>
-                                        <text class="mapa-label" x="528" y="158">Cibao</text><text class="mapa-label" x="528" y="183">Nordeste</text>
-                                        <text class="mapa-label" x="427" y="267">Cibao</text><text class="mapa-label" x="427" y="292">Sur</text>
-                                        <text class="mapa-label" x="201" y="291">El</text><text class="mapa-label" x="201" y="316">Valle</text>
-                                        <text class="mapa-label" x="192" y="474">Enriquillo</text>
-                                        <text class="mapa-label" x="448" y="401">Valdesia</text>
-                                        <text class="mapa-label" x="560" y="387">Ozama</text>
-                                        <text class="mapa-label" x="653" y="309">Higuamo</text>
-                                        <text class="mapa-label" x="833" y="356">Yuma</text>
-                                    </g>
-                                </svg>
+                <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
+                    <button onclick="showSubTab('perfil','datos')" id="st-perfil-datos" class="subtab-btn">🏢 Datos de Empresa</button>
+                    <button onclick="showSubTab('perfil','familias')" id="st-perfil-familias" class="subtab-btn">🏷️ Familias UNSPSC</button>
+                    <button onclick="showSubTab('perfil','seguridad')" id="st-perfil-seguridad" class="subtab-btn">🔒 Seguridad</button>
+                </div>
+
+                <!-- SUB: Datos de Empresa -->
+                <div id="sc-perfil-datos" class="hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Perfil de Empresa</h2>
+                    <form id="form-perfil" onsubmit="guardarPerfil(event)">
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Empresa *</label>
+                                <input type="text" id="empresa-nombre" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition" placeholder="Ej: Consultores ABC">
                             </div>
-                            <p class="text-right text-xs text-gray-300 mt-1">Map © <a href="https://simplemaps.com" target="_blank" class="hover:text-gray-400">simplemaps.com</a></p>
-                            <div id="regiones-display" class="mt-2 min-h-5 text-xs text-indigo-600 font-medium"></div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Palabras Clave <span class="text-gray-400 font-normal">(separadas por coma)</span></label>
-                            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-3 rounded-r-lg">
-                                <div class="flex">
-                                    <div class="flex-shrink-0"><span class="text-2xl">💡</span></div>
-                                    <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-blue-800 mb-2">Puedes usar palabras genéricas; o también marcas o modelos específicos.</h3>
-                                        <div class="text-xs text-blue-700 space-y-2">
-                                            <div><strong class="text-green-700">✅ Palabras efectivas para generar resultados variados:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">mantenimiento, equipos, servicios, consultoría, capacitación, sistemas, suministro</div></div>
-                                            <div><strong class="text-green-700">✅ Palabras muy específicas para obtener resultados focalizados:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Guardian Z-Series, Kopr-Kote, modelo XYZ-2000, cualquier marca específica</div></div>
-                                            <p class="mt-2 text-blue-600 italic">Las descripciones básicas están generalmente en lenguaje genérico. Palabras muy técnicas pueden resultar en 0 oportunidades detectadas.</p>
-                                            <div><strong class="text-green-700">✅ Puedes usar expresiones que incluyan varias palabras:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Escríbelas completas separadas por coma, sin ninguna coma interna.</div></div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Descripción de la Empresa</label>
+                                <textarea id="empresa-descripcion" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="Ej: Empresa dominicana de consultoría en gestión pública con 10 años de experiencia..."></textarea>
+                                <p class="text-xs text-gray-500 mt-1">La IA usa esto para entender tu perfil y hacer mejores recomendaciones.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Sitio web <span class="text-gray-400 font-normal">(opcional)</span></label>
+                                <input type="url" id="empresa-website" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition" placeholder="https://www.tuempresa.com">
+                                <p class="text-xs text-gray-500 mt-1">La IA lo usa para entender mejor qué vende tu empresa y evitar falsos positivos.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">¿En qué sector(es) opera tu empresa? <span class="text-gray-400 font-normal">(hasta 3)</span></label>
+                                <p id="contador-sectores-cuenta" class="text-xs font-semibold text-indigo-600 mb-3">0 de 3 seleccionados</p>
+                                <div class="grid grid-cols-3 gap-3" id="sectores-grid-cuenta"></div>
+                                <p class="text-xs text-gray-500 mt-2">El sector ayuda a la IA a priorizar las licitaciones más relevantes para ti.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Regiones de Interés</label>
+                                <p class="text-xs text-gray-500 mb-3">Haz clic en las regiones donde puedes ejecutar contratos.</p>
+                                <button type="button" onclick="toggleTodasRegiones()" id="btn-todas-regiones" class="mb-3 px-4 py-2 border-2 border-indigo-300 text-indigo-700 bg-white rounded-lg text-sm font-semibold hover:bg-indigo-50 transition">🗺️ Todas las regiones</button>
+                                <p class="text-xs text-gray-500 mb-3">Puedes seleccionar regiones individuales haciendo clic en el mapa.</p>
+                                <div class="bg-sky-50 rounded-xl overflow-hidden border border-gray-200">
+                                    <svg baseprofile="tiny" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 1000 686" class="w-full" style="max-height:450px" xmlns="http://www.w3.org/2000/svg">
+                                        <g id="features">
+                                            <path class="mapa-region" id="r-DO34" d="M240.1 58.3l1.6 8.9 5 7.6 7.7 2.2 7.4 3 8.4 3 8 4 5.5 4.2 6.6 1.7 10.1 3.2 8.3 6.7 9.3 4.7 10.4 1.4-1.6 8.7-3.6 8-6.3 0.9-6.2-4.4 0.5 5.3 1.9 4.7 3.6 1.7 3.7 2.3-0.2 7.2-1.8 7.5 5.7 4.3-1 4.7-10.9 0-10.2-4.4-2.2 2.8-2.3 3.4-3.6 0.5-3.6-0.8-7.2-3.1-6.8-3.8-3.3 4.4-0.5 5.2 3.3 2.4 2.1 2.5-9.5 3.3-8.9 4.2-4.7 0.3-4.6-0.5-3.8 2.5-3.1 3.6-4.5 3.7-3.5 4.8-0.8 7.9-0.7 8.1 0.9 5.5 4.1 3.9 0.3 7.9-1.3 8.2-13.1-0.1-10.7-5.3-10.8-5.8-11.1-5.6-7.6-10.2-10.2-6.6-4.3 4.4-5 3.1-5.9-2-6-1.6-3.1 3.6-1.8 4.8-5.2 1.9-5 3-4.1 3.9-16-7.8-8.2-8.3-1-1.1-4.4-6.2-1.2-5.2 1.6-1.7 6.7-3.8 2.3-1.8 3.1-8 1.4-1.5 2.8-6 0.2-11.7-3-20.5-6.9-16.4-1.1-6 0.4-6.8 0.2-4.2-0.8-4.6-2.2-7.3 4.7 1.1 4.5 2.3-1-5.2-4.4-10.2 0.3-2.5 0-2-6.6-0.4-0.9-2.8 2.7-4.1 3.9-4.3 1.1-0.8 1.3-0.2 2.7 0 1.7-0.7 2.7-3.3 1.5-1.3 3-1.2 2.1-0.6 2.2-1 2.8-2.6-1.6-3.3-0.3-2.9 1.3-2.1 3.2-0.8 1.9 0.3 2.9 1.3 1.9 0.3 0.8-0.6 1.8-2.4 0.9-0.6 25.3-1.9 6.5 0.9 6.3 2.3 23.6 12.3 6.9 1.4 6.6-2.6 5 3.7 3.5 1.6 11 0.4 0.5-0.1z" onclick="toggleRegionMapa('DO34','Cibao Noroeste')"/>
+                                            <path class="mapa-region" id="r-DO37" d="M133.9 219.8l4.1-3.9 5-3 5.2-1.9 1.8-4.8 3.1-3.6 6 1.6 5.9 2 5-3.1 4.3-4.4 10.2 6.6 7.6 10.2 11.1 5.6 10.8 5.8 10.7 5.3 13.1 0.1 9.3 5.5 10.1 5 4.1 2.1 2.1 3.9 0.8 6.5 4.7 4.2 11 7.1 11.1 3.5 5.7-2.8 6-1.3 6.4 2 6.4 2 4.1 4.2 2.1 5.6-2.1 5.6-5.1 2.6-1 5-3.5 3.4-6.1 4.2-3 6.6-1.6 12.9-0.1 13.4-2 4.5-3.3 3.2-3.6-1.5-2.1-4.5-8 2.6 1.5 9.8-0.3 3.3-2.5 3.5 1.6 2.9 0.6 3.3-4.7 2.2-4 1.6-6.6 9.7-10.8 2.9-9-5.1-11.7 3.6-6.8 1.1-6.8-0.7-5.7 1.9-5.3 3.5-12.1-1-11-5.6-12.3-2.5-11.6-4.3-15.5-3.3-15.8-1.3-16.7-2.6-13.7-1.6 6.6-4.1 3.5-2.9 2.9-4.9 1.7-4.4 1.2-4.8 0.4-4.9-2-10.2-0.2-10.6-1.4-4.8-1.8-2.4-5.7-5.2-2.2-2.7-3.5-7.3-2.3-1.9-5.8-0.2-6.1 2.1-4.4 0.7-0.8-4.5 4.3-2.9 12.7-3.4 3.2-2 10.7-11.9 7.4-10.4 3.7-3.4 8.4-6 3.1-4.6 1.3-4.5 1.1-15.6-3.1-1.6z" onclick="toggleRegionMapa('DO37','El Valle')"/>
+                                            <path class="mapa-region" id="r-DO38" d="M101 359.1l13.7 1.6 16.7 2.6 15.8 1.3 15.5 3.3 11.6 4.3 12.3 2.5 11 5.6 12.1 1 5.3-3.5 5.7-1.9 6.8 0.7 6.8-1.1 11.7-3.6 9 5.1 11.7 11.9 15.4 5.4 7.8 1.4 6.6 4.4-0.1 4.6-5.2 2 2.5 4.2 0.8 8.3-5 6.5-7.6 6.6 1.2 2.9 1.2 3.1 2.3 1.7 3.1 1.2 8 2.3 7.2 1.7-0.6 3.8 0.8 5.5 1.9 8.4-3.7 6.2-1.6-2.1-1.3-2.6-1.6-2.3-2.5-2-2.7-1.1-10.7-2.3-4.9-0.1-3.9 1.5-1.5 4-0.6 2.2-2.2 3.8-0.5 2.9 0.5 3.3 1.2 1.8 1.6 1.7 1.8 2.9 4 14.1 1.3 2.4 0 3.1-4.8 7.3-4.1 10.5-23.3 34.2-2.1 5.9-1 2.1-2.3 1.6-5 2.6-3 2.6-2.2 2.5-1.7 3.1-1.5 4.3-1.8-0.6-0.7-0.4-0.8-0.7-0.2-0.2-0.4 1.9-0.4 0.7-0.9 0.8 1.7 0-1 2.2-1.3 1.6-1.6 1.1-1.9 0.4-0.9 1.1-1.7 5.1-0.9 1.9-3 4.4-8.3 24.3-2.6 4.8-10.2 14.3-2.5-1.1-2.1-2.1-0.1-1-2.4-2.1-17-28.1-4.1-4.5-8.4-3.3-19.7 2.7-8.4-2.1 2.4-1.8 7.8-8.2 1.7-3.3-0.3-5.6-1.1-3.9-3.8-7.4-2.7-4.1-0.5-1.5-0.1-3.1 1.6-9.9-1.8-4.5-4.3-5-9-7.5-13.9-5.3 3-7.8 0.9-4.5-0.6-7.6 0.2-4.3-0.6-2.9-2.6-7.4-0.4-2.5 0.7-5.1 1.9-4.9 11-18.9 0.2-0.3 2.9-5-0.6-0.7-2.2-2.1-3.6-2.3-13.2-5-9.4-6.3-2-2.3-3.7-5.5-2.1-1.9-9.6-2.4-3.7-2.1-1.5-4.8 0.9-2.8 1.9-1.1 1.3-1.4-0.6-3.9-1.6-2.5-22.4-23-2.1-4.2 4.2-3.2 9.2-2 18.5 3.4 9.6-3.2 3.2-3.5 5.1-8.7 3.4-3.8 0.6-0.4 1.7-1z m62.4 281.5l2.8-5.1 3.4 1.9 3.6 2.6 6.3 6.1-3.8 1.2-6.2 6.3-4.2 1.5-4.1-2.4-0.1-5.6 2.3-6.5z" onclick="toggleRegionMapa('DO38','Enriquillo')"/>
+                                            <path class="mapa-region" id="r-DO42" d="M887.8 494l2.5 3.4 2.8 5.1 1.8 4.7-0.4 2-3.8-0.8-7.9-3.7-4.2-0.8-4.4 0.5-7.6 2.5-4.2 0.5-8.7-2.3-6.2-5.6-4-7-2.1-6.4 3.6-1.1 4.4 0.9 4.2 2.1 3.7 2.6 2.9 1.1 11.5 1.5 12.8-0.4 3.3 1.2z m-120.2-59.7l-1.2-7.3-3.1-7.5-3-2.5-1.6-3.4 3.2-7 3.9-6.5 1.9-6.8 1.2-6-7.2-0.8-7.8 1.1-7-5.2-6-6.6-4-1.1-4.2 0.4-3.3-2-3.3-2.4 3-9.6 4.3-10 1.1-11.1-3.9-10.5-14.1-14.7-8.9-18.2 14-2.5 20.3 4.8-6.8-12.3 1.2-14.2 0-0.1 0.2-1 9.5 2.6 3.9-0.3 4.6-2.6-1.5-1.9-3.1-1.9 0-2.5 4.4-1.3 3.8 3.5 5.2 8.5 3.4 2 3.7 1.1 3.2 1.4 1.7 2.8 3-2.4 6-2.8 2.8-2.1-1.9-2.1 0.9-0.5 2.3-0.1 2.1-0.7 2.6-2.7 0.7-1.1 1-0.1 8.9 0.5 5.1 1.1 4.7 1.6 4.1 2.3 0.5 0.7 0 1 0.2 1 1 0.9 5 1.8 0.5-0.1 8.8 1.8 5.5 0.3 2.3 0.8 0.4 0.3 2 1.4 2.3 1.3 4.4 0.3 2.5 1 28.7 26.8 10.6 12.8 14.9 11.4 10.6 7.5 3.1 1.4 1.6 1 11.1 10.8 14.1 8.6 6.8 10.4-1.3 10.3-23.2 35.4-1.7 1.4-1.6 1.8-0.7 2.5 0.4 9-0.4 2.6-2.8 4.4-4.1 2.1-5.1 0.6-5.9 0-4.5-1.5-9.8-6.5-3.5-1.1-4.1 2.8 0.6 4.2 1.3 4.9-2.1 5.1-3 4.1-1.9 4.7-3.8 15.1-1.4 2.7-2.8 1-20.9 1.7-4.2-1.5-0.6-9.6-6-12.5-8.2-12.3-7.3-8.4-7.8-5.4-4.9-2.1-5.3-2.3-10.4-1.4-11.9 4.9-18 0.8z" onclick="toggleRegionMapa('DO42','Yuma')"/>
+                                            <path class="mapa-region" id="r-DO39" d="M736.5 271.3l-0.2 1 0 0.1-1.2 14.2 6.8 12.3-20.3-4.8-14 2.5 8.9 18.2 14.1 14.7 3.9 10.5-1.1 11.1-4.3 10-3 9.6 3.3 2.4 3.3 2 4.2-0.4 4 1.1 6 6.6 7 5.2 7.8-1.1 7.2 0.8-1.2 6-1.9 6.8-3.9 6.5-3.2 7 1.6 3.4 3 2.5 3.1 7.5 1.2 7.3-4.6-0.8-10.9-3.7-4.9-0.8-4.2-1.4-7.2-6.1-5.4-1.4-4.8 1-4.8 1.6-4.9 0.4-5-3-5.1 4.8-32.1 2.5-9.6 3.5-5.1 0.1-0.7-0.4 0.9-6.9 1.6-8.3-14.5-2.9-9.8-10.5 4-6.8 5-6.6 0.5-6.6-1.1-6.5-1.3 0.6-1.4-0.1 1.4-4 3.1-3.4-8.9-3.4-8.4 1.8-4.6 3-5.4 1.2-14.4 5.3-11.3 12-2-7.4-5.2-5-1.4-5.2-3.4-4.5-5.6-6.4-6.7-5.3-5.7-0.3-5.8-0.2-3.1 0.1-2.9 1-1.1 2.4-0.7 2.4-10.5 4.8-11.7-2.3-8.1-2.2-7.8-2.9-4.5-8.2-7-2.5-6-4.4-6.4-3.6-4.3-5-4-5.2 1.6-8.2 5.1-5.7 12.8-2.7 10.5-2.5 4.7-4.3 6.5-1.6 5.2 1.1 4.4 0.7 3-4.6 5 0.9 8 4 6.9-5.4 4.3-17 3.7-16.7 6.6 0.2 3.7-5 0.4-4 0.5-2.9 13.2-1.6 16.2 0.6 7 5.4 7.1 5.3 7.8 4.5 7.2 5.4 3.3-7.5 1.5-7.9-0.8-7 0.2-1.9 3.1 2.2 13.6-2.1 4.7 1.7 5.9-1.9 11.6 4.6 6.1-0.7-1.5-1.3-2-1.2-2.3-0.9-2.8-0.3 0-1.8 13.2-0.7 3.9 0.7 4.3 3.2 3.4 8 4.2 3.2 4.2 1.1 8.5 1.1 23 6.2z" onclick="toggleRegionMapa('DO39','Higuamo')"/>
+                                            <path class="mapa-region" id="r-DO33" d="M635.4 250.2l-0.2 1.9 0.8 7-1.5 7.9-3.3 7.5-7.2-5.4-7.8-4.5-7.1-5.3-7-5.4-16.2-0.6-13.2 1.6-0.5 2.9-0.4 4-3.7 5-6.6-0.2 2.2-7.3 0.9-6.9-5.3-3.4-6.1-1.9-8-0.6-7.6 0-5.8-1.9-5.6-2.6-6.4-2.9-7-0.5-10.8-1.3-11 0.2-5 0.9-5.2-0.9-4.8-1.4-4.6 1.6 0.8-0.3 0.1 1.1-12.3-8.1-8-12.4-10.1-0.7-6.9-6.7-5-8.3-3.6-8.8 5.3-15.4 1-14.7-0.1-17.5 8.2-10.2 4.5 1.7 4.1 2 2.9 7 5.8-4 5.1-7.4 7.4-4.3 7.1 6.3 5.7 9.2 2.6 0 2.7 0.5 0.7-7.5 1.5-6.7 5.2-0.4 5.8 0.4 12.2-7.1 4.6-13.6-0.1-1.6 8.1-8.8 4.7-2.2 13.7 0.3 6.7-0.7 3 0.4 3.8 2.2 8.4 9 2.6 6.1-0.1 6.6-4 14.4 4.9 2.1 1.9 4.7-0.1 11.9 0.6 5.2 1.6 4.2 16.4 24.7 7.4 7.2 1 0.9 8.4 3.5 5-0.8 9.6-3.7 4.9-0.9 11.2-0.4 4.9-1.1 5-2 7.3-4.9 2.9-0.7 2.5 0.6 5.2 2.6 3.3 0.6 6-1.5 2.6-0.3 1.4 0 1.3 0.4 1 0.8 0.4 1.5 0.8 1.2 1.7-0.4 2.7-1.7 14.3 5.8 4.3 3.1 2.8-5.7 4.5-4.2 11.2-6.2 7.2-2.2 1.7 3-1.9 6.3-3.6 7.4 4.9 1.8 5.6 0 5.4-1.4 4.5-2.4 1.4 5.8-3.2 4.5-4.4 4.1-2.3 4.5-1 4.7-2.9 4.3-4.3 3.1-5.4 1.3-19.4-3.5-21.2 1.6-5-1.4-9.2-4.6-31.5-3.9-3.5 0.9-1.4 3.5-0.8 12.5-1.8 10.6 0.8 4 2.3 1.7z" onclick="toggleRegionMapa('DO33','Cibao Nordeste')"/>
+                                            <path class="mapa-region" id="r-DO35" d="M237.8 232.3l1.3-8.2-0.3-7.9-4.1-3.9-0.9-5.5 0.7-8.1 0.8-7.9 3.5-4.8 4.5-3.7 3.1-3.6 3.8-2.5 4.6 0.5 4.7-0.3 8.9-4.2 9.5-3.3-2.1-2.5-3.3-2.4 0.5-5.2 3.3-4.4 6.8 3.8 7.2 3.1 3.6 0.8 3.6-0.5 2.3-3.4 2.2-2.8 10.2 4.4 10.9 0 1-4.7-5.7-4.3 1.8-7.5 0.2-7.2-3.7-2.3-3.6-1.7-1.9-4.7-0.5-5.3 6.2 4.4 6.3-0.9 3.6-8 1.6-8.7-10.4-1.4-9.3-4.7-8.3-6.7-10.1-3.2-6.6-1.7-5.5-4.2-8-4-8.4-3-7.4-3-7.7-2.2-5-7.6-1.6-8.9 2.4-0.7 0.6-2 0.2-2.7 1.3-2.7 2.9-1.1 2.1 2.4 2.7 6.9 1.9-1.2 1.5-1.3 1-1.4 0.7-1.8-2.1-0.6-0.5-0.4 0-0.6-0.8-1.8 3.9 1.5 3.2-0.2 3.3-0.8 4-0.5 2.5-2 4.6-8.6 3-2 3.8-0.9 8-4 4.3-0.6 4 1 3.8 2.3 2.1 3.3-1.3 4.2 4.8 1.9 1.8 0-1.2-4-0.6-1.5 11.9 1.9 3.5-0.3 7.3-1.8 2.8 0.2 3.1 2 10.8 13.1 0.9 2.5-1.3 2.4 9.3 0.1 3.6 1.7 9.4 8 9 4.6 9.5 3.3 11 1.7 14.9 0.1 1.2-0.7 1.3-1.8 3-2.1 3.4-1.7 2.4-0.8 9.7 3.1 15 16 9.1 9.6 4.1 2.9 4.5 2.3 5 1.5 11.3 1.2 9.1 3.3 16.5 3.3 3.7-0.1 2.5-0.9 2.2-1.9 0.9-0.9 0.1 1.6-4.6 13.6-12.2 7.1-5.8-0.4-5.2 0.4-1.5 6.7-0.7 7.5-2.7-0.5-2.6 0-5.7-9.2-7.1-6.3-7.4 4.3-5.1 7.4-5.8 4-2.9-7-4.1-2-4.5-1.7-8.2 10.2 0.1 17.5-1 14.7-5.3 15.4-7 1.3-4.9-12.5-5.1 1.1-5.5 2.2-7.8-0.8-5.9-4.4-13 4.2-12.4 6.6-6.2 1.7-1.7 5.3 5.9 4.6 7.6 2.1 3.9 6.9-1.8 8.9 0.7 7.5-6.4-1.3-5.4 0.3-3 7.1-12.9 9.8-15.4 7.5-8.1 3.5-7.2 3.6 1.8 5.5-1.1 5.8-6.4-2-6.4-2-6 1.3-5.7 2.8-11.1-3.5-11-7.1-4.7-4.2-0.8-6.5-2.1-3.9-4.1-2.1-10.1-5-9.3-5.5z" onclick="toggleRegionMapa('DO35','Cibao Norte')"/>
+                                            <path class="mapa-region" id="r-DO41" d="M255 377l10.8-2.9 6.6-9.7 4-1.6 4.7-2.2-0.6-3.3-1.6-2.9 2.5-3.5 0.3-3.3-1.5-9.8 8-2.6 2.1 4.5 3.6 1.5 3.3-3.2 2-4.5 0.1-13.4 1.6-12.9 3-6.6 6.1-4.2 3.5-3.4 1-5 5.1-2.6 2.1-5.6 13 8.9 2.8 24.1 10.5 14.3 15.1 7.7 9.3 11.4-3.5 14.9 11.2-0.2 10.9 0.1 3.8-4.2 5.2-4.8 6.5-8.3 3.5-11.5 10.4 6 9.9 7.3 6.2-0.6 5.9-2.2 6.6 2.7 6.4 4.4 9.1 0.2 3.3-9.9 3.5-7.5 8.5-4 4 5.2 4.3 5 6.4 3.6 6 4.4 0.2 11.7 6.7 10.8-2.2 5.8-1.2 6.4 2.7 9.3 4.6 8.3 6 4.5 4.6 5.6 0.7 4.5 2.8 3 5.6-0.1 5.5 0.2 3.2 4.6 0.2 5.7 0.9 1.6-3.1 1.6-5.5 4.9-4.2 6.6-1.6 7.8-1.3 2.1-5.7 3-1.3 1.9-1 2.9-8.3 7.7-6 7-3.4 2.9-1.5-0.7-0.7 0-5.3 0.1-4.6 0.8-3.1 1.7-4.3-2.7-4.7-0.9-31.6 0.1-5.3 1.7-10.2 5.7-5.7 1.3-17.1 0-4-1.6-0.3-2.3 1.7-1.7 2.4-1.5 1.1-1.6-0.7-2.8-1.7-1.6-1.7-1-1.9-2.5-1.5-1-3.2-2.1-1.1-2.4 0.6-2.6 1.5-1.2 1.6-0.9 1.3-1.8 1.2-5.2 0.1-5.5-0.6-4.8-1.4-3.1-5.4-6.8-3.3-2.4-5.7-2.2-4.9-1.2-6.2-0.4-5.2 1.4-2.3 4.5 0.9 5.5-0.6 2.2-7.4 7.2-2 1.3-2.7 0.8-2.8-0.1-5.2-1.6-2.2-0.2-2 0.7-3.4 2.5-2.3 0.5-3.1-0.4-1.1 0.7-2.5 2.3-0.7 0.9-1.5 3.3-0.3 1.1-0.7 1-3.3 1.1-1.2 0.6-6.6 7.9-3.5 2.1-5.8 0.7-2.4-0.9 3.7-6.2-1.9-8.4-0.8-5.5 0.6-3.8-7.2-1.7-8-2.3-3.1-1.2-2.3-1.7-1.2-3.1-1.2-2.9 7.6-6.6 5-6.5-0.8-8.3-2.5-4.2 5.2-2 0.1-4.6-6.6-4.4-7.8-1.4-15.4-5.4-11.7-11.9z" onclick="toggleRegionMapa('DO41','Valdesia')"/>
+                                            <path class="mapa-region" id="r-DO40" d="M500.5 346.8l7 2.5 4.5 8.2 7.8 2.9 8.1 2.2 11.7 2.3 10.5-4.8 0.7-2.4 1.1-2.4 2.9-1 3.1-0.1 5.8 0.2 5.7 0.3 6.7 5.3 5.6 6.4 3.4 4.5 1.4 5.2 5.2 5 2 7.4 11.3-12 14.4-5.3 5.4-1.2 4.6-3 8.4-1.8 8.9 3.4-3.1 3.4-1.4 4 1.4 0.1 1.3-0.6 1.1 6.5-0.5 6.6-5 6.6-4 6.8 9.8 10.5 14.5 2.9-1.6 8.3-0.9 6.9-12.8-8.9-5.5-3-3.6-0.4-1.5 2.4 0.1 3 0.4 2.9-0.7 2.4-2.2 0.7-3.4 0-3.2-0.6-1.4-0.9-4.2-7.1-1.9-1.9-1.9-0.6-38-4.2-6.9 0.3-1.1 0-4 1.2-7.7 3.8-6.4 4.4-2.4 1.1-3.5 1.1-3.1 1.1-2.6 1.3-0.9-1.6-0.2-5.7-3.2-4.6-5.5-0.2-5.6 0.1-2.8-3-0.7-4.5-4.6-5.6-6-4.5-4.6-8.3-2.7-9.3 1.2-6.4 2.2-5.8-6.7-10.8-0.2-11.7z" onclick="toggleRegionMapa('DO40','Ozama')"/>
+                                            <path class="mapa-region" id="r-DO36" d="M321.7 279.8l-2.1-5.6-4.1-4.2 1.1-5.8-1.8-5.5 7.2-3.6 8.1-3.5 15.4-7.5 12.9-9.8 3-7.1 5.4-0.3 6.4 1.3-0.7-7.5 1.8-8.9-3.9-6.9-7.6-2.1-5.9-4.6 1.7-5.3 6.2-1.7 12.4-6.6 13-4.2 5.9 4.4 7.8 0.8 5.5-2.2 5.1-1.1 4.9 12.5 7-1.3 3.6 8.8 5 8.3 6.9 6.7 10.1 0.7 8 12.4 12.3 8.1-0.1-1.1-0.8 0.3 4.6-1.6 4.8 1.4 5.2 0.9 5-0.9 11-0.2 10.8 1.3 7 0.5 6.4 2.9 5.6 2.6 5.8 1.9 7.6 0 8 0.6 6.1 1.9 5.3 3.4-0.9 6.9-2.2 7.3-3.7 16.7-4.3 17-6.9 5.4-8-4-5-0.9-3 4.6-4.4-0.7-5.2-1.1-6.5 1.6-4.7 4.3-10.5 2.5-12.8 2.7-5.1 5.7-1.6 8.2-8.5 4-3.5 7.5-3.3 9.9-9.1-0.2-6.4-4.4-6.6-2.7-5.9 2.2-6.2 0.6-9.9-7.3-10.4-6-3.5 11.5-6.5 8.3-5.2 4.8-3.8 4.2-10.9-0.1-11.2 0.2 3.5-14.9-9.3-11.4-15.1-7.7-10.5-14.3-2.8-24.1-13-8.9z" onclick="toggleRegionMapa('DO36','Cibao Sur')"/>
+                                        </g>
+                                        <g id="ciudades" pointer-events="none">
+                                            <circle cx="560" cy="415" r="6" fill="white" stroke="#374151" stroke-width="2"/><text x="560" y="435" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santo</text><text x="560" y="453" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Domingo</text>
+                                            <circle cx="380" cy="160" r="6" fill="white" stroke="#374151" stroke-width="2"/><text x="380" y="180" font-size="17" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santiago</text>
+                                            <circle cx="383" cy="80" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="395" y="77" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Puerto Plata</text>
+                                            <circle cx="485" cy="210" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="497" y="214" font-size="14" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">San Francisco de Macorís</text>
+                                            <circle cx="290" cy="148" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="290" y="122" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Santa Cruz de</text><text x="290" y="140" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Mao</text>
+                                            <circle cx="709" cy="415" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="709" y="435" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Pedro</text><text x="709" y="453" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">de Macorís</text>
+                                            <circle cx="256" cy="328" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="256" y="304" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">San Juan de</text><text x="256" y="320" font-size="14" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">la Maguana</text>
+                                            <circle cx="272" cy="435" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="284" y="439" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">Barahona</text>
+                                            <circle cx="845" cy="370" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="845" y="352" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Higüey</text>
+                                            <circle cx="925" cy="368" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="925" y="388" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Punta</text><text x="925" y="406" font-size="16" font-family="Arial" text-anchor="middle" fill="#111827" font-weight="700">Cana</text>
+                                            <circle cx="519" cy="413" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="507" y="432" font-size="16" font-family="Arial" text-anchor="end" fill="#111827" font-weight="700">San Cristóbal</text>
+                                            <circle cx="785" cy="420" r="5" fill="white" stroke="#374151" stroke-width="2"/><text x="797" y="424" font-size="16" font-family="Arial" text-anchor="start" fill="#111827" font-weight="700">La Romana</text>
+                                        </g>
+                                        <g id="labels" pointer-events="none">
+                                            <text class="mapa-label" x="188" y="127">Cibao</text><text class="mapa-label" x="188" y="152">Noroeste</text>
+                                            <text class="mapa-label" x="380" y="119">Cibao</text><text class="mapa-label" x="380" y="144">Norte</text>
+                                            <text class="mapa-label" x="528" y="158">Cibao</text><text class="mapa-label" x="528" y="183">Nordeste</text>
+                                            <text class="mapa-label" x="427" y="267">Cibao</text><text class="mapa-label" x="427" y="292">Sur</text>
+                                            <text class="mapa-label" x="201" y="291">El</text><text class="mapa-label" x="201" y="316">Valle</text>
+                                            <text class="mapa-label" x="192" y="474">Enriquillo</text>
+                                            <text class="mapa-label" x="448" y="401">Valdesia</text>
+                                            <text class="mapa-label" x="560" y="387">Ozama</text>
+                                            <text class="mapa-label" x="653" y="309">Higuamo</text>
+                                            <text class="mapa-label" x="833" y="356">Yuma</text>
+                                        </g>
+                                    </svg>
+                                </div>
+                                <p class="text-right text-xs text-gray-300 mt-1">Map © <a href="https://simplemaps.com" target="_blank" class="hover:text-gray-400">simplemaps.com</a></p>
+                                <div id="regiones-display" class="mt-2 min-h-5 text-xs text-indigo-600 font-medium"></div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Palabras Clave <span class="text-gray-400 font-normal">(separadas por coma)</span></label>
+                                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-3 rounded-r-lg">
+                                    <div class="flex"><div class="flex-shrink-0"><span class="text-2xl">💡</span></div>
+                                        <div class="ml-3">
+                                            <h3 class="text-sm font-medium text-blue-800 mb-2">Puedes usar palabras genéricas o marcas/modelos específicos.</h3>
+                                            <div class="text-xs text-blue-700 space-y-2">
+                                                <div><strong class="text-green-700">✅ Palabras efectivas para generar resultados variados:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">mantenimiento, equipos, servicios, consultoría, capacitación, sistemas, suministro</div></div>
+                                                <div><strong class="text-green-700">✅ Palabras muy específicas para resultados focalizados:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Guardian Z-Series, Kopr-Kote, modelo XYZ-2000, cualquier marca específica</div></div>
+                                                <p class="mt-2 text-blue-600 italic">Las descripciones están generalmente en lenguaje genérico. Palabras muy técnicas pueden resultar en 0 oportunidades detectadas.</p>
+                                                <div><strong class="text-green-700">✅ Puedes usar expresiones con varias palabras:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Escríbelas completas separadas por coma, sin coma interna. Ej: <span class="font-mono">asesoría en recursos humanos, consultoría financiera</span></div></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <p class="text-xs text-gray-500 mt-1">💡 Licitaciones con AL MENOS una de estas palabras serán clasificadas como de MEDIA relevancia.</p>
+                                <div class="mt-3">
+                                    <p class="text-xs font-semibold text-gray-700 mb-1">💡 Sugerencias según tu(s) sector(es):</p>
+                                    <p class="text-xs text-gray-500 mb-2">Haz clic en las sugerencias para agregarlas o quitarlas.</p>
+                                    <div id="chips-sugeridos-cuenta" class="min-h-8"></div>
+                                </div>
+                                <textarea id="empresa-palabras-clave" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="Ejemplo: mantenimiento, equipos, lubricación, filtración, servicios industriales, capacitación"></textarea>
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">💡 Licitaciones con AL MENOS una de estas palabras serán clasificadas como de MEDIA relevancia.</p>
-                            <div class="mt-3">
-                                <p class="text-xs font-semibold text-gray-700 mb-1">💡 Sugerencias según tu(s) sector(es):</p>
-                                <p class="text-xs text-gray-500 mb-2">Haz clic en las palabras clave sugeridas para agregarlas o quitarlas.</p>
-                                <div id="chips-sugeridos-cuenta" class="min-h-8"></div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Exclusiones <span class="text-gray-400 font-normal">(separadas por coma)</span></label>
+                                <p class="text-xs text-gray-500 mt-1">🚫 Licitaciones que incluyan una o más de estas palabras serán descartadas automáticamente.</p>
+                                <textarea id="empresa-exclusiones" rows="2" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="construcción, materiales, alimentos"></textarea>
                             </div>
-                            <textarea id="empresa-palabras-clave" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="Ejemplo: mantenimiento, equipos, lubricación, filtración, servicios industriales, capacitación"></textarea>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Monto Mínimo para ALTA Relevancia: <span class="text-gray-400 font-normal">(RD$)</span></label>
+                                <p class="text-xs text-gray-500 mb-2">Mientras menor sea el monto, más licitaciones de ALTA relevancia aparecerán.</p>
+                                <div class="relative"><span class="absolute left-3 top-3.5 text-gray-400 font-semibold text-sm">RD$</span><input type="number" id="empresa-monto-minimo" step="1" min="0" class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-lg font-semibold transition" placeholder="500,000"></div>
+                                <div class="grid grid-cols-4 gap-2 mt-2">
+                                    <button type="button" onclick="setMontoCuenta(1)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$1</button>
+                                    <button type="button" onclick="setMontoCuenta(100000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$100K</button>
+                                    <button type="button" onclick="setMontoCuenta(1000000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$1,000K</button>
+                                    <button type="button" onclick="setMontoCuenta(10000000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$10,000K+</button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">💰 Licitaciones MEDIA con monto mayor o igual se subirán a ALTA.</p>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Exclusiones <span class="text-gray-400 font-normal">(separadas por coma)</span></label>
-                            <p class="text-xs text-gray-500 mt-1">🚫 Licitaciones que incluyan una o más de estas palabras serán descartadas automáticamente.</p>
-                            <textarea id="empresa-exclusiones" rows="2" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="construcción, materiales, alimentos"></textarea>
+                        <div class="flex gap-4 mt-8">
+                            <button type="submit" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-md">💾 Guardar Cambios</button>
+                            <button type="button" onclick="cargarPerfil()" class="px-6 py-4 border-2 border-gray-200 text-gray-600 rounded-xl font-semibold hover:bg-gray-50 transition">↺ Cancelar</button>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Monto Mínimo para ALTA Relevancia: <span class="text-gray-400 font-normal">(RD$)</span></label>
-                            <p class="text-xs text-gray-500 mb-2">Mientras menor sea el monto, más licitaciones de ALTA relevancia aparecerán.</p>
-                            <div class="relative">
-                                <span class="absolute left-3 top-3.5 text-gray-400 font-semibold text-sm">RD$</span>
-                                <input type="number" id="empresa-monto-minimo" step="1" min="0" class="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none text-lg font-semibold transition" placeholder="500,000">
-                            </div>
-                            <div class="grid grid-cols-4 gap-2 mt-2">
-                                <button type="button" onclick="setMontoCuenta(1)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$1</button>
-                                <button type="button" onclick="setMontoCuenta(100000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$100K</button>
-                                <button type="button" onclick="setMontoCuenta(1000000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$1,000K</button>
-                                <button type="button" onclick="setMontoCuenta(10000000)" class="text-xs py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition font-medium">RD$10,000K+</button>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">💰 Licitaciones MEDIA con monto mayor o igual se subirán a ALTA.</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-4 mt-8">
-                        <button type="submit" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl font-bold text-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-md">💾 Guardar Cambios</button>
-                        <button type="button" onclick="cargarPerfil()" class="px-6 py-4 border-2 border-gray-200 text-gray-600 rounded-xl font-semibold hover:bg-gray-50 transition">↺ Cancelar</button>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div><!-- fin sc-perfil-datos -->
 
-            <!-- TAB: Perfil de Plan -->
+                <!-- SUB: Familias UNSPSC -->
+                <div id="sc-perfil-familias" class="hidden">
+                    <div class="mb-6"><h2 class="text-2xl font-bold text-gray-900 mb-2">🏷️ Familias UNSPSC</h2><p class="text-gray-600 text-sm">Selecciona las familias de productos/servicios para filtrar licitaciones relevantes automáticamente.</p></div>
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-4 mb-6 border border-indigo-200">
+                        <div class="flex items-center justify-between">
+                            <div><p class="text-sm text-gray-600 font-medium">Familias seleccionadas</p><p class="text-2xl font-bold text-indigo-600"><span id="familias-contador">0</span> de <span id="familias-limite">0</span></p></div>
+                            <div class="text-right"><p class="text-sm text-gray-600 font-medium">Plan actual</p><p class="text-lg font-bold text-gray-900" id="plan-familias">-</p></div>
+                        </div>
+                    </div>
+                    <div class="mb-6"><div class="relative"><input type="text" id="buscar-familias" placeholder="🔍 Buscar familias... (ej: construcción, tecnología, alimentos)" class="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition" oninput="filtrarFamilias()"><span class="absolute left-3 top-3.5 text-gray-400">🔍</span></div></div>
+                    <div id="familias-lista" class="space-y-4 mb-6"></div>
+                    <div class="flex gap-4 sticky bottom-0 bg-white pt-4 border-t">
+                        <button onclick="limpiarSeleccion()" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition">🗑️ Limpiar selección</button>
+                        <button onclick="guardarFamilias()" class="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition">💾 Guardar cambios</button>
+                    </div>
+                </div><!-- fin sc-perfil-familias -->
+
+                <!-- SUB: Seguridad -->
+                <div id="sc-perfil-seguridad" class="hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">🔒 Seguridad</h2>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6"><label class="block text-sm font-medium text-gray-700 mb-2">Email de la cuenta</label><div class="text-gray-900 font-semibold" id="email-readonly"></div><p class="text-xs text-gray-500 mt-1">El email no puede ser modificado</p></div>
+                    <form id="form-password" onsubmit="cambiarPassword(event)">
+                        <div class="space-y-6">
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Contraseña Actual *</label><input type="password" id="password-actual" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña *</label><input type="password" id="password-nueva" required minlength="8" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"><p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Confirmar Nueva Contraseña *</label><input type="password" id="password-confirmar" required minlength="8" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"></div>
+                        </div>
+                        <button type="submit" class="mt-6 w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition">🔒 Cambiar Contraseña</button>
+                    </form>
+                </div><!-- fin sc-perfil-seguridad -->
+            </div><!-- fin content-perfil -->
+
+
+            <!-- ══════════════════════════════════════════════════════ -->
+            <!-- TAB: MI PLAN (con sub-tabs: Plan / Invitar)           -->
+            <!-- ══════════════════════════════════════════════════════ -->
             <div id="content-plan" class="tab-content hidden">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">📋 Perfil de Plan</h2>
-                <p class="text-gray-500 text-sm mb-6">Detalles, cupos y condiciones de tu plan actual.</p>
-                <div id="plan-nombre-seccion" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-6 mb-6">
-                    <p class="text-sm font-medium opacity-80 mb-1">Plan activo</p>
-                    <p class="text-3xl font-bold" id="plan-nombre-display">Cargando...</p>
-                    <p class="text-sm opacity-80 mt-1" id="plan-subtitulo-display"></p>
+                <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
+                    <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Mi Plan</button>
+                    <button onclick="showSubTab('plan','invitar')" id="st-plan-invitar" class="subtab-btn">🤝 Invitar</button>
                 </div>
-                <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">✨ Lo que incluye tu plan</h3>
-                    <div id="plan-features-display" class="space-y-3"></div>
-                </div>
-                <div id="seccion-cupos-incluidos" class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">📊 Cupos incluidos en tu plan</h3>
-                    <p class="text-xs text-gray-500 mb-4">Los cupos mensuales se reinician el día 1 de cada mes. Los semanales, cada lunes a las 00:00 UTC.</p>
-                    <div id="plan-cupos-display" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
-                </div>
-                <div id="seccion-agentes-cupos" class="bg-white border border-indigo-200 rounded-xl p-6 mb-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">📦 Cupos adicionales (paquetes mensuales)</h3>
-                    <p class="text-xs text-gray-500 mb-4">Amplía tus cupos con paquetes según tu demanda.</p>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead><tr class="border-b border-gray-200"><th class="text-left py-2 pr-4 text-gray-600 font-semibold">Acción</th><th class="text-center py-2 px-3 text-gray-500 font-medium"><div class="text-xs font-semibold text-gray-700">Paquete S</div></th><th class="text-center py-2 px-3 bg-indigo-50 rounded"><div class="text-xs font-semibold text-indigo-700">Paquete M</div></th><th class="text-center py-2 px-3 text-gray-500 font-medium"><div class="text-xs font-semibold text-gray-700">Paquete L</div></th></tr></thead>
-                            <tbody class="divide-y divide-gray-100">
-                                <tr><td class="py-3 pr-4 text-gray-700">📄 Descargar Pliego (PDF)</td><td class="text-center py-3 px-3 font-bold text-gray-900">5</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">10</td><td class="text-center py-3 px-3 font-bold text-gray-900">20</td></tr>
-                                <tr><td class="py-3 pr-4 text-gray-700">🤖 Analizar Pliego con IA</td><td class="text-center py-3 px-3 font-bold text-gray-900">2</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">4</td><td class="text-center py-3 px-3 font-bold text-gray-900">8</td></tr>
-                                <tr><td class="py-3 pr-4 text-gray-700">📋 Generar F033 (Agente 033)</td><td class="text-center py-3 px-3 font-bold text-gray-900">5</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">10</td><td class="text-center py-3 px-3 font-bold text-gray-900">20</td></tr>
-                                <tr><td class="py-3 pr-4 text-gray-700">🗂️ Plan para ofertar (Agente Sprint)</td><td class="text-center py-3 px-3 font-bold text-gray-900">2</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">4</td><td class="text-center py-3 px-3 font-bold text-gray-900">8</td></tr>
-                            </tbody>
-                        </table>
+
+                <!-- SUB: Info del Plan -->
+                <div id="sc-plan-info" class="hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">📋 Perfil de Plan</h2>
+                    <p class="text-gray-500 text-sm mb-6">Detalles, cupos y condiciones de tu plan actual.</p>
+                    <div id="plan-nombre-seccion" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-6 mb-6">
+                        <p class="text-sm font-medium opacity-80 mb-1">Plan activo</p>
+                        <p class="text-3xl font-bold" id="plan-nombre-display">Cargando...</p>
+                        <p class="text-sm opacity-80 mt-1" id="plan-subtitulo-display"></p>
                     </div>
-                    <p class="text-xs text-gray-400 mt-4 text-center">Para adquirir paquetes adicionales, contacta a <a href="mailto:sales@umbusk.com" class="text-indigo-600 underline">sales@umbusk.com</a></p>
-                </div>
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">⚠️ Condiciones y avisos importantes</h3>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los cupos mensuales se reinician el día 1 de cada mes a las 00:00 UTC. Los cupos no utilizados no se acumulan.</span></li>
-                        <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los cupos semanales de los Agentes 033 y Sprint se reinician cada lunes a las 00:00 UTC.</span></li>
-                        <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los documentos descargados del portal SECP son responsabilidad de la entidad contratante. Compita no garantiza su completitud, vigencia ni exactitud.</span></li>
-                        <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los análisis generados por IA son orientativos e informativos. No constituyen asesoría legal, financiera ni técnica.</span></li>
-                        <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>El Formulario F033 generado es un borrador de referencia. El usuario debe revisarlo antes de presentarlo.</span></li>
-                        <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Compita puede experimentar interrupciones temporales. Umbusk LLC no se hace responsable por licitaciones perdidas durante dichos períodos.</span></li>
-                        <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>El monitoreo automático opera de lunes a sábado. Las licitaciones de fines de semana se procesan en el siguiente ciclo.</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- TAB: Familias UNSPSC -->
-            <div id="content-familias" class="tab-content hidden">
-                <div class="mb-6"><h2 class="text-2xl font-bold text-gray-900 mb-2">🏷️ Familias UNSPSC</h2><p class="text-gray-600 text-sm">Selecciona las familias de productos/servicios que te interesan para filtrar licitaciones relevantes automáticamente.</p></div>
-                <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-4 mb-6 border border-indigo-200">
-                    <div class="flex items-center justify-between">
-                        <div><p class="text-sm text-gray-600 font-medium">Familias seleccionadas</p><p class="text-2xl font-bold text-indigo-600"><span id="familias-contador">0</span> de <span id="familias-limite">0</span></p></div>
-                        <div class="text-right"><p class="text-sm text-gray-600 font-medium">Plan actual</p><p class="text-lg font-bold text-gray-900" id="plan-familias">-</p></div>
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6"><h3 class="text-lg font-bold text-gray-900 mb-4">✨ Lo que incluye tu plan</h3><div id="plan-features-display" class="space-y-3"></div></div>
+                    <div id="seccion-cupos-incluidos" class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">📊 Cupos incluidos en tu plan</h3>
+                        <p class="text-xs text-gray-500 mb-4">Los cupos mensuales se reinician el día 1 de cada mes. Los semanales, cada lunes a las 00:00 UTC.</p>
+                        <div id="plan-cupos-display" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
                     </div>
-                </div>
-                <div class="mb-6"><div class="relative"><input type="text" id="buscar-familias" placeholder="🔍 Buscar familias..." class="w-full px-4 py-3 pl-10 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition" oninput="filtrarFamilias()"><span class="absolute left-3 top-3.5 text-gray-400">🔍</span></div></div>
-                <div id="familias-lista" class="space-y-4 mb-6"></div>
-                <div class="flex gap-4 sticky bottom-0 bg-white pt-4 border-t">
-                    <button onclick="limpiarSeleccion()" class="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition">🗑️ Limpiar selección</button>
-                    <button onclick="guardarFamilias()" class="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition">💾 Guardar cambios</button>
-                </div>
-            </div>
-
-            <!-- TAB: Seguridad -->
-            <div id="content-seguridad" class="tab-content hidden">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Seguridad</h2>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6"><label class="block text-sm font-medium text-gray-700 mb-2">Email de la cuenta</label><div class="text-gray-900 font-semibold" id="email-readonly"></div><p class="text-xs text-gray-500 mt-1">El email no puede ser modificado</p></div>
-                <form id="form-password" onsubmit="cambiarPassword(event)">
-                    <div class="space-y-6">
-                        <div><label class="block text-sm font-medium text-gray-700 mb-2">Contraseña Actual *</label><input type="password" id="password-actual" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"></div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña *</label><input type="password" id="password-nueva" required minlength="8" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"><p class="text-xs text-gray-500 mt-1">Mínimo 8 caracteres</p></div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-2">Confirmar Nueva Contraseña *</label><input type="password" id="password-confirmar" required minlength="8" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition"></div>
+                    <div id="seccion-agentes-cupos" class="bg-white border border-indigo-200 rounded-xl p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">📦 Cupos adicionales (paquetes mensuales)</h3>
+                        <p class="text-xs text-gray-500 mb-4">Amplía tus cupos con paquetes según tu demanda.</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead><tr class="border-b border-gray-200"><th class="text-left py-2 pr-4 text-gray-600 font-semibold">Acción</th><th class="text-center py-2 px-3 text-gray-500 font-medium"><div class="text-xs font-semibold text-gray-700">Paquete S</div></th><th class="text-center py-2 px-3 bg-indigo-50 rounded"><div class="text-xs font-semibold text-indigo-700">Paquete M</div></th><th class="text-center py-2 px-3 text-gray-500 font-medium"><div class="text-xs font-semibold text-gray-700">Paquete L</div></th></tr></thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr><td class="py-3 pr-4 text-gray-700">📄 Descargar Pliego (PDF)</td><td class="text-center py-3 px-3 font-bold text-gray-900">5</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">10</td><td class="text-center py-3 px-3 font-bold text-gray-900">20</td></tr>
+                                    <tr><td class="py-3 pr-4 text-gray-700">🤖 Analizar Pliego con IA</td><td class="text-center py-3 px-3 font-bold text-gray-900">2</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">4</td><td class="text-center py-3 px-3 font-bold text-gray-900">8</td></tr>
+                                    <tr><td class="py-3 pr-4 text-gray-700">📋 Generar F033 (Agente 033)</td><td class="text-center py-3 px-3 font-bold text-gray-900">5</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">10</td><td class="text-center py-3 px-3 font-bold text-gray-900">20</td></tr>
+                                    <tr><td class="py-3 pr-4 text-gray-700">🗂️ Plan para ofertar (Agente Sprint)</td><td class="text-center py-3 px-3 font-bold text-gray-900">2</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">4</td><td class="text-center py-3 px-3 font-bold text-gray-900">8</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">Para adquirir paquetes adicionales, contacta a <a href="mailto:sales@umbusk.com" class="text-indigo-600 underline">sales@umbusk.com</a></p>
                     </div>
-                    <button type="submit" class="mt-6 w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition">🔒 Cambiar Contraseña</button>
-                </form>
-            </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">⚠️ Condiciones y avisos importantes</h3>
+                        <ul class="space-y-3 text-sm text-gray-600">
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los cupos mensuales se reinician el día 1 de cada mes a las 00:00 UTC. Los cupos no utilizados no se acumulan.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los cupos semanales de los Agentes 033 y Sprint se reinician cada lunes a las 00:00 UTC.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los documentos descargados del portal SECP son responsabilidad de la entidad contratante. Compita no garantiza su completitud, vigencia ni exactitud.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Los análisis generados por IA son orientativos e informativos. No constituyen asesoría legal, financiera ni técnica.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>El Formulario F033 generado es un borrador de referencia. El usuario debe revisarlo y validarlo antes de presentarlo.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>Compita puede experimentar interrupciones temporales. Umbusk LLC no se responsabiliza por licitaciones perdidas durante dichos períodos.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5 flex-shrink-0">•</span><span>El monitoreo automático opera de lunes a sábado. Las licitaciones de fines de semana se procesan en el siguiente ciclo activo.</span></li>
+                        </ul>
+                    </div>
+                </div><!-- fin sc-plan-info -->
 
-            <!-- TAB: Invitar -->
-            <div id="content-invitar" class="tab-content hidden">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">🤝 Invitar a un Colega</h2>
-                <p class="text-gray-600 text-sm mb-6">Invita a otra empresa a probar Compita.</p>
-                <div class="bg-white border-2 border-indigo-100 rounded-xl p-6 mb-6">
-                    <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Email de la persona a invitar *</label><input type="email" id="invitar-email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition" placeholder="correo@empresa.com"></div>
-                    <button onclick="enviarInvitacion()" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition">✉️ Enviar Invitación</button>
-                </div>
-                <div><h3 class="text-lg font-bold text-gray-900 mb-4">Invitaciones enviadas</h3><div id="invitaciones-lista" class="space-y-3"><p class="text-gray-500 text-sm">Cargando...</p></div></div>
-            </div>
+                <!-- SUB: Invitar -->
+                <div id="sc-plan-invitar" class="hidden">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">🤝 Invitar a un Colega</h2>
+                    <p class="text-gray-600 text-sm mb-6">Invita a otra empresa a probar Compita. Recibirán un email con un link de registro personalizado.</p>
+                    <div class="bg-white border-2 border-indigo-100 rounded-xl p-6 mb-6">
+                        <div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Email de la persona a invitar *</label><input type="email" id="invitar-email" class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-600 focus:outline-none transition" placeholder="correo@empresa.com"></div>
+                        <button onclick="enviarInvitacion()" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-semibold transition">✉️ Enviar Invitación</button>
+                    </div>
+                    <div><h3 class="text-lg font-bold text-gray-900 mb-4">Invitaciones enviadas</h3><div id="invitaciones-lista" class="space-y-3"><p class="text-gray-500 text-sm">Cargando...</p></div></div>
+                </div><!-- fin sc-plan-invitar -->
+            </div><!-- fin content-plan -->
 
-            <!-- TAB: Facturación -->
+
+            <!-- ══════════════════════════════════════════════════════ -->
+            <!-- TAB: FACTURACIÓN                                       -->
+            <!-- ══════════════════════════════════════════════════════ -->
             <div id="content-facturacion" class="tab-content hidden">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6">Facturación</h2>
                 <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 mb-6 border border-indigo-200">
@@ -339,7 +329,7 @@
                     </div>
                 </div>
                 <div id="upgrade-section" class="hidden bg-white border-2 border-indigo-200 rounded-lg p-6 mb-6">
-                    <p class="text-sm font-semibold text-gray-800 mb-4 text-center">¡Suscríbete a uno de nuestros planes!</p>
+                    <p class="text-sm font-semibold text-gray-800 mb-4 text-center">¡Suscríbete a uno de nuestros planes para continuar recibiendo las oportunidades que importan!</p>
                     <div class="flex gap-4">
                         <div class="flex-1"><button onclick="iniciarUpgrade('estandar')" class="w-full bg-indigo-600 text-white px-6 py-4 rounded-lg hover:bg-indigo-700 transition font-bold text-center shadow-md"><div class="text-xs opacity-90 mb-1">Plan Estándar</div><div class="text-xl">$10/mes</div></button></div>
                         <div class="flex-1"><button onclick="iniciarUpgrade('business')" class="w-full bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-4 rounded-lg hover:from-yellow-500 hover:to-orange-500 transition font-bold text-center shadow-md"><div class="text-xs opacity-90 mb-1">Plan Business</div><div class="text-xl">$20/mes</div></button></div>
@@ -350,51 +340,58 @@
                     <ul class="space-y-2 mb-6"><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Ver y descargar tus facturas</li><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Actualizar tu método de pago</li><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Cambiar de plan</li><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Cancelar tu suscripción</li></ul>
                     <button onclick="abrirPortalFacturacion()" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">🔗 Abrir Portal de Facturación</button>
                 </div>
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4"><p class="text-sm text-gray-600"><strong>Nota:</strong> Serás redirigido a un portal seguro gestionado por Stripe.</p></div>
-            </div>
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4"><p class="text-sm text-gray-600"><strong>Nota:</strong> Serás redirigido a un portal seguro gestionado por Stripe. Todos los cambios se reflejarán automáticamente en tu cuenta.</p></div>
+            </div><!-- fin content-facturacion -->
 
-            <!-- ═══════════════════════════════════════════════════ -->
-            <!-- TAB: Perfil Licitador (solo Enterprise)            -->
-            <!-- ═══════════════════════════════════════════════════ -->
+
+            <!-- ══════════════════════════════════════════════════════ -->
+            <!-- TAB: PERFIL LICITADOR (solo Enterprise)               -->
+            <!-- ══════════════════════════════════════════════════════ -->
             <div id="content-perfil-licitador" class="tab-content hidden">
+                <!-- Encabezado + estado agregado -->
                 <div class="flex items-start justify-between mb-6 flex-wrap gap-4">
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-900">📋 Perfil Licitador</h2>
-                        <p class="text-sm text-gray-500 mt-1">Documentos y certificaciones de tu empresa para licitaciones públicas en la RD</p>
+                        <h2 class="text-2xl font-bold text-gray-900">Perfil Licitador</h2>
+                        <p class="text-sm text-gray-400 mt-1">Documentos y certificaciones para licitaciones públicas en la República Dominicana</p>
                     </div>
-                    <div id="pl-estado-card" class="flex items-center gap-3 px-5 py-3 rounded-xl border border-gray-200 bg-gray-50">
-                        <div id="pl-estado-dot" class="w-3 h-3 rounded-full bg-gray-300"></div>
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50">
+                        <div id="pl-estado-dot" class="w-3 h-3 rounded-full bg-gray-300 flex-shrink-0"></div>
                         <div>
                             <p class="text-xs text-gray-400">Estado de la empresa</p>
                             <p id="pl-estado-val" class="text-sm font-bold text-gray-500">Cargando...</p>
                         </div>
                     </div>
                 </div>
-                <div id="pl-loading" class="text-center py-12 text-gray-400">Cargando documentos...</div>
-                <div id="pl-tabla-wrap" class="hidden border border-gray-200 rounded-xl overflow-hidden">
-                    <table class="w-full border-collapse">
-                        <thead>
-                            <tr class="bg-gray-50 border-b border-gray-200">
-                                <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-14">Cód.</th>
-                                <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide">Documento</th>
-                                <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-40 hidden md:table-cell">Emisor</th>
-                                <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-24 hidden lg:table-cell">Vigencia</th>
-                                <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-36">Vence</th>
-                                <th class="text-left px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-28">Estado</th>
-                                <th class="w-8"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="pl-tbody"></tbody>
-                    </table>
+
+                <!-- Tabla -->
+                <div id="pl-loading" class="text-center py-12 text-gray-400 text-sm">Cargando documentos...</div>
+                <div id="pl-tabla-wrap" class="hidden">
+                    <div class="border border-gray-200 rounded-xl overflow-hidden">
+                        <table class="w-full border-collapse text-sm">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-200">
+                                    <th class="text-left px-3 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-12">Cód.</th>
+                                    <th class="text-left px-3 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide">Documento</th>
+                                    <th class="text-left px-3 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-40 hidden md:table-cell">Emisor</th>
+                                    <th class="text-left px-3 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-24 hidden lg:table-cell">Vigencia</th>
+                                    <th class="text-left px-3 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-36">Fecha vence</th>
+                                    <th class="text-left px-3 py-3 text-xs font-bold text-gray-400 uppercase tracking-wide w-28">Estado</th>
+                                    <th class="w-8"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="pl-tbody"></tbody>
+                        </table>
+                    </div>
+                    <!-- Leyenda -->
+                    <div class="mt-3 flex flex-wrap gap-4 text-xs text-gray-400">
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-600 inline-block"></span>Vigente (+30 días)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-500 inline-block"></span>Por vencer (≤30 días)</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>Vencido</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-300 inline-block"></span>Sin registrar</span>
+                        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Permanente</span>
+                    </div>
                 </div>
-                <div class="mt-3 flex flex-wrap gap-4 text-xs text-gray-400">
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-600 inline-block"></span>Vigente (+30 días)</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500 inline-block"></span>Por vencer (≤30 días)</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span>Vencido</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-300 inline-block"></span>Sin registrar</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Permanente</span>
-                </div>
-            </div>
+            </div><!-- fin content-perfil-licitador -->
 
         </div><!-- fin .p-8 -->
     </div><!-- fin .bg-white -->
@@ -412,142 +409,65 @@
 
 <script>
 const API_BASE = window.location.origin;
-let usuarioActual = null;
-let empresaActual = null;
-let familiasSeleccionadas = new Set();
-let limiteFamilias = 0;
+let usuarioActual = null, empresaActual = null;
+let familiasSeleccionadas = new Set(), limiteFamilias = 0;
 
 const sectores = [
-    { id: 'construccion', emoji: '🏗️', label: 'Construcción e infraestructura' },
-    { id: 'tecnologia',   emoji: '💻', label: 'Tecnología y sistemas' },
-    { id: 'salud',        emoji: '🏥', label: 'Salud y farmacéuticos' },
-    { id: 'educacion',    emoji: '📚', label: 'Educación y capacitación' },
-    { id: 'consultoria',  emoji: '📊', label: 'Consultoría y servicios profesionales' },
-    { id: 'suministros',  emoji: '📦', label: 'Suministros y materiales' },
-    { id: 'limpieza',     emoji: '🧹', label: 'Limpieza y mantenimiento' },
-    { id: 'transporte',   emoji: '🚛', label: 'Transporte y logística' },
-    { id: 'alimentacion', emoji: '🍽️', label: 'Alimentación y catering' },
-    { id: 'seguridad',    emoji: '🔒', label: 'Seguridad y vigilancia' },
-    { id: 'ingenieria',   emoji: '⚙️', label: 'Ingeniería y arquitectura' },
-    { id: 'otro',         emoji: '🔧', label: 'Otro sector' },
+    {id:'construccion',emoji:'🏗️',label:'Construcción e infraestructura'},
+    {id:'tecnologia',emoji:'💻',label:'Tecnología y sistemas'},
+    {id:'salud',emoji:'🏥',label:'Salud y farmacéuticos'},
+    {id:'educacion',emoji:'📚',label:'Educación y capacitación'},
+    {id:'consultoria',emoji:'📊',label:'Consultoría y servicios profesionales'},
+    {id:'suministros',emoji:'📦',label:'Suministros y materiales'},
+    {id:'limpieza',emoji:'🧹',label:'Limpieza y mantenimiento'},
+    {id:'transporte',emoji:'🚛',label:'Transporte y logística'},
+    {id:'alimentacion',emoji:'🍽️',label:'Alimentación y catering'},
+    {id:'seguridad',emoji:'🔒',label:'Seguridad y vigilancia'},
+    {id:'ingenieria',emoji:'⚙️',label:'Ingeniería y arquitectura'},
+    {id:'otro',emoji:'🔧',label:'Otro sector'},
 ];
 const sectorKeywords = {
-    construccion: ['construcción','infraestructura','obra civil','mantenimiento','reparación','rehabilitación','pavimentación','edificios','carreteras','puentes'],
-    tecnologia:   ['tecnología','sistemas','software','hardware','redes','telecomunicaciones','informática','soporte técnico','ciberseguridad','bases de datos'],
-    salud:        ['salud','médico','farmacéutico','equipos médicos','laboratorio','insumos médicos','diagnóstico','hospitalario','clínica'],
-    educacion:    ['educación','capacitación','formación','materiales educativos','libros','talleres','entrenamiento','cursos','desarrollo profesional'],
-    consultoria:  ['consultoría','asesoría','servicios profesionales','gestión','planificación','estudios','investigación','evaluación','diagnóstico organizacional'],
-    suministros:  ['suministros','materiales','oficina','papelería','insumos','artículos','equipos de oficina','mobiliario','útiles'],
-    limpieza:     ['limpieza','mantenimiento','fumigación','desinfección','jardinería','saneamiento','higiene','sanitización'],
-    transporte:   ['transporte','logística','vehículos','combustible','flota','carga','traslado','distribución','mensajería'],
-    alimentacion: ['alimentación','catering','comida','bebidas','servicios de alimentación','provisiones','comedor','refrigerios'],
-    seguridad:    ['seguridad','vigilancia','monitoreo','sistemas de seguridad','guardias','CCTV','acceso controlado','alarmas'],
-    ingenieria:   ['ingeniería','topografía','arquitectura','diseño','estudios técnicos','supervisión','planos','peritaje','geotecnia'],
-    otro:         [],
+    construccion:['construcción','infraestructura','obra civil','mantenimiento','reparación','rehabilitación','pavimentación','edificios','carreteras','puentes'],
+    tecnologia:['tecnología','sistemas','software','hardware','redes','telecomunicaciones','informática','soporte técnico','ciberseguridad','bases de datos'],
+    salud:['salud','médico','farmacéutico','equipos médicos','laboratorio','insumos médicos','diagnóstico','hospitalario','clínica'],
+    educacion:['educación','capacitación','formación','materiales educativos','libros','talleres','entrenamiento','cursos','desarrollo profesional'],
+    consultoria:['consultoría','asesoría','servicios profesionales','gestión','planificación','estudios','investigación','evaluación','diagnóstico organizacional'],
+    suministros:['suministros','materiales','oficina','papelería','insumos','artículos','equipos de oficina','mobiliario','útiles'],
+    limpieza:['limpieza','mantenimiento','fumigación','desinfección','jardinería','saneamiento','higiene','sanitización'],
+    transporte:['transporte','logística','vehículos','combustible','flota','carga','traslado','distribución','mensajería'],
+    alimentacion:['alimentación','catering','comida','bebidas','servicios de alimentación','provisiones','comedor','refrigerios'],
+    seguridad:['seguridad','vigilancia','monitoreo','sistemas de seguridad','guardias','CCTV','acceso controlado','alarmas'],
+    ingenieria:['ingeniería','topografía','arquitectura','diseño','estudios técnicos','supervisión','planos','peritaje','geotecnia'],
+    otro:[],
 };
 let sectoresSeleccionadosCuenta = new Set();
 
-const mapaRegiones = {
-    DO34: 'Cibao Noroeste', DO35: 'Cibao Norte', DO33: 'Cibao Nordeste', DO36: 'Cibao Sur',
-    DO37: 'El Valle', DO38: 'Enriquillo', DO41: 'Valdesia', DO40: 'Ozama', DO39: 'Higuamo', DO42: 'Yuma',
-};
+const mapaRegiones = {DO34:'Cibao Noroeste',DO35:'Cibao Norte',DO33:'Cibao Nordeste',DO36:'Cibao Sur',DO37:'El Valle',DO38:'Enriquillo',DO41:'Valdesia',DO40:'Ozama',DO39:'Higuamo',DO42:'Yuma'};
 
-function renderSectoresCuenta() {
-    const grid = document.getElementById('sectores-grid-cuenta');
-    if (!grid) return;
-    grid.innerHTML = sectores.map(s => `
-        <div class="sector-card border-2 border-gray-200 rounded-xl p-4 text-center ${sectoresSeleccionadosCuenta.has(s.id) ? 'selected' : ''}"
-             id="sc-cuenta-${s.id}" onclick="seleccionarSectorCuenta('${s.id}')">
-            <div class="text-3xl mb-2">${s.emoji}</div>
-            <div class="text-xs font-semibold text-gray-700 leading-tight">${s.label}</div>
-        </div>`).join('');
-    actualizarContadorSectoresCuenta();
+// ════════════════════ TABS ════════════════════
+function showTab(tabName) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('border-indigo-600','text-indigo-600'));
+    document.getElementById(`content-${tabName}`).classList.remove('hidden');
+    document.getElementById(`tab-${tabName}`).classList.add('border-indigo-600','text-indigo-600');
+    if (tabName === 'perfil')           showSubTab('perfil','datos');
+    if (tabName === 'plan')             showSubTab('plan','info');
+    if (tabName === 'perfil-licitador') plCargar();
 }
 
-function seleccionarSectorCuenta(id) {
-    if (sectoresSeleccionadosCuenta.has(id)) {
-        sectoresSeleccionadosCuenta.delete(id);
-        document.getElementById(`sc-cuenta-${id}`)?.classList.remove('selected');
-    } else {
-        if (sectoresSeleccionadosCuenta.size >= 3) { alert('Máximo 3 sectores.'); return; }
-        sectoresSeleccionadosCuenta.add(id);
-        document.getElementById(`sc-cuenta-${id}`)?.classList.add('selected');
-    }
-    actualizarContadorSectoresCuenta();
-    renderChipsCuenta();
+function showSubTab(parent, sub) {
+    document.querySelectorAll(`[id^="sc-${parent}-"]`).forEach(el => el.classList.add('hidden'));
+    document.getElementById(`sc-${parent}-${sub}`)?.classList.remove('hidden');
+    document.querySelectorAll(`[id^="st-${parent}-"]`).forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.getElementById(`st-${parent}-${sub}`)?.classList.add('active');
+    if (parent === 'perfil' && sub === 'familias') cargarFamiliasUNSPSC();
+    if (parent === 'plan'   && sub === 'invitar')  cargarInvitaciones();
 }
 
-function actualizarContadorSectoresCuenta() {
-    const el = document.getElementById('contador-sectores-cuenta');
-    if (el) el.textContent = `${sectoresSeleccionadosCuenta.size} de 3 seleccionados`;
-}
-
-function renderChipsCuenta() {
-    const todas = [...sectoresSeleccionadosCuenta].flatMap(id => sectorKeywords[id] || []);
-    const chips = document.getElementById('chips-sugeridos-cuenta');
-    if (!chips) return;
-    if (todas.length === 0) { chips.innerHTML = '<p class="text-xs text-gray-400 italic">Selecciona al menos un sector para ver sugerencias.</p>'; return; }
-    const kw = document.getElementById('empresa-palabras-clave');
-    const actuales = kw ? kw.value.split(',').map(s => s.trim()).filter(s => s) : [];
-    chips.innerHTML = [...new Set(todas)].map(k => {
-        const estaActiva = actuales.includes(k);
-        return `<span class="keyword-chip ${estaActiva ? 'added' : ''}" onclick="toggleChipCuenta(this,'${k}')">${k}</span>`;
-    }).join('');
-}
-
-function toggleChipCuenta(el, keyword) {
-    el.classList.toggle('added');
-    const kw = document.getElementById('empresa-palabras-clave');
-    let palabras = kw.value.split(',').map(s => s.trim()).filter(s => s);
-    if (el.classList.contains('added')) { if (!palabras.includes(keyword)) palabras.push(keyword); }
-    else { palabras = palabras.filter(p => p !== keyword); }
-    kw.value = palabras.join(', ');
-}
-
-function setMontoCuenta(val) { document.getElementById('empresa-monto-minimo').value = val || ''; }
-
-function toggleRegionMapa(id, nombre) {
-    document.getElementById(`r-${id}`)?.classList.toggle('selected');
-    sincronizarBotonTodas();
-    actualizarDisplayRegiones();
-}
-
-function toggleTodasRegiones() {
-    const ids = Object.keys(mapaRegiones);
-    const todasON = ids.every(k => document.getElementById(`r-${k}`)?.classList.contains('selected'));
-    const btn = document.getElementById('btn-todas-regiones');
-    if (todasON) {
-        ids.forEach(k => document.getElementById(`r-${k}`)?.classList.remove('selected'));
-        btn.classList.remove('bg-indigo-600','text-white','border-indigo-600');
-        btn.classList.add('border-indigo-300','text-indigo-700','bg-white');
-    } else {
-        ids.forEach(k => document.getElementById(`r-${k}`)?.classList.add('selected'));
-        btn.classList.add('bg-indigo-600','text-white','border-indigo-600');
-        btn.classList.remove('border-indigo-300','text-indigo-700','bg-white');
-    }
-    actualizarDisplayRegiones();
-}
-
-function sincronizarBotonTodas() {
-    const ids = Object.keys(mapaRegiones);
-    const todasON = ids.every(k => document.getElementById(`r-${k}`)?.classList.contains('selected'));
-    const btn = document.getElementById('btn-todas-regiones');
-    if (!btn) return;
-    if (todasON) { btn.classList.add('bg-indigo-600','text-white','border-indigo-600'); btn.classList.remove('border-indigo-300','text-indigo-700','bg-white'); }
-    else { btn.classList.remove('bg-indigo-600','text-white','border-indigo-600'); btn.classList.add('border-indigo-300','text-indigo-700','bg-white'); }
-}
-
-function actualizarDisplayRegiones() {
-    const total = Object.keys(mapaRegiones).length;
-    const seleccionadas = Object.entries(mapaRegiones).filter(([id]) => document.getElementById(`r-${id}`)?.classList.contains('selected')).map(([, nombre]) => nombre);
-    const el = document.getElementById('regiones-display');
-    if (!el) return;
-    if (seleccionadas.length === 0) { el.textContent = ''; return; }
-    if (seleccionadas.length === total) { el.textContent = '✓ Todas las regiones seleccionadas'; return; }
-    el.textContent = `✓ ${seleccionadas.length} región(es): ${seleccionadas.join(', ')}`;
-}
-
-window.addEventListener('DOMContentLoaded', function() { verificarAutenticacion(); });
+// ════════════════════ INIT ════════════════════
+window.addEventListener('DOMContentLoaded', () => verificarAutenticacion());
 
 async function verificarAutenticacion() {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -559,479 +479,429 @@ async function verificarAutenticacion() {
         renderSectoresCuenta();
         await cargarPerfil();
         await cargarInfoFacturacion();
-        const perfilResponse = await fetch(`${API_BASE}/api/perfil?type=usuario`, { headers: { 'Authorization': `Bearer ${token}` } });
-        if (perfilResponse.ok) {
-            const perfilData = await perfilResponse.json();
-            document.getElementById('nombre-empresa').textContent = perfilData.empresa.nombre;
-            document.getElementById('nombre-empresa-mobile').textContent = perfilData.empresa.nombre;
+        const r = await fetch(`${API_BASE}/api/perfil?type=usuario`, {headers:{'Authorization':`Bearer ${token}`}});
+        if (r.ok) {
+            const d = await r.json();
+            document.getElementById('nombre-empresa').textContent = d.empresa.nombre;
+            document.getElementById('nombre-empresa-mobile').textContent = d.empresa.nombre;
         }
         showTab('perfil');
-    } catch (error) {
-        console.error('Error:', error);
-        window.location.href = '/login.html';
-    }
+    } catch (e) { console.error(e); window.location.href = '/login.html'; }
 }
 
 function cerrarSesion() {
-    localStorage.removeItem('token'); localStorage.removeItem('user');
-    sessionStorage.removeItem('token'); sessionStorage.removeItem('user');
+    ['token','user'].forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
     window.location.href = '/login.html';
 }
 
-function showTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('border-indigo-600', 'text-indigo-600'));
-    document.getElementById(`content-${tabName}`).classList.remove('hidden');
-    document.getElementById(`tab-${tabName}`).classList.add('border-indigo-600', 'text-indigo-600');
-    if (tabName === 'plan' && empresaActual) cargarPerfilPlan(empresaActual.plan);
-    if (tabName === 'familias') cargarFamiliasUNSPSC();
-    if (tabName === 'invitar') cargarInvitaciones();
-    if (tabName === 'perfil-licitador') plCargar(); // ← NUEVO
+function toggleMobileMenuCuenta() {
+    document.getElementById('mobile-menu-cuenta').classList.toggle('hidden');
+    document.getElementById('menu-icon-cuenta').classList.toggle('hidden');
+    document.getElementById('close-icon-cuenta').classList.toggle('hidden');
 }
 
+// ════════════════════ SECTORES ════════════════════
+function renderSectoresCuenta() {
+    const grid = document.getElementById('sectores-grid-cuenta');
+    if (!grid) return;
+    grid.innerHTML = sectores.map(s => `
+        <div class="sector-card border-2 border-gray-200 rounded-xl p-4 text-center ${sectoresSeleccionadosCuenta.has(s.id)?'selected':''}" id="sc-cuenta-${s.id}" onclick="seleccionarSectorCuenta('${s.id}')">
+            <div class="text-3xl mb-2">${s.emoji}</div>
+            <div class="text-xs font-semibold text-gray-700 leading-tight">${s.label}</div>
+        </div>`).join('');
+    actualizarContadorSectoresCuenta();
+}
+function seleccionarSectorCuenta(id) {
+    if (sectoresSeleccionadosCuenta.has(id)) { sectoresSeleccionadosCuenta.delete(id); document.getElementById(`sc-cuenta-${id}`)?.classList.remove('selected'); }
+    else { if (sectoresSeleccionadosCuenta.size>=3){alert('Máximo 3 sectores.');return;} sectoresSeleccionadosCuenta.add(id); document.getElementById(`sc-cuenta-${id}`)?.classList.add('selected'); }
+    actualizarContadorSectoresCuenta(); renderChipsCuenta();
+}
+function actualizarContadorSectoresCuenta() {
+    const el=document.getElementById('contador-sectores-cuenta');
+    if(el) el.textContent=`${sectoresSeleccionadosCuenta.size} de 3 seleccionados`;
+}
+function renderChipsCuenta() {
+    const todas=[...sectoresSeleccionadosCuenta].flatMap(id=>sectorKeywords[id]||[]);
+    const chips=document.getElementById('chips-sugeridos-cuenta');
+    if(!chips)return;
+    if(!todas.length){chips.innerHTML='<p class="text-xs text-gray-400 italic">Selecciona al menos un sector para ver sugerencias.</p>';return;}
+    const kw=document.getElementById('empresa-palabras-clave');
+    const actuales=kw?kw.value.split(',').map(s=>s.trim()).filter(s=>s):[];
+    chips.innerHTML=[...new Set(todas)].map(k=>`<span class="keyword-chip ${actuales.includes(k)?'added':''}" onclick="toggleChipCuenta(this,'${k}')">${k}</span>`).join('');
+}
+function toggleChipCuenta(el,keyword) {
+    el.classList.toggle('added');
+    const kw=document.getElementById('empresa-palabras-clave');
+    let p=kw.value.split(',').map(s=>s.trim()).filter(s=>s);
+    if(el.classList.contains('added')){if(!p.includes(keyword))p.push(keyword);}else{p=p.filter(x=>x!==keyword);}
+    kw.value=p.join(', ');
+}
+function setMontoCuenta(val){document.getElementById('empresa-monto-minimo').value=val||'';}
+
+// ════════════════════ MAPA ════════════════════
+function toggleRegionMapa(id){document.getElementById(`r-${id}`)?.classList.toggle('selected');sincronizarBotonTodas();actualizarDisplayRegiones();}
+function toggleTodasRegiones(){
+    const ids=Object.keys(mapaRegiones);
+    const todasON=ids.every(k=>document.getElementById(`r-${k}`)?.classList.contains('selected'));
+    const btn=document.getElementById('btn-todas-regiones');
+    if(todasON){ids.forEach(k=>document.getElementById(`r-${k}`)?.classList.remove('selected'));btn.classList.remove('bg-indigo-600','text-white','border-indigo-600');btn.classList.add('border-indigo-300','text-indigo-700','bg-white');}
+    else{ids.forEach(k=>document.getElementById(`r-${k}`)?.classList.add('selected'));btn.classList.add('bg-indigo-600','text-white','border-indigo-600');btn.classList.remove('border-indigo-300','text-indigo-700','bg-white');}
+    actualizarDisplayRegiones();
+}
+function sincronizarBotonTodas(){
+    const todasON=Object.keys(mapaRegiones).every(k=>document.getElementById(`r-${k}`)?.classList.contains('selected'));
+    const btn=document.getElementById('btn-todas-regiones');if(!btn)return;
+    if(todasON){btn.classList.add('bg-indigo-600','text-white','border-indigo-600');btn.classList.remove('border-indigo-300','text-indigo-700','bg-white');}
+    else{btn.classList.remove('bg-indigo-600','text-white','border-indigo-600');btn.classList.add('border-indigo-300','text-indigo-700','bg-white');}
+}
+function actualizarDisplayRegiones(){
+    const total=Object.keys(mapaRegiones).length;
+    const sel=Object.entries(mapaRegiones).filter(([id])=>document.getElementById(`r-${id}`)?.classList.contains('selected')).map(([,n])=>n);
+    const el=document.getElementById('regiones-display');if(!el)return;
+    if(!sel.length){el.textContent='';return;}
+    el.textContent=sel.length===total?'✓ Todas las regiones seleccionadas':`✓ ${sel.length} región(es): ${sel.join(', ')}`;
+}
+
+// ════════════════════ PERFIL EMPRESA ════════════════════
 async function cargarPerfil() {
-    if (!usuarioActual || !usuarioActual.empresa_id) { alert('Error: No se encontró la empresa'); return; }
+    if(!usuarioActual?.empresa_id){alert('Error: No se encontró la empresa');return;}
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/perfil?type=empresa`, { headers: { 'Authorization': `Bearer ${token}` } });
-        if (!response.ok) { alert('Error al cargar perfil de empresa'); return; }
-        empresaActual = await response.json();
-        document.getElementById('banner-onboarding').classList.toggle('hidden', !!empresaActual.onboarding_completado);
-        document.getElementById('empresa-nombre').value = empresaActual.nombre || '';
-        document.getElementById('empresa-descripcion').value = empresaActual.descripcion || '';
-        document.getElementById('empresa-website').value = empresaActual.website || '';
-        const palabrasClave = Array.isArray(empresaActual.palabras_clave) ? empresaActual.palabras_clave.join(', ') : (empresaActual.palabras_clave || '');
-        document.getElementById('empresa-palabras-clave').value = palabrasClave;
-        const exclusiones = Array.isArray(empresaActual.exclusiones) ? empresaActual.exclusiones.join(', ') : (empresaActual.exclusiones || '');
-        document.getElementById('empresa-exclusiones').value = exclusiones;
-        document.getElementById('empresa-monto-minimo').value = empresaActual.monto_minimo_alta || 500000;
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/perfil?type=empresa`,{headers:{'Authorization':`Bearer ${token}`}});
+        if(!r.ok){alert('Error al cargar perfil de empresa');return;}
+        empresaActual=await r.json();
+        document.getElementById('banner-onboarding').classList.toggle('hidden',!!empresaActual.onboarding_completado);
+        document.getElementById('empresa-nombre').value=empresaActual.nombre||'';
+        document.getElementById('empresa-descripcion').value=empresaActual.descripcion||'';
+        document.getElementById('empresa-website').value=empresaActual.website||'';
+        const pc=Array.isArray(empresaActual.palabras_clave)?empresaActual.palabras_clave.join(', '):(empresaActual.palabras_clave||'');
+        document.getElementById('empresa-palabras-clave').value=pc;
+        const ex=Array.isArray(empresaActual.exclusiones)?empresaActual.exclusiones.join(', '):(empresaActual.exclusiones||'');
+        document.getElementById('empresa-exclusiones').value=ex;
+        document.getElementById('empresa-monto-minimo').value=empresaActual.monto_minimo_alta||500000;
         sectoresSeleccionadosCuenta.clear();
-        if (empresaActual.sector_principal) sectoresSeleccionadosCuenta.add(empresaActual.sector_principal);
-        if (Array.isArray(empresaActual.sectores_adicionales)) empresaActual.sectores_adicionales.forEach(s => sectoresSeleccionadosCuenta.add(s));
-        renderSectoresCuenta();
-        renderChipsCuenta();
-        Object.keys(mapaRegiones).forEach(id => document.getElementById(`r-${id}`)?.classList.remove('selected'));
-        const regiones = Array.isArray(empresaActual.regiones_interes) ? empresaActual.regiones_interes : [];
-        regiones.forEach(nombre => {
-            const entrada = Object.entries(mapaRegiones).find(([, v]) => v === nombre);
-            if (entrada) document.getElementById(`r-${entrada[0]}`)?.classList.add('selected');
-        });
-        sincronizarBotonTodas();
-        actualizarDisplayRegiones();
-    } catch (error) {
-        console.error('Error cargando perfil:', error);
-        alert('Error al cargar perfil de empresa');
-    }
+        if(empresaActual.sector_principal) sectoresSeleccionadosCuenta.add(empresaActual.sector_principal);
+        if(Array.isArray(empresaActual.sectores_adicionales)) empresaActual.sectores_adicionales.forEach(s=>sectoresSeleccionadosCuenta.add(s));
+        renderSectoresCuenta(); renderChipsCuenta();
+        Object.keys(mapaRegiones).forEach(id=>document.getElementById(`r-${id}`)?.classList.remove('selected'));
+        const reg=Array.isArray(empresaActual.regiones_interes)?empresaActual.regiones_interes:[];
+        reg.forEach(n=>{const e=Object.entries(mapaRegiones).find(([,v])=>v===n);if(e)document.getElementById(`r-${e[0]}`)?.classList.add('selected');});
+        sincronizarBotonTodas(); actualizarDisplayRegiones();
+    } catch(e){console.error(e);alert('Error al cargar perfil de empresa');}
 }
-
 async function guardarPerfil(event) {
     event.preventDefault();
-    if (!usuarioActual || !usuarioActual.empresa_id) { alert('Error: No se encontró la empresa'); return; }
-    const regionesMarcadas = Object.entries(mapaRegiones).filter(([id]) => document.getElementById(`r-${id}`)?.classList.contains('selected')).map(([, nombre]) => nombre);
-    const sectoresArray = [...sectoresSeleccionadosCuenta];
-    const datos = {
-        descripcion: document.getElementById('empresa-descripcion').value.trim(),
-        website: document.getElementById('empresa-website').value.trim(),
-        palabras_clave: document.getElementById('empresa-palabras-clave').value.split(',').map(s => s.trim()).filter(s => s),
-        exclusiones: document.getElementById('empresa-exclusiones').value.split(',').map(s => s.trim()).filter(s => s),
-        monto_minimo_alta: parseFloat(document.getElementById('empresa-monto-minimo').value) || 500000,
-        sector_principal: sectoresArray[0] || null,
-        sectores_adicionales: sectoresArray.slice(1),
-        regiones_interes: regionesMarcadas,
+    if(!usuarioActual?.empresa_id){alert('Error: No se encontró la empresa');return;}
+    const rm=Object.entries(mapaRegiones).filter(([id])=>document.getElementById(`r-${id}`)?.classList.contains('selected')).map(([,n])=>n);
+    const sa=[...sectoresSeleccionadosCuenta];
+    const datos={
+        descripcion:document.getElementById('empresa-descripcion').value.trim(),
+        website:document.getElementById('empresa-website').value.trim(),
+        palabras_clave:document.getElementById('empresa-palabras-clave').value.split(',').map(s=>s.trim()).filter(s=>s),
+        exclusiones:document.getElementById('empresa-exclusiones').value.split(',').map(s=>s.trim()).filter(s=>s),
+        monto_minimo_alta:parseFloat(document.getElementById('empresa-monto-minimo').value)||500000,
+        sector_principal:sa[0]||null, sectores_adicionales:sa.slice(1), regiones_interes:rm,
     };
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const btnGuardar = document.querySelector('#form-perfil button[type="submit"]');
-        const textoOriginal = btnGuardar.innerHTML;
-        btnGuardar.disabled = true;
-        btnGuardar.innerHTML = '⏳ Guardando perfil...';
-        const response = await fetch(`${API_BASE}/api/perfil`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(datos) });
-        const result = await response.json();
-        if (!response.ok) { btnGuardar.disabled = false; btnGuardar.innerHTML = textoOriginal; alert('Error: ' + result.error); return; }
-        btnGuardar.innerHTML = '🔍 Re-analizando oportunidades...';
-        try {
-            await fetch(`${API_BASE}/api/business-features`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ empresa_id: usuarioActual.empresa_id, accion: 're-analizar' }) });
-        } catch (e) { console.warn('Re-análisis no pudo ejecutarse:', e.message); }
-        btnGuardar.innerHTML = '✅ ¡Listo! Cargando oportunidades...';
-        window.location.href = '/oportunidades.html';
-    } catch (error) {
-        console.error('Error guardando perfil:', error);
-        const btnGuardar = document.querySelector('#form-perfil button[type="submit"]');
-        if (btnGuardar) { btnGuardar.disabled = false; btnGuardar.innerHTML = '💾 Guardar Cambios'; }
-        alert('Error al guardar cambios');
-    }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const btn=document.querySelector('#form-perfil button[type="submit"]');
+        const orig=btn.innerHTML; btn.disabled=true; btn.innerHTML='⏳ Guardando perfil...';
+        const r=await fetch(`${API_BASE}/api/perfil`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify(datos)});
+        const res=await r.json();
+        if(!r.ok){btn.disabled=false;btn.innerHTML=orig;alert('Error: '+res.error);return;}
+        btn.innerHTML='🔍 Re-analizando oportunidades...';
+        try{await fetch(`${API_BASE}/api/business-features`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({empresa_id:usuarioActual.empresa_id,accion:'re-analizar'})});}
+        catch(e){console.warn(e);}
+        btn.innerHTML='✅ ¡Listo! Cargando oportunidades...';
+        window.location.href='/oportunidades.html';
+    } catch(e){console.error(e);const btn=document.querySelector('#form-perfil button[type="submit"]');if(btn){btn.disabled=false;btn.innerHTML='💾 Guardar Cambios';}alert('Error al guardar cambios');}
 }
 
-// ════════════════════════════════════════════════════════════
-// FAMILIAS UNSPSC
-// ════════════════════════════════════════════════════════════
-const taxonomiaUNSPSC = {"10-10":{"name":"Animales vivos","segment":"Material vivo"},"10-11":{"name":"Productos para animales","segment":"Material vivo"},"10-12":{"name":"Comida de animales","segment":"Material vivo"},"10-15":{"name":"Semillas y plantas","segment":"Material vivo"},"10-16":{"name":"Productos de floricultura","segment":"Material vivo"},"10-17":{"name":"Fertilizantes","segment":"Material vivo"},"11-10":{"name":"Minerales","segment":"Minerales"},"11-11":{"name":"Madera","segment":"Minerales"},"11-12":{"name":"Productos de cuero","segment":"Minerales"},"11-13":{"name":"Fibras textiles","segment":"Minerales"},"11-14":{"name":"Telas","segment":"Minerales"},"11-15":{"name":"Ropa y uniformes","segment":"Minerales"},"12-14":{"name":"Resinas y adhesivos","segment":"Químicos"},"12-16":{"name":"Tintes y pigmentos","segment":"Químicos"},"12-17":{"name":"Explosivos","segment":"Químicos"},"12-18":{"name":"Medicamentos","segment":"Químicos"},"12-19":{"name":"Gases industriales","segment":"Químicos"},"12-35":{"name":"Reactivos de laboratorio","segment":"Químicos"},"13-10":{"name":"Caucho","segment":"Resinas"},"13-11":{"name":"Plásticos","segment":"Resinas"},"14-10":{"name":"Papel y cartón","segment":"Papel"},"14-11":{"name":"Papel de oficina","segment":"Papel"},"15-10":{"name":"Combustibles","segment":"Combustibles"},"15-11":{"name":"Lubricantes","segment":"Combustibles"},"20-10":{"name":"Equipo de minería","segment":"Maquinaria minería"},"21-10":{"name":"Equipo agrícola","segment":"Maquinaria agrícola"},"21-11":{"name":"Equipo de pesca","segment":"Maquinaria agrícola"},"22-10":{"name":"Maquinaria de construcción","segment":"Maquinaria construcción"},"23-10":{"name":"Maquinaria industrial","segment":"Maquinaria industrial"},"24-10":{"name":"Equipos de almacenamiento","segment":"Manejo materiales"},"24-11":{"name":"Montacargas","segment":"Manejo materiales"},"25-10":{"name":"Vehículos","segment":"Vehículos"},"25-11":{"name":"Partes de vehículos","segment":"Vehículos"},"25-12":{"name":"Motocicletas","segment":"Vehículos"},"25-13":{"name":"Bicicletas","segment":"Vehículos"},"26-10":{"name":"Equipos de generación eléctrica","segment":"Generación energía"},"26-11":{"name":"Equipos de distribución eléctrica","segment":"Generación energía"},"27-10":{"name":"Herramientas manuales","segment":"Herramientas"},"27-11":{"name":"Herramientas eléctricas","segment":"Herramientas"},"27-21":{"name":"Equipo de seguridad","segment":"Herramientas"},"30-10":{"name":"Materiales de construcción","segment":"Construcción"},"30-11":{"name":"Madera para construcción","segment":"Construcción"},"30-15":{"name":"Tuberías","segment":"Construcción"},"30-17":{"name":"Estructuras metálicas","segment":"Construcción"},"30-18":{"name":"Acabados de construcción","segment":"Construcción"},"31-10":{"name":"Componentes mecánicos","segment":"Componentes manufactura"},"31-15":{"name":"Válvulas","segment":"Componentes manufactura"},"39-10":{"name":"Cables eléctricos","segment":"Equipos eléctricos"},"39-11":{"name":"Equipos eléctricos","segment":"Equipos eléctricos"},"39-12":{"name":"Iluminación","segment":"Equipos eléctricos"},"40-10":{"name":"Calefacción y ventilación","segment":"Distribución HVAC"},"40-11":{"name":"Refrigeración","segment":"Distribución HVAC"},"41-10":{"name":"Equipos de laboratorio","segment":"Laboratorio"},"41-11":{"name":"Instrumentos de medición","segment":"Laboratorio"},"41-12":{"name":"Equipos de prueba","segment":"Laboratorio"},"42-14":{"name":"Equipo quirúrgico","segment":"Equipos médicos"},"42-18":{"name":"Equipos médicos","segment":"Equipos médicos"},"42-19":{"name":"Equipo de rehabilitación","segment":"Equipos médicos"},"42-22":{"name":"Equipo de examen médico","segment":"Equipos médicos"},"42-27":{"name":"Equipos de sala de operaciones","segment":"Equipos médicos"},"42-29":{"name":"Insumos médicos","segment":"Equipos médicos"},"42-30":{"name":"Equipo dental","segment":"Equipos médicos"},"43-20":{"name":"Almacenamiento de datos","segment":"Tecnología"},"43-21":{"name":"Computadoras","segment":"Tecnología"},"43-22":{"name":"Periféricos","segment":"Tecnología"},"43-23":{"name":"Software","segment":"Tecnología"},"43-24":{"name":"Equipos de telecomunicaciones","segment":"Tecnología"},"43-31":{"name":"Equipos de redes","segment":"Tecnología"},"43-33":{"name":"Componentes de computadora","segment":"Tecnología"},"44-10":{"name":"Materiales de oficina","segment":"Oficina"},"44-11":{"name":"Mobiliario de oficina","segment":"Oficina"},"44-12":{"name":"Suministros de oficina","segment":"Oficina"},"44-13":{"name":"Equipos de presentación","segment":"Oficina"},"45-10":{"name":"Equipos de imprenta","segment":"Impresión"},"46-16":{"name":"Equipos militares","segment":"Defensa"},"46-17":{"name":"Armas y municiones","segment":"Defensa"},"46-18":{"name":"Equipos de seguridad","segment":"Defensa"},"46-19":{"name":"Equipos de bomberos","segment":"Defensa"},"47-10":{"name":"Equipos de limpieza","segment":"Limpieza"},"47-13":{"name":"Productos de limpieza","segment":"Limpieza"},"48-10":{"name":"Equipo de lavandería","segment":"Servicios"},"49-10":{"name":"Equipos deportivos","segment":"Deportes"},"50-10":{"name":"Carnes","segment":"Alimentos"},"50-11":{"name":"Pescados y mariscos","segment":"Alimentos"},"50-13":{"name":"Lácteos","segment":"Alimentos"},"50-20":{"name":"Alimentos procesados","segment":"Alimentos"},"50-21":{"name":"Bebidas","segment":"Alimentos"},"50-30":{"name":"Tabaco","segment":"Alimentos"},"51-10":{"name":"Medicamentos","segment":"Farmacéuticos"},"52-10":{"name":"Electrodomésticos","segment":"Productos domésticos"},"52-14":{"name":"Utensilios de cocina","segment":"Productos domésticos"},"52-15":{"name":"Productos desechables","segment":"Productos domésticos"},"53-10":{"name":"Ropa","segment":"Vestimenta"},"53-11":{"name":"Calzado","segment":"Vestimenta"},"53-13":{"name":"Productos de aseo personal","segment":"Vestimenta"},"55-10":{"name":"Libros","segment":"Publicaciones"},"56-10":{"name":"Mobiliario","segment":"Mobiliario"},"60-10":{"name":"Instrumentos musicales","segment":"Música"},"60-11":{"name":"Juguetes","segment":"Música"},"60-14":{"name":"Material educativo","segment":"Música"},"70-10":{"name":"Servicios agrícolas","segment":"Servicios agrícolas"},"70-11":{"name":"Servicios de pesca","segment":"Servicios agrícolas"},"71-10":{"name":"Servicios de minería","segment":"Servicios minería"},"72-10":{"name":"Construcción de edificios","segment":"Servicios construcción"},"72-11":{"name":"Mantenimiento de edificios","segment":"Servicios construcción"},"72-12":{"name":"Construcción de carreteras","segment":"Servicios construcción"},"72-13":{"name":"Construcción de puentes","segment":"Servicios construcción"},"72-14":{"name":"Construcción de infraestructura","segment":"Servicios construcción"},"72-15":{"name":"Trabajos especializados","segment":"Servicios construcción"},"73-10":{"name":"Servicios de manufactura","segment":"Servicios manufactura"},"73-15":{"name":"Servicios de impresión","segment":"Servicios manufactura"},"76-10":{"name":"Servicios de limpieza","segment":"Servicios limpieza"},"76-11":{"name":"Manejo de desechos","segment":"Servicios limpieza"},"76-12":{"name":"Fumigación","segment":"Servicios limpieza"},"77-10":{"name":"Gestión ambiental","segment":"Servicios ambientales"},"77-11":{"name":"Remediación ambiental","segment":"Servicios ambientales"},"78-10":{"name":"Transporte de pasajeros","segment":"Servicios transporte"},"78-11":{"name":"Transporte de carga","segment":"Servicios transporte"},"78-13":{"name":"Servicios de mudanza","segment":"Servicios transporte"},"78-16":{"name":"Alquiler de vehículos","segment":"Servicios transporte"},"78-18":{"name":"Servicios de almacenamiento","segment":"Servicios transporte"},"80-10":{"name":"Servicios de consultoría","segment":"Servicios profesionales"},"80-11":{"name":"Servicios profesionales técnicos","segment":"Servicios profesionales"},"80-12":{"name":"Servicios legales","segment":"Servicios profesionales"},"80-14":{"name":"Servicios de marketing y eventos","segment":"Servicios profesionales"},"80-16":{"name":"Servicios de gestión","segment":"Servicios profesionales"},"81-10":{"name":"Servicios de ingeniería","segment":"Servicios ingeniería"},"81-11":{"name":"Servicios de arquitectura","segment":"Servicios ingeniería"},"81-12":{"name":"Servicios de topografía","segment":"Servicios ingeniería"},"82-10":{"name":"Servicios editoriales","segment":"Servicios editoriales"},"82-11":{"name":"Servicios de diseño gráfico","segment":"Servicios editoriales"},"83-10":{"name":"Servicios de publicidad","segment":"Servicios comunicación"},"83-11":{"name":"Servicios audiovisuales","segment":"Servicios comunicación"},"83-12":{"name":"Servicios de telecomunicaciones","segment":"Servicios comunicación"},"84-10":{"name":"Servicios bancarios","segment":"Servicios financieros"},"84-11":{"name":"Servicios de seguros","segment":"Servicios financieros"},"84-12":{"name":"Servicios contables","segment":"Servicios financieros"},"85-10":{"name":"Servicios médicos","segment":"Servicios salud"},"85-11":{"name":"Servicios de enfermería","segment":"Servicios salud"},"85-12":{"name":"Servicios de laboratorio clínico","segment":"Servicios salud"},"85-13":{"name":"Servicios dentales","segment":"Servicios salud"},"86-10":{"name":"Capacitación","segment":"Servicios educativos"},"86-11":{"name":"Educación","segment":"Servicios educativos"},"86-12":{"name":"Investigación educativa","segment":"Servicios educativos"},"90-10":{"name":"Servicios de hotel","segment":"Servicios viaje"},"90-11":{"name":"Servicios de alimentación","segment":"Servicios viaje"},"90-12":{"name":"Servicios de viaje","segment":"Servicios viaje"},"90-15":{"name":"Servicios de entretenimiento","segment":"Servicios viaje"},"91-10":{"name":"Servicios de belleza","segment":"Servicios personales"},"92-10":{"name":"Servicios de vigilancia","segment":"Servicios seguridad"},"92-12":{"name":"Servicios de investigación","segment":"Servicios seguridad"},"93-14":{"name":"Servicios de telecomunicaciones públicas","segment":"Servicios públicos"},"93-15":{"name":"Servicios de energía","segment":"Servicios públicos"},"93-16":{"name":"Servicios de agua","segment":"Servicios públicos"},"94-10":{"name":"Servicios cívicos y culturales","segment":"Servicios políticos"},"95-10":{"name":"Terrenos","segment":"Inmuebles"},"95-11":{"name":"Edificios","segment":"Inmuebles"}};
+// ════════════════════ FAMILIAS UNSPSC ════════════════════
+const taxonomiaUNSPSC={"10-10":{"name":"Animales vivos","segment":"Material vivo"},"10-11":{"name":"Productos para animales","segment":"Material vivo"},"10-12":{"name":"Comida de animales","segment":"Material vivo"},"10-15":{"name":"Semillas y plantas","segment":"Material vivo"},"10-16":{"name":"Productos de floricultura","segment":"Material vivo"},"10-17":{"name":"Fertilizantes","segment":"Material vivo"},"11-10":{"name":"Minerales","segment":"Minerales"},"11-11":{"name":"Madera","segment":"Minerales"},"11-12":{"name":"Productos de cuero","segment":"Minerales"},"11-13":{"name":"Fibras textiles","segment":"Minerales"},"11-14":{"name":"Telas","segment":"Minerales"},"11-15":{"name":"Ropa y uniformes","segment":"Minerales"},"12-14":{"name":"Resinas y adhesivos","segment":"Químicos"},"12-16":{"name":"Tintes y pigmentos","segment":"Químicos"},"12-17":{"name":"Explosivos","segment":"Químicos"},"12-18":{"name":"Medicamentos","segment":"Químicos"},"12-19":{"name":"Gases industriales","segment":"Químicos"},"12-35":{"name":"Reactivos de laboratorio","segment":"Químicos"},"13-10":{"name":"Caucho","segment":"Resinas"},"13-11":{"name":"Plásticos","segment":"Resinas"},"14-10":{"name":"Papel y cartón","segment":"Papel"},"14-11":{"name":"Papel de oficina","segment":"Papel"},"15-10":{"name":"Combustibles","segment":"Combustibles"},"15-11":{"name":"Lubricantes","segment":"Combustibles"},"20-10":{"name":"Equipo de minería","segment":"Maquinaria minería"},"21-10":{"name":"Equipo agrícola","segment":"Maquinaria agrícola"},"21-11":{"name":"Equipo de pesca","segment":"Maquinaria agrícola"},"22-10":{"name":"Maquinaria de construcción","segment":"Maquinaria construcción"},"23-10":{"name":"Maquinaria industrial","segment":"Maquinaria industrial"},"24-10":{"name":"Equipos de almacenamiento","segment":"Manejo materiales"},"24-11":{"name":"Montacargas","segment":"Manejo materiales"},"25-10":{"name":"Vehículos","segment":"Vehículos"},"25-11":{"name":"Partes de vehículos","segment":"Vehículos"},"25-12":{"name":"Motocicletas","segment":"Vehículos"},"25-13":{"name":"Bicicletas","segment":"Vehículos"},"26-10":{"name":"Equipos de generación eléctrica","segment":"Generación energía"},"26-11":{"name":"Equipos de distribución eléctrica","segment":"Generación energía"},"27-10":{"name":"Herramientas manuales","segment":"Herramientas"},"27-11":{"name":"Herramientas eléctricas","segment":"Herramientas"},"27-21":{"name":"Equipo de seguridad","segment":"Herramientas"},"30-10":{"name":"Materiales de construcción","segment":"Construcción"},"30-11":{"name":"Madera para construcción","segment":"Construcción"},"30-15":{"name":"Tuberías","segment":"Construcción"},"30-17":{"name":"Estructuras metálicas","segment":"Construcción"},"30-18":{"name":"Acabados de construcción","segment":"Construcción"},"31-10":{"name":"Componentes mecánicos","segment":"Componentes manufactura"},"31-15":{"name":"Válvulas","segment":"Componentes manufactura"},"39-10":{"name":"Cables eléctricos","segment":"Equipos eléctricos"},"39-11":{"name":"Equipos eléctricos","segment":"Equipos eléctricos"},"39-12":{"name":"Iluminación","segment":"Equipos eléctricos"},"40-10":{"name":"Calefacción y ventilación","segment":"Distribución HVAC"},"40-11":{"name":"Refrigeración","segment":"Distribución HVAC"},"41-10":{"name":"Equipos de laboratorio","segment":"Laboratorio"},"41-11":{"name":"Instrumentos de medición","segment":"Laboratorio"},"41-12":{"name":"Equipos de prueba","segment":"Laboratorio"},"42-14":{"name":"Equipo quirúrgico","segment":"Equipos médicos"},"42-18":{"name":"Equipos médicos","segment":"Equipos médicos"},"42-19":{"name":"Equipo de rehabilitación","segment":"Equipos médicos"},"42-22":{"name":"Equipo de examen médico","segment":"Equipos médicos"},"42-27":{"name":"Equipos de sala de operaciones","segment":"Equipos médicos"},"42-29":{"name":"Insumos médicos","segment":"Equipos médicos"},"42-30":{"name":"Equipo dental","segment":"Equipos médicos"},"43-20":{"name":"Almacenamiento de datos","segment":"Tecnología"},"43-21":{"name":"Computadoras","segment":"Tecnología"},"43-22":{"name":"Periféricos","segment":"Tecnología"},"43-23":{"name":"Software","segment":"Tecnología"},"43-24":{"name":"Equipos de telecomunicaciones","segment":"Tecnología"},"43-31":{"name":"Equipos de redes","segment":"Tecnología"},"43-33":{"name":"Componentes de computadora","segment":"Tecnología"},"44-10":{"name":"Materiales de oficina","segment":"Oficina"},"44-11":{"name":"Mobiliario de oficina","segment":"Oficina"},"44-12":{"name":"Suministros de oficina","segment":"Oficina"},"44-13":{"name":"Equipos de presentación","segment":"Oficina"},"45-10":{"name":"Equipos de imprenta","segment":"Impresión"},"46-16":{"name":"Equipos militares","segment":"Defensa"},"46-17":{"name":"Armas y municiones","segment":"Defensa"},"46-18":{"name":"Equipos de seguridad","segment":"Defensa"},"46-19":{"name":"Equipos de bomberos","segment":"Defensa"},"47-10":{"name":"Equipos de limpieza","segment":"Limpieza"},"47-13":{"name":"Productos de limpieza","segment":"Limpieza"},"48-10":{"name":"Equipo de lavandería","segment":"Servicios"},"49-10":{"name":"Equipos deportivos","segment":"Deportes"},"50-10":{"name":"Carnes","segment":"Alimentos"},"50-11":{"name":"Pescados y mariscos","segment":"Alimentos"},"50-13":{"name":"Lácteos","segment":"Alimentos"},"50-20":{"name":"Alimentos procesados","segment":"Alimentos"},"50-21":{"name":"Bebidas","segment":"Alimentos"},"50-30":{"name":"Tabaco","segment":"Alimentos"},"51-10":{"name":"Medicamentos","segment":"Farmacéuticos"},"52-10":{"name":"Electrodomésticos","segment":"Productos domésticos"},"52-14":{"name":"Utensilios de cocina","segment":"Productos domésticos"},"52-15":{"name":"Productos desechables","segment":"Productos domésticos"},"53-10":{"name":"Ropa","segment":"Vestimenta"},"53-11":{"name":"Calzado","segment":"Vestimenta"},"53-13":{"name":"Productos de aseo personal","segment":"Vestimenta"},"55-10":{"name":"Libros","segment":"Publicaciones"},"56-10":{"name":"Mobiliario","segment":"Mobiliario"},"60-10":{"name":"Instrumentos musicales","segment":"Música"},"60-11":{"name":"Juguetes","segment":"Música"},"60-14":{"name":"Material educativo","segment":"Música"},"70-10":{"name":"Servicios agrícolas","segment":"Servicios agrícolas"},"70-11":{"name":"Servicios de pesca","segment":"Servicios agrícolas"},"71-10":{"name":"Servicios de minería","segment":"Servicios minería"},"72-10":{"name":"Construcción de edificios","segment":"Servicios construcción"},"72-11":{"name":"Mantenimiento de edificios","segment":"Servicios construcción"},"72-12":{"name":"Construcción de carreteras","segment":"Servicios construcción"},"72-13":{"name":"Construcción de puentes","segment":"Servicios construcción"},"72-14":{"name":"Construcción de infraestructura","segment":"Servicios construcción"},"72-15":{"name":"Trabajos especializados","segment":"Servicios construcción"},"73-10":{"name":"Servicios de manufactura","segment":"Servicios manufactura"},"73-15":{"name":"Servicios de impresión","segment":"Servicios manufactura"},"76-10":{"name":"Servicios de limpieza","segment":"Servicios limpieza"},"76-11":{"name":"Manejo de desechos","segment":"Servicios limpieza"},"76-12":{"name":"Fumigación","segment":"Servicios limpieza"},"77-10":{"name":"Gestión ambiental","segment":"Servicios ambientales"},"77-11":{"name":"Remediación ambiental","segment":"Servicios ambientales"},"78-10":{"name":"Transporte de pasajeros","segment":"Servicios transporte"},"78-11":{"name":"Transporte de carga","segment":"Servicios transporte"},"78-13":{"name":"Servicios de mudanza","segment":"Servicios transporte"},"78-16":{"name":"Alquiler de vehículos","segment":"Servicios transporte"},"78-18":{"name":"Servicios de almacenamiento","segment":"Servicios transporte"},"80-10":{"name":"Servicios de consultoría","segment":"Servicios profesionales"},"80-11":{"name":"Servicios profesionales técnicos","segment":"Servicios profesionales"},"80-12":{"name":"Servicios legales","segment":"Servicios profesionales"},"80-14":{"name":"Servicios de marketing y eventos","segment":"Servicios profesionales"},"80-16":{"name":"Servicios de gestión","segment":"Servicios profesionales"},"81-10":{"name":"Servicios de ingeniería","segment":"Servicios ingeniería"},"81-11":{"name":"Servicios de arquitectura","segment":"Servicios ingeniería"},"81-12":{"name":"Servicios de topografía","segment":"Servicios ingeniería"},"82-10":{"name":"Servicios editoriales","segment":"Servicios editoriales"},"82-11":{"name":"Servicios de diseño gráfico","segment":"Servicios editoriales"},"83-10":{"name":"Servicios de publicidad","segment":"Servicios comunicación"},"83-11":{"name":"Servicios audiovisuales","segment":"Servicios comunicación"},"83-12":{"name":"Servicios de telecomunicaciones","segment":"Servicios comunicación"},"84-10":{"name":"Servicios bancarios","segment":"Servicios financieros"},"84-11":{"name":"Servicios de seguros","segment":"Servicios financieros"},"84-12":{"name":"Servicios contables","segment":"Servicios financieros"},"85-10":{"name":"Servicios médicos","segment":"Servicios salud"},"85-11":{"name":"Servicios de enfermería","segment":"Servicios salud"},"85-12":{"name":"Servicios de laboratorio clínico","segment":"Servicios salud"},"85-13":{"name":"Servicios dentales","segment":"Servicios salud"},"86-10":{"name":"Capacitación","segment":"Servicios educativos"},"86-11":{"name":"Educación","segment":"Servicios educativos"},"86-12":{"name":"Investigación educativa","segment":"Servicios educativos"},"90-10":{"name":"Servicios de hotel","segment":"Servicios viaje"},"90-11":{"name":"Servicios de alimentación","segment":"Servicios viaje"},"90-12":{"name":"Servicios de viaje","segment":"Servicios viaje"},"90-15":{"name":"Servicios de entretenimiento","segment":"Servicios viaje"},"91-10":{"name":"Servicios de belleza","segment":"Servicios personales"},"92-10":{"name":"Servicios de vigilancia","segment":"Servicios seguridad"},"92-12":{"name":"Servicios de investigación","segment":"Servicios seguridad"},"93-14":{"name":"Servicios de telecomunicaciones públicas","segment":"Servicios públicos"},"93-15":{"name":"Servicios de energía","segment":"Servicios públicos"},"93-16":{"name":"Servicios de agua","segment":"Servicios públicos"},"94-10":{"name":"Servicios cívicos y culturales","segment":"Servicios políticos"},"95-10":{"name":"Terrenos","segment":"Inmuebles"},"95-11":{"name":"Edificios","segment":"Inmuebles"}};
 
 async function cargarFamiliasUNSPSC() {
-    if (!usuarioActual || !usuarioActual.empresa_id) { alert('Error: No se encontró la empresa'); return; }
+    if(!usuarioActual?.empresa_id){alert('Error: No se encontró la empresa');return;}
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}&action=familias`, { headers: { 'Authorization': `Bearer ${token}` } });
-        if (!response.ok) { alert('Error al cargar familias UNSPSC'); return; }
-        const data = await response.json();
-        limiteFamilias = data.limite_familias;
-        familiasSeleccionadas = new Set(data.familias_unspsc || []);
-        document.getElementById('familias-limite').textContent = limiteFamilias;
-        document.getElementById('plan-familias').textContent = data.plan === 'free_trial' ? 'Prueba Gratuita' : data.plan === 'estandar' ? 'Estándar' : data.plan === 'business' ? 'Business' : data.plan;
-        actualizarContador();
-        renderizarFamilias();
-    } catch (error) { console.error('Error cargando familias:', error); alert('Error al cargar familias UNSPSC'); }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}&action=familias`,{headers:{'Authorization':`Bearer ${token}`}});
+        if(!r.ok){alert('Error al cargar familias UNSPSC');return;}
+        const d=await r.json();
+        limiteFamilias=d.limite_familias; familiasSeleccionadas=new Set(d.familias_unspsc||[]);
+        document.getElementById('familias-limite').textContent=limiteFamilias;
+        document.getElementById('plan-familias').textContent=d.plan==='free_trial'?'Prueba Gratuita':d.plan==='estandar'?'Estándar':d.plan==='business'?'Business':d.plan;
+        actualizarContador(); renderizarFamilias();
+    } catch(e){console.error(e);alert('Error al cargar familias UNSPSC');}
 }
-
 function renderizarFamilias() {
-    const porSegmento = {};
-    for (const [codigo, info] of Object.entries(taxonomiaUNSPSC)) {
-        if (!porSegmento[info.segment]) porSegmento[info.segment] = [];
-        porSegmento[info.segment].push({ codigo, ...info });
-    }
-    const html = Object.keys(porSegmento).sort().map(segmento => {
-        const familias = porSegmento[segmento];
-        const cant = familias.filter(f => familiasSeleccionadas.has(f.codigo)).length;
-        return `<div class="border border-gray-200 rounded-lg overflow-hidden segmento-container" data-segmento="${segmento.toLowerCase()}">
-            <button onclick="toggleSegmento('${segmento}')" class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 flex items-center justify-between transition">
-                <span class="font-semibold text-gray-900">${segmento} <span class="text-sm text-gray-500">(${familias.length})</span>${cant > 0 ? `<span class="ml-2 text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded">${cant} seleccionadas</span>` : ''}</span>
+    const seg={};
+    for(const[c,i]of Object.entries(taxonomiaUNSPSC)){if(!seg[i.segment])seg[i.segment]=[];seg[i.segment].push({codigo:c,...i});}
+    document.getElementById('familias-lista').innerHTML=Object.keys(seg).sort().map(s=>{
+        const fams=seg[s],cnt=fams.filter(f=>familiasSeleccionadas.has(f.codigo)).length;
+        return`<div class="border border-gray-200 rounded-lg overflow-hidden segmento-container" data-segmento="${s.toLowerCase()}">
+            <button onclick="toggleSegmento('${s}')" class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 flex items-center justify-between transition">
+                <span class="font-semibold text-gray-900">${s} <span class="text-sm text-gray-500">(${fams.length})</span>${cnt>0?`<span class="ml-2 text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded">${cnt} seleccionadas</span>`:''}</span>
                 <span class="text-gray-400">▼</span>
             </button>
-            <div id="segmento-${segmento.replace(/\s+/g, '-')}" class="hidden bg-white">
-                ${familias.map(f => `<label class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-t border-gray-100 familia-item" data-familia="${f.name.toLowerCase()} ${f.codigo}">
-                    <input type="checkbox" value="${f.codigo}" ${familiasSeleccionadas.has(f.codigo) ? 'checked' : ''} onchange="toggleFamilia('${f.codigo}')" class="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                    <div class="flex-1"><div class="font-medium text-gray-900">${f.codigo} - ${f.name}</div></div>
+            <div id="segmento-${s.replace(/\s+/g,'-')}" class="hidden bg-white">
+                ${fams.map(f=>`<label class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer border-t border-gray-100 familia-item" data-familia="${f.name.toLowerCase()} ${f.codigo}">
+                    <input type="checkbox" value="${f.codigo}" ${familiasSeleccionadas.has(f.codigo)?'checked':''} onchange="toggleFamilia('${f.codigo}')" class="mt-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                    <div class="font-medium text-gray-900">${f.codigo} - ${f.name}</div>
                 </label>`).join('')}
             </div>
         </div>`;
     }).join('');
-    document.getElementById('familias-lista').innerHTML = html;
 }
-
-function toggleSegmento(s) { document.getElementById(`segmento-${s.replace(/\s+/g, '-')}`).classList.toggle('hidden'); }
-
-function toggleFamilia(codigo) {
-    if (familiasSeleccionadas.has(codigo)) { familiasSeleccionadas.delete(codigo); }
-    else {
-        if (familiasSeleccionadas.size >= limiteFamilias) { alert(`⚠️ Has alcanzado el límite de ${limiteFamilias} familias para tu plan`); event.target.checked = false; return; }
-        familiasSeleccionadas.add(codigo);
-    }
+function toggleSegmento(s){document.getElementById(`segmento-${s.replace(/\s+/g,'-')}`).classList.toggle('hidden');}
+function toggleFamilia(c){
+    if(familiasSeleccionadas.has(c)){familiasSeleccionadas.delete(c);}
+    else{if(familiasSeleccionadas.size>=limiteFamilias){alert(`⚠️ Límite de ${limiteFamilias} familias alcanzado`);event.target.checked=false;return;}familiasSeleccionadas.add(c);}
     actualizarContador();
 }
-
-function actualizarContador() {
-    const c = document.getElementById('familias-contador');
-    c.textContent = familiasSeleccionadas.size;
-    c.classList.toggle('text-red-600', familiasSeleccionadas.size >= limiteFamilias);
+function actualizarContador(){const c=document.getElementById('familias-contador');c.textContent=familiasSeleccionadas.size;c.classList.toggle('text-red-600',familiasSeleccionadas.size>=limiteFamilias);}
+function filtrarFamilias(){
+    const b=document.getElementById('buscar-familias').value.toLowerCase();
+    if(!b){document.querySelectorAll('.segmento-container').forEach(el=>el.classList.remove('hidden'));document.querySelectorAll('.familia-item').forEach(el=>el.classList.remove('hidden'));return;}
+    document.querySelectorAll('.familia-item').forEach(item=>item.classList.toggle('hidden',!item.getAttribute('data-familia').includes(b)));
+    document.querySelectorAll('.segmento-container').forEach(c=>c.classList.toggle('hidden',c.querySelectorAll('.familia-item:not(.hidden)').length===0));
 }
-
-function filtrarFamilias() {
-    const b = document.getElementById('buscar-familias').value.toLowerCase();
-    if (!b) { document.querySelectorAll('.segmento-container').forEach(el => el.classList.remove('hidden')); document.querySelectorAll('.familia-item').forEach(el => el.classList.remove('hidden')); return; }
-    document.querySelectorAll('.familia-item').forEach(item => item.classList.toggle('hidden', !item.getAttribute('data-familia').includes(b)));
-    document.querySelectorAll('.segmento-container').forEach(c => c.classList.toggle('hidden', c.querySelectorAll('.familia-item:not(.hidden)').length === 0));
-}
-
-function limpiarSeleccion() {
-    if (!confirm('¿Estás seguro de que quieres limpiar todas las familias seleccionadas?')) return;
-    familiasSeleccionadas.clear(); actualizarContador(); renderizarFamilias();
-}
-
+function limpiarSeleccion(){if(!confirm('¿Limpiar todas las familias seleccionadas?'))return;familiasSeleccionadas.clear();actualizarContador();renderizarFamilias();}
 async function guardarFamilias() {
-    if (!usuarioActual || !usuarioActual.empresa_id) { alert('Error: No se encontró la empresa'); return; }
+    if(!usuarioActual?.empresa_id){alert('Error: No se encontró la empresa');return;}
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}&action=familias`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ familias_unspsc: Array.from(familiasSeleccionadas) }) });
-        const result = await response.json();
-        if (response.ok) { alert(`✅ ${result.message}\n\n${result.familias_guardadas} de ${result.limite_familias} familias guardadas`); }
-        else { alert('Error: ' + result.error); }
-    } catch (error) { console.error('Error guardando familias:', error); alert('Error al guardar familias'); }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}&action=familias`,{method:'PUT',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({familias_unspsc:Array.from(familiasSeleccionadas)})});
+        const res=await r.json();
+        if(r.ok){alert(`✅ ${res.message}\n\n${res.familias_guardadas} de ${res.limite_familias} familias guardadas`);}
+        else{alert('Error: '+res.error);}
+    } catch(e){console.error(e);alert('Error al guardar familias');}
 }
 
+// ════════════════════ SEGURIDAD ════════════════════
 async function cambiarPassword(event) {
     event.preventDefault();
-    const passwordActual = document.getElementById('password-actual').value;
-    const passwordNueva = document.getElementById('password-nueva').value;
-    const passwordConfirmar = document.getElementById('password-confirmar').value;
-    if (passwordNueva !== passwordConfirmar) { alert('Las contraseñas no coinciden'); return; }
-    if (passwordNueva.length < 8) { alert('La nueva contraseña debe tener al menos 8 caracteres'); return; }
+    const pa=document.getElementById('password-actual').value,pn=document.getElementById('password-nueva').value,pc=document.getElementById('password-confirmar').value;
+    if(pn!==pc){alert('Las contraseñas no coinciden');return;}
+    if(pn.length<8){alert('La nueva contraseña debe tener al menos 8 caracteres');return;}
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/password?action=change`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ password_actual: passwordActual, password_nueva: passwordNueva }) });
-        const result = await response.json();
-        if (response.ok) { alert('✅ Contraseña actualizada correctamente'); document.getElementById('form-password').reset(); }
-        else { alert('Error: ' + result.error); }
-    } catch (error) { console.error('Error cambiando contraseña:', error); alert('Error al cambiar contraseña'); }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/password?action=change`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({password_actual:pa,password_nueva:pn})});
+        const res=await r.json();
+        if(r.ok){alert('✅ Contraseña actualizada correctamente');document.getElementById('form-password').reset();}
+        else{alert('Error: '+res.error);}
+    } catch(e){console.error(e);alert('Error al cambiar contraseña');}
 }
 
+// ════════════════════ INVITACIONES ════════════════════
 async function enviarInvitacion() {
-    const email = document.getElementById('invitar-email').value.trim();
-    if (!email) { alert('Por favor ingresa un email'); return; }
+    const email=document.getElementById('invitar-email').value.trim();
+    if(!email){alert('Por favor ingresa un email');return;}
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/auth`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'invitar', email_invitado: email }) });
-        const result = await response.json();
-        if (response.ok) { alert('✅ Invitación enviada a ' + email); document.getElementById('invitar-email').value = ''; cargarInvitaciones(); }
-        else { alert('Error: ' + result.error); }
-    } catch (error) { console.error('Error enviando invitación:', error); alert('Error al enviar invitación'); }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/auth`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'invitar',email_invitado:email})});
+        const res=await r.json();
+        if(r.ok){alert('✅ Invitación enviada a '+email);document.getElementById('invitar-email').value='';cargarInvitaciones();}
+        else{alert('Error: '+res.error);}
+    } catch(e){console.error(e);alert('Error al enviar invitación');}
 }
-
 async function cargarInvitaciones() {
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/auth`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'mis_invitaciones' }) });
-        if (!response.ok) return;
-        const data = await response.json();
-        const lista = document.getElementById('invitaciones-lista');
-        if (!data.invitaciones || data.invitaciones.length === 0) { lista.innerHTML = '<p class="text-gray-500 text-sm">Aún no has enviado invitaciones.</p>'; return; }
-        lista.innerHTML = data.invitaciones.map(inv => {
-            const estadoColor = inv.estado === 'usado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
-            const estadoLabel = inv.estado === 'usado' ? '✅ Registrado' : '⏳ Pendiente';
-            const fecha = new Date(inv.created_at).toLocaleDateString('es-DO');
-            return `<div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3"><div><p class="font-medium text-gray-900">${inv.email_invitado}</p><p class="text-xs text-gray-500">Enviado el ${fecha}</p></div><span class="px-3 py-1 rounded-full text-xs font-semibold ${estadoColor}">${estadoLabel}</span></div>`;
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/auth`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'mis_invitaciones'})});
+        if(!r.ok)return;
+        const d=await r.json();
+        const lista=document.getElementById('invitaciones-lista');
+        if(!d.invitaciones?.length){lista.innerHTML='<p class="text-gray-500 text-sm">Aún no has enviado invitaciones.</p>';return;}
+        lista.innerHTML=d.invitaciones.map(inv=>{
+            const ec=inv.estado==='usado'?'bg-green-100 text-green-800':'bg-yellow-100 text-yellow-800';
+            const el=inv.estado==='usado'?'✅ Registrado':'⏳ Pendiente';
+            return`<div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-4 py-3"><div><p class="font-medium text-gray-900">${inv.email_invitado}</p><p class="text-xs text-gray-500">Enviado el ${new Date(inv.created_at).toLocaleDateString('es-DO')}</p></div><span class="px-3 py-1 rounded-full text-xs font-semibold ${ec}">${el}</span></div>`;
         }).join('');
-    } catch (error) { console.error('Error cargando invitaciones:', error); }
+    } catch(e){console.error(e);}
 }
 
+// ════════════════════ FACTURACIÓN ════════════════════
 async function cargarInfoFacturacion() {
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/perfil?type=usuario`, { headers: { 'Authorization': `Bearer ${token}` } });
-        if (response.ok) {
-            const data = await response.json();
-            const planNombres = { 'free_trial': 'Prueba Gratuita', 'estandar': 'Estándar ($10/mes)', 'business': 'Business ($20/mes)', 'cancelado': 'Cancelado' };
-            document.getElementById('plan-actual').textContent = planNombres[data.empresa.plan] || data.empresa.plan;
-            const nombresPlan = { 'estandar': 'Plan Estándar', 'business': 'Plan Business', 'enterprise': 'Plan Enterprise' };
-            const badgePlanCuenta = document.getElementById('badge-plan-cuenta');
-            if (badgePlanCuenta && nombresPlan[data.empresa.plan]) { badgePlanCuenta.textContent = nombresPlan[data.empresa.plan]; badgePlanCuenta.classList.remove('hidden'); }
-            if (data.empresa.plan === 'free_trial') {
-                const diasRestantes = Math.ceil((new Date(data.empresa.trial_fin) - new Date()) / (1000 * 60 * 60 * 24));
-                document.getElementById('estado-plan').textContent = `${diasRestantes} días restantes de prueba`;
-            } else if (data.empresa.plan === 'cancelado') {
-                document.getElementById('estado-plan').textContent = 'Suscripción cancelada';
-            } else {
-                document.getElementById('estado-plan').textContent = 'Renovación automática mensual';
-            }
-            const badge = document.getElementById('badge-estado');
-            if (data.empresa.activo) { badge.textContent = 'Activo'; badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800'; }
-            else { badge.textContent = 'Inactivo'; badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800'; }
-            if (data.empresa.plan === 'free_trial') { document.getElementById('upgrade-section').classList.remove('hidden'); document.getElementById('portal-section').classList.add('hidden'); }
-            else { document.getElementById('upgrade-section').classList.add('hidden'); document.getElementById('portal-section').classList.remove('hidden'); }
-            cargarPerfilPlan(data.empresa.plan);
-            plMostrarSiEnterprise(data.empresa.plan); // ← NUEVO
-        }
-    } catch (error) { console.error('Error cargando info de facturación:', error); }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/perfil?type=usuario`,{headers:{'Authorization':`Bearer ${token}`}});
+        if(!r.ok)return;
+        const d=await r.json();
+        const pn={'free_trial':'Prueba Gratuita','estandar':'Estándar ($10/mes)','business':'Business ($20/mes)','cancelado':'Cancelado'};
+        document.getElementById('plan-actual').textContent=pn[d.empresa.plan]||d.empresa.plan;
+        const np={'estandar':'Plan Estándar','business':'Plan Business','enterprise':'Plan Enterprise'};
+        const badge=document.getElementById('badge-plan-cuenta');
+        if(badge&&np[d.empresa.plan]){badge.textContent=np[d.empresa.plan];badge.classList.remove('hidden');}
+        if(d.empresa.plan==='free_trial'){const dias=Math.ceil((new Date(d.empresa.trial_fin)-new Date())/(1000*60*60*24));document.getElementById('estado-plan').textContent=`${dias} días restantes de prueba`;}
+        else if(d.empresa.plan==='cancelado'){document.getElementById('estado-plan').textContent='Suscripción cancelada';}
+        else{document.getElementById('estado-plan').textContent='Renovación automática mensual';}
+        const be=document.getElementById('badge-estado');
+        if(d.empresa.activo){be.textContent='Activo';be.className='px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';}
+        else{be.textContent='Inactivo';be.className='px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';}
+        if(d.empresa.plan==='free_trial'){document.getElementById('upgrade-section').classList.remove('hidden');document.getElementById('portal-section').classList.add('hidden');}
+        else{document.getElementById('upgrade-section').classList.add('hidden');document.getElementById('portal-section').classList.remove('hidden');}
+        cargarPerfilPlan(d.empresa.plan);
+        plMostrarSiEnterprise(d.empresa.plan);
+    } catch(e){console.error(e);}
 }
-
 async function abrirPortalFacturacion() {
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/stripe`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'create_portal' }) });
-        if (response.ok) { const data = await response.json(); window.location.href = data.portal_url; }
-        else { const error = await response.json(); alert('Error: ' + error.error); }
-    } catch (error) { console.error('Error:', error); alert('Error al abrir portal de facturación'); }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/stripe`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'create_portal'})});
+        if(r.ok){const d=await r.json();window.location.href=d.portal_url;}else{const e=await r.json();alert('Error: '+e.error);}
+    } catch(e){console.error(e);alert('Error al abrir portal de facturación');}
 }
-
 async function iniciarUpgrade(plan) {
     try {
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(`${API_BASE}/api/stripe`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'create_checkout', plan: plan }) });
-        if (response.ok) { const data = await response.json(); window.location.href = data.checkout_url; }
-        else { const error = await response.json(); alert('Error: ' + error.error); }
-    } catch (error) { console.error('Error:', error); alert('Error al iniciar upgrade'); }
+        const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+        const r=await fetch(`${API_BASE}/api/stripe`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'create_checkout',plan})});
+        if(r.ok){const d=await r.json();window.location.href=d.checkout_url;}else{const e=await r.json();alert('Error: '+e.error);}
+    } catch(e){console.error(e);alert('Error al iniciar upgrade');}
 }
 
-function toggleMobileMenuCuenta() {
-    const menu = document.getElementById('mobile-menu-cuenta');
-    const menuIcon = document.getElementById('menu-icon-cuenta');
-    const closeIcon = document.getElementById('close-icon-cuenta');
-    menu.classList.toggle('hidden');
-    menuIcon.classList.toggle('hidden');
-    closeIcon.classList.toggle('hidden');
-}
-
+// ════════════════════ PERFIL DE PLAN ════════════════════
 function cargarPerfilPlan(plan) {
-    const featuresEstandar = ['Análisis diario automático de licitaciones','Notificaciones por email de oportunidades ALTA y MEDIA','Dashboard con todas tus oportunidades','Filtros por relevancia, fecha y monto','Perfil empresarial personalizable (sectores, regiones, palabras clave)','Hasta 5 familias UNSPSC para filtrado automático','Soporte por email'];
-    const featuresBusiness = [...featuresEstandar,'📄 Descargar pliego en PDF directamente desde el SECP (10/mes)','🤖 Análisis profundo del pliego con IA: síntesis, riesgos, viabilidad, tiempos, certificaciones (5/mes)','Exportación a Excel de todas tus oportunidades','Soporte prioritario por email y chat'];
-    const config = {
-        free_trial: { nombre: 'Prueba Gratuita', subtitulo: 'Acceso completo al Plan Estándar por 7 días', features: featuresEstandar, mostrarAgentes: false },
-        estandar:   { nombre: 'Plan Estándar', subtitulo: '$10 / mes — renovación automática', features: featuresEstandar, mostrarAgentes: false },
-        business:   { nombre: 'Plan Business', subtitulo: '$20 / mes — renovación automática', features: featuresBusiness, mostrarAgentes: false },
-        enterprise: { nombre: 'Plan Enterprise', subtitulo: 'Plan piloto — condiciones especiales', features: [...featuresBusiness,'📋 Agente 033: genera el Formulario F033 pre-llenado (1/semana)','🗂️ Agente Sprint: genera un plan de trabajo en KanbanBonsai (1/semana)','Detección automática de política de ITBIS por licitación','Soporte dedicado por WhatsApp','Acceso anticipado a nuevas funcionalidades'], mostrarAgentes: true }
+    const fe=['Análisis diario automático de licitaciones','Notificaciones por email de oportunidades ALTA y MEDIA','Dashboard con todas tus oportunidades','Filtros por relevancia, fecha y monto','Perfil empresarial personalizable','Hasta 5 familias UNSPSC para filtrado automático','Soporte por email'];
+    const fb=[...fe,'📄 Descargar pliego en PDF directamente desde el SECP (10/mes)','🤖 Análisis profundo del pliego con IA (5/mes)','Exportación a Excel de todas tus oportunidades','Soporte prioritario por email y chat'];
+    const cfg={
+        free_trial:{nombre:'Prueba Gratuita',subtitulo:'Acceso completo al Plan Estándar por 7 días',features:fe,mostrarAgentes:false},
+        estandar:{nombre:'Plan Estándar',subtitulo:'$10 / mes — renovación automática',features:fe,mostrarAgentes:false},
+        business:{nombre:'Plan Business',subtitulo:'$20 / mes — renovación automática',features:fb,mostrarAgentes:false},
+        enterprise:{nombre:'Plan Enterprise',subtitulo:'Plan piloto — condiciones especiales',features:[...fb,'📋 Agente 033: genera el Formulario F033 pre-llenado (1/semana)','🗂️ Agente Sprint: genera un plan de trabajo en KanbanBonsai (1/semana)','Detección automática de política de ITBIS por licitación','Soporte dedicado por WhatsApp','Acceso anticipado a nuevas funcionalidades'],mostrarAgentes:true}
     };
-    const c = config[plan] || config['estandar'];
-    document.getElementById('plan-nombre-display').textContent = c.nombre;
-    document.getElementById('plan-subtitulo-display').textContent = c.subtitulo;
-    const mitad = Math.ceil(c.features.length / 2);
-    const renderCol = items => items.map(f => `<div class="flex items-start gap-2"><span class="text-green-600 font-bold flex-shrink-0">✓</span><span class="text-gray-700 text-sm">${f}</span></div>`).join('');
-    document.getElementById('plan-features-display').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1"><div class="space-y-3">${renderCol(c.features.slice(0, mitad))}</div><div class="space-y-3">${renderCol(c.features.slice(mitad))}</div></div>`;
-    const cuposEnterprise = [{ emoji:'📄', label:'Descargar Pliego (PDF)', valor:'10', periodo:'mes' },{ emoji:'🤖', label:'Analizar Pliego con IA', valor:'5', periodo:'mes' },{ emoji:'📋', label:'Generar F033 (Agente 033)', valor:'1', periodo:'semana' },{ emoji:'🗂️', label:'Plan para ofertar (Agente Sprint)', valor:'1', periodo:'semana' }];
-    const cuposBusiness = [{ emoji:'📄', label:'Descargar Pliego (PDF)', valor:'10', periodo:'mes' },{ emoji:'🤖', label:'Analizar Pliego con IA', valor:'5', periodo:'mes' }];
-    const seccionCupos = document.getElementById('seccion-cupos-incluidos');
-    const cuposEl = document.getElementById('plan-cupos-display');
-    const mkCupo = q => `<div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center"><p class="text-xl mb-1">${q.emoji}</p><p class="text-xs text-gray-500 mb-1 leading-tight">${q.label}</p><p class="text-xl font-bold text-indigo-700">${q.valor}</p><p class="text-xs text-gray-400">x ${q.periodo}</p></div>`;
-    if (plan === 'enterprise') { if (seccionCupos) seccionCupos.style.display = 'block'; cuposEl.innerHTML = cuposEnterprise.map(mkCupo).join(''); }
-    else if (plan === 'business' || plan === 'free_trial') { if (seccionCupos) seccionCupos.style.display = 'block'; cuposEl.className = 'grid grid-cols-2 gap-3'; cuposEl.innerHTML = cuposBusiness.map(mkCupo).join(''); }
-    else { if (seccionCupos) seccionCupos.style.display = 'none'; }
-    const seccionAgentes = document.getElementById('seccion-agentes-cupos');
-    if (seccionAgentes) seccionAgentes.style.display = c.mostrarAgentes ? 'block' : 'none';
+    const c=cfg[plan]||cfg['estandar'];
+    document.getElementById('plan-nombre-display').textContent=c.nombre;
+    document.getElementById('plan-subtitulo-display').textContent=c.subtitulo;
+    const m=Math.ceil(c.features.length/2);
+    const rc=items=>items.map(f=>`<div class="flex items-start gap-2"><span class="text-green-600 font-bold flex-shrink-0">✓</span><span class="text-gray-700 text-sm">${f}</span></div>`).join('');
+    document.getElementById('plan-features-display').innerHTML=`<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1"><div class="space-y-3">${rc(c.features.slice(0,m))}</div><div class="space-y-3">${rc(c.features.slice(m))}</div></div>`;
+    const ce=[{emoji:'📄',label:'Descargar Pliego (PDF)',valor:'10',periodo:'mes'},{emoji:'🤖',label:'Analizar Pliego con IA',valor:'5',periodo:'mes'},{emoji:'📋',label:'Generar F033 (Agente 033)',valor:'1',periodo:'semana'},{emoji:'🗂️',label:'Plan para ofertar (Agente Sprint)',valor:'1',periodo:'semana'}];
+    const cb=[{emoji:'📄',label:'Descargar Pliego (PDF)',valor:'10',periodo:'mes'},{emoji:'🤖',label:'Analizar Pliego con IA',valor:'5',periodo:'mes'}];
+    const sc=document.getElementById('seccion-cupos-incluidos'),ce2=document.getElementById('plan-cupos-display');
+    const mk=q=>`<div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center"><p class="text-xl mb-1">${q.emoji}</p><p class="text-xs text-gray-500 mb-1 leading-tight">${q.label}</p><p class="text-xl font-bold text-indigo-700">${q.valor}</p><p class="text-xs text-gray-400">x ${q.periodo}</p></div>`;
+    if(plan==='enterprise'){if(sc)sc.style.display='block';ce2.innerHTML=ce.map(mk).join('');}
+    else if(plan==='business'||plan==='free_trial'){if(sc)sc.style.display='block';ce2.className='grid grid-cols-2 gap-3';ce2.innerHTML=cb.map(mk).join('');}
+    else{if(sc)sc.style.display='none';}
+    const sa=document.getElementById('seccion-agentes-cupos');
+    if(sa)sa.style.display=c.mostrarAgentes?'block':'none';
 }
 
-// ════════════════════════════════════════════════════════════
-// PERFIL LICITADOR
-// ════════════════════════════════════════════════════════════
-let plDocumentos = [];
-const PL_GRUPOS = {
-    A: 'A — Existencia legal de la empresa',
-    B: 'B — Cumplimiento tributario y laboral',
-    C: 'C — Habilitación para el Estado',
-    D: 'D — Capacidad financiera',
-    E: 'E — Situacional (certificaciones propias e institucionales)'
-};
+// ════════════════════ PERFIL LICITADOR ════════════════════
+let plDocumentos=[];
+const PL_GRUPOS={A:'A — Existencia legal de la empresa',B:'B — Cumplimiento tributario y laboral',C:'C — Habilitación para el Estado',D:'D — Capacidad financiera',E:'E — Situacional (certificaciones propias e institucionales)'};
 
 function plMostrarSiEnterprise(plan) {
-    if (plan === 'enterprise') document.getElementById('tab-perfil-licitador')?.classList.remove('hidden');
+    if(plan==='enterprise') document.getElementById('tab-perfil-licitador')?.classList.remove('hidden');
 }
-
-function plEstado(fechaStr, esPermanente) {
-    if (esPermanente) return 'perm';
-    if (!fechaStr) return 'sin';
-    const hoy = new Date(); hoy.setHours(0,0,0,0);
-    const diff = Math.round((new Date(fechaStr) - hoy) / 86400000);
-    if (diff < 0) return 'vencido';
-    if (diff <= 30) return 'porvencer';
-    return 'vigente';
+function plEstado(f,perm) {
+    if(perm)return 'perm';if(!f)return 'sin';
+    const hoy=new Date();hoy.setHours(0,0,0,0);
+    const diff=Math.round((new Date(f)-hoy)/86400000);
+    if(diff<0)return 'vencido';if(diff<=30)return 'porvencer';return 'vigente';
 }
-
-function plBadge(estado) {
-    const m = { vigente:['bg-green-100 text-green-800','Vigente'], porvencer:['bg-yellow-100 text-yellow-800','Por vencer'], vencido:['bg-red-100 text-red-800','Vencido'], sin:['bg-gray-100 text-gray-500','Sin registrar'], perm:['bg-blue-100 text-blue-800','Permanente'] };
-    const [cls, lbl] = m[estado] || m['sin'];
-    return `<span class="text-xs font-semibold px-2 py-1 rounded-full ${cls}">${lbl}</span>`;
+function plBadge(e) {
+    const m={vigente:['#EAF3DE','#3B6D11','Vigente'],porvencer:['#FAEEDA','#854F0B','Por vencer'],vencido:['#FCEBEB','#A32D2D','Vencido'],sin:['#F1EFE8','#5F5E5A','Sin registrar'],perm:['#E6F1FB','#185FA5','Permanente']};
+    const[bg,color,lbl]=m[e]||m['sin'];
+    return`<span style="background:${bg};color:${color};font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;white-space:nowrap">${lbl}</span>`;
 }
-
 function plActualizarAgregado() {
-    const criticos = plDocumentos.filter(d => ['A','B','C'].includes(d.grupo) && !d.es_permanente);
-    let brechas = false, atencion = false;
-    criticos.forEach(d => {
-        const e = plEstado(d.fecha_vencimiento, d.es_permanente);
-        if (e === 'vencido' || e === 'sin') brechas = true;
-        else if (e === 'porvencer') atencion = true;
-    });
-    const dot = document.getElementById('pl-estado-dot'), val = document.getElementById('pl-estado-val');
-    if (brechas) { dot.className = 'w-3 h-3 rounded-full bg-red-500'; val.textContent = 'Tiene brechas'; }
-    else if (atencion) { dot.className = 'w-3 h-3 rounded-full bg-yellow-500'; val.textContent = 'Atención requerida'; }
-    else { dot.className = 'w-3 h-3 rounded-full bg-green-600'; val.textContent = 'Lista para licitar'; }
+    const crit=plDocumentos.filter(d=>['A','B','C'].includes(d.grupo)&&!d.es_permanente);
+    let brechas=false,atencion=false;
+    crit.forEach(d=>{const e=plEstado(d.fecha_vencimiento,d.es_permanente);if(e==='vencido'||e==='sin')brechas=true;else if(e==='porvencer')atencion=true;});
+    const dot=document.getElementById('pl-estado-dot'),val=document.getElementById('pl-estado-val');
+    if(brechas){dot.style.background='#E24B4A';val.textContent='Tiene brechas';}
+    else if(atencion){dot.style.background='#EF9F27';val.textContent='Atención requerida';}
+    else{dot.style.background='#639922';val.textContent='Lista para licitar';}
 }
-
 function plRender() {
-    const tbody = document.getElementById('pl-tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-    Object.keys(PL_GRUPOS).forEach(grupo => {
-        const docs = plDocumentos.filter(d => d.grupo === grupo);
-        const editable = ['D','E'].includes(grupo);
-        const gh = document.createElement('tr');
-        gh.innerHTML = `<td colspan="7" class="bg-gray-50 border-t border-b border-gray-200 px-4 py-2"><div class="flex items-center justify-between"><span class="text-xs font-bold text-gray-500 uppercase tracking-wide">${PL_GRUPOS[grupo]}</span>${editable ? `<button onclick="plAgregarDoc('${grupo}')" class="text-xs px-3 py-1 border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-100 transition">+ Agregar</button>` : ''}</div></td>`;
+    const tbody=document.getElementById('pl-tbody');if(!tbody)return;tbody.innerHTML='';
+    Object.keys(PL_GRUPOS).forEach(grupo=>{
+        const docs=plDocumentos.filter(d=>d.grupo===grupo);
+        const editable=['D','E'].includes(grupo);
+        const gh=document.createElement('tr');
+        gh.innerHTML=`<td colspan="7" style="background:#f9f9f7;border-top:1px solid #e8e8e6;border-bottom:1px solid #e8e8e6;padding:7px 12px"><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:10px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.05em">${PL_GRUPOS[grupo]}</span>${editable?`<button onclick="plAgregarDoc('${grupo}')" style="font-size:11px;padding:3px 9px;border:1px solid #ccc;border-radius:5px;background:#fff;color:#666;cursor:pointer">+ Agregar</button>`:''}</div></td>`;
         tbody.appendChild(gh);
-        if (docs.length === 0) {
-            const er = document.createElement('tr');
-            er.innerHTML = `<td colspan="7" class="px-4 py-4 text-xs text-gray-300 italic">Sin documentos registrados — usa "Agregar" para añadir certificaciones o requisitos institucionales.</td>`;
-            tbody.appendChild(er);
-            return;
+        if(!docs.length){
+            const er=document.createElement('tr');
+            er.innerHTML=`<td colspan="7" style="padding:12px;font-size:11px;color:#ccc;font-style:italic">Sin documentos registrados — usa "Agregar" para añadir certificaciones propias o requisitos institucionales frecuentes.</td>`;
+            tbody.appendChild(er);return;
         }
-        docs.forEach(d => {
-            const estado = plEstado(d.fecha_vencimiento, d.es_permanente);
-            const fechaVal = d.fecha_vencimiento ? d.fecha_vencimiento.split('T')[0] : '';
-            const tr = document.createElement('tr');
-            tr.className = 'border-b border-gray-100 hover:bg-gray-50';
-            tr.innerHTML = `
-                <td class="px-4 py-3"><span class="text-xs font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded">${d.codigo}</span></td>
-                <td class="px-4 py-3 text-sm text-gray-800">${d.nombre}</td>
-                <td class="px-4 py-3 text-xs text-gray-400 hidden md:table-cell">${d.emisor || '—'}</td>
-                <td class="px-4 py-3 text-xs text-gray-300 hidden lg:table-cell">${d.vigencia_estandar || '—'}</td>
-                <td class="px-4 py-3">${d.es_permanente ? '<span class="text-xs text-gray-300">—</span>' : `<input type="date" value="${fechaVal}" data-id="${d.id}" onchange="plGuardarFecha(this)" class="text-xs px-2 py-1 border border-gray-200 rounded-lg focus:border-indigo-400 focus:outline-none w-32">`}</td>
-                <td class="px-4 py-3" id="pl-est-${d.id}">${plBadge(estado)}</td>
-                <td class="px-4 py-3 text-center">${!d.es_predefinido ? `<button onclick="plEliminarDoc(${d.id})" title="Eliminar" class="text-gray-300 hover:text-red-400 transition text-base">✕</button>` : ''}</td>`;
+        docs.forEach(d=>{
+            const e=plEstado(d.fecha_vencimiento,d.es_permanente);
+            const fv=d.fecha_vencimiento?d.fecha_vencimiento.split('T')[0]:'';
+            const tr=document.createElement('tr');
+            tr.style.borderBottom='1px solid #f2f2f0';
+            tr.innerHTML=`
+                <td style="padding:8px 12px"><span style="font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;background:#efefed;color:#777">${d.codigo}</span></td>
+                <td style="padding:8px 12px;font-size:12px;color:#1a1a1a">${d.nombre}</td>
+                <td style="padding:8px 12px;font-size:11px;color:#999" class="hidden md:table-cell">${d.emisor||'—'}</td>
+                <td style="padding:8px 12px;font-size:11px;color:#bbb" class="hidden lg:table-cell">${d.vigencia_estandar||'—'}</td>
+                <td style="padding:8px 12px">${d.es_permanente?'<span style="font-size:11px;color:#ddd">—</span>':`<input type="date" value="${fv}" data-id="${d.id}" onchange="plGuardarFecha(this)" style="font-size:11px;padding:3px 6px;border:1px solid #ddd;border-radius:5px;color:#1a1a1a;background:#fff;width:125px">`}</td>
+                <td style="padding:8px 12px" id="pl-est-${d.id}">${plBadge(e)}</td>
+                <td style="padding:8px 12px;text-align:center">${!d.es_predefinido?`<button onclick="plEliminarDoc(${d.id})" style="color:#ddd;cursor:pointer;font-size:13px;border:none;background:none" title="Eliminar">✕</button>`:''}</td>`;
             tbody.appendChild(tr);
         });
     });
     plActualizarAgregado();
 }
-
 async function plCargar() {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const token=localStorage.getItem('token')||sessionStorage.getItem('token');
     try {
-        const r = await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`, { headers: { 'Authorization': `Bearer ${token}` } });
-        if (!r.ok) throw new Error('Error al cargar');
-        const data = await r.json();
-        if (!data.documentos || data.documentos.length === 0) {
-            await fetch(`${API_BASE}/api/perfil`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'perfil_licitador_init' }) });
-            const r2 = await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`, { headers: { 'Authorization': `Bearer ${token}` } });
-            const data2 = await r2.json();
-            plDocumentos = data2.documentos || [];
-        } else {
-            plDocumentos = data.documentos;
-        }
+        const r=await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`,{headers:{'Authorization':`Bearer ${token}`}});
+        if(!r.ok)throw new Error();
+        const d=await r.json();
+        if(!d.documentos?.length){
+            await fetch(`${API_BASE}/api/perfil`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'perfil_licitador_init'})});
+            const r2=await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`,{headers:{'Authorization':`Bearer ${token}`}});
+            const d2=await r2.json(); plDocumentos=d2.documentos||[];
+        } else { plDocumentos=d.documentos; }
         document.getElementById('pl-loading').classList.add('hidden');
         document.getElementById('pl-tabla-wrap').classList.remove('hidden');
         plRender();
-    } catch (e) {
-        console.error(e);
-        document.getElementById('pl-loading').textContent = 'Error al cargar el Perfil Licitador.';
-    }
+    } catch(e){console.error(e);document.getElementById('pl-loading').textContent='Error al cargar el Perfil Licitador.';}
 }
-
 async function plGuardarFecha(input) {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    const id = input.dataset.id;
-    const fecha = input.value || null;
-    const doc = plDocumentos.find(d => d.id == id);
-    if (doc) { doc.fecha_vencimiento = fecha; document.getElementById(`pl-est-${id}`).innerHTML = plBadge(plEstado(fecha, false)); plActualizarAgregado(); }
-    try {
-        await fetch(`${API_BASE}/api/perfil`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'perfil_licitador_update', id: parseInt(id), fecha_vencimiento: fecha }) });
-    } catch (e) { console.error('Error guardando fecha:', e); }
+    const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+    const id=input.dataset.id,fecha=input.value||null;
+    const doc=plDocumentos.find(d=>d.id==id);
+    if(doc){doc.fecha_vencimiento=fecha;document.getElementById(`pl-est-${id}`).innerHTML=plBadge(plEstado(fecha,false));plActualizarAgregado();}
+    try{await fetch(`${API_BASE}/api/perfil`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'perfil_licitador_update',id:parseInt(id),fecha_vencimiento:fecha})});}
+    catch(e){console.error(e);}
 }
-
 async function plAgregarDoc(grupo) {
-    const nombre = prompt(`Nombre del documento a agregar al Grupo ${grupo}:`);
-    if (!nombre || nombre.trim() === '') return;
-    const emisor = prompt('Emisor (opcional):') || '';
-    const vigencia = prompt('Vigencia estándar (opcional, ej: Anual, 30 días):') || '';
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const nombre=prompt(`Nombre del documento a agregar al Grupo ${grupo}:`);
+    if(!nombre?.trim())return;
+    const emisor=prompt('Emisor (opcional):')||'';
+    const vig=prompt('Vigencia estándar (opcional, ej: Anual, 30 días):')||'';
+    const token=localStorage.getItem('token')||sessionStorage.getItem('token');
     try {
-        const r = await fetch(`${API_BASE}/api/perfil`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ action: 'perfil_licitador_add', grupo, nombre, emisor, vigencia_estandar: vigencia }) });
-        if (!r.ok) throw new Error('Error al agregar');
-        const data = await r.json();
-        plDocumentos.push(data.documento);
-        plRender();
-    } catch (e) { alert('Error al agregar documento'); console.error(e); }
+        const r=await fetch(`${API_BASE}/api/perfil`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'perfil_licitador_add',grupo,nombre,emisor,vigencia_estandar:vig})});
+        if(!r.ok)throw new Error();
+        const d=await r.json(); plDocumentos.push(d.documento); plRender();
+    } catch(e){alert('Error al agregar documento');console.error(e);}
 }
-
 async function plEliminarDoc(id) {
-    if (!confirm('¿Eliminar este documento del Perfil Licitador?')) return;
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if(!confirm('¿Eliminar este documento del Perfil Licitador?'))return;
+    const token=localStorage.getItem('token')||sessionStorage.getItem('token');
     try {
-        const r = await fetch(`${API_BASE}/api/perfil?id=${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
-        if (!r.ok) throw new Error('Error al eliminar');
-        plDocumentos = plDocumentos.filter(d => d.id !== id);
-        plRender();
-    } catch (e) { alert('Error al eliminar documento'); console.error(e); }
+        const r=await fetch(`${API_BASE}/api/perfil?id=${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});
+        if(!r.ok)throw new Error();
+        plDocumentos=plDocumentos.filter(d=>d.id!==id); plRender();
+    } catch(e){alert('Error al eliminar documento');console.error(e);}
 }
 </script>
 
 <style>
-  .whatsapp-float { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; }
-  .whatsapp-float .wa-label { background-color: #fff; color: #128c7e; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); white-space: nowrap; opacity: 0; transform: translateX(10px); transition: all 0.3s ease; }
-  .whatsapp-float:hover .wa-label { opacity: 1; transform: translateX(0); }
-  .whatsapp-float .wa-icon { width: 58px; height: 58px; background-color: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(37,211,102,0.4); transition: transform 0.2s ease; }
-  .whatsapp-float:hover .wa-icon { transform: scale(1.1); }
-  .whatsapp-float .wa-icon svg { width: 32px; height: 32px; fill: white; }
+  .whatsapp-float{position:fixed;bottom:30px;right:30px;z-index:9999;display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+  .whatsapp-float .wa-label{background:#fff;color:#128c7e;font-size:14px;font-weight:600;padding:8px 14px;border-radius:20px;box-shadow:0 2px 10px rgba(0,0,0,.15);white-space:nowrap;opacity:0;transform:translateX(10px);transition:all .3s}
+  .whatsapp-float:hover .wa-label{opacity:1;transform:translateX(0)}
+  .whatsapp-float .wa-icon{width:58px;height:58px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(37,211,102,.4);transition:transform .2s}
+  .whatsapp-float:hover .wa-icon{transform:scale(1.1)}
+  .whatsapp-float .wa-icon svg{width:32px;height:32px;fill:white}
 </style>
 <a class="whatsapp-float" href="https://wa.me/584122324636?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20Compita" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
     <span class="wa-label">¿Tienes dudas? Escríbenos</span>
-    <div class="wa-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    </div>
+    <div class="wa-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
 </a>
 </body>
 </html>
