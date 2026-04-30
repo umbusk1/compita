@@ -76,10 +76,10 @@
 
         <!-- ══ TABS PRINCIPALES (3 siempre + 1 Enterprise) ══ -->
         <div class="flex border-b overflow-x-auto">
-            <button onclick="showTab('perfil')" id="tab-perfil" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🏢 Mi Empresa</button>
-            <button onclick="showTab('plan')" id="tab-plan" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📋 Mi Plan</button>
-            <button onclick="showTab('facturacion')" id="tab-facturacion" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">💳 Facturación</button>
+            <button onclick="showTab('perfil')" id="tab-perfil" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🏢 Perfil de Empresa</button>
             <button onclick="showTab('perfil-licitador')" id="tab-perfil-licitador" class="tab-button hidden flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📄 Perfil Licitador</button>
+            <button onclick="showTab('plan')" id="tab-plan" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📋 Perfil de Plan</button>
+            <button onclick="showTab('facturacion')" id="tab-facturacion" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">💳 Facturación</button>
         </div>
 
         <div class="p-8">
@@ -89,7 +89,7 @@
             <!-- ══════════════════════════════════════════════════════ -->
             <div id="content-perfil" class="tab-content hidden">
                 <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
-                    <button onclick="showSubTab('perfil','datos')" id="st-perfil-datos" class="subtab-btn">🏢 Datos de Empresa</button>
+                    <button onclick="showSubTab('perfil','datos')" id="st-perfil-datos" class="subtab-btn">🏢 Perfil</button>
                     <button onclick="showSubTab('perfil','familias')" id="st-perfil-familias" class="subtab-btn">🏷️ Familias UNSPSC</button>
                     <button onclick="showSubTab('perfil','seguridad')" id="st-perfil-seguridad" class="subtab-btn">🔒 Seguridad</button>
                 </div>
@@ -255,13 +255,13 @@
             <!-- ══════════════════════════════════════════════════════ -->
             <div id="content-plan" class="tab-content hidden">
                 <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
-                    <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Mi Plan</button>
+                    <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Perfil de Plan</button>
                     <button onclick="showSubTab('plan','invitar')" id="st-plan-invitar" class="subtab-btn">🤝 Invitar</button>
                 </div>
 
                 <!-- SUB: Info del Plan -->
                 <div id="sc-plan-info" class="hidden">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">📋 Perfil de Plan</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Perfil de Plan</h2>
                     <p class="text-gray-500 text-sm mb-6">Detalles, cupos y condiciones de tu plan actual.</p>
                     <div id="plan-nombre-seccion" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl p-6 mb-6">
                         <p class="text-sm font-medium opacity-80 mb-1">Plan activo</p>
