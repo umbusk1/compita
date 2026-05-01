@@ -44,6 +44,7 @@ export default async function handler(req, res) {
     if (action === 'perfil_licitador_init')   return handleInitPerfilLicitador(req, res, empresaId);
     if (action === 'perfil_licitador_update') return handleUpdateDocumento(req, res, empresaId);
     if (action === 'perfil_licitador_add')    return handleAddDocumento(req, res, empresaId);
+    if (action === 'perfil_licitador_alertas') return handleEnviarAlertas(req, res);
     return handleUpdateEmpresa(req, res, empresaId, authHeader);
   }
 
@@ -121,7 +122,8 @@ async function handleUpdateDocumento(req, res, empresaId) {
       `UPDATE perfil_licitador
        SET fecha_vencimiento = $1,
            notas             = $2,
-           archivo_url       = $3
+           archivo_url       = $3,
+           ultima_alerta_dias = NULL
        WHERE id = $4 AND empresa_id = $5
        RETURNING *`,
       [
@@ -318,4 +320,149 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
     console.error('Error al actualizar empresa:', error);
     return res.status(500).json({ error: 'Error al actualizar perfil de la empresa' });
   }
+
+async function handleEnviarAlertas(req, res) {
+  const { secret } = req.body;
+  if (secret !== process.env.CRON_SECRET) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+
+  try {
+    // Obtener documentos que vencen en los próximos 30 días
+    // para empresas Enterprise activas
+    const { rows } = await pool.query(`
+      SELECT
+        pl.id,
+        pl.empresa_id,
+        pl.codigo,
+        pl.nombre,
+        pl.emisor,
+        pl.fecha_vencimiento,
+        pl.ultima_alerta_dias,
+        pl.vigencia_estandar,
+        e.nombre  AS empresa_nombre,
+        u.email   AS admin_email
+      FROM perfil_licitador pl
+      JOIN empresas e  ON e.id = pl.empresa_id
+      JOIN usuarios u  ON u.empresa_id = e.id AND u.rol = 'admin'
+      WHERE e.plan            = 'enterprise'
+        AND e.activo          = TRUE
+        AND pl.es_permanente  = FALSE
+        AND pl.fecha_vencimiento IS NOT NULL
+        AND pl.fecha_vencimiento >= CURRENT_DATE
+        AND pl.fecha_vencimiento <= CURRENT_DATE + INTERVAL '30 days'
+      ORDER BY pl.empresa_id, pl.fecha_vencimiento ASC
+    `);
+
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const grupos = {};  // key = empresaId-threshold
+
+    for (const doc of rows) {
+      const diffDias = Math.round((new Date(doc.fecha_vencimiento) - hoy) / 86400000);
+      const skip30   = doc.vigencia_estandar === '30 días'; // docs de 30 días omiten alerta preventiva
+
+      let threshold = null;
+      if      (diffDias <= 5  && (!doc.ultima_alerta_dias || doc.ultima_alerta_dias > 5))  threshold = 5;
+      else if (diffDias <= 15 && (!doc.ultima_alerta_dias || doc.ultima_alerta_dias > 15)) threshold = 15;
+      else if (diffDias <= 30 && !skip30 && !doc.ultima_alerta_dias)                       threshold = 30;
+
+      if (!threshold) continue;
+
+      const key = `${doc.empresa_id}-${threshold}`;
+      if (!grupos[key]) grupos[key] = {
+        empresa_id: doc.empresa_id, empresa_nombre: doc.empresa_nombre,
+        admin_email: doc.admin_email, threshold, docs: []
+      };
+      grupos[key].docs.push({ ...doc, diff_dias: diffDias });
+    }
+
+    let enviados = 0;
+    for (const g of Object.values(grupos)) {
+      await enviarEmailAlerta(g);
+      // Marcar como enviada
+      for (const doc of g.docs) {
+        await pool.query(
+          `UPDATE perfil_licitador
+           SET ultima_alerta_dias = $1, updated_at = NOW()
+           WHERE id = $2`,
+          [g.threshold, doc.id]
+        );
+      }
+      enviados++;
+    }
+
+    return res.status(200).json({
+      message: `Alertas procesadas: ${enviados} email(s) enviado(s)`,
+      grupos_procesados: enviados
+    });
+
+  } catch (error) {
+    console.error('Error procesando alertas Perfil Licitador:', error);
+    return res.status(500).json({ error: 'Error al procesar alertas' });
+  }
+}
+
+async function enviarEmailAlerta({ empresa_nombre, admin_email, threshold, docs }) {
+  const nivel = threshold === 5  ? { emoji: '🔴', label: 'URGENTE'     }
+              : threshold === 15 ? { emoji: '🟡', label: 'ATENCIÓN'    }
+              :                    { emoji: '🟢', label: 'PREVENTIVO'  };
+
+  const filas = docs.map(d => `
+    <tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0">
+        <strong style="font-size:11px;color:#6b7280">${d.codigo}</strong>
+      </td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:13px">${d.nombre}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;font-size:12px;color:#9ca3af">${d.emisor}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #f0f0f0;font-weight:700;font-size:13px;
+                 color:${threshold<=5?'#dc2626':threshold<=15?'#d97706':'#059669'}">
+        ${d.diff_dias} día${d.diff_dias!==1?'s':''}
+      </td>
+    </tr>`).join('');
+
+  const html = `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a;background:#f9fafb;padding:24px">
+  <div style="background:linear-gradient(135deg,#4f46e5,#7c3aed);padding:20px 24px;border-radius:12px 12px 0 0;text-align:center">
+    <p style="color:white;font-size:20px;font-weight:700;margin:0">Compita</p>
+    <p style="color:#c7d2fe;font-size:12px;margin:4px 0 0">Perfil Licitador — Alerta de Vencimiento</p>
+  </div>
+  <div style="background:#fff;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px">
+    <p style="margin:0 0 4px;font-size:13px;color:#6b7280">${nivel.emoji} Alerta ${nivel.label}</p>
+    <h2 style="margin:0 0 4px;font-size:18px">Documentos por vencer en ≤${threshold} días</h2>
+    <p style="color:#6b7280;font-size:13px;margin:0 0 20px">${empresa_nombre}</p>
+    <table style="width:100%;border-collapse:collapse;background:#f9fafb;border-radius:8px;overflow:hidden">
+      <thead><tr style="background:#f3f4f6">
+        <th style="padding:8px 12px;text-align:left;font-size:10px;color:#9ca3af;text-transform:uppercase">Cód.</th>
+        <th style="padding:8px 12px;text-align:left;font-size:10px;color:#9ca3af;text-transform:uppercase">Documento</th>
+        <th style="padding:8px 12px;text-align:left;font-size:10px;color:#9ca3af;text-transform:uppercase">Emisor</th>
+        <th style="padding:8px 12px;text-align:left;font-size:10px;color:#9ca3af;text-transform:uppercase">Días restantes</th>
+      </tr></thead>
+      <tbody>${filas}</tbody>
+    </table>
+    <div style="margin-top:24px;text-align:center">
+      <a href="https://compita.umbusk.com/cuenta.html"
+         style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;padding:12px 28px;
+                border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;display:inline-block">
+        Actualizar Perfil Licitador →
+      </a>
+    </div>
+    <p style="margin-top:24px;font-size:11px;color:#d1d5db;text-align:center">
+      Mensaje automático de Compita · Umbusk LLC<br>
+      Para dejar de recibir estas alertas, actualiza las fechas en tu Perfil Licitador.
+    </p>
+  </div>
+</body></html>`;
+
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${process.env.RESEND_API_KEY}` },
+    body: JSON.stringify({
+      from:    'Compita Alertas <alertas@compita.umbusk.com>',
+      to:      [admin_email],
+      subject: `${nivel.emoji} ${nivel.label} — Documentos por vencer | ${empresa_nombre}`,
+      html
+    })
+  });
+  if (!r.ok) console.error('Resend error:', await r.json());
+}
+
 }
