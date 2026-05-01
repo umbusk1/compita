@@ -65,6 +65,7 @@
 
 <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
+    <!-- Banner de completitud -->
     <div id="banner-onboarding" class="hidden mb-6 rounded-2xl shadow-md overflow-hidden">
         <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-4 text-white">
             <div class="flex items-start justify-between gap-4">
@@ -93,25 +94,46 @@
             <button onclick="showTab('facturacion')" id="tab-facturacion" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">💳 Facturación y Seguridad</button>
         </div>
 
-
+        <!-- ══ BARRA SECUNDARIA DE SUB-TABS ══
+             Estructura espejo del tab bar: 4 slots flex-1 iguales.
+             Los sub-tabs aparecen en el slot de su pestaña padre,
+             alineados visualmente debajo de ella.           ══ -->
+        <div id="secondary-subtab-bar" class="hidden border-b bg-gray-50">
+            <div class="flex">
+                <!-- Slot 1: Perfil de Empresa — sin sub-tabs aquí (usa sub-tabs internos) -->
+                <div class="flex-1"></div>
+                <!-- Slot 2: Perfil Licitador — oculto hasta Enterprise -->
+                <div id="ss-licitador" class="flex-1 hidden"></div>
+                <!-- Slot 3: Perfil de Plan -->
+                <div id="ss-plan" class="flex-1 hidden flex items-center gap-2 px-4 py-2">
+                    <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Perfil de Plan</button>
+                    <button onclick="showSubTab('plan','invitar')" id="st-plan-invitar" class="subtab-btn">🤝 Invitar</button>
+                </div>
+                <!-- Slot 4: Facturación y Seguridad -->
+                <div id="ss-facturacion" class="flex-1 hidden flex items-center gap-2 px-4 py-2">
+                    <button onclick="showSubTab('facturacion','datos')" id="st-facturacion-datos" class="subtab-btn">💳 Facturación</button>
+                    <button onclick="showSubTab('facturacion','seguridad')" id="st-facturacion-seguridad" class="subtab-btn">🔒 Seguridad</button>
+                </div>
+            </div>
+        </div>
 
         <div class="p-8">
 
             <!-- ══ TAB: PERFIL DE EMPRESA ══ -->
             <div id="content-perfil" class="tab-content hidden">
+                <!-- Sub-tabs internos (pestaña izquierda: alineación natural) -->
                 <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
                     <button onclick="showSubTab('perfil','datos')" id="st-perfil-datos" class="subtab-btn">🏢 Perfil</button>
                     <button onclick="showSubTab('perfil','familias')" id="st-perfil-familias" class="subtab-btn">🏷️ Familias UNSPSC</button>
                 </div>
-
                 <!-- SUB: Perfil de la Empresa -->
                 <div id="sc-perfil-datos" class="hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Perfil de Empresa</h2>
                     <form id="form-perfil" onsubmit="guardarPerfil(event)">
                         <div class="space-y-6">
                             <div><label class="block text-sm font-medium text-gray-700 mb-2">Nombre de la Empresa *</label><input type="text" id="empresa-nombre" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition" placeholder="Ej: Consultores ABC"></div>
-                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Descripción de la Empresa</label><textarea id="empresa-descripcion" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="Ej: Empresa dominicana de consultoría en gestión pública..."></textarea><p class="text-xs text-gray-500 mt-1">La IA usa esto para entender tu perfil y hacer mejores recomendaciones.</p></div>
-                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Sitio web <span class="text-gray-400 font-normal">(opcional)</span></label><input type="url" id="empresa-website" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition" placeholder="https://www.tuempresa.com"><p class="text-xs text-gray-500 mt-1">La IA lo usa para entender mejor qué vende tu empresa y evitar falsos positivos.</p></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Descripción de la Empresa</label><textarea id="empresa-descripcion" rows="3" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition resize-none" placeholder="Ej: Empresa dominicana de consultoría..."></textarea><p class="text-xs text-gray-500 mt-1">La IA usa esto para entender tu perfil y hacer mejores recomendaciones.</p></div>
+                            <div><label class="block text-sm font-medium text-gray-700 mb-2">Sitio web <span class="text-gray-400 font-normal">(opcional)</span></label><input type="url" id="empresa-website" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-600 focus:outline-none transition" placeholder="https://www.tuempresa.com"><p class="text-xs text-gray-500 mt-1">La IA lo usa para entender mejor qué vende tu empresa.</p></div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">¿En qué sector(es) opera tu empresa? <span class="text-gray-400 font-normal">(hasta 3)</span></label>
                                 <p id="contador-sectores-cuenta" class="text-xs font-semibold text-indigo-600 mb-3">0 de 3 seleccionados</p>
@@ -177,7 +199,7 @@
                                                 <div><strong class="text-green-700">✅ Palabras efectivas para resultados variados:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">mantenimiento, equipos, servicios, consultoría, capacitación, sistemas, suministro</div></div>
                                                 <div><strong class="text-green-700">✅ Palabras muy específicas para resultados focalizados:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Guardian Z-Series, Kopr-Kote, modelo XYZ-2000, cualquier marca específica</div></div>
                                                 <p class="mt-2 text-blue-600 italic">Palabras muy técnicas pueden resultar en 0 oportunidades detectadas.</p>
-                                                <div><strong class="text-green-700">✅ Puedes usar expresiones con varias palabras:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Escríbelas separadas por coma. Ej: <span class="font-mono">asesoría en recursos humanos, consultoría financiera</span></div></div>
+                                                <div><strong class="text-green-700">✅ Puedes usar expresiones con varias palabras:</strong><div class="mt-1 font-mono bg-red-50 px-2 py-1 rounded">Ej: <span class="font-mono">asesoría en recursos humanos, consultoría financiera</span></div></div>
                                             </div>
                                         </div>
                                     </div>
@@ -210,7 +232,6 @@
                         </div>
                     </form>
                 </div>
-
                 <!-- SUB: Familias UNSPSC -->
                 <div id="sc-perfil-familias" class="hidden">
                     <div class="mb-6"><h2 class="text-2xl font-bold text-gray-900 mb-2">🏷️ Familias UNSPSC</h2><p class="text-gray-600 text-sm">Selecciona las familias de productos/servicios para filtrar licitaciones relevantes automáticamente.</p></div>
@@ -230,13 +251,8 @@
             </div><!-- fin content-perfil -->
 
 
-            <!-- ══ TAB: PERFIL DE PLAN ══ -->
+            <!-- ══ TAB: PERFIL DE PLAN ══ (sub-tabs en barra secundaria) -->
             <div id="content-plan" class="tab-content hidden">
-                <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
-                    <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Perfil de Plan</button>
-                    <button onclick="showSubTab('plan','invitar')" id="st-plan-invitar" class="subtab-btn">🤝 Invitar</button>
-                </div>
-                <!-- SUB: Info del Plan -->
                 <div id="sc-plan-info" class="hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">Perfil de Plan</h2>
                     <p class="text-gray-500 text-sm mb-6">Detalles, cupos y condiciones de tu plan actual.</p>
@@ -272,7 +288,7 @@
                         <ul class="space-y-3 text-sm text-gray-600">
                             <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">•</span><span>Los cupos mensuales se reinician el día 1 de cada mes a las 00:00 UTC. Los cupos no utilizados no se acumulan.</span></li>
                             <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">•</span><span>Los cupos semanales de los Agentes 033 y Sprint se reinician cada lunes a las 00:00 UTC.</span></li>
-                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">•</span><span>Los documentos descargados del portal SECP son responsabilidad de la entidad contratante. Compita no garantiza su completitud, vigencia ni exactitud.</span></li>
+                            <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">•</span><span>Los documentos descargados del portal SECP son responsabilidad de la entidad contratante. Compita no garantiza su completitud ni exactitud.</span></li>
                             <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">•</span><span>Los análisis generados por IA son orientativos e informativos. No constituyen asesoría legal, financiera ni técnica.</span></li>
                             <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">•</span><span>El Formulario F033 es un borrador de referencia. Debe revisarse y validarse antes de presentarlo.</span></li>
                             <li class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">•</span><span>Compita puede experimentar interrupciones temporales. Umbusk LLC no se responsabiliza por licitaciones perdidas durante dichos períodos.</span></li>
@@ -280,8 +296,6 @@
                         </ul>
                     </div>
                 </div>
-
-                <!-- SUB: Invitar -->
                 <div id="sc-plan-invitar" class="hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">🤝 Invitar a un Colega</h2>
                     <p class="text-gray-600 text-sm mb-6">Invita a otra empresa a probar Compita. Recibirán un email con un link de registro personalizado.</p>
@@ -294,13 +308,8 @@
             </div><!-- fin content-plan -->
 
 
-            <!-- ══ TAB: FACTURACIÓN Y SEGURIDAD ══ -->
+            <!-- ══ TAB: FACTURACIÓN Y SEGURIDAD ══ (sub-tabs en barra secundaria) -->
             <div id="content-facturacion" class="tab-content hidden">
-                <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
-                    <button onclick="showSubTab('facturacion','datos')" id="st-facturacion-datos" class="subtab-btn">💳 Facturación</button>
-                    <button onclick="showSubTab('facturacion','seguridad')" id="st-facturacion-seguridad" class="subtab-btn">🔒 Seguridad</button>
-                </div>
-                <!-- SUB: Facturación -->
                 <div id="sc-facturacion-datos" class="hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Facturación</h2>
                     <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-6 mb-6 border border-indigo-200">
@@ -321,10 +330,8 @@
                         <ul class="space-y-2 mb-6"><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Ver y descargar tus facturas</li><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Actualizar tu método de pago</li><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Cambiar de plan</li><li class="flex items-center gap-2 text-gray-700"><span class="text-green-600">✓</span> Cancelar tu suscripción</li></ul>
                         <button onclick="abrirPortalFacturacion()" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold">🔗 Abrir Portal de Facturación</button>
                     </div>
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4"><p class="text-sm text-gray-600"><strong>Nota:</strong> Serás redirigido a un portal seguro gestionado por Stripe. Todos los cambios se reflejarán automáticamente en tu cuenta.</p></div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4"><p class="text-sm text-gray-600"><strong>Nota:</strong> Serás redirigido a un portal seguro gestionado por Stripe.</p></div>
                 </div>
-
-                <!-- SUB: Seguridad -->
                 <div id="sc-facturacion-seguridad" class="hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">🔒 Seguridad</h2>
                     <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6"><label class="block text-sm font-medium text-gray-700 mb-2">Email de la cuenta</label><div class="text-gray-900 font-semibold" id="email-readonly"></div><p class="text-xs text-gray-500 mt-1">El email no puede ser modificado</p></div>
@@ -408,10 +415,23 @@ function showTab(name) {
     document.getElementById(`content-${name}`).classList.remove('hidden');
     document.getElementById(`tab-${name}`).classList.add('border-indigo-600','text-indigo-600');
 
-    if(name==='perfil')          showSubTab('perfil','datos');
-    if(name==='plan')            showSubTab('plan','info');
-    if(name==='facturacion')     showSubTab('facturacion','datos');
-    if(name==='perfil-licitador') plCargar();
+    // Barra secundaria: mostrar sólo el slot de la pestaña activa
+    const bar=document.getElementById('secondary-subtab-bar');
+    ['plan','facturacion'].forEach(n=>document.getElementById(`ss-${n}`)?.classList.add('hidden'));
+
+    if(name==='plan'){
+        bar.classList.remove('hidden');
+        document.getElementById('ss-plan')?.classList.remove('hidden');
+        showSubTab('plan','info');
+    } else if(name==='facturacion'){
+        bar.classList.remove('hidden');
+        document.getElementById('ss-facturacion')?.classList.remove('hidden');
+        showSubTab('facturacion','datos');
+    } else {
+        bar.classList.add('hidden');
+        if(name==='perfil')          showSubTab('perfil','datos');
+        if(name==='perfil-licitador') plCargar();
+    }
 }
 
 function showSubTab(parent,sub) {
@@ -439,7 +459,6 @@ async function verificarAutenticacion(){
         if(r.ok){const d=await r.json();document.getElementById('nombre-empresa').textContent=d.empresa.nombre;document.getElementById('nombre-empresa-mobile').textContent=d.empresa.nombre;}
         if(empresaActual?.plan==='enterprise') await plCargarSilencioso();
         evaluarCompletitud();
-        actualizarBadgeLicitador();
         showTab('perfil');
     }catch(e){console.error(e);window.location.href='/login.html';}
 }
@@ -501,7 +520,6 @@ async function cargarPerfil(){
         const r=await fetch(`${API_BASE}/api/perfil?type=empresa`,{headers:{'Authorization':`Bearer ${token}`}});
         if(!r.ok){alert('Error al cargar perfil de empresa');return;}
         empresaActual=await r.json();
-        document.getElementById('banner-onboarding').classList.toggle('hidden',!!empresaActual.onboarding_completado);
         document.getElementById('empresa-nombre').value=empresaActual.nombre||'';
         document.getElementById('empresa-descripcion').value=empresaActual.descripcion||'';
         document.getElementById('empresa-website').value=empresaActual.website||'';
@@ -660,28 +678,32 @@ function cargarPerfilPlan(plan){
 // ════════ PERFIL LICITADOR ════════
 let plDocumentos=[];
 const PL_GRUPOS={A:'A — Existencia legal de la empresa',B:'B — Cumplimiento tributario y laboral',C:'C — Habilitación para el Estado',D:'D — Capacidad financiera',E:'E — Situacional (certificaciones propias e institucionales)'};
-function plMostrarSiEnterprise(plan){if(plan==='enterprise')document.getElementById('tab-perfil-licitador')?.classList.remove('hidden');}
 
-function actualizarBadgeLicitador() {
-    const badge = document.getElementById('badge-licitador');
-    if (!badge || !plDocumentos.length) return;
-    const hoy = new Date(); hoy.setHours(0,0,0,0);
-    const criticos = plDocumentos.filter(d => ['A','B','C'].includes(d.grupo) && !d.es_permanente);
-    const count = criticos.filter(d => {
-        if (!d.fecha_vencimiento) return true; // sin registrar = alerta
-        return new Date(d.fecha_vencimiento) <= hoy; // vencido = alerta
-    }).length;
-    if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
-    else           { badge.classList.add('hidden'); }
+function plMostrarSiEnterprise(plan){
+    if(plan==='enterprise'){
+        document.getElementById('tab-perfil-licitador')?.classList.remove('hidden');
+        document.getElementById('ss-licitador')?.classList.remove('hidden'); // sincronizar barra secundaria
+    }
 }
+
+function actualizarBadgeLicitador(){
+    const badge=document.getElementById('badge-licitador');if(!badge||!plDocumentos.length)return;
+    const hoy=new Date();hoy.setHours(0,0,0,0);
+    const criticos=plDocumentos.filter(d=>['A','B','C'].includes(d.grupo)&&!d.es_permanente);
+    const count=criticos.filter(d=>!d.fecha_vencimiento||new Date(d.fecha_vencimiento)<=hoy).length;
+    if(count>0){badge.textContent=count;badge.classList.remove('hidden');}else{badge.classList.add('hidden');}
+}
+
 function plEstado(f,perm){if(perm)return 'perm';if(!f)return 'sin';const hoy=new Date();hoy.setHours(0,0,0,0);const diff=Math.round((new Date(f)-hoy)/86400000);if(diff<0)return 'vencido';if(diff<=30)return 'porvencer';return 'vigente';}
 function plBadge(e){const m={vigente:['#EAF3DE','#3B6D11','Vigente'],porvencer:['#FAEEDA','#854F0B','Por vencer'],vencido:['#FCEBEB','#A32D2D','Vencido'],sin:['#F1EFE8','#5F5E5A','Sin registrar'],perm:['#E6F1FB','#185FA5','Permanente']};const[bg,color,lbl]=m[e]||m['sin'];return`<span style="background:${bg};color:${color};font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;white-space:nowrap">${lbl}</span>`;}
+
 function plActualizarAgregado(){
     const crit=plDocumentos.filter(d=>['A','B','C'].includes(d.grupo)&&!d.es_permanente);let brechas=false,atencion=false;
     crit.forEach(d=>{const e=plEstado(d.fecha_vencimiento,d.es_permanente);if(e==='vencido'||e==='sin')brechas=true;else if(e==='porvencer')atencion=true;});
     const dot=document.getElementById('pl-estado-dot'),val=document.getElementById('pl-estado-val');
     if(brechas){dot.style.background='#E24B4A';val.textContent='Tiene brechas';}else if(atencion){dot.style.background='#EF9F27';val.textContent='Atención requerida';}else{dot.style.background='#639922';val.textContent='Lista para licitar';}
 }
+
 function plRender(){
     const tbody=document.getElementById('pl-tbody');if(!tbody)return;tbody.innerHTML='';
     Object.keys(PL_GRUPOS).forEach(grupo=>{
@@ -699,6 +721,7 @@ function plRender(){
     });
     plActualizarAgregado();
 }
+
 async function plCargar(){
     const token=localStorage.getItem('token')||sessionStorage.getItem('token');
     try{
@@ -709,80 +732,17 @@ async function plCargar(){
             const r2=await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`,{headers:{'Authorization':`Bearer ${token}`}});
             const d2=await r2.json();plDocumentos=d2.documentos||[];
         }else{plDocumentos=d.documentos;}
-        document.getElementById('pl-loading').classList.add('hidden');document.getElementById('pl-tabla-wrap').classList.remove('hidden');plRender();
-        evaluarCompletitud();
+        document.getElementById('pl-loading').classList.add('hidden');document.getElementById('pl-tabla-wrap').classList.remove('hidden');
+        plRender();evaluarCompletitud();actualizarBadgeLicitador();
     }catch(e){console.error(e);document.getElementById('pl-loading').textContent='Error al cargar el Perfil Licitador.';}
 }
 
-// ════════ COMPLETITUD DEL PERFIL ════════
-let bannerDismissed = false;
-
-function dismissBanner() {
-    bannerDismissed = true;
-    document.getElementById('banner-onboarding').classList.add('hidden');
-}
-
-function evaluarCompletitud() {
-    if (bannerDismissed) return;
-    const issues = [];
-
-    // — Perfil de Empresa —
-    if (empresaActual) {
-        const falta = [];
-        if (!empresaActual.descripcion?.trim())                                               falta.push('descripción');
-        if (!empresaActual.sector_principal)                                                  falta.push('sector');
-        if (!(Array.isArray(empresaActual.palabras_clave) ? empresaActual.palabras_clave : []).length) falta.push('palabras clave');
-        if (!(Array.isArray(empresaActual.regiones_interes) ? empresaActual.regiones_interes : []).length) falta.push('regiones de interés');
-        if (falta.length) issues.push({
-            texto: `Perfil de Empresa: falta ${falta.join(' · ')}`,
-            accion: `showTab('perfil');showSubTab('perfil','datos')`
-        });
-    }
-
-    // — Perfil Licitador (solo Enterprise) —
-    if (empresaActual?.plan === 'enterprise' && plDocumentos.length) {
-        const hoy = new Date(); hoy.setHours(0,0,0,0);
-        const criticos = plDocumentos.filter(d => ['A','B','C'].includes(d.grupo) && !d.es_permanente);
-        const sinFecha  = criticos.filter(d => !d.fecha_vencimiento).length;
-        const vencidos  = criticos.filter(d => d.fecha_vencimiento && new Date(d.fecha_vencimiento) < hoy).length;
-        const rpe = plDocumentos.find(d => d.codigo === 'C1');
-        const rpeVencido = rpe?.fecha_vencimiento && new Date(rpe.fecha_vencimiento) < hoy;
-        const plFalta = [];
-        if (rpeVencido)  plFalta.push('⚠️ RPE vencido — no puedes licitar');
-        if (vencidos)    plFalta.push(`${vencidos} documento${vencidos>1?'s':''} vencido${vencidos>1?'s':''}`);
-        if (sinFecha)    plFalta.push(`${sinFecha} documento${sinFecha>1?'s':''} sin fecha registrada`);
-        if (plFalta.length) issues.push({
-            texto: `Perfil Licitador: ${plFalta.join(' · ')}`,
-            accion: `showTab('perfil-licitador')`
-        });
-    }
-
-    const banner = document.getElementById('banner-onboarding');
-    if (!issues.length) { banner.classList.add('hidden'); return; }
-    document.getElementById('banner-issues').innerHTML = issues
-        .map(i => `<li><a href="#" onclick="${i.accion};return false;" class="underline decoration-dotted hover:decoration-solid">${i.texto}</a></li>`)
-        .join('');
-    banner.classList.remove('hidden');
-}
-
-async function plCargarSilencioso() {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    try {
-        const r = await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`, {headers:{'Authorization':`Bearer ${token}`}});
-        if (!r.ok) return;
-        const d = await r.json();
-        if (!d.documentos?.length) {
-            await fetch(`${API_BASE}/api/perfil`, {method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body:JSON.stringify({action:'perfil_licitador_init'})});
-            const r2 = await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`, {headers:{'Authorization':`Bearer ${token}`}});
-            plDocumentos = (await r2.json()).documentos || [];
-        } else { plDocumentos = d.documentos; }
-    } catch(e) { console.error(e); }
-}
 async function plGuardarFecha(input){
     const token=localStorage.getItem('token')||sessionStorage.getItem('token'),id=input.dataset.id,fecha=input.value||null;
-    const doc=plDocumentos.find(d=>d.id==id);if(doc){doc.fecha_vencimiento=fecha;document.getElementById(`pl-est-${id}`).innerHTML=plBadge(plEstado(fecha,false));plActualizarAgregado();}
+    const doc=plDocumentos.find(d=>d.id==id);if(doc){doc.fecha_vencimiento=fecha;document.getElementById(`pl-est-${id}`).innerHTML=plBadge(plEstado(fecha,false));plActualizarAgregado();actualizarBadgeLicitador();}
     try{await fetch(`${API_BASE}/api/perfil`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'perfil_licitador_update',id:parseInt(id),fecha_vencimiento:fecha})});}catch(e){console.error(e);}
 }
+
 async function plAgregarDoc(grupo){
     const nombre=prompt(`Nombre del documento a agregar al Grupo ${grupo}:`);if(!nombre?.trim())return;
     const emisor=prompt('Emisor (opcional):')||'',vig=prompt('Vigencia estándar (opcional):')||'';
@@ -790,11 +750,59 @@ async function plAgregarDoc(grupo){
     try{const r=await fetch(`${API_BASE}/api/perfil`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'perfil_licitador_add',grupo,nombre,emisor,vigencia_estandar:vig})});if(!r.ok)throw new Error();const d=await r.json();plDocumentos.push(d.documento);plRender();}
     catch(e){alert('Error al agregar documento');console.error(e);}
 }
+
 async function plEliminarDoc(id){
     if(!confirm('¿Eliminar este documento del Perfil Licitador?'))return;
     const token=localStorage.getItem('token')||sessionStorage.getItem('token');
     try{const r=await fetch(`${API_BASE}/api/perfil?id=${id}`,{method:'DELETE',headers:{'Authorization':`Bearer ${token}`}});if(!r.ok)throw new Error();plDocumentos=plDocumentos.filter(d=>d.id!==id);plRender();}
     catch(e){alert('Error al eliminar documento');console.error(e);}
+}
+
+async function plCargarSilencioso(){
+    const token=localStorage.getItem('token')||sessionStorage.getItem('token');
+    try{
+        const r=await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`,{headers:{'Authorization':`Bearer ${token}`}});
+        if(!r.ok)return;const d=await r.json();
+        if(!d.documentos?.length){
+            await fetch(`${API_BASE}/api/perfil`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'perfil_licitador_init'})});
+            const r2=await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`,{headers:{'Authorization':`Bearer ${token}`}});
+            plDocumentos=(await r2.json()).documentos||[];
+        }else{plDocumentos=d.documentos;}
+    }catch(e){console.error(e);}
+}
+
+// ════════ BANNER DE COMPLETITUD ════════
+let bannerDismissed=false;
+function dismissBanner(){bannerDismissed=true;document.getElementById('banner-onboarding').classList.add('hidden');}
+
+function evaluarCompletitud(){
+    if(bannerDismissed)return;
+    const issues=[];
+    if(empresaActual){
+        const falta=[];
+        if(!empresaActual.descripcion?.trim())falta.push('descripción');
+        if(!empresaActual.sector_principal)falta.push('sector');
+        if(!(Array.isArray(empresaActual.palabras_clave)?empresaActual.palabras_clave:[]).length)falta.push('palabras clave');
+        if(!(Array.isArray(empresaActual.regiones_interes)?empresaActual.regiones_interes:[]).length)falta.push('regiones de interés');
+        if(falta.length)issues.push({texto:`Perfil de Empresa: falta ${falta.join(' · ')}`,accion:`showTab('perfil');showSubTab('perfil','datos')`});
+    }
+    if(empresaActual?.plan==='enterprise'&&plDocumentos.length){
+        const hoy=new Date();hoy.setHours(0,0,0,0);
+        const criticos=plDocumentos.filter(d=>['A','B','C'].includes(d.grupo)&&!d.es_permanente);
+        const sinFecha=criticos.filter(d=>!d.fecha_vencimiento).length;
+        const vencidos=criticos.filter(d=>d.fecha_vencimiento&&new Date(d.fecha_vencimiento)<hoy).length;
+        const rpe=plDocumentos.find(d=>d.codigo==='C1');
+        const rpeVencido=rpe?.fecha_vencimiento&&new Date(rpe.fecha_vencimiento)<hoy;
+        const plFalta=[];
+        if(rpeVencido)plFalta.push('⚠️ RPE vencido — no puedes licitar');
+        if(vencidos)plFalta.push(`${vencidos} documento${vencidos>1?'s':''} vencido${vencidos>1?'s':''}`);
+        if(sinFecha)plFalta.push(`${sinFecha} documento${sinFecha>1?'s':''} sin fecha registrada`);
+        if(plFalta.length)issues.push({texto:`Perfil Licitador: ${plFalta.join(' · ')}`,accion:`showTab('perfil-licitador')`});
+    }
+    const banner=document.getElementById('banner-onboarding');
+    if(!issues.length){banner.classList.add('hidden');return;}
+    document.getElementById('banner-issues').innerHTML=issues.map(i=>`<li><a href="#" onclick="${i.accion};return false;" class="underline decoration-dotted hover:decoration-solid">${i.texto}</a></li>`).join('');
+    banner.classList.remove('hidden');
 }
 </script>
 
