@@ -1,7 +1,12 @@
 // api/business-features.js - Gestión de recursos Business (ZIP y Análisis IA)
 import { neon } from '@neondatabase/serverless';
 
+function normalizar(t) {
+  return (t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
 function construirRegex(palabra) {
+  palabra = normalizar(palabra);
   const esExpresion = palabra.includes(' ');
   const escapada = palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   if (esExpresion) return new RegExp(escapada, 'i');
@@ -351,7 +356,7 @@ export default async function handler(req, res) {
         }
         // ─────────────────────────────────────────────────────────────────────
 
-        const texto = `${lic.referencia} ${lic.descripcion}`.toLowerCase();
+        const texto = normalizar(`${lic.referencia} ${lic.descripcion}`.toLowerCase());
         const monto = parseFloat(lic.monto_estimado) || 0;
         const codigoUNSPSC = lic.codigo_unspsc || '';
         const familiaUNSPSC = lic.familia_unspsc || '';

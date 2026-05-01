@@ -205,6 +205,10 @@ async function handleReanalizar(req, res) {
 // UTILIDAD: Stemming seguro para español
 // ============================================================================
 
+function normalizar(t) {
+  return (t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
 function obtenerRaiz(palabra) {
   if (palabra.length <= 4) return palabra;
   if (/[aeiouáéíóúü]s$/i.test(palabra)) return palabra;
@@ -242,7 +246,7 @@ async function procesarEtapa1(oportunidad, empresa) {
       : (empresa.palabras_clave || '').split(',')
   ).map(p => p.trim().toLowerCase()).filter(p => p.length > 0);
 
-  const textoCompleto = (oportunidad.descripcion || '').toLowerCase();
+  const textoCompleto = normalizar((oportunidad.descripcion || '').toLowerCase());
 
   let palabraEncontrada = null;
   const tieneCoincidencia = palabrasClave.some(palabra => {
@@ -274,7 +278,8 @@ async function procesarEtapa1(oportunidad, empresa) {
         : (empresa.exclusiones || '').split(',')
     ).map(e => e.trim().toLowerCase()).filter(e => e.length > 0);
 
-    for (const exclusion of exclusiones) {
+    for (const excl of exclusiones) {
+	  const exclusion = normalizar(excl);
       const esExpresion = exclusion.includes(' ');
       let regex;
       if (esExpresion) {
