@@ -104,15 +104,19 @@
                 <div class="flex-1"></div>
                 <!-- Slot 2: Perfil Licitador — oculto hasta Enterprise -->
                 <div id="ss-licitador" class="flex-1 hidden"></div>
-                <!-- Slot 3: Perfil de Plan -->
-                <div id="ss-plan" class="flex-1 hidden flex items-center gap-2 px-4 py-2">
-                    <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Perfil de Plan</button>
-                    <button onclick="showSubTab('plan','invitar')" id="st-plan-invitar" class="subtab-btn">🤝 Invitar</button>
+                <!-- Slot 3: Perfil de Plan — siempre flex-1 para mantener alineación -->
+                <div class="flex-1 flex items-center px-4 py-2">
+                    <div id="ss-plan" class="hidden flex gap-2">
+                        <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Perfil de Plan</button>
+                        <button onclick="showSubTab('plan','invitar')" id="st-plan-invitar" class="subtab-btn">🤝 Invitar</button>
+                    </div>
                 </div>
-                <!-- Slot 4: Facturación y Seguridad -->
-                <div id="ss-facturacion" class="flex-1 hidden flex items-center gap-2 px-4 py-2">
-                    <button onclick="showSubTab('facturacion','datos')" id="st-facturacion-datos" class="subtab-btn">💳 Facturación</button>
-                    <button onclick="showSubTab('facturacion','seguridad')" id="st-facturacion-seguridad" class="subtab-btn">🔒 Seguridad</button>
+                <!-- Slot 4: Facturación y Seguridad — siempre flex-1 para mantener alineación -->
+                <div class="flex-1 flex items-center px-4 py-2">
+                    <div id="ss-facturacion" class="hidden flex gap-2">
+                        <button onclick="showSubTab('facturacion','datos')" id="st-facturacion-datos" class="subtab-btn">💳 Facturación</button>
+                        <button onclick="showSubTab('facturacion','seguridad')" id="st-facturacion-seguridad" class="subtab-btn">🔒 Seguridad</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -768,10 +772,9 @@ async function plCargarSilencioso(){
             const r2=await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`,{headers:{'Authorization':`Bearer ${token}`}});
             plDocumentos=(await r2.json()).documentos||[];
         }else{plDocumentos=d.documentos;}
+        actualizarBadgeLicitador();
     }catch(e){console.error(e);}
 }
-
-// ════════ BANNER DE COMPLETITUD ════════
 let bannerDismissed=false;
 function dismissBanner(){bannerDismissed=true;document.getElementById('banner-onboarding').classList.add('hidden');}
 
