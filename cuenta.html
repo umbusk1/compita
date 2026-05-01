@@ -85,7 +85,10 @@
         <!-- ══ TABS PRINCIPALES ══ -->
         <div class="flex border-b overflow-x-auto">
             <button onclick="showTab('perfil')" id="tab-perfil" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🏢 Perfil de Empresa</button>
-            <button onclick="showTab('perfil-licitador')" id="tab-perfil-licitador" class="tab-button hidden flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📄 Perfil Licitador</button>
+            <button onclick="showTab('perfil-licitador')" id="tab-perfil-licitador" class="tab-button hidden flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">
+                📄 Perfil Licitador
+                <span id="badge-licitador" class="hidden ml-1.5 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full align-middle"></span>
+            </button>
             <button onclick="showTab('plan')" id="tab-plan" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">📋 Perfil de Plan</button>
             <button onclick="showTab('facturacion')" id="tab-facturacion" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">💳 Facturación y Seguridad</button>
         </div>
@@ -436,6 +439,7 @@ async function verificarAutenticacion(){
         if(r.ok){const d=await r.json();document.getElementById('nombre-empresa').textContent=d.empresa.nombre;document.getElementById('nombre-empresa-mobile').textContent=d.empresa.nombre;}
         if(empresaActual?.plan==='enterprise') await plCargarSilencioso();
         evaluarCompletitud();
+        actualizarBadgeLicitador();
         showTab('perfil');
     }catch(e){console.error(e);window.location.href='/login.html';}
 }
@@ -657,6 +661,19 @@ function cargarPerfilPlan(plan){
 let plDocumentos=[];
 const PL_GRUPOS={A:'A — Existencia legal de la empresa',B:'B — Cumplimiento tributario y laboral',C:'C — Habilitación para el Estado',D:'D — Capacidad financiera',E:'E — Situacional (certificaciones propias e institucionales)'};
 function plMostrarSiEnterprise(plan){if(plan==='enterprise')document.getElementById('tab-perfil-licitador')?.classList.remove('hidden');}
+
+function actualizarBadgeLicitador() {
+    const badge = document.getElementById('badge-licitador');
+    if (!badge || !plDocumentos.length) return;
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const criticos = plDocumentos.filter(d => ['A','B','C'].includes(d.grupo) && !d.es_permanente);
+    const count = criticos.filter(d => {
+        if (!d.fecha_vencimiento) return true; // sin registrar = alerta
+        return new Date(d.fecha_vencimiento) <= hoy; // vencido = alerta
+    }).length;
+    if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); }
+    else           { badge.classList.add('hidden'); }
+}
 function plEstado(f,perm){if(perm)return 'perm';if(!f)return 'sin';const hoy=new Date();hoy.setHours(0,0,0,0);const diff=Math.round((new Date(f)-hoy)/86400000);if(diff<0)return 'vencido';if(diff<=30)return 'porvencer';return 'vigente';}
 function plBadge(e){const m={vigente:['#EAF3DE','#3B6D11','Vigente'],porvencer:['#FAEEDA','#854F0B','Por vencer'],vencido:['#FCEBEB','#A32D2D','Vencido'],sin:['#F1EFE8','#5F5E5A','Sin registrar'],perm:['#E6F1FB','#185FA5','Permanente']};const[bg,color,lbl]=m[e]||m['sin'];return`<span style="background:${bg};color:${color};font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;display:inline-block;white-space:nowrap">${lbl}</span>`;}
 function plActualizarAgregado(){
