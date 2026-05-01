@@ -65,9 +65,18 @@
 
 <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <div id="banner-onboarding" class="hidden mb-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-5 text-white shadow-md">
-        <div class="flex items-center gap-3"><span class="text-3xl">🚀</span>
-            <div><p class="font-bold text-base">Completa la configuración de tu empresa</p><p class="text-sm text-indigo-100 mt-0.5">Un perfil bien configurado mejora la precisión de tus alertas y reduce el ruido.</p></div>
+    <div id="banner-onboarding" class="hidden mb-6 rounded-2xl shadow-md overflow-hidden">
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-5 py-4 text-white">
+            <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl mt-0.5 flex-shrink-0">⚠️</span>
+                    <div>
+                        <p class="font-bold text-base mb-1">Tu perfil tiene elementos pendientes</p>
+                        <ul id="banner-issues" class="text-sm text-indigo-100 space-y-1 list-disc list-inside"></ul>
+                    </div>
+                </div>
+                <button onclick="dismissBanner()" class="text-indigo-200 hover:text-white transition flex-shrink-0 text-xl leading-none mt-0.5" title="Cerrar">✕</button>
+            </div>
         </div>
     </div>
 
@@ -425,6 +434,8 @@ async function verificarAutenticacion(){
         await cargarInfoFacturacion();
         const r=await fetch(`${API_BASE}/api/perfil?type=usuario`,{headers:{'Authorization':`Bearer ${token}`}});
         if(r.ok){const d=await r.json();document.getElementById('nombre-empresa').textContent=d.empresa.nombre;document.getElementById('nombre-empresa-mobile').textContent=d.empresa.nombre;}
+        if(empresaActual?.plan==='enterprise') await plCargarSilencioso();
+        evaluarCompletitud();
         showTab('perfil');
     }catch(e){console.error(e);window.location.href='/login.html';}
 }
@@ -682,7 +693,73 @@ async function plCargar(){
             const d2=await r2.json();plDocumentos=d2.documentos||[];
         }else{plDocumentos=d.documentos;}
         document.getElementById('pl-loading').classList.add('hidden');document.getElementById('pl-tabla-wrap').classList.remove('hidden');plRender();
+        evaluarCompletitud();
     }catch(e){console.error(e);document.getElementById('pl-loading').textContent='Error al cargar el Perfil Licitador.';}
+}
+
+// ════════ COMPLETITUD DEL PERFIL ════════
+let bannerDismissed = false;
+
+function dismissBanner() {
+    bannerDismissed = true;
+    document.getElementById('banner-onboarding').classList.add('hidden');
+}
+
+function evaluarCompletitud() {
+    if (bannerDismissed) return;
+    const issues = [];
+
+    // — Perfil de Empresa —
+    if (empresaActual) {
+        const falta = [];
+        if (!empresaActual.descripcion?.trim())                                               falta.push('descripción');
+        if (!empresaActual.sector_principal)                                                  falta.push('sector');
+        if (!(Array.isArray(empresaActual.palabras_clave) ? empresaActual.palabras_clave : []).length) falta.push('palabras clave');
+        if (!(Array.isArray(empresaActual.regiones_interes) ? empresaActual.regiones_interes : []).length) falta.push('regiones de interés');
+        if (falta.length) issues.push({
+            texto: `Perfil de Empresa: falta ${falta.join(' · ')}`,
+            accion: `showTab('perfil');showSubTab('perfil','datos')`
+        });
+    }
+
+    // — Perfil Licitador (solo Enterprise) —
+    if (empresaActual?.plan === 'enterprise' && plDocumentos.length) {
+        const hoy = new Date(); hoy.setHours(0,0,0,0);
+        const criticos = plDocumentos.filter(d => ['A','B','C'].includes(d.grupo) && !d.es_permanente);
+        const sinFecha  = criticos.filter(d => !d.fecha_vencimiento).length;
+        const vencidos  = criticos.filter(d => d.fecha_vencimiento && new Date(d.fecha_vencimiento) < hoy).length;
+        const rpe = plDocumentos.find(d => d.codigo === 'C1');
+        const rpeVencido = rpe?.fecha_vencimiento && new Date(rpe.fecha_vencimiento) < hoy;
+        const plFalta = [];
+        if (rpeVencido)  plFalta.push('⚠️ RPE vencido — no puedes licitar');
+        if (vencidos)    plFalta.push(`${vencidos} documento${vencidos>1?'s':''} vencido${vencidos>1?'s':''}`);
+        if (sinFecha)    plFalta.push(`${sinFecha} documento${sinFecha>1?'s':''} sin fecha registrada`);
+        if (plFalta.length) issues.push({
+            texto: `Perfil Licitador: ${plFalta.join(' · ')}`,
+            accion: `showTab('perfil-licitador')`
+        });
+    }
+
+    const banner = document.getElementById('banner-onboarding');
+    if (!issues.length) { banner.classList.add('hidden'); return; }
+    document.getElementById('banner-issues').innerHTML = issues
+        .map(i => `<li><a href="#" onclick="${i.accion};return false;" class="underline decoration-dotted hover:decoration-solid">${i.texto}</a></li>`)
+        .join('');
+    banner.classList.remove('hidden');
+}
+
+async function plCargarSilencioso() {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    try {
+        const r = await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`, {headers:{'Authorization':`Bearer ${token}`}});
+        if (!r.ok) return;
+        const d = await r.json();
+        if (!d.documentos?.length) {
+            await fetch(`${API_BASE}/api/perfil`, {method:'POST', headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}, body:JSON.stringify({action:'perfil_licitador_init'})});
+            const r2 = await fetch(`${API_BASE}/api/perfil?type=perfil_licitador`, {headers:{'Authorization':`Bearer ${token}`}});
+            plDocumentos = (await r2.json()).documentos || [];
+        } else { plDocumentos = d.documentos; }
+    } catch(e) { console.error(e); }
 }
 async function plGuardarFecha(input){
     const token=localStorage.getItem('token')||sessionStorage.getItem('token'),id=input.dataset.id,fecha=input.value||null;
