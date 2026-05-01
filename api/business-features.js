@@ -396,18 +396,15 @@ export default async function handler(req, res) {
         const cumpleMonto = monto >= montoMinimoAlta;
 
         // D. Criterio de REGIÓN
-        // Si el usuario tiene regiones específicas configuradas:
-        //   - Buscar señal geográfica en unidad_compras y luego en descripcion
-        //   - Si la licitación es Nacional (sin señal geográfica) → MEDIA
-        //     porque no podemos confirmar que se ejecute en la región del usuario
-        //   - Si la licitación tiene región y coincide → cumple
-        //   - Si la licitación tiene región y no coincide → no cumple
+        // - Sin filtro de región, o con las 10 regiones seleccionadas → cumple siempre
+        // - Con regiones parciales y licitación Nacional → MEDIA (región incierta)
+        // - Con regiones parciales y licitación regional → verifica coincidencia
         let cumpleRegion = true, regionLicitacion = 'Nacional';
-        if (regionesEmpresa.length > 0) {
+        const todasLasRegiones = regionesEmpresa.length === 0 || regionesEmpresa.length >= 10;
+        if (!todasLasRegiones) {
           regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras, lic.descripcion);
           if (regionLicitacion === 'Nacional') {
-            // Sin señal geográfica: mostrar como MEDIA (región incierta)
-            cumpleRegion = false;
+            cumpleRegion = false; // región incierta → no puede ser ALTA
           } else {
             cumpleRegion = regionesEmpresa.includes(regionLicitacion);
           }
