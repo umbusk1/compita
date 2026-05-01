@@ -17,28 +17,41 @@ function construirRegex(palabra) {
   return new RegExp('\\b' + raizEscapada + 's?\\b', 'i');
 }
 
-function obtenerRegionLicitacion(unidad_compras) {
-  if (!unidad_compras) return 'Nacional';
-  const texto = unidad_compras.toLowerCase();
+// Busca señales geográficas primero en unidad_compras, luego en descripcion
+function obtenerRegionLicitacion(unidad_compras, descripcion) {
   const mapeo = {
     'Cibao Norte':    ['santiago', 'puerto plata', 'espaillat', 'valverde', 'moca',
-                       'cabral y báez', 'del norte', 'edenorte'],
-    'Cibao Sur':      ['la vega', 'monseñor nouel', 'sánchez ramírez', 'bonao', 'cotuí'],
-    'Cibao Nordeste': ['duarte', 'samaná', 'maría trinidad', 'san francisco de macorís', 'nagua'],
-    'Cibao Noroeste': ['dajabón', 'montecristi', 'santiago rodríguez', 'mao'],
-    'El Valle':       ['elías piña', 'san juan', 'comendador'],
+                       'cabral y baez', 'del norte', 'edenorte'],
+    'Cibao Sur':      ['la vega', 'monsenor nouel', 'sanchez ramirez', 'bonao', 'cotui'],
+    'Cibao Nordeste': ['duarte', 'samana', 'maria trinidad', 'san francisco de macoris', 'nagua'],
+    'Cibao Noroeste': ['dajabon', 'montecristi', 'santiago rodriguez', 'mao'],
+    'El Valle':       ['elias pina', 'san juan', 'comendador'],
     'Enriquillo':     ['barahona', 'baoruco', 'independencia', 'pedernales', 'neiba', 'del sur'],
-    'Higuamo':        ['san pedro de macorís', 'el seibo', 'hato mayor'],
+    'Higuamo':        ['san pedro de macoris', 'el seibo', 'hato mayor'],
     'Ozama':          ['santo domingo', 'distrito nacional', 'd.n.', 'ozama', 'del este',
                        'edeeste', 'edes'],
-    'Valdesia':       ['san cristóbal', 'peravia', 'azua', 'ocoa', 'baní', 'bani'],
-    'Yuma':           ['la romana', 'la altagracia', 'higüey', 'higuey'],
+    'Valdesia':       ['san cristobal', 'peravia', 'azua', 'ocoa', 'bani'],
+    'Yuma':           ['la romana', 'la altagracia', 'higuey'],
   };
+
+  // Buscar en unidad_compras primero
+  const textoUnidad = normalizar((unidad_compras || '').toLowerCase());
   for (const [region, palabras] of Object.entries(mapeo)) {
     for (const palabra of palabras) {
-      if (texto.includes(palabra)) return region;
+      if (textoUnidad.includes(palabra)) return region;
     }
   }
+
+  // Si no hay señal en unidad_compras, buscar en descripcion
+  const textoDesc = normalizar((descripcion || '').toLowerCase());
+  for (const [region, palabras] of Object.entries(mapeo)) {
+    for (const palabra of palabras) {
+      // Usar word boundary para evitar falsos positivos en la descripción
+      const regex = new RegExp('\\b' + palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+      if (regex.test(textoDesc)) return region;
+    }
+  }
+
   return 'Nacional';
 }
 
@@ -259,7 +272,7 @@ export default async function handler(req, res) {
     }
 
     // ====================================================
-    // ACCIÓN: RE-ANALIZAR OPORTUNIDADES  ← CAMBIOS AQUÍ
+    // ACCIÓN: RE-ANALIZAR OPORTUNIDADES
     // ====================================================
     if (accion === 're-analizar') {
       const perfilEmpresa = await sql`
@@ -276,7 +289,7 @@ export default async function handler(req, res) {
       const montoMinimoAlta = perfil.monto_minimo_alta || 500000;
 
       const familiasCodigos = Array.isArray(perfil.familias_unspsc)
-	    ? perfil.familias_unspsc
+        ? perfil.familias_unspsc
         : [];
 
       // Parsear regiones
@@ -297,8 +310,7 @@ export default async function handler(req, res) {
         r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
       );
 
-      // ── NUEVO: Memorizar qué licitaciones descartó el usuario ───────────────
-      // Estas NO se borran y NO se reinsertarán en el dashboard
+      // Memorizar qué licitaciones descartó el usuario
       const descartadasRows = await sql`
         SELECT licitacion_id FROM resultados
         WHERE empresa_id = ${empresa_id}
@@ -306,7 +318,6 @@ export default async function handler(req, res) {
           AND licitacion_id IS NOT NULL
       `;
       const idsDescartados = new Set(descartadasRows.map(d => d.licitacion_id));
-      // ────────────────────────────────────────────────────────────────────────
 
       const hoy = new Date().toISOString().split('T')[0];
       const licitacionesAbiertas = await sql`
@@ -324,38 +335,33 @@ export default async function handler(req, res) {
         });
       }
 
-      // ── CAMBIO CLAVE: Solo borrar resultados NO descartados ─────────────────
-      // Los resultados con descartada = TRUE quedan intactos en la BD
+      // Solo borrar resultados NO descartados por el usuario
       await sql`
         DELETE FROM resultados
         WHERE empresa_id = ${empresa_id}
           AND (descartada IS NULL OR descartada = FALSE)
       `;
-      // ────────────────────────────────────────────────────────────────────────
 
       let contadorAlta = 0, contadorMedia = 0,
           contadorDescartadas = 0, contadorPepuPeex = 0;
 
       for (const lic of licitacionesAbiertas) {
 
-        // ── NUEVO: Excluir PEPU y PEEX (procedimientos de excepción no competitivos) ──
+        // Excluir PEPU y PEEX
         if (/-(PEPU|PEEX)-/i.test(lic.referencia || '')) {
           contadorPepuPeex++;
           continue;
         }
-        // ─────────────────────────────────────────────────────────────────────
 
-        // ── NUEVO: Saltar las que el usuario descartó (no reactivar) ─────────
+        // Saltar las que el usuario descartó
         if (idsDescartados.has(lic.licitacion_id)) {
           contadorDescartadas++;
           continue;
         }
-        // ─────────────────────────────────────────────────────────────────────
 
         const texto = normalizar(`${lic.referencia} ${lic.descripcion}`.toLowerCase());
         const monto = parseFloat(lic.monto_estimado) || 0;
         const codigoUNSPSC = lic.codigo_unspsc || '';
-        const familiaUNSPSC = lic.familia_unspsc || '';
 
         // A. Verificar exclusiones
         let esDescartada = false;
@@ -366,35 +372,45 @@ export default async function handler(req, res) {
         if (esDescartada) { contadorDescartadas++; continue; }
 
         // B. Pre-filtro UNSPSC: si la licitación tiene código conocido
-		//    y no coincide con las familias de la empresa, descartarla
-		if (familiasCodigos.length > 0 && codigoUNSPSC && codigoUNSPSC !== '99-99') {
-		  if (!familiasCodigos.includes(codigoUNSPSC)) {
-		    contadorDescartadas++;
-		    continue;
-		  }
-		}
+        //    y no coincide con las familias de la empresa, descartarla
+        if (familiasCodigos.length > 0 && codigoUNSPSC && codigoUNSPSC !== '99-99') {
+          if (!familiasCodigos.includes(codigoUNSPSC)) {
+            contadorDescartadas++;
+            continue;
+          }
+        }
 
-		// B2. Entre las que pasan el filtro UNSPSC, verificar coincidencia
-		//     por palabras clave
-		let coincideTema = false, razon = '';
-		for (const palabra of palabrasClave) {
-		  const regex = construirRegex(palabra.toLowerCase());
-		  if (regex.test(texto)) {
-		    coincideTema = true;
-		    razon = `Coincide con palabra clave "${palabra}"`;
-		    break;
-		  }
-		}
-if (!coincideTema) continue;
+        // B2. Verificar coincidencia por palabras clave
+        let coincideTema = false, razon = '';
+        for (const palabra of palabrasClave) {
+          const regex = construirRegex(palabra.toLowerCase());
+          if (regex.test(texto)) {
+            coincideTema = true;
+            razon = `Coincide con palabra clave "${palabra}"`;
+            break;
+          }
+        }
+        if (!coincideTema) continue;
 
         // C. Criterio de MONTO
         const cumpleMonto = monto >= montoMinimoAlta;
 
         // D. Criterio de REGIÓN
+        // Si el usuario tiene regiones específicas configuradas:
+        //   - Buscar señal geográfica en unidad_compras y luego en descripcion
+        //   - Si la licitación es Nacional (sin señal geográfica) → MEDIA
+        //     porque no podemos confirmar que se ejecute en la región del usuario
+        //   - Si la licitación tiene región y coincide → cumple
+        //   - Si la licitación tiene región y no coincide → no cumple
         let cumpleRegion = true, regionLicitacion = 'Nacional';
         if (regionesEmpresa.length > 0) {
-          regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras);
-          cumpleRegion = regionesEmpresa.includes(regionLicitacion);
+          regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras, lic.descripcion);
+          if (regionLicitacion === 'Nacional') {
+            // Sin señal geográfica: mostrar como MEDIA (región incierta)
+            cumpleRegion = false;
+          } else {
+            cumpleRegion = regionesEmpresa.includes(regionLicitacion);
+          }
         }
 
         // E. Clasificar relevancia
@@ -410,18 +426,24 @@ if (!coincideTema) continue;
           relevancia = 'MEDIA';
           contadorMedia++;
           if (!cumpleMonto && !cumpleRegion) {
-            razon = `Región ${regionLicitacion} fuera del área configurada y monto por debajo del mínimo. ${razon}`;
+            const motivo = regionLicitacion === 'Nacional'
+              ? 'Región no determinada (organismo nacional)'
+              : `Región ${regionLicitacion} fuera del área configurada`;
+            razon = `${motivo} y monto por debajo del mínimo. ${razon}`;
           } else if (!cumpleMonto) {
             razon += `. Monto RD$${monto.toLocaleString()} por debajo del mínimo configurado.`;
           } else {
-            razon = `Región ${regionLicitacion} fuera del área configurada. ${razon}`;
+            const motivo = regionLicitacion === 'Nacional'
+              ? 'Región no determinada (organismo nacional)'
+              : `Región ${regionLicitacion} fuera del área configurada`;
+            razon = `${motivo}. ${razon}`;
           }
         }
 
-        // F. INSERT (los descartados ya están preservados separados)
-        const queVal  = (lic.descripcion   || '').substring(0, 99);
-        const quienVal = (lic.unidad_compras || '').substring(0, 99);
-        const refVal   = (lic.referencia    || '').substring(0, 254);
+        // F. INSERT
+        const queVal   = (lic.descripcion    || '').substring(0, 99);
+        const quienVal = (lic.unidad_compras  || '').substring(0, 99);
+        const refVal   = (lic.referencia      || '').substring(0, 254);
 
         await sql`
           INSERT INTO resultados
