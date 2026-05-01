@@ -14,9 +14,7 @@ function construirRegex(palabra) {
     ? palabra
     : (palabra.endsWith('s') ? palabra.slice(0, -1) : palabra);
   const raizEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return raiz !== palabra
-    ? new RegExp('\\b' + raizEscapada + 's?\\b', 'i')
-    : new RegExp('\\b' + raizEscapada + '\\b', 'i');
+  return new RegExp('\\b' + raizEscapada + 's?\\b', 'i');
 }
 
 function obtenerRegionLicitacion(unidad_compras) {

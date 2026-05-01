@@ -258,9 +258,7 @@ async function procesarEtapa1(oportunidad, empresa) {
     } else {
       const raiz = obtenerRaiz(palabra);
       const palabraEscapada = raiz.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      regex = raiz !== palabra
-        ? new RegExp('\\b' + palabraEscapada + 's?\\b', 'i')
-        : new RegExp('\\b' + palabraEscapada + '\\b', 'i');
+      regex = new RegExp('\\b' + palabraEscapada + 's?\\b', 'i');
     }
     const encontrada = regex.test(textoCompleto);
     if (encontrada) { palabraEncontrada = palabra; return true; }
