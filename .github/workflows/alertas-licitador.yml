@@ -1,0 +1,27 @@
+name: Alertas Perfil Licitador
+
+on:
+  schedule:
+    - cron: "0 13 * * *"   # 9:00 AM hora RD (UTC-4) = 13:00 UTC
+  workflow_dispatch:        # Permite ejecución manual para pruebas
+
+jobs:
+  alertas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar alertas de vencimiento de documentos
+        run: |
+          RESPONSE=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -X POST https://compita.umbusk.com/api/perfil \
+            -H "Content-Type: application/json" \
+            -d "{\"action\":\"perfil_licitador_alertas\",\"secret\":\"${{ secrets.CRON_SECRET }}\"}")
+
+          echo "HTTP Status: $RESPONSE"
+          cat /tmp/response.json
+
+          if [ "$RESPONSE" != "200" ]; then
+            echo "❌ Error al procesar alertas (HTTP $RESPONSE)"
+            exit 1
+          fi
+
+          echo "✅ Alertas procesadas correctamente"
