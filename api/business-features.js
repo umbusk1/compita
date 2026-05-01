@@ -265,7 +265,7 @@ export default async function handler(req, res) {
     // ====================================================
     if (accion === 're-analizar') {
       const perfilEmpresa = await sql`
-        SELECT palabras_clave, exclusiones, monto_minimo_alta, regiones_interes
+        SELECT palabras_clave, exclusiones, monto_minimo_alta, regiones_interes, familias_unspsc
         FROM empresas WHERE id = ${empresa_id} LIMIT 1
       `;
       if (perfilEmpresa.length === 0) {
@@ -277,11 +277,9 @@ export default async function handler(req, res) {
       const exclusiones   = perfil.exclusiones   || [];
       const montoMinimoAlta = perfil.monto_minimo_alta || 500000;
 
-      const familiasActivas = await sql`
-        SELECT familia_codigo FROM empresas_familias_unspsc
-        WHERE empresa_id = ${empresa_id} AND activo = true
-      `;
-      const familiasCodigos = familiasActivas.map(f => f.familia_codigo);
+      const familiasCodigos = Array.isArray(perfil.familias_unspsc)
+	    ? perfil.familias_unspsc
+        : [];
 
       // Parsear regiones
       let regionesRaw = perfil.regiones_interes;
@@ -369,26 +367,27 @@ export default async function handler(req, res) {
         }
         if (esDescartada) { contadorDescartadas++; continue; }
 
-        // B. Verificar coincidencia temática (UNSPSC o palabras clave)
-        let coincideTema = false, razon = '';
-        for (const codigo of familiasCodigos) {
-          if (codigoUNSPSC === codigo || familiaUNSPSC === codigo) {
-            coincideTema = true;
-            razon = `Coincide con categoría UNSPSC ${codigo}`;
-            break;
-          }
-        }
-        if (!coincideTema) {
-          for (const palabra of palabrasClave) {
-            const regex = construirRegex(palabra.toLowerCase());
-            if (regex.test(texto)) {
-              coincideTema = true;
-              razon = `Coincide con palabra clave "${palabra}"`;
-              break;
-            }
-          }
-        }
-        if (!coincideTema) continue;
+        // B. Pre-filtro UNSPSC: si la licitación tiene código conocido
+		//    y no coincide con las familias de la empresa, descartarla
+		if (familiasCodigos.length > 0 && codigoUNSPSC && codigoUNSPSC !== '99-99') {
+		  if (!familiasCodigos.includes(codigoUNSPSC)) {
+		    contadorDescartadas++;
+		    continue;
+		  }
+		}
+
+		// B2. Entre las que pasan el filtro UNSPSC, verificar coincidencia
+		//     por palabras clave
+		let coincideTema = false, razon = '';
+		for (const palabra of palabrasClave) {
+		  const regex = construirRegex(palabra.toLowerCase());
+		  if (regex.test(texto)) {
+		    coincideTema = true;
+		    razon = `Coincide con palabra clave "${palabra}"`;
+		    break;
+		  }
+		}
+if (!coincideTema) continue;
 
         // C. Criterio de MONTO
         const cumpleMonto = monto >= montoMinimoAlta;
