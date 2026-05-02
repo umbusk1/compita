@@ -960,8 +960,7 @@ function toggleMobileMenu() {
 </section>
 
 <!-- ══════════════════════════════════════════════════════
-     SECCIÓN 05 — EVIDENCIA (versión corregida)
-     Reemplaza completamente la S05 anterior
+     SECCIÓN 05 · EVIDENCIA
      ══════════════════════════════════════════════════════ -->
 <section id="evidencia" style="background: var(--verde-oscuro); padding: 6rem 0;">
   <div class="container mx-auto px-4">
@@ -987,9 +986,7 @@ function toggleMobileMenu() {
                   border-radius:16px; padding:2.5rem 2rem;">
 
         <!-- KPIs -->
-        <div id="stats-cards"
-             class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          <!-- Rellenados por JS -->
+        <div id="stats-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
           <div class="text-center" style="background:rgba(255,255,255,0.04); border-radius:12px; padding:1.25rem;">
             <div class="lora" style="font-size:2rem; font-weight:700; color:var(--dorado);">—</div>
             <div style="font-size:0.7rem; font-weight:600; letter-spacing:0.06em;
@@ -1013,13 +1010,9 @@ function toggleMobileMenu() {
           Licitaciones abiertas por mes y día
         </p>
 
-        <!-- Pestañas de meses -->
         <div class="flex justify-center gap-1 md:gap-2 mb-6 overflow-x-auto"
-             id="month-tabs-evidencia">
-          <!-- Generadas por JS -->
-        </div>
+             id="month-tabs-evidencia"></div>
 
-        <!-- Gráfico -->
         <div style="position:relative;">
           <canvas id="grafico-diario-evidencia"></canvas>
         </div>
@@ -1037,21 +1030,21 @@ function toggleMobileMenu() {
 
   <script>
   (function () {
-    var chartInstance = null;
-    var datosCompletos = null;
-    var maxGlobalCalculado = 50;
+    var chartEvidencia = null;
+    var datosEvidencia = null;
+    var maxEvidencia   = 50;
 
-    function obtenerTodosMeses() {
-      var meses = [];
-      var nombresCortos = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-      var nombresLargos  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                            'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-      var mesActual = new Date().getMonth();
+    var NOMBRES_CORTOS  = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    var NOMBRES_LARGOS  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                           'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+    function obtenerMeses() {
+      var meses = [], mesActual = new Date().getMonth();
       for (var i = 0; i < 12; i++) {
         meses.push({
           numero: i + 1,
-          nombre: nombresCortos[i],
-          nombreCompleto: nombresLargos[i],
+          nombre: NOMBRES_CORTOS[i],
+          nombreCompleto: NOMBRES_LARGOS[i],
           año: 2026,
           esActual: i === mesActual
         });
@@ -1068,27 +1061,21 @@ function toggleMobileMenu() {
         var activo = i === mesActual;
         btn.id = 'ev-tab-' + mes.numero;
         btn.style.cssText = [
-          'font-family:\'Manrope\',sans-serif',
-          'font-size:0.8rem',
-          'font-weight:600',
-          'padding:6px 16px',
-          'border-radius:99px',
-          'cursor:pointer',
-          'border:none',
+          "font-family:'Manrope',sans-serif",
+          'font-size:0.8rem', 'font-weight:600',
+          'padding:6px 16px', 'border-radius:99px',
+          'cursor:pointer', 'border:none',
           'transition:background 0.2s, color 0.2s',
-          activo
-            ? 'background:var(--dorado); color:var(--verde-oscuro);'
-            : 'background:rgba(255,255,255,0.07); color:var(--texto-claro);'
+          activo ? 'background:var(--dorado);color:var(--verde-oscuro);'
+                 : 'background:rgba(255,255,255,0.07);color:var(--texto-claro);'
         ].join(';');
         btn.textContent = mes.nombre;
-        btn.onclick = (function(m) {
-          return function() { cambiarMesEvidencia(m, meses); };
-        })(mes);
+        btn.onclick = (function(m){ return function(){ cambiarMes(m, meses); }; })(mes);
         cont.appendChild(btn);
       });
     }
 
-    function cambiarMesEvidencia(mesSeleccionado, todosMeses) {
+    function cambiarMes(mesSeleccionado, todosMeses) {
       todosMeses.forEach(function(mes) {
         var btn = document.getElementById('ev-tab-' + mes.numero);
         if (!btn) return;
@@ -1096,344 +1083,108 @@ function toggleMobileMenu() {
         btn.style.background = activo ? 'var(--dorado)' : 'rgba(255,255,255,0.07)';
         btn.style.color       = activo ? 'var(--verde-oscuro)' : 'var(--texto-claro)';
       });
-      var datosMes = datosCompletos.por_dia.filter(function(d) {
-        var fecha = new Date(d.fecha);
-        return fecha.getMonth() === mesSeleccionado.numero - 1
-            && fecha.getFullYear() === mesSeleccionado.año;
+      var datosMes = datosEvidencia.por_dia.filter(function(d) {
+        var f = new Date(d.fecha);
+        return f.getMonth() === mesSeleccionado.numero - 1 && f.getFullYear() === mesSeleccionado.año;
       });
-      actualizarGraficoEvidencia(datosMes, mesSeleccionado);
+      dibujarGrafico(datosMes, mesSeleccionado);
     }
 
-function actualizarGraficoEvidencia(datos, mesInfo) {
-      if (chartInstance) chartInstance.destroy();
+    function dibujarGrafico(datos, mesInfo) {
+      if (chartEvidencia) chartEvidencia.destroy();
       var diasEnMes = new Date(mesInfo.año, mesInfo.numero, 0).getDate();
       var hoy = new Date();
-      var diaActual  = hoy.getDate();
-      var mesActual  = hoy.getMonth() + 1;
-      var datosPorDia = {};
+      var diaActual = hoy.getDate(), mesActual = hoy.getMonth() + 1;
+      var porDia = {};
       datos.forEach(function(d) {
-        datosPorDia[parseInt(d.fecha.split('-')[2])] = d.cantidad; // ← CORRECCIÓN
+        porDia[parseInt(d.fecha.split('-')[2])] = d.cantidad;
       });
-      var diasCompletos = [], cantidadesAbiertas = [], cantidadesCerradas = [];
+      var labels = [], abiertas = [], cerradas = [];
       for (var dia = 1; dia <= diasEnMes; dia++) {
-        diasCompletos.push(dia);
-        var cantidad = datosPorDia[dia] || 0;
-        var esPasado = mesInfo.numero < mesActual
-                    || (mesInfo.numero === mesActual && dia < diaActual);
-        if (esPasado) {
-          cantidadesCerradas.push(cantidad);
-          cantidadesAbiertas.push(0);
-        } else {
-          cantidadesAbiertas.push(cantidad);
-          cantidadesCerradas.push(0);
-        }
+        labels.push(dia);
+        var cant = porDia[dia] || 0;
+        var pasado = mesInfo.numero < mesActual || (mesInfo.numero === mesActual && dia < diaActual);
+        abiertas.push(pasado ? 0 : cant);
+        cerradas.push(pasado ? cant : 0);
       }
       var ctx = document.getElementById('grafico-diario-evidencia');
       if (!ctx) return;
-      chartInstance = new Chart(ctx, {
+      chartEvidencia = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: diasCompletos,
+          labels: labels,
           datasets: [
-            {
-              label: 'Abiertas',
-              data: cantidadesAbiertas,
-              backgroundColor: 'rgba(234,186,129,0.85)',
-              borderColor: 'rgba(234,186,129,1)',
-              borderWidth: 1
-            },
-            {
-              label: 'Cerradas',
-              data: cantidadesCerradas,
-              backgroundColor: 'rgba(154,184,176,0.25)',
-              borderColor: 'rgba(154,184,176,0.5)',
-              borderWidth: 1
-            }
+            { label:'Abiertas', data:abiertas, backgroundColor:'rgba(234,186,129,0.85)', borderColor:'rgba(234,186,129,1)', borderWidth:1 },
+            { label:'Cerradas', data:cerradas, backgroundColor:'rgba(154,184,176,0.25)', borderColor:'rgba(154,184,176,0.5)', borderWidth:1 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: window.innerWidth > 768,
           plugins: {
-            legend: {
-              display: true,
-              labels: {
-                color: 'rgba(245,240,232,0.75)',
-                font: { family: 'Manrope', size: 12 }
-              }
-            }
+            legend: { display:true, labels:{ color:'rgba(245,240,232,0.75)', font:{ family:'Manrope', size:12 } } }
           },
           scales: {
-            x: {
-              stacked: true,
-              ticks: { color: 'rgba(154,184,176,0.7)', font: { size: 10, family: 'Manrope' } },
-              grid: { color: 'rgba(255,255,255,0.04)' }
-            },
-            y: {
-              stacked: true,
-              beginAtZero: true,
-              max: maxGlobalCalculado,
-              ticks: {
-                color: 'rgba(154,184,176,0.7)',
-                font: { size: 10, family: 'Manrope' },
-                stepSize: Math.ceil(maxGlobalCalculado / 5),
-                precision: 0
-              },
-              grid: { color: 'rgba(255,255,255,0.06)' }
-            }
+            x: { stacked:true, ticks:{ color:'rgba(154,184,176,0.7)', font:{ size:10, family:'Manrope' } }, grid:{ color:'rgba(255,255,255,0.04)' } },
+            y: { stacked:true, beginAtZero:true, max:maxEvidencia,
+                 ticks:{ color:'rgba(154,184,176,0.7)', font:{ size:10, family:'Manrope' }, stepSize:Math.ceil(maxEvidencia/5), precision:0 },
+                 grid:{ color:'rgba(255,255,255,0.06)' } }
           }
         }
       });
     }
 
-    async function cargarStatsEvidencia() {
-      try {
-        var res  = await fetch('/stats-2026.json');
-        var data = await res.json();
-        datosCompletos = data;
+    function cargar() {
+      fetch('/stats-2026.json')
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+          datosEvidencia = data;
+          var todas = data.por_dia.map(function(d){ return d.cantidad; });
+          maxEvidencia = Math.ceil(Math.max.apply(null, todas.concat([50])) / 5) * 5;
 
-        var todas = data.por_dia.map(function(d) { return d.cantidad; });
-        maxGlobalCalculado = Math.ceil(Math.max.apply(null, todas.concat([50])) / 5) * 5;
+          var hoy = new Date(); hoy.setHours(0,0,0,0);
+          var abiertas = data.por_dia
+            .filter(function(d){ return new Date(d.fecha) >= hoy; })
+            .reduce(function(s,d){ return s + d.cantidad; }, 0);
+          var cerrados = data.por_dia.filter(function(d){ return new Date(d.fecha) < hoy && d.cantidad > 0; });
+          var prom = cerrados.length > 0
+            ? Math.round(cerrados.reduce(function(s,d){ return s+d.cantidad; },0) / cerrados.length)
+            : 0;
 
-        var hoy = new Date(); hoy.setHours(0,0,0,0);
-        var abiertasDesdeHoy = data.por_dia
-          .filter(function(d) { return new Date(d.fecha) >= hoy; })
-          .reduce(function(s, d) { return s + d.cantidad; }, 0);
+          document.getElementById('stats-cards').innerHTML =
+            '<div class="text-center" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:1.25rem;">'
+            + '<div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">' + abiertas.toLocaleString('es-DO') + '</div>'
+            + '<div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">Abiertas desde hoy</div>'
+            + '<div style="font-size:0.75rem;color:var(--texto-claro);margin-top:4px;">' + data.stats.total.toLocaleString('es-DO') + ' total en base de datos</div>'
+            + '</div>'
+            + '<div class="text-center" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:1.25rem;">'
+            + '<div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">' + prom + '</div>'
+            + '<div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">Promedio diario</div>'
+            + '<div style="font-size:0.75rem;color:var(--texto-claro);margin-top:4px;">en días laborables</div>'
+            + '</div>';
 
-        var diasCerrados = data.por_dia.filter(function(d) {
-          return new Date(d.fecha) < hoy && d.cantidad > 0;
-        });
-        var promedio = diasCerrados.length > 0
-          ? Math.round(diasCerrados.reduce(function(s,d){return s+d.cantidad;},0) / diasCerrados.length)
-          : 0;
-
-        document.getElementById('stats-cards').innerHTML =
-          '<div class="text-center" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:1.25rem;">'
-          + '<div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">'
-          + abiertasDesdeHoy.toLocaleString('es-DO') + '</div>'
-          + '<div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;'
-          + 'text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">Abiertas desde hoy</div>'
-          + '<div style="font-size:0.75rem;color:var(--texto-claro);margin-top:4px;">'
-          + data.stats.total.toLocaleString('es-DO') + ' total en base de datos</div>'
-          + '</div>'
-          + '<div class="text-center" style="background:rgba(255,255,255,0.04);border-radius:12px;padding:1.25rem;">'
-          + '<div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">'
-          + promedio + '</div>'
-          + '<div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;'
-          + 'text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">Promedio diario</div>'
-          + '<div style="font-size:0.75rem;color:var(--texto-claro);margin-top:4px;">en días laborables</div>'
-          + '</div>';
-
-        var meses = obtenerTodosMeses();
-        crearPestanas(meses);
-        cambiarMesEvidencia(meses[new Date().getMonth()], meses);
-
-      } catch(e) {
-        console.error('Error cargando stats-2026.json:', e);
-      }
+          var meses = obtenerMeses();
+          crearPestanas(meses);
+          cambiarMes(meses[new Date().getMonth()], meses);
+        })
+        .catch(function(e){ console.error('Error cargando stats-2026.json:', e); });
     }
 
-    document.addEventListener('DOMContentLoaded', cargarStatsEvidencia);
+    document.addEventListener('DOMContentLoaded', cargar);
   })();
   </script>
-<!-- FIN SECCIÓN 05 EVIDENCIA -->
 
 </section>
+<!-- FIN SECCIÓN 05 EVIDENCIA -->
 
-<script>
-(function () {
-  const MESES_ES   = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                      'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  const DIAS_X_MES = [31,28,31,30,31,30,31,31,30,31,30,31]; // 2026 no es bisiesto
-
-  let chart         = null;
-  let datosGlobales = null;
-
-  /* ── Carga del JSON ── */
-  async function cargarStats() {
-    try {
-      const res  = await fetch('/stats-2026.json');
-      const data = await res.json();
-      datosGlobales = data;
-      renderKPIs(data);
-      const meses = obtenerMeses();
-      renderPestanas(meses);
-      const mesActual = new Date().toISOString().substring(0, 7); // ej: "2026-03"
-      renderGrafico(mesActual, data); // abrir siempre en el mes actual
-    } catch (e) {
-      console.error('Error cargando stats-2026.json:', e);
-    }
-  }
-
-  /* ── KPIs ── */
-  function renderKPIs(data) {
-    const el = document.getElementById('stats-kpis');
-    if (!el) return;
-    el.innerHTML = `
-      <div class="text-center">
-        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
-          ${(data.stats?.total || 0).toLocaleString('es-DO')}
-        </div>
-        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
-                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
-          Total 2026
-        </div>
-      </div>
-      <div class="text-center">
-        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
-          ${(data.stats?.por_estado?.abiertas || 0).toLocaleString('es-DO')}
-        </div>
-        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
-                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
-          Abiertas hoy
-        </div>
-      </div>
-      <div class="text-center">
-        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
-          ${data.stats?.dias_activos || 0}
-        </div>
-        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
-                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
-          Días activos
-        </div>
-      </div>
-      <div class="text-center">
-        <div class="lora" style="font-size:2rem;font-weight:700;color:var(--dorado);">
-          ${Math.round(data.stats?.promedio_diario || 0)}
-        </div>
-        <div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;
-                    text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">
-          Promedio diario
-        </div>
-      </div>
-    `;
-  }
-
-  /* ── 12 meses fijos de 2026 ── */
-  function obtenerMeses() {
-    return ['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06',
-            '2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
-  }
-
-  function renderPestanas(meses) {
-    const cont = document.getElementById('pestanas-meses');
-    if (!cont) return;
-    const mesActual = new Date().toISOString().substring(0, 7);
-    cont.innerHTML = meses.map((clave) => {
-      const mes    = parseInt(clave.split('-')[1]) - 1;
-      const nombre = MESES_ES[mes];
-      const activo = clave === mesActual;
-      return `
-        <button id="tab-${clave}"
-                onclick="window._compitaMes('${clave}')"
-                style="font-family:'Manrope',sans-serif; font-size:0.8rem; font-weight:600;
-                       padding:6px 20px; border-radius:99px; cursor:pointer; border:none;
-                       transition:background 0.2s, color 0.2s;
-                       background:${activo ? 'var(--dorado)' : 'rgba(255,255,255,0.07)'};
-                       color:${activo ? 'var(--verde-oscuro)' : 'var(--texto-claro)'};">
-          ${nombre}
-        </button>`;
-    }).join('');
-  }
-
-  /* ── Cambio de mes (global para onclick) ── */
-  window._compitaMes = function (clave) {
-    if (!datosGlobales) return;
-    obtenerMeses().forEach(m => {
-      const btn = document.getElementById('tab-' + m);
-      if (!btn) return;
-      const activo = m === clave;
-      btn.style.background = activo ? 'var(--dorado)' : 'rgba(255,255,255,0.07)';
-      btn.style.color       = activo ? 'var(--verde-oscuro)' : 'var(--texto-claro)';
-    });
-    renderGrafico(clave, datosGlobales);
-  };
-
-  /* ── Gráfico ── */
-  function renderGrafico(claveMes, data) {
-    const [anio, mesStr] = claveMes.split('-');
-    const mesIdx  = parseInt(mesStr) - 1;
-    const numDias = DIAS_X_MES[mesIdx];
-
-    // Construir diccionario filtrando la lista plana por el mes seleccionado
-    const porDia = {};
-    (data.por_dia || [])
-      .filter(item => item.fecha.startsWith(claveMes))
-      .forEach(item => { porDia[item.fecha] = item.cantidad; });
-
-    // Etiquetas como strings para evitar desalineación en Chart.js
-    const labels  = Array.from({length: numDias}, (_, i) => String(i + 1));
-    const valores = labels.map(d => {
-      const key = `${anio}-${mesStr}-${String(d).padStart(2, '0')}`;
-      return porDia[key] || 0;
-    });
-
-    // Máximo global sobre toda la lista plana
-    const maxGlobal = Math.max(
-      ...(data.por_dia || []).map(item => item.cantidad),
-      10
-    );
-
-    const ctx = document.getElementById('grafico-licitaciones');
-    if (!ctx) return;
-    if (chart) chart.destroy();
-
-    chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{
-          data: valores,
-          backgroundColor: 'rgba(234,186,129,0.75)',
-          borderColor:     'rgba(234,186,129,1)',
-          borderWidth: 1,
-          borderRadius: 3,
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: {
-            ticks: {
-              color: 'rgba(154,184,176,0.7)',
-              font: { size: 10, family: 'Manrope' },
-              maxRotation: 0,
-              callback: (val, i) => (i % 5 === 0) ? val : ''
-            },
-            grid: { color: 'rgba(255,255,255,0.04)' }
-          },
-          y: {
-            min: 0,
-            max: maxGlobal,
-            ticks: {
-              color: 'rgba(154,184,176,0.7)',
-              font: { size: 10, family: 'Manrope' },
-              stepSize: Math.ceil(maxGlobal / 5),
-              precision: 0
-            },
-            grid: { color: 'rgba(255,255,255,0.06)' }
-          }
-        }
-      }
-    });
-  }
-
-  cargarStats();
-})();
-</script>
 
 <!-- ══════════════════════════════════════════════════════
      SECCIÓN · MEDICIÓN DE COMPETITIVIDAD
-     Pegar justo después del cierre del script de #evidencia
-     y antes de la sección #faq
      ══════════════════════════════════════════════════════ -->
 <section id="competitividad" style="background: var(--crema); padding: 6rem 0;">
   <div class="container mx-auto px-4">
     <div class="max-w-4xl mx-auto">
 
-      <!-- Encabezado -->
       <div class="text-center mb-10">
         <p class="section-eyebrow mb-4" style="color: var(--violeta);">
           <span style="display:inline-block; width:24px; height:2px; background:var(--violeta);
@@ -1455,10 +1206,9 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
         </p>
       </div>
 
-      <!-- ── Bloque 1: ¿Tiene sentido revisar el portal? ── -->
+      <!-- Bloque 1: Pie -->
       <div style="background:#fff; border:1px solid var(--crema-borde);
                   border-radius:16px; padding:2.5rem 2rem; margin-bottom:2rem;">
-
         <h3 class="lora text-center"
             style="font-size:1.2rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:6px;">
           ¿Tiene sentido revisar el portal manualmente?
@@ -1468,99 +1218,59 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
           Solo una fracción corresponde a procedimientos competitivos
           donde cualquier proveedor puede participar.
         </p>
-
         <div style="display:flex; flex-wrap:wrap; gap:2.5rem; align-items:center;">
           <div style="position:relative; width:200px; height:200px; flex-shrink:0; margin:0 auto;">
-            <canvas id="comp-pie" role="img"
-                    aria-label="Dona: porcentaje de licitaciones competitivas vs no competitivas.">
-            </canvas>
+            <canvas id="comp-pie" role="img" aria-label="Dona: porcentaje competitivas vs no competitivas."></canvas>
           </div>
           <div style="flex:1; min-width:200px; display:flex; flex-direction:column; gap:14px;">
             <div style="display:flex; gap:10px; align-items:flex-start;">
-              <span style="width:13px;height:13px;border-radius:3px;background:#5247e4;
-                           flex-shrink:0;margin-top:2px;display:inline-block;"></span>
+              <span style="width:13px;height:13px;border-radius:3px;background:#5247e4;flex-shrink:0;margin-top:2px;display:inline-block;"></span>
               <div>
-                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
-                  <span id="comp-pct-comp">34</span>% son competitivas
-                </p>
-                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
-                  LPN, LPI, CP, SI y CM — procedimientos donde cualquier
-                  proveedor registrado puede presentar oferta.
-                </p>
+                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;"><span id="comp-pct-comp">34</span>% son competitivas</p>
+                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">LPN, LPI, CP, SI y CM — procedimientos donde cualquier proveedor registrado puede presentar oferta.</p>
               </div>
             </div>
             <div style="display:flex; gap:10px; align-items:flex-start;">
-              <span style="width:13px;height:13px;border-radius:3px;background:#d1d1ce;
-                           flex-shrink:0;margin-top:2px;display:inline-block;"></span>
+              <span style="width:13px;height:13px;border-radius:3px;background:#d1d1ce;flex-shrink:0;margin-top:2px;display:inline-block;"></span>
               <div>
-                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
-                  <span id="comp-pct-cd">61</span>% son Contratación Directa
-                </p>
-                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
-                  El proveedor ya está preseleccionado.
-                  Revisar estas licitaciones es tiempo perdido.
-                </p>
+                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;"><span id="comp-pct-cd">61</span>% son Contratación Directa</p>
+                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">El proveedor ya está preseleccionado. Revisar estas licitaciones es tiempo perdido.</p>
               </div>
             </div>
             <div style="display:flex; gap:10px; align-items:flex-start;">
-              <span style="width:13px;height:13px;border-radius:3px;background:#eaba81;
-                           flex-shrink:0;margin-top:2px;display:inline-block;"></span>
+              <span style="width:13px;height:13px;border-radius:3px;background:#eaba81;flex-shrink:0;margin-top:2px;display:inline-block;"></span>
               <div>
-                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
-                  <span id="comp-pct-pe">5</span>% son excepciones PE*
-                </p>
-                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
-                  Procedimientos de excepción por urgencia o interés nacional.
-                  Acceso muy limitado.
-                </p>
+                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;"><span id="comp-pct-pe">5</span>% son excepciones PE*</p>
+                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">Procedimientos de excepción por urgencia o interés nacional. Acceso muy limitado.</p>
               </div>
             </div>
           </div>
         </div>
-
         <div style="margin-top:2rem; padding:14px 18px; background:#f0f0fe;
                     border-radius:10px; border-left:3px solid var(--violeta);">
           <p style="font-size:13px; color:var(--violeta); font-weight:600; line-height:1.6; margin:0;">
-            Compita revisa el portal y te envía solo las licitaciones
-            que te pueden importar para participar.
+            Compita revisa el portal y te envía solo las licitaciones que te pueden importar para participar.
           </p>
         </div>
       </div>
 
-      <!-- ── Bloque 2: Ventana de tiempo ── -->
+      <!-- Bloque 2: Box plot + tabla -->
       <div style="background:#fff; border:1px solid var(--crema-borde);
                   border-radius:16px; padding:2.5rem 2rem; margin-bottom:2rem;">
-
-        <h3 class="lora"
-            style="font-size:1.2rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:6px;">
+        <h3 class="lora" style="font-size:1.2rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:6px;">
           Ventana de tiempo: Licitaciones competitivas
         </h3>
         <p style="font-size:0.875rem; color:var(--texto-medio); margin-bottom:1.5rem; line-height:1.6;">
-          Solo LPN, LPI, CP, SI y CM son los tipos de licitación en los que tiene sentido
-          calcular el tiempo disponible para preparar una oferta.
+          Solo LPN, LPI, CP, SI y CM son los tipos de licitación en los que tiene sentido calcular el tiempo disponible para preparar una oferta.
         </p>
-
-        <div style="display:flex; gap:16px; margin-bottom:10px;
-                    font-size:12px; color:var(--texto-medio); flex-wrap:wrap;">
-          <span style="display:flex; align-items:center; gap:5px;">
-            <span style="width:12px;height:12px;border-radius:2px;background:rgba(82,71,228,0.2);
-                         border:1.5px solid #5247e4;display:inline-block;"></span>rango P25–P75
-          </span>
-          <span style="display:flex; align-items:center; gap:5px;">
-            <span style="width:14px;height:2.5px;background:#5247e4;display:inline-block;"></span>mediana
-          </span>
-          <span style="display:flex; align-items:center; gap:5px; color:var(--texto-claro);">
-            ✕ promedio
-          </span>
+        <div style="display:flex; gap:16px; margin-bottom:10px; font-size:12px; color:var(--texto-medio); flex-wrap:wrap;">
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:2px;background:rgba(82,71,228,0.2);border:1.5px solid #5247e4;display:inline-block;"></span>rango P25–P75</span>
+          <span style="display:flex;align-items:center;gap:5px;"><span style="width:14px;height:2.5px;background:#5247e4;display:inline-block;"></span>mediana</span>
+          <span style="display:flex;align-items:center;gap:5px;color:var(--texto-claro);">✕ promedio</span>
         </div>
-
         <div style="position:relative; width:100%; height:280px; margin-bottom:2rem;">
-          <canvas id="comp-box" role="img"
-                  aria-label="Días disponibles por tipo de licitación competitiva.">
-          </canvas>
+          <canvas id="comp-box" role="img" aria-label="Días disponibles por tipo de licitación competitiva."></canvas>
         </div>
-
-        <!-- Tabla completa con todos los tipos -->
         <div style="overflow-x:auto;">
           <table style="width:100%; border-collapse:collapse; font-size:12px;">
             <thead>
@@ -1577,165 +1287,53 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
               </tr>
             </thead>
             <tbody>
-              <!-- Competitivos -->
               <tr><td colspan="9" style="padding:5px 8px;background:#f7f5f0;font-size:11px;color:var(--texto-claro);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Competitivos</td></tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">LPI <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">4</td><td style="text-align:right;padding:6px 8px;">20</td><td style="text-align:right;padding:6px 8px;">28</td><td style="text-align:right;padding:6px 8px;font-weight:600;">36</td><td style="text-align:right;padding:6px 8px;">45</td><td style="text-align:right;padding:6px 8px;">53</td><td style="text-align:right;padding:6px 8px;">87</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">30</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">LPN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">400</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">36</td><td style="text-align:right;padding:6px 8px;font-weight:600;">44</td><td style="text-align:right;padding:6px 8px;">40</td><td style="text-align:right;padding:6px 8px;">46</td><td style="text-align:right;padding:6px 8px;">81</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">11</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">SI <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">70</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;font-weight:600;">8</td><td style="text-align:right;padding:6px 8px;">9</td><td style="text-align:right;padding:6px 8px;">11</td><td style="text-align:right;padding:6px 8px;">19</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">CP <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">879</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;font-weight:600;">8</td><td style="text-align:right;padding:6px 8px;">9</td><td style="text-align:right;padding:6px 8px;">11</td><td style="text-align:right;padding:6px 8px;">47</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">5</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">CM <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">5,923</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">4</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">26</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
-              </tr>
-              <!-- No competitivos -->
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">LPI <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">4</td><td style="text-align:right;padding:6px 8px;">20</td><td style="text-align:right;padding:6px 8px;">28</td><td style="text-align:right;padding:6px 8px;font-weight:600;">36</td><td style="text-align:right;padding:6px 8px;">45</td><td style="text-align:right;padding:6px 8px;">53</td><td style="text-align:right;padding:6px 8px;">87</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">30</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">LPN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">400</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">36</td><td style="text-align:right;padding:6px 8px;font-weight:600;">44</td><td style="text-align:right;padding:6px 8px;">40</td><td style="text-align:right;padding:6px 8px;">46</td><td style="text-align:right;padding:6px 8px;">81</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">11</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">SI <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">70</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;font-weight:600;">8</td><td style="text-align:right;padding:6px 8px;">9</td><td style="text-align:right;padding:6px 8px;">11</td><td style="text-align:right;padding:6px 8px;">19</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">CP <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">879</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;font-weight:600;">8</td><td style="text-align:right;padding:6px 8px;">9</td><td style="text-align:right;padding:6px 8px;">11</td><td style="text-align:right;padding:6px 8px;">47</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">5</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">CM <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">5,923</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">4</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">26</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td></tr>
               <tr><td colspan="9" style="padding:5px 8px;background:#f7f5f0;font-size:11px;color:var(--texto-claro);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">No competitivos</td></tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">CD <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">directa</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">13,155</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">17</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">SO <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">sorteo</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">6</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;font-weight:600;">6</td><td style="text-align:right;padding:6px 8px;">12</td><td style="text-align:right;padding:6px 8px;">21</td><td style="text-align:right;padding:6px 8px;">28</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">12</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">DAF <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">interno</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">56</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">6</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
-              </tr>
-              <!-- Excepciones -->
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">CD <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">directa</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">13,155</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">17</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">SO <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">sorteo</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">6</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;font-weight:600;">6</td><td style="text-align:right;padding:6px 8px;">12</td><td style="text-align:right;padding:6px 8px;">21</td><td style="text-align:right;padding:6px 8px;">28</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">12</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">DAF <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">interno</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">56</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">6</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td></tr>
               <tr><td colspan="9" style="padding:5px 8px;background:#f7f5f0;font-size:11px;color:var(--texto-claro);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Procedimientos de excepción (PE*)</td></tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEEN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">25</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;font-weight:600;">13</td><td style="text-align:right;padding:6px 8px;">13</td><td style="text-align:right;padding:6px 8px;">19</td><td style="text-align:right;padding:6px 8px;">26</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">8</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEUR <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">40</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">6</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;">24</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">6</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEPU <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">274</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">5</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">16</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEOR <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">91</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEEX <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">209</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">25</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">5</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEPB <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">228</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">14</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEIN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">11</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;font-weight:600;">0</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
-              </tr>
-              <tr style="border-bottom:1px solid var(--crema-borde);">
-                <td style="padding:6px 8px;font-weight:600;">PEJU <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">6</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">1</td>
-              </tr>
-              <tr>
-                <td style="padding:6px 8px;font-weight:600;">PEPS <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
-                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">3</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">1</td>
-              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEEN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">25</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;font-weight:600;">13</td><td style="text-align:right;padding:6px 8px;">13</td><td style="text-align:right;padding:6px 8px;">19</td><td style="text-align:right;padding:6px 8px;">26</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">8</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEUR <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">40</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">6</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;">24</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">6</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEPU <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">274</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">5</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">16</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEOR <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">91</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEEX <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">209</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">25</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">5</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEPB <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">228</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">14</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEIN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">11</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;font-weight:600;">0</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);"><td style="padding:6px 8px;font-weight:600;">PEJU <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">6</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">1</td></tr>
+              <tr><td style="padding:6px 8px;font-weight:600;">PEPS <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td><td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">3</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">1</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- ── Bloque 3: Leyenda completa ── -->
-      <div style="background:#fff; border:1px solid var(--crema-borde);
-                  border-radius:16px; padding:2rem;">
-        <p style="font-size:11px; font-weight:600; color:var(--texto-claro);
-                  text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;">
-          Tipos de procedimiento
-        </p>
+      <!-- Bloque 3: Leyenda -->
+      <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px; padding:2rem;">
+        <p style="font-size:11px; font-weight:600; color:var(--texto-claro); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;">Tipos de procedimiento</p>
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px;">
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">LPN</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Nacional</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">LPI</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Internacional</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">CP</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Comparación de Precios</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">SI</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Subasta Inversa Electrónica</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">CM</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Compra Menor</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">CD</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Contratación Directa</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">SO</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Sorteo de Obras</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">DAF</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Dirección Administrativa y Financiera</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEPU</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Proveedor Único</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEEX</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Extrema Urgencia</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEOR</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Obras de Arte / Reconocido Mérito</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEPB</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Precalificación de Bienes</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEUR</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Urgencia Reconocida</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEEN</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Emergencia Nacional</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEIN</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Interés Nacional</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEPS</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Patente o Secreto Industrial</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">PEJU</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Fallo Judicial</span>
-          </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:44px;">CCC</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Comité de Compras y Contrataciones</span>
-          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">LPN</span><span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Nacional</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">LPI</span><span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Internacional</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">CP</span><span style="font-size:13px;color:var(--texto-medio);">Comparación de Precios</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">SI</span><span style="font-size:13px;color:var(--texto-medio);">Subasta Inversa Electrónica</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">CM</span><span style="font-size:13px;color:var(--texto-medio);">Compra Menor</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">CD</span><span style="font-size:13px;color:var(--texto-medio);">Contratación Directa</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">SO</span><span style="font-size:13px;color:var(--texto-medio);">Sorteo de Obras</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">DAF</span><span style="font-size:13px;color:var(--texto-medio);">Dirección Administrativa y Financiera</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEPU</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Proveedor Único</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEEX</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Extrema Urgencia</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEOR</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Obras de Arte / Reconocido Mérito</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEPB</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Precalificación de Bienes</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEUR</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Urgencia Reconocida</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEEN</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Emergencia Nacional</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEIN</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Interés Nacional</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEPS</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Patente o Secreto Industrial</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">PEJU</span><span style="font-size:13px;color:var(--texto-medio);">Excepción — Fallo Judicial</span></div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;"><span style="font-weight:700;font-size:13px;min-width:44px;">CCC</span><span style="font-size:13px;color:var(--texto-medio);">Comité de Compras y Contrataciones</span></div>
         </div>
       </div>
 
@@ -1743,17 +1341,14 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
   </div>
 </section>
 
-<!-- Script competitividad — Chart.js ya cargado en #evidencia -->
+<!-- Script competitividad — Chart.js ya cargado arriba en #evidencia -->
 <script>
 (function () {
   var pieChart = null;
   var boxChart = null;
 
-  var FALLBACK_COMP = {
-    total: 21391,
-    competitivo: 7276,
-    cd: 13155,
-    pe: 960,
+  var FALLBACK = {
+    total: 21391, competitivo: 7276, cd: 13155, pe: 960,
     tipos_box: [
       { tipo:'LPI', total:4,    prom:45, p25:28, med:36, p75:53 },
       { tipo:'LPN', total:400,  prom:40, p25:36, med:44, p75:46 },
@@ -1764,8 +1359,7 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
   };
 
   function renderFecha() {
-    var m = ['enero','febrero','marzo','abril','mayo','junio',
-             'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    var m = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
     var h = new Date();
     var el = document.getElementById('comp-fecha-hoy');
     if (el) el.textContent = h.getDate() + ' de ' + m[h.getMonth()] + ' de ' + h.getFullYear();
@@ -1775,7 +1369,7 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
     var total = d.total, comp = d.competitivo, cd = d.cd, pe = d.pe;
     var elN = document.getElementById('comp-n');
     if (elN) elN.textContent = 'n = ' + total.toLocaleString('es-DO');
-    var pc = document.getElementById('comp-pct-comp');
+    var pc  = document.getElementById('comp-pct-comp');
     var pcd = document.getElementById('comp-pct-cd');
     var ppe = document.getElementById('comp-pct-pe');
     if (pc)  pc.textContent  = Math.round(comp / total * 100);
@@ -1786,50 +1380,36 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
     if (pieChart) pieChart.destroy();
     pieChart = new Chart(ctx, {
       type: 'doughnut',
-      data: {
-        labels: ['Competitivas','Contratación Directa','Excepciones PE*'],
-        datasets: [{ data:[comp,cd,pe], backgroundColor:['#5247e4','#d1d1ce','#eaba81'], borderWidth:0, hoverOffset:8 }]
-      },
-      options: {
-        responsive:true, maintainAspectRatio:false, cutout:'58%',
-        plugins: {
-          legend:{ display:false },
-          tooltip:{ callbacks:{ label:function(c){ return c.label+': '+c.parsed.toLocaleString('es-DO')+' ('+Math.round(c.parsed/total*100)+'%)'; } } }
-        }
-      }
+      data: { labels:['Competitivas','Contratación Directa','Excepciones PE*'],
+              datasets:[{ data:[comp,cd,pe], backgroundColor:['#5247e4','#d1d1ce','#eaba81'], borderWidth:0, hoverOffset:8 }] },
+      options: { responsive:true, maintainAspectRatio:false, cutout:'58%',
+        plugins:{ legend:{ display:false },
+          tooltip:{ callbacks:{ label:function(c){ return c.label+': '+c.parsed.toLocaleString('es-DO')+' ('+Math.round(c.parsed/total*100)+'%)'; } } } } }
     });
   }
 
   function renderBox(tipos) {
-    var labels   = tipos.map(function(t){ return t.tipo; });
-    var rangos   = tipos.map(function(t){ return [t.p25, t.p75]; });
-    var medianas = tipos.map(function(t,i){ return { x:i, y:t.med }; });
-    var promedios= tipos.map(function(t,i){ return { x:i, y:t.prom }; });
     var ctx = document.getElementById('comp-box');
     if (!ctx) return;
     if (boxChart) boxChart.destroy();
     boxChart = new Chart(ctx, {
       type:'bar',
       data:{
-        labels:labels,
+        labels: tipos.map(function(t){ return t.tipo; }),
         datasets:[
-          { label:'P25-P75', data:rangos, backgroundColor:'rgba(82,71,228,0.18)', borderColor:'#5247e4', borderWidth:1.5, borderSkipped:false, barPercentage:0.45 },
-          { label:'mediana', type:'scatter', data:medianas, pointStyle:'line', pointRadius:16, pointBorderWidth:3, pointBorderColor:'#5247e4', backgroundColor:'transparent' },
-          { label:'promedio', type:'scatter', data:promedios, pointStyle:'crossRot', pointRadius:7, pointBorderWidth:2, pointBorderColor:'#aaa', backgroundColor:'transparent' }
+          { label:'P25-P75', data:tipos.map(function(t){ return [t.p25,t.p75]; }), backgroundColor:'rgba(82,71,228,0.18)', borderColor:'#5247e4', borderWidth:1.5, borderSkipped:false, barPercentage:0.45 },
+          { label:'mediana', type:'scatter', data:tipos.map(function(t,i){ return {x:i,y:t.med}; }), pointStyle:'line', pointRadius:16, pointBorderWidth:3, pointBorderColor:'#5247e4', backgroundColor:'transparent' },
+          { label:'promedio', type:'scatter', data:tipos.map(function(t,i){ return {x:i,y:t.prom}; }), pointStyle:'crossRot', pointRadius:7, pointBorderWidth:2, pointBorderColor:'#aaa', backgroundColor:'transparent' }
         ]
       },
-      options:{
-        responsive:true, maintainAspectRatio:false,
-        plugins:{
-          legend:{ display:false },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false },
           tooltip:{ callbacks:{ label:function(c){
-            var t=tipos[c.dataIndex];
-            if(!t) return '';
+            var t=tipos[c.dataIndex]; if(!t) return '';
             if(c.datasetIndex===0) return 'P25: '+t.p25+' | P75: '+t.p75;
             if(c.datasetIndex===1) return 'Mediana: '+t.med+' días';
             return 'Promedio: '+t.prom+' días';
-          }}}
-        },
+          }}}},
         scales:{
           x:{ ticks:{ color:'#888', font:{ size:12 } }, grid:{ display:false } },
           y:{ title:{ display:true, text:'días calendario', color:'#aaa', font:{ size:11 } }, ticks:{ color:'#888', font:{ size:11 } }, grid:{ color:'rgba(0,0,0,0.05)' }, min:0 }
@@ -1850,11 +1430,11 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
           renderPie({ total:c.total, competitivo:comp, cd:cd, pe:c.pe_total||0 });
           renderBox(c.tipos.filter(function(t){ return t.grupo==='competitivo' && t.prom!==undefined; }));
         } else {
-          renderPie(FALLBACK_COMP);
-          renderBox(FALLBACK_COMP.tipos_box);
+          renderPie(FALLBACK);
+          renderBox(FALLBACK.tipos_box);
         }
       })
-      .catch(function(){ renderPie(FALLBACK_COMP); renderBox(FALLBACK_COMP.tipos_box); });
+      .catch(function(){ renderPie(FALLBACK); renderBox(FALLBACK.tipos_box); });
   }
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
