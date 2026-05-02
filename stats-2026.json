@@ -1,498 +1,408 @@
 {
-  "ultima_actualizacion": "2026-05-01 21:41:50",
+  "metadata": {
+    "generado_en": "2025-12-31 09:53:12",
+    "fuente": "PostgreSQL/Neon - Compita",
+    "version": "1.0"
+  },
   "stats": {
-    "total": 21389,
+    "total": 428,
+    "dias_con_licitaciones": 43,
+    "promedio_diario": 10.0,
+    "mes_mas_activo": "Ene",
+    "cantidad_mes_mas_activo": 307,
+    "primera_fecha": "2026-01-02",
+    "ultima_fecha": "2026-03-26",
     "por_estado": {
-      "abiertas": 21389,
-      "todas": {
-        "Suspended": 2,
-        "NonAwarded": 18,
-        "Canceled": 44,
-        "Proceso cancelado": 59,
-        "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 4799,
-        "ClosedForReplies": 5254,
-        "Proceso publicado": 510,
-        "Published": 8363,
-        "Proceso con etapa cerrada": 386,
-        "Suspendido": 3,
-        "Proceso desierto": 47
-      }
-    },
-    "promedio_diario": 181.3
+      "abiertas": 425,
+      "cerradas": 0,
+      "adjudicadas": 0
+    }
   },
   "por_dia": [
     {
       "fecha": "2026-01-02",
-      "cantidad": 37
+      "cantidad": 19,
+      "mes": 1,
+      "dia": 2
     },
     {
       "fecha": "2026-01-06",
-      "cantidad": 82
+      "cantidad": 46,
+      "mes": 1,
+      "dia": 6
     },
     {
       "fecha": "2026-01-07",
-      "cantidad": 72
+      "cantidad": 31,
+      "mes": 1,
+      "dia": 7
     },
     {
       "fecha": "2026-01-08",
-      "cantidad": 96
+      "cantidad": 31,
+      "mes": 1,
+      "dia": 8
     },
     {
       "fecha": "2026-01-09",
-      "cantidad": 94
+      "cantidad": 25,
+      "mes": 1,
+      "dia": 9
     },
     {
       "fecha": "2026-01-12",
-      "cantidad": 111
+      "cantidad": 16,
+      "mes": 1,
+      "dia": 12
     },
     {
       "fecha": "2026-01-13",
-      "cantidad": 132
+      "cantidad": 23,
+      "mes": 1,
+      "dia": 13
     },
     {
       "fecha": "2026-01-14",
-      "cantidad": 154
+      "cantidad": 18,
+      "mes": 1,
+      "dia": 14
     },
     {
       "fecha": "2026-01-15",
-      "cantidad": 152
+      "cantidad": 12,
+      "mes": 1,
+      "dia": 15
     },
     {
       "fecha": "2026-01-16",
-      "cantidad": 161
+      "cantidad": 9,
+      "mes": 1,
+      "dia": 16
     },
     {
       "fecha": "2026-01-19",
-      "cantidad": 160
+      "cantidad": 6,
+      "mes": 1,
+      "dia": 19
     },
     {
       "fecha": "2026-01-20",
-      "cantidad": 196
+      "cantidad": 12,
+      "mes": 1,
+      "dia": 20
     },
     {
       "fecha": "2026-01-22",
-      "cantidad": 231
+      "cantidad": 3,
+      "mes": 1,
+      "dia": 22
     },
     {
       "fecha": "2026-01-23",
-      "cantidad": 248
+      "cantidad": 15,
+      "mes": 1,
+      "dia": 23
     },
     {
       "fecha": "2026-01-27",
-      "cantidad": 236
+      "cantidad": 10,
+      "mes": 1,
+      "dia": 27
     },
     {
       "fecha": "2026-01-28",
-      "cantidad": 236
+      "cantidad": 13,
+      "mes": 1,
+      "dia": 28
     },
     {
       "fecha": "2026-01-29",
-      "cantidad": 241
+      "cantidad": 9,
+      "mes": 1,
+      "dia": 29
     },
     {
       "fecha": "2026-01-30",
-      "cantidad": 242
+      "cantidad": 9,
+      "mes": 1,
+      "dia": 30
     },
     {
       "fecha": "2026-02-02",
-      "cantidad": 198
+      "cantidad": 3,
+      "mes": 2,
+      "dia": 2
     },
     {
       "fecha": "2026-02-03",
-      "cantidad": 220
+      "cantidad": 14,
+      "mes": 2,
+      "dia": 3
     },
     {
       "fecha": "2026-02-04",
-      "cantidad": 267
+      "cantidad": 5,
+      "mes": 2,
+      "dia": 4
     },
     {
       "fecha": "2026-02-05",
-      "cantidad": 264
+      "cantidad": 8,
+      "mes": 2,
+      "dia": 5
     },
     {
       "fecha": "2026-02-06",
-      "cantidad": 285
+      "cantidad": 5,
+      "mes": 2,
+      "dia": 6
     },
     {
       "fecha": "2026-02-09",
-      "cantidad": 216
+      "cantidad": 9,
+      "mes": 2,
+      "dia": 9
     },
     {
       "fecha": "2026-02-10",
-      "cantidad": 266
+      "cantidad": 13,
+      "mes": 2,
+      "dia": 10
     },
     {
       "fecha": "2026-02-11",
-      "cantidad": 296
+      "cantidad": 11,
+      "mes": 2,
+      "dia": 11
     },
     {
       "fecha": "2026-02-12",
-      "cantidad": 313
+      "cantidad": 8,
+      "mes": 2,
+      "dia": 12
     },
     {
       "fecha": "2026-02-13",
-      "cantidad": 277
+      "cantidad": 3,
+      "mes": 2,
+      "dia": 13
     },
     {
       "fecha": "2026-02-16",
-      "cantidad": 255
+      "cantidad": 4,
+      "mes": 2,
+      "dia": 16
     },
     {
       "fecha": "2026-02-17",
-      "cantidad": 273
+      "cantidad": 12,
+      "mes": 2,
+      "dia": 17
     },
     {
       "fecha": "2026-02-18",
-      "cantidad": 286
+      "cantidad": 6,
+      "mes": 2,
+      "dia": 18
     },
     {
       "fecha": "2026-02-19",
-      "cantidad": 319
+      "cantidad": 6,
+      "mes": 2,
+      "dia": 19
     },
     {
       "fecha": "2026-02-20",
-      "cantidad": 314
+      "cantidad": 2,
+      "mes": 2,
+      "dia": 20
     },
     {
       "fecha": "2026-02-23",
-      "cantidad": 246
+      "cantidad": 1,
+      "mes": 2,
+      "dia": 23
     },
     {
       "fecha": "2026-02-24",
-      "cantidad": 290
-    },
-    {
-      "fecha": "2026-02-25",
-      "cantidad": 304
-    },
-    {
-      "fecha": "2026-02-26",
-      "cantidad": 318
-    },
-    {
-      "fecha": "2026-03-02",
-      "cantidad": 246
+      "cantidad": 2,
+      "mes": 2,
+      "dia": 24
     },
     {
       "fecha": "2026-03-03",
-      "cantidad": 273
-    },
-    {
-      "fecha": "2026-03-04",
-      "cantidad": 286
+      "cantidad": 1,
+      "mes": 3,
+      "dia": 3
     },
     {
       "fecha": "2026-03-05",
-      "cantidad": 328
-    },
-    {
-      "fecha": "2026-03-06",
-      "cantidad": 300
-    },
-    {
-      "fecha": "2026-03-09",
-      "cantidad": 291
+      "cantidad": 2,
+      "mes": 3,
+      "dia": 5
     },
     {
       "fecha": "2026-03-10",
-      "cantidad": 283
-    },
-    {
-      "fecha": "2026-03-11",
-      "cantidad": 297
+      "cantidad": 1,
+      "mes": 3,
+      "dia": 10
     },
     {
       "fecha": "2026-03-12",
-      "cantidad": 336
-    },
-    {
-      "fecha": "2026-03-13",
-      "cantidad": 285
-    },
-    {
-      "fecha": "2026-03-16",
-      "cantidad": 272
+      "cantidad": 1,
+      "mes": 3,
+      "dia": 12
     },
     {
       "fecha": "2026-03-17",
-      "cantidad": 302
-    },
-    {
-      "fecha": "2026-03-18",
-      "cantidad": 288
+      "cantidad": 1,
+      "mes": 3,
+      "dia": 17
     },
     {
       "fecha": "2026-03-19",
-      "cantidad": 261
-    },
-    {
-      "fecha": "2026-03-20",
-      "cantidad": 293
-    },
-    {
-      "fecha": "2026-03-23",
-      "cantidad": 308
+      "cantidad": 1,
+      "mes": 3,
+      "dia": 19
     },
     {
       "fecha": "2026-03-24",
-      "cantidad": 266
-    },
-    {
-      "fecha": "2026-03-25",
-      "cantidad": 262
+      "cantidad": 1,
+      "mes": 3,
+      "dia": 24
     },
     {
       "fecha": "2026-03-26",
-      "cantidad": 302
+      "cantidad": 1,
+      "mes": 3,
+      "dia": 26
+    }
+  ],
+  "por_mes": [
+    {
+      "mes": "Ene",
+      "cantidad": 307,
+      "numero_mes": 1
     },
     {
-      "fecha": "2026-03-27",
-      "cantidad": 312
+      "mes": "Feb",
+      "cantidad": 112,
+      "numero_mes": 2
     },
     {
-      "fecha": "2026-03-30",
-      "cantidad": 263
+      "mes": "Mar",
+      "cantidad": 9,
+      "numero_mes": 3
+    }
+  ],
+  "proximas_vencer": [
+    {
+      "referencia": "HDPB-DAF-CM-2025-0186",
+      "descripcion": "ADQUISICION DE ALMACEN DE MEDICAMENTOS (ALBUMINA)",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 933610.0,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-03-31",
-      "cantidad": 281
+      "referencia": "HDPB-DAF-CM-2025-0184",
+      "descripcion": "ADQUISICION DE ALMACEN DE MEDICAMENTOS (MEROPENEM)",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 684500.0,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-01",
-      "cantidad": 215
+      "referencia": "MITUR-DAF-CM-2025-0116",
+      "descripcion": "CONTRATACIÓN DE LOS SERVICIOS DE MANTENIMIENTO Y REPARACIÓN EN TALLER DE LOS VEHÍCULOS PERTENECIENTE...",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 1860600.0,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-02",
-      "cantidad": 76
+      "referencia": "PROCURADURIA-DAF-CM-2025-0214",
+      "descripcion": "Adquisicion de baterias para radios y UPS.",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 336331.8,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-06",
-      "cantidad": 221
+      "referencia": "HSBG-DAF-CM-2025-0166",
+      "descripcion": "Adquisición de Lamparas para los Quirófanos #2 y #5 HSBG.",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 1770000.0,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-07",
-      "cantidad": 312
+      "referencia": "PROCURADURIA-DAF-CD-2025-0108",
+      "descripcion": "Adquisición de Panel Board eléctrico industrial trifásico",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 200000.0,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-08",
-      "cantidad": 167
+      "referencia": "AMNA-DAF-CM-2025-0012",
+      "descripcion": "compra de Crucetas con sus tornillos para greda",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 28320.0,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-09",
-      "cantidad": 263
+      "referencia": "AYUNT LOS ALCARRIZOS-CCC-CP-2025-0044",
+      "descripcion": "CONSTRUCCION DE ACERAS, CONTENES, BADENES, RELLENO E IMPRIMACION DE CALLE EN EL SECTOR VILLA LINDA I...",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 29519698.67,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-10",
-      "cantidad": 277
+      "referencia": "AYUNT LOS ALCARRIZOS-CCC-CP-2025-0045",
+      "descripcion": "CONSTRUCCION DE DRENAJE DE AGUA RESIDUALES Y PLUVIALES Y CONSTRUCCION DE ENCACHE EN EL CALLEJON LA F...",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 5304582.7,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     },
     {
-      "fecha": "2026-04-13",
-      "cantidad": 227
-    },
-    {
-      "fecha": "2026-04-14",
-      "cantidad": 307
-    },
-    {
-      "fecha": "2026-04-15",
-      "cantidad": 300
-    },
-    {
-      "fecha": "2026-04-16",
-      "cantidad": 312
-    },
-    {
-      "fecha": "2026-04-17",
-      "cantidad": 326
-    },
-    {
-      "fecha": "2026-04-20",
-      "cantidad": 314
-    },
-    {
-      "fecha": "2026-04-21",
-      "cantidad": 309
-    },
-    {
-      "fecha": "2026-04-22",
-      "cantidad": 348
-    },
-    {
-      "fecha": "2026-04-23",
-      "cantidad": 306
-    },
-    {
-      "fecha": "2026-04-24",
-      "cantidad": 339
-    },
-    {
-      "fecha": "2026-04-27",
-      "cantidad": 346
-    },
-    {
-      "fecha": "2026-04-28",
-      "cantidad": 333
-    },
-    {
-      "fecha": "2026-04-29",
-      "cantidad": 305
-    },
-    {
-      "fecha": "2026-04-30",
-      "cantidad": 362
-    },
-    {
-      "fecha": "2026-05-01",
-      "cantidad": 355
-    },
-    {
-      "fecha": "2026-05-05",
-      "cantidad": 149
-    },
-    {
-      "fecha": "2026-05-06",
-      "cantidad": 112
-    },
-    {
-      "fecha": "2026-05-07",
-      "cantidad": 107
-    },
-    {
-      "fecha": "2026-05-08",
-      "cantidad": 91
-    },
-    {
-      "fecha": "2026-05-11",
-      "cantidad": 27
-    },
-    {
-      "fecha": "2026-05-12",
-      "cantidad": 26
-    },
-    {
-      "fecha": "2026-05-13",
-      "cantidad": 16
-    },
-    {
-      "fecha": "2026-05-14",
-      "cantidad": 7
-    },
-    {
-      "fecha": "2026-05-15",
-      "cantidad": 7
-    },
-    {
-      "fecha": "2026-05-18",
-      "cantidad": 6
-    },
-    {
-      "fecha": "2026-05-19",
-      "cantidad": 6
-    },
-    {
-      "fecha": "2026-05-20",
-      "cantidad": 8
-    },
-    {
-      "fecha": "2026-05-21",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-05-22",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-05-25",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-05-26",
-      "cantidad": 5
-    },
-    {
-      "fecha": "2026-05-27",
-      "cantidad": 5
-    },
-    {
-      "fecha": "2026-05-28",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-05-29",
-      "cantidad": 5
-    },
-    {
-      "fecha": "2026-06-01",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-06-02",
-      "cantidad": 8
-    },
-    {
-      "fecha": "2026-06-03",
-      "cantidad": 1
-    },
-    {
-      "fecha": "2026-06-05",
-      "cantidad": 1
-    },
-    {
-      "fecha": "2026-06-08",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-06-09",
-      "cantidad": 6
-    },
-    {
-      "fecha": "2026-06-10",
-      "cantidad": 1
-    },
-    {
-      "fecha": "2026-06-11",
-      "cantidad": 4
-    },
-    {
-      "fecha": "2026-06-12",
-      "cantidad": 2
-    },
-    {
-      "fecha": "2026-06-15",
-      "cantidad": 8
-    },
-    {
-      "fecha": "2026-06-16",
-      "cantidad": 7
-    },
-    {
-      "fecha": "2026-06-17",
-      "cantidad": 5
-    },
-    {
-      "fecha": "2026-06-18",
-      "cantidad": 3
-    },
-    {
-      "fecha": "2026-06-24",
-      "cantidad": 1
-    },
-    {
-      "fecha": "2026-06-29",
-      "cantidad": 1
-    },
-    {
-      "fecha": "2026-06-30",
-      "cantidad": 1
-    },
-    {
-      "fecha": "2026-07-01",
-      "cantidad": 1
-    },
-    {
-      "fecha": "2026-07-07",
-      "cantidad": 1
+      "referencia": "ASDE-DAF-CM-2025-0151",
+      "descripcion": "SOLICITUD DE COMPRA DE 300 LÁMPARAS LED PARA SER UTILIZADOS EN DIFERENTES PARQUES Y AVENIDAS DEL MUN...",
+      "fecha_presentacion": "2026-01-02",
+      "dias_restantes": 2,
+      "monto": 1860000.0,
+      "moneda": "DOP",
+      "url": "javascript:void(0);"
     }
   ]
+}
+
+{
+  "stats": { ... },
+  "por_dia": [ ... ],
+  "competitividad": {
+    "actualizado": "2026-05-02",
+    "total": 21391,
+    "tipos": [
+      { "tipo": "CD",  "total": 13155, "grupo": "directa" },
+      { "tipo": "CM",  "total": 5923,  "grupo": "competitivo", "prom": 4,  "p25": 2,  "med": 4,  "p75": 5  },
+      { "tipo": "CP",  "total": 879,   "grupo": "competitivo", "prom": 9,  "p25": 7,  "med": 8,  "p75": 11 },
+      { "tipo": "LPN", "total": 400,   "grupo": "competitivo", "prom": 40, "p25": 36, "med": 44, "p75": 46 },
+      { "tipo": "SI",  "total": 70,    "grupo": "competitivo", "prom": 9,  "p25": 7,  "med": 8,  "p75": 11 },
+      { "tipo": "LPI", "total": 4,     "grupo": "competitivo", "prom": 45, "p25": 28, "med": 36, "p75": 53 }
+    ],
+    "pe_total": 960
+  }
 }

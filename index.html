@@ -1425,6 +1425,442 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
 </script>
 
 <!-- ══════════════════════════════════════════════════════
+     SECCIÓN · MEDICIÓN DE COMPETITIVIDAD
+     Pegar justo después del cierre </section> de #evidencia
+     Carga datos desde /stats-2026.json (clave: competitividad)
+     ══════════════════════════════════════════════════════ -->
+<section id="competitividad" style="background: var(--crema); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Encabezado -->
+      <div class="text-center mb-10">
+        <p class="section-eyebrow mb-4" style="color: var(--violeta);">
+          <span style="display:inline-block; width:24px; height:2px; background:var(--violeta);
+                       border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
+          Inteligencia de mercado
+        </p>
+        <h2 class="lora mb-3"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
+                   color: var(--texto-oscuro); line-height:1.25;">
+          Medición de Competitividad
+        </h2>
+        <p id="comp-periodo"
+           style="font-size:0.95rem; color:var(--texto-medio); margin-bottom:6px;">
+          Esta es la realidad en 2026, desde el 1º de enero al <span id="comp-fecha-hoy"></span>.
+        </p>
+        <p id="comp-data-note"
+           style="font-size:0.8rem; color:var(--texto-claro); line-height:1.6;">
+          Días calendario entre fecha de publicación y fecha de presentación.
+          <strong id="comp-n" style="color:var(--texto-medio);">n = …</strong>
+          licitaciones obtenidas del portal de compras de la República Dominicana.
+        </p>
+      </div>
+
+      <!-- ── Bloque 1: ¿Tiene sentido revisar el portal? ── -->
+      <div style="background:#fff; border:1px solid var(--crema-borde);
+                  border-radius:16px; padding:2.5rem 2rem; margin-bottom:2rem;">
+
+        <h3 class="lora text-center"
+            style="font-size:1.2rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:6px;">
+          ¿Tiene sentido revisar el portal manualmente?
+        </h3>
+        <p style="text-align:center; font-size:0.875rem; color:var(--texto-medio);
+                  margin-bottom:2rem; line-height:1.6;">
+          Solo una fracción corresponde a procedimientos competitivos
+          donde cualquier proveedor puede participar.
+        </p>
+
+        <!-- Pie chart + leyenda -->
+        <div style="display:flex; flex-wrap:wrap; gap:2.5rem; align-items:center;">
+          <div style="position:relative; width:200px; height:200px;
+                      flex-shrink:0; margin:0 auto;">
+            <canvas id="comp-pie"
+                    role="img"
+                    aria-label="Dona: porcentaje de licitaciones competitivas vs no competitivas.">
+            </canvas>
+          </div>
+          <div style="flex:1; min-width:200px; display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <span style="width:13px;height:13px;border-radius:3px;background:#5247e4;
+                           flex-shrink:0;margin-top:2px;display:inline-block;"></span>
+              <div>
+                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
+                  <span id="comp-pct-comp">—</span>% son competitivas
+                </p>
+                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
+                  LPN, LPI, CP, SI y CM — procedimientos donde cualquier
+                  proveedor registrado puede presentar oferta.
+                </p>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <span style="width:13px;height:13px;border-radius:3px;background:#d1d1ce;
+                           flex-shrink:0;margin-top:2px;display:inline-block;"></span>
+              <div>
+                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
+                  <span id="comp-pct-cd">—</span>% son Contratación Directa
+                </p>
+                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
+                  El proveedor ya está preseleccionado.
+                  Revisar estas licitaciones es tiempo perdido.
+                </p>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:flex-start;">
+              <span style="width:13px;height:13px;border-radius:3px;background:#eaba81;
+                           flex-shrink:0;margin-top:2px;display:inline-block;"></span>
+              <div>
+                <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
+                  <span id="comp-pct-pe">—</span>% son excepciones PE*
+                </p>
+                <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
+                  Procedimientos de excepción por urgencia o interés nacional.
+                  Acceso muy limitado.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA Compita -->
+        <div style="margin-top:2rem; padding:14px 18px; background:#f0f0fe;
+                    border-radius:10px; border-left:3px solid var(--violeta);">
+          <p style="font-size:13px; color:var(--violeta); font-weight:600; line-height:1.6; margin:0;">
+            Compita revisa el portal y te envía solo las licitaciones
+            que te pueden importar para participar.
+          </p>
+        </div>
+      </div>
+
+      <!-- ── Bloque 2: Ventana de tiempo ── -->
+      <div style="background:#fff; border:1px solid var(--crema-borde);
+                  border-radius:16px; padding:2.5rem 2rem; margin-bottom:2rem;">
+
+        <h3 class="lora"
+            style="font-size:1.2rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:6px;">
+          Ventana de tiempo: Licitaciones competitivas
+        </h3>
+        <p style="font-size:0.875rem; color:var(--texto-medio); margin-bottom:1.5rem; line-height:1.6;">
+          Solo LPN, LPI, CP, SI y CM son los tipos de licitación en los que tiene sentido
+          calcular el tiempo disponible para preparar una oferta.
+        </p>
+
+        <!-- Leyenda gráfico -->
+        <div style="display:flex; gap:16px; margin-bottom:10px;
+                    font-size:12px; color:var(--texto-medio); flex-wrap:wrap;">
+          <span style="display:flex; align-items:center; gap:5px;">
+            <span style="width:12px;height:12px;border-radius:2px;
+                         background:rgba(82,71,228,0.2);border:1.5px solid #5247e4;
+                         display:inline-block;"></span>
+            rango P25–P75
+          </span>
+          <span style="display:flex; align-items:center; gap:5px;">
+            <span style="width:14px;height:2.5px;background:#5247e4;display:inline-block;"></span>
+            mediana
+          </span>
+          <span style="display:flex; align-items:center; gap:5px; color:var(--texto-claro);">
+            ✕ promedio
+          </span>
+        </div>
+
+        <div style="position:relative; width:100%; height:280px; margin-bottom:1.5rem;">
+          <canvas id="comp-box"
+                  role="img"
+                  aria-label="Días disponibles por tipo de licitación competitiva.">
+          </canvas>
+        </div>
+
+        <!-- Tabla estadísticas -->
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse; font-size:12px;">
+            <thead>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <th style="text-align:left; padding:6px 8px; color:var(--texto-claro);
+                           font-weight:600; font-size:11px; text-transform:uppercase;
+                           letter-spacing:0.04em;">Tipo</th>
+                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
+                           font-weight:600; font-size:11px; text-transform:uppercase;">n</th>
+                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
+                           font-weight:600; font-size:11px; text-transform:uppercase;">P25</th>
+                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
+                           font-weight:600; font-size:11px; text-transform:uppercase;">mediana</th>
+                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
+                           font-weight:600; font-size:11px; text-transform:uppercase;">prom</th>
+                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
+                           font-weight:600; font-size:11px; text-transform:uppercase;">P75</th>
+              </tr>
+            </thead>
+            <tbody id="comp-tabla">
+              <!-- Generado por JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── Bloque 3: Leyenda de siglas ── -->
+      <div style="background:#fff; border:1px solid var(--crema-borde);
+                  border-radius:16px; padding:2rem;">
+        <p style="font-size:11px; font-weight:600; color:var(--texto-claro);
+                  text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;">
+          Tipos de procedimiento
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px;">
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
+                      background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:40px;">LPN</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Nacional</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
+                      background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:40px;">LPI</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Internacional</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
+                      background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:40px;">CP</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Comparación de Precios</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
+                      background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:40px;">SI</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Subasta Inversa Electrónica</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
+                      background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:40px;">CM</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Compra Menor</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
+                      background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:40px;">CD</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Contratación Directa</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
+                      background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:40px;">PE*</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Procedimientos de Excepción (varios tipos)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Script de la sección competitividad -->
+<!-- Chart.js ya cargado más arriba en la página -->
+<script>
+(function () {
+
+  var TIPOS_COMPETITIVOS = ['LPN','LPI','CP','SI','CM'];
+
+  // Fallback hardcodeado por si el JSON aún no tiene la clave competitividad
+  var FALLBACK = {
+    total: 21391,
+    tipos: [
+      { tipo:'CD',  total:13155, grupo:'directa' },
+      { tipo:'CM',  total:5923,  grupo:'competitivo', prom:4,  p25:2,  med:4,  p75:5  },
+      { tipo:'CP',  total:879,   grupo:'competitivo', prom:9,  p25:7,  med:8,  p75:11 },
+      { tipo:'LPN', total:400,   grupo:'competitivo', prom:40, p25:36, med:44, p75:46 },
+      { tipo:'SI',  total:70,    grupo:'competitivo', prom:9,  p25:7,  med:8,  p75:11 },
+      { tipo:'LPI', total:4,     grupo:'competitivo', prom:45, p25:28, med:36, p75:53 }
+    ],
+    pe_total: 960
+  };
+
+  var pieChart = null;
+  var boxChart = null;
+
+  function renderFecha() {
+    var meses = ['enero','febrero','marzo','abril','mayo','junio',
+                 'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    var hoy = new Date();
+    var el = document.getElementById('comp-fecha-hoy');
+    if (el) el.textContent = hoy.getDate() + ' de ' + meses[hoy.getMonth()] + ' de ' + hoy.getFullYear();
+  }
+
+  function renderPie(data) {
+    var total      = data.total;
+    var competitivo = data.tipos
+      .filter(function(t){ return t.grupo === 'competitivo'; })
+      .reduce(function(s,t){ return s + t.total; }, 0);
+    var cd         = (data.tipos.find(function(t){ return t.tipo === 'CD'; }) || {}).total || 0;
+    var pe         = data.pe_total || 0;
+    var otros      = total - competitivo - cd - pe;
+    if (otros < 0) otros = 0;
+
+    var pctComp = Math.round(competitivo / total * 100);
+    var pctCd   = Math.round(cd          / total * 100);
+    var pctPe   = Math.round(pe          / total * 100);
+
+    var elN = document.getElementById('comp-n');
+    if (elN) elN.textContent = 'n = ' + total.toLocaleString('es-DO');
+
+    var elPctComp = document.getElementById('comp-pct-comp');
+    var elPctCd   = document.getElementById('comp-pct-cd');
+    var elPctPe   = document.getElementById('comp-pct-pe');
+    if (elPctComp) elPctComp.textContent = pctComp;
+    if (elPctCd)   elPctCd.textContent   = pctCd;
+    if (elPctPe)   elPctPe.textContent   = pctPe;
+
+    var ctx = document.getElementById('comp-pie');
+    if (!ctx) return;
+    if (pieChart) pieChart.destroy();
+    pieChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Competitivas','Contratación Directa','Excepciones PE*'],
+        datasets: [{
+          data: [competitivo, cd, pe],
+          backgroundColor: ['#5247e4','#d1d1ce','#eaba81'],
+          borderWidth: 0,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '58%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var pct = Math.round(ctx.parsed / total * 100);
+                return ctx.label + ': ' + ctx.parsed.toLocaleString('es-DO') + ' (' + pct + '%)';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function renderBox(data) {
+    var competitivos = data.tipos
+      .filter(function(t){ return t.grupo === 'competitivo' && t.prom !== undefined; })
+      .sort(function(a,b){ return b.prom - a.prom; }); // orden descendente por promedio
+
+    var labels = competitivos.map(function(t){ return t.tipo; });
+    var rangos = competitivos.map(function(t){ return [t.p25, t.p75]; });
+    var medianas = competitivos.map(function(t,i){ return { x: i, y: t.med }; });
+    var promedios = competitivos.map(function(t,i){ return { x: i, y: t.prom }; });
+
+    var ctx = document.getElementById('comp-box');
+    if (!ctx) return;
+    if (boxChart) boxChart.destroy();
+    boxChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'P25-P75',
+            data: rangos,
+            backgroundColor: 'rgba(82,71,228,0.18)',
+            borderColor: '#5247e4',
+            borderWidth: 1.5,
+            borderSkipped: false,
+            barPercentage: 0.45
+          },
+          {
+            label: 'mediana',
+            type: 'scatter',
+            data: medianas,
+            pointStyle: 'line',
+            pointRadius: 16,
+            pointBorderWidth: 3,
+            pointBorderColor: '#5247e4',
+            backgroundColor: 'transparent'
+          },
+          {
+            label: 'promedio',
+            type: 'scatter',
+            data: promedios,
+            pointStyle: 'crossRot',
+            pointRadius: 7,
+            pointBorderWidth: 2,
+            pointBorderColor: '#aaa',
+            backgroundColor: 'transparent'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(ctx) {
+                var t = competitivos[ctx.dataIndex];
+                if (!t) return '';
+                if (ctx.datasetIndex === 0) return 'P25: ' + t.p25 + '  |  P75: ' + t.p75;
+                if (ctx.datasetIndex === 1) return 'Mediana: ' + t.med + ' dias';
+                return 'Promedio: ' + t.prom + ' dias';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#888', font: { size: 12 } },
+            grid: { display: false }
+          },
+          y: {
+            title: { display: true, text: 'dias calendario',
+                     color: '#aaa', font: { size: 11 } },
+            ticks: { color: '#888', font: { size: 11 } },
+            grid: { color: 'rgba(0,0,0,0.05)' },
+            min: 0
+          }
+        }
+      }
+    });
+
+    // Tabla
+    var tbody = document.getElementById('comp-tabla');
+    if (!tbody) return;
+    tbody.innerHTML = competitivos.map(function(t) {
+      return '<tr style="border-bottom:1px solid var(--crema-borde);">'
+        + '<td style="padding:6px 8px;font-weight:600;color:var(--texto-oscuro);">' + t.tipo + '</td>'
+        + '<td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">' + t.total.toLocaleString('es-DO') + '</td>'
+        + '<td style="text-align:right;padding:6px 8px;">' + t.p25 + '</td>'
+        + '<td style="text-align:right;padding:6px 8px;font-weight:600;">' + t.med + '</td>'
+        + '<td style="text-align:right;padding:6px 8px;">' + t.prom + '</td>'
+        + '<td style="text-align:right;padding:6px 8px;">' + t.p75 + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  function init() {
+    renderFecha();
+    fetch('/stats-2026.json')
+      .then(function(r){ return r.json(); })
+      .then(function(data) {
+        var comp = data.competitividad || FALLBACK;
+        renderPie(comp);
+        renderBox(comp);
+      })
+      .catch(function(err) {
+        console.warn('Usando fallback para competitividad:', err);
+        renderPie(FALLBACK);
+        renderBox(FALLBACK);
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+<!-- FIN SECCIÓN COMPETITIVIDAD -->
+
+<!-- ══════════════════════════════════════════════════════
      FAQ
      ══════════════════════════════════════════════════════ -->
 <section id="faq" style="background: var(--crema); padding: 6rem 0;">
