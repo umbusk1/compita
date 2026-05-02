@@ -1426,8 +1426,8 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
 
 <!-- ══════════════════════════════════════════════════════
      SECCIÓN · MEDICIÓN DE COMPETITIVIDAD
-     Pegar justo después del cierre </section> de #evidencia
-     Carga datos desde /stats-2026.json (clave: competitividad)
+     Pegar justo después del cierre del script de #evidencia
+     y antes de la sección #faq
      ══════════════════════════════════════════════════════ -->
 <section id="competitividad" style="background: var(--crema); padding: 6rem 0;">
   <div class="container mx-auto px-4">
@@ -1445,14 +1445,12 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
                    color: var(--texto-oscuro); line-height:1.25;">
           Medición de Competitividad
         </h2>
-        <p id="comp-periodo"
-           style="font-size:0.95rem; color:var(--texto-medio); margin-bottom:6px;">
+        <p style="font-size:0.95rem; color:var(--texto-medio); margin-bottom:6px;">
           Esta es la realidad en 2026, desde el 1º de enero al <span id="comp-fecha-hoy"></span>.
         </p>
-        <p id="comp-data-note"
-           style="font-size:0.8rem; color:var(--texto-claro); line-height:1.6;">
+        <p style="font-size:0.8rem; color:var(--texto-claro); line-height:1.6;">
           Días calendario entre fecha de publicación y fecha de presentación.
-          <strong id="comp-n" style="color:var(--texto-medio);">n = …</strong>
+          <strong id="comp-n" style="color:var(--texto-medio);">n = 21,391</strong>
           licitaciones obtenidas del portal de compras de la República Dominicana.
         </p>
       </div>
@@ -1471,12 +1469,9 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
           donde cualquier proveedor puede participar.
         </p>
 
-        <!-- Pie chart + leyenda -->
         <div style="display:flex; flex-wrap:wrap; gap:2.5rem; align-items:center;">
-          <div style="position:relative; width:200px; height:200px;
-                      flex-shrink:0; margin:0 auto;">
-            <canvas id="comp-pie"
-                    role="img"
+          <div style="position:relative; width:200px; height:200px; flex-shrink:0; margin:0 auto;">
+            <canvas id="comp-pie" role="img"
                     aria-label="Dona: porcentaje de licitaciones competitivas vs no competitivas.">
             </canvas>
           </div>
@@ -1486,7 +1481,7 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
                            flex-shrink:0;margin-top:2px;display:inline-block;"></span>
               <div>
                 <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
-                  <span id="comp-pct-comp">—</span>% son competitivas
+                  <span id="comp-pct-comp">34</span>% son competitivas
                 </p>
                 <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
                   LPN, LPI, CP, SI y CM — procedimientos donde cualquier
@@ -1499,7 +1494,7 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
                            flex-shrink:0;margin-top:2px;display:inline-block;"></span>
               <div>
                 <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
-                  <span id="comp-pct-cd">—</span>% son Contratación Directa
+                  <span id="comp-pct-cd">61</span>% son Contratación Directa
                 </p>
                 <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
                   El proveedor ya está preseleccionado.
@@ -1512,7 +1507,7 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
                            flex-shrink:0;margin-top:2px;display:inline-block;"></span>
               <div>
                 <p style="font-size:14px;font-weight:600;color:var(--texto-oscuro);margin-bottom:2px;">
-                  <span id="comp-pct-pe">—</span>% son excepciones PE*
+                  <span id="comp-pct-pe">5</span>% son excepciones PE*
                 </p>
                 <p style="font-size:13px;color:var(--texto-medio);line-height:1.5;">
                   Procedimientos de excepción por urgencia o interés nacional.
@@ -1523,7 +1518,6 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
           </div>
         </div>
 
-        <!-- CTA Compita -->
         <div style="margin-top:2rem; padding:14px 18px; background:#f0f0fe;
                     border-radius:10px; border-left:3px solid var(--violeta);">
           <p style="font-size:13px; color:var(--violeta); font-weight:600; line-height:1.6; margin:0;">
@@ -1546,59 +1540,123 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
           calcular el tiempo disponible para preparar una oferta.
         </p>
 
-        <!-- Leyenda gráfico -->
         <div style="display:flex; gap:16px; margin-bottom:10px;
                     font-size:12px; color:var(--texto-medio); flex-wrap:wrap;">
           <span style="display:flex; align-items:center; gap:5px;">
-            <span style="width:12px;height:12px;border-radius:2px;
-                         background:rgba(82,71,228,0.2);border:1.5px solid #5247e4;
-                         display:inline-block;"></span>
-            rango P25–P75
+            <span style="width:12px;height:12px;border-radius:2px;background:rgba(82,71,228,0.2);
+                         border:1.5px solid #5247e4;display:inline-block;"></span>rango P25–P75
           </span>
           <span style="display:flex; align-items:center; gap:5px;">
-            <span style="width:14px;height:2.5px;background:#5247e4;display:inline-block;"></span>
-            mediana
+            <span style="width:14px;height:2.5px;background:#5247e4;display:inline-block;"></span>mediana
           </span>
           <span style="display:flex; align-items:center; gap:5px; color:var(--texto-claro);">
             ✕ promedio
           </span>
         </div>
 
-        <div style="position:relative; width:100%; height:280px; margin-bottom:1.5rem;">
-          <canvas id="comp-box"
-                  role="img"
+        <div style="position:relative; width:100%; height:280px; margin-bottom:2rem;">
+          <canvas id="comp-box" role="img"
                   aria-label="Días disponibles por tipo de licitación competitiva.">
           </canvas>
         </div>
 
-        <!-- Tabla estadísticas -->
+        <!-- Tabla completa con todos los tipos -->
         <div style="overflow-x:auto;">
           <table style="width:100%; border-collapse:collapse; font-size:12px;">
             <thead>
               <tr style="border-bottom:1px solid var(--crema-borde);">
-                <th style="text-align:left; padding:6px 8px; color:var(--texto-claro);
-                           font-weight:600; font-size:11px; text-transform:uppercase;
-                           letter-spacing:0.04em;">Tipo</th>
-                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
-                           font-weight:600; font-size:11px; text-transform:uppercase;">n</th>
-                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
-                           font-weight:600; font-size:11px; text-transform:uppercase;">P25</th>
-                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
-                           font-weight:600; font-size:11px; text-transform:uppercase;">mediana</th>
-                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
-                           font-weight:600; font-size:11px; text-transform:uppercase;">prom</th>
-                <th style="text-align:right; padding:6px 8px; color:var(--texto-claro);
-                           font-weight:600; font-size:11px; text-transform:uppercase;">P75</th>
+                <th style="text-align:left;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;">Tipo</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">n total</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">mín</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">P25</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">mediana</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">prom</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">P75</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">máx</th>
+                <th style="text-align:right;padding:6px 8px;color:var(--texto-claro);font-weight:600;font-size:11px;text-transform:uppercase;">σ</th>
               </tr>
             </thead>
-            <tbody id="comp-tabla">
-              <!-- Generado por JS -->
+            <tbody>
+              <!-- Competitivos -->
+              <tr><td colspan="9" style="padding:5px 8px;background:#f7f5f0;font-size:11px;color:var(--texto-claro);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Competitivos</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">LPI <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">4</td><td style="text-align:right;padding:6px 8px;">20</td><td style="text-align:right;padding:6px 8px;">28</td><td style="text-align:right;padding:6px 8px;font-weight:600;">36</td><td style="text-align:right;padding:6px 8px;">45</td><td style="text-align:right;padding:6px 8px;">53</td><td style="text-align:right;padding:6px 8px;">87</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">30</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">LPN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">400</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">36</td><td style="text-align:right;padding:6px 8px;font-weight:600;">44</td><td style="text-align:right;padding:6px 8px;">40</td><td style="text-align:right;padding:6px 8px;">46</td><td style="text-align:right;padding:6px 8px;">81</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">11</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">SI <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">70</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;font-weight:600;">8</td><td style="text-align:right;padding:6px 8px;">9</td><td style="text-align:right;padding:6px 8px;">11</td><td style="text-align:right;padding:6px 8px;">19</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">CP <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">879</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;font-weight:600;">8</td><td style="text-align:right;padding:6px 8px;">9</td><td style="text-align:right;padding:6px 8px;">11</td><td style="text-align:right;padding:6px 8px;">47</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">5</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">CM <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#e8f4e8;color:#2d7a2d;font-weight:500;margin-left:3px;">competitivo</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">5,923</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">4</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">26</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
+              </tr>
+              <!-- No competitivos -->
+              <tr><td colspan="9" style="padding:5px 8px;background:#f7f5f0;font-size:11px;color:var(--texto-claro);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">No competitivos</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">CD <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">directa</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">13,155</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">17</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">SO <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">sorteo</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">6</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;font-weight:600;">6</td><td style="text-align:right;padding:6px 8px;">12</td><td style="text-align:right;padding:6px 8px;">21</td><td style="text-align:right;padding:6px 8px;">28</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">12</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">DAF <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#f0f0f0;color:#777;font-weight:500;margin-left:3px;">interno</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">56</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">6</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
+              </tr>
+              <!-- Excepciones -->
+              <tr><td colspan="9" style="padding:5px 8px;background:#f7f5f0;font-size:11px;color:var(--texto-claro);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Procedimientos de excepción (PE*)</td></tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEEN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">25</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;font-weight:600;">13</td><td style="text-align:right;padding:6px 8px;">13</td><td style="text-align:right;padding:6px 8px;">19</td><td style="text-align:right;padding:6px 8px;">26</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">8</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEUR <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">40</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">6</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;">24</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">6</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEPU <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">274</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">5</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">16</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEOR <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">91</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">2</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEEX <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">209</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">7</td><td style="text-align:right;padding:6px 8px;">25</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">5</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEPB <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">228</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;font-weight:600;">3</td><td style="text-align:right;padding:6px 8px;">4</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">14</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEIN <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">11</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;font-weight:600;">0</td><td style="text-align:right;padding:6px 8px;">3</td><td style="text-align:right;padding:6px 8px;">5</td><td style="text-align:right;padding:6px 8px;">10</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">4</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--crema-borde);">
+                <td style="padding:6px 8px;font-weight:600;">PEJU <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">6</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">1</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 8px;font-weight:600;">PEPS <span style="display:inline-block;font-size:10px;padding:1px 5px;border-radius:3px;background:#fef3e2;color:#b45309;font-weight:500;margin-left:3px;">excepción</span></td>
+                <td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">3</td><td style="text-align:right;padding:6px 8px;">0</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;font-weight:600;">1</td><td style="text-align:right;padding:6px 8px;">1</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;">2</td><td style="text-align:right;padding:6px 8px;color:var(--texto-claro);">1</td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- ── Bloque 3: Leyenda de siglas ── -->
+      <!-- ── Bloque 3: Leyenda completa ── -->
       <div style="background:#fff; border:1px solid var(--crema-borde);
                   border-radius:16px; padding:2rem;">
         <p style="font-size:11px; font-weight:600; color:var(--texto-claro);
@@ -1606,40 +1664,77 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
           Tipos de procedimiento
         </p>
         <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px;">
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
-                      background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:40px;">LPN</span>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">LPN</span>
             <span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Nacional</span>
           </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
-                      background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:40px;">LPI</span>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">LPI</span>
             <span style="font-size:13px;color:var(--texto-medio);">Licitación Pública Internacional</span>
           </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
-                      background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:40px;">CP</span>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">CP</span>
             <span style="font-size:13px;color:var(--texto-medio);">Comparación de Precios</span>
           </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
-                      background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:40px;">SI</span>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">SI</span>
             <span style="font-size:13px;color:var(--texto-medio);">Subasta Inversa Electrónica</span>
           </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
-                      background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:40px;">CM</span>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">CM</span>
             <span style="font-size:13px;color:var(--texto-medio);">Compra Menor</span>
           </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
-                      background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:40px;">CD</span>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">CD</span>
             <span style="font-size:13px;color:var(--texto-medio);">Contratación Directa</span>
           </div>
-          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;
-                      background:var(--crema);border-radius:8px;">
-            <span style="font-weight:700;font-size:13px;min-width:40px;">PE*</span>
-            <span style="font-size:13px;color:var(--texto-medio);">Procedimientos de Excepción (varios tipos)</span>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">SO</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Sorteo de Obras</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">DAF</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Dirección Administrativa y Financiera</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEPU</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Proveedor Único</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEEX</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Extrema Urgencia</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEOR</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Obras de Arte / Reconocido Mérito</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEPB</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Precalificación de Bienes</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEUR</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Urgencia Reconocida</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEEN</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Emergencia Nacional</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEIN</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Interés Nacional</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEPS</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Patente o Secreto Industrial</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">PEJU</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Excepción — Fallo Judicial</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:baseline;padding:7px 12px;background:var(--crema);border-radius:8px;">
+            <span style="font-weight:700;font-size:13px;min-width:44px;">CCC</span>
+            <span style="font-size:13px;color:var(--texto-medio);">Comité de Compras y Contrataciones</span>
           </div>
         </div>
       </div>
@@ -1648,62 +1743,44 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
   </div>
 </section>
 
-<!-- Script de la sección competitividad -->
-<!-- Chart.js ya cargado más arriba en la página -->
+<!-- Script competitividad — Chart.js ya cargado en #evidencia -->
 <script>
 (function () {
-
-  var TIPOS_COMPETITIVOS = ['LPN','LPI','CP','SI','CM'];
-
-  // Fallback hardcodeado por si el JSON aún no tiene la clave competitividad
-  var FALLBACK = {
-    total: 21391,
-    tipos: [
-      { tipo:'CD',  total:13155, grupo:'directa' },
-      { tipo:'CM',  total:5923,  grupo:'competitivo', prom:4,  p25:2,  med:4,  p75:5  },
-      { tipo:'CP',  total:879,   grupo:'competitivo', prom:9,  p25:7,  med:8,  p75:11 },
-      { tipo:'LPN', total:400,   grupo:'competitivo', prom:40, p25:36, med:44, p75:46 },
-      { tipo:'SI',  total:70,    grupo:'competitivo', prom:9,  p25:7,  med:8,  p75:11 },
-      { tipo:'LPI', total:4,     grupo:'competitivo', prom:45, p25:28, med:36, p75:53 }
-    ],
-    pe_total: 960
-  };
-
   var pieChart = null;
   var boxChart = null;
 
+  var FALLBACK_COMP = {
+    total: 21391,
+    competitivo: 7276,
+    cd: 13155,
+    pe: 960,
+    tipos_box: [
+      { tipo:'LPI', total:4,    prom:45, p25:28, med:36, p75:53 },
+      { tipo:'LPN', total:400,  prom:40, p25:36, med:44, p75:46 },
+      { tipo:'CP',  total:879,  prom:9,  p25:7,  med:8,  p75:11 },
+      { tipo:'SI',  total:70,   prom:9,  p25:7,  med:8,  p75:11 },
+      { tipo:'CM',  total:5923, prom:4,  p25:2,  med:4,  p75:5  }
+    ]
+  };
+
   function renderFecha() {
-    var meses = ['enero','febrero','marzo','abril','mayo','junio',
-                 'julio','agosto','septiembre','octubre','noviembre','diciembre'];
-    var hoy = new Date();
+    var m = ['enero','febrero','marzo','abril','mayo','junio',
+             'julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    var h = new Date();
     var el = document.getElementById('comp-fecha-hoy');
-    if (el) el.textContent = hoy.getDate() + ' de ' + meses[hoy.getMonth()] + ' de ' + hoy.getFullYear();
+    if (el) el.textContent = h.getDate() + ' de ' + m[h.getMonth()] + ' de ' + h.getFullYear();
   }
 
-  function renderPie(data) {
-    var total      = data.total;
-    var competitivo = data.tipos
-      .filter(function(t){ return t.grupo === 'competitivo'; })
-      .reduce(function(s,t){ return s + t.total; }, 0);
-    var cd         = (data.tipos.find(function(t){ return t.tipo === 'CD'; }) || {}).total || 0;
-    var pe         = data.pe_total || 0;
-    var otros      = total - competitivo - cd - pe;
-    if (otros < 0) otros = 0;
-
-    var pctComp = Math.round(competitivo / total * 100);
-    var pctCd   = Math.round(cd          / total * 100);
-    var pctPe   = Math.round(pe          / total * 100);
-
+  function renderPie(d) {
+    var total = d.total, comp = d.competitivo, cd = d.cd, pe = d.pe;
     var elN = document.getElementById('comp-n');
     if (elN) elN.textContent = 'n = ' + total.toLocaleString('es-DO');
-
-    var elPctComp = document.getElementById('comp-pct-comp');
-    var elPctCd   = document.getElementById('comp-pct-cd');
-    var elPctPe   = document.getElementById('comp-pct-pe');
-    if (elPctComp) elPctComp.textContent = pctComp;
-    if (elPctCd)   elPctCd.textContent   = pctCd;
-    if (elPctPe)   elPctPe.textContent   = pctPe;
-
+    var pc = document.getElementById('comp-pct-comp');
+    var pcd = document.getElementById('comp-pct-cd');
+    var ppe = document.getElementById('comp-pct-pe');
+    if (pc)  pc.textContent  = Math.round(comp / total * 100);
+    if (pcd) pcd.textContent = Math.round(cd   / total * 100);
+    if (ppe) ppe.textContent = Math.round(pe   / total * 100);
     var ctx = document.getElementById('comp-pie');
     if (!ctx) return;
     if (pieChart) pieChart.destroy();
@@ -1711,127 +1788,54 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
       type: 'doughnut',
       data: {
         labels: ['Competitivas','Contratación Directa','Excepciones PE*'],
-        datasets: [{
-          data: [competitivo, cd, pe],
-          backgroundColor: ['#5247e4','#d1d1ce','#eaba81'],
-          borderWidth: 0,
-          hoverOffset: 8
-        }]
+        datasets: [{ data:[comp,cd,pe], backgroundColor:['#5247e4','#d1d1ce','#eaba81'], borderWidth:0, hoverOffset:8 }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '58%',
+        responsive:true, maintainAspectRatio:false, cutout:'58%',
         plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function(ctx) {
-                var pct = Math.round(ctx.parsed / total * 100);
-                return ctx.label + ': ' + ctx.parsed.toLocaleString('es-DO') + ' (' + pct + '%)';
-              }
-            }
-          }
+          legend:{ display:false },
+          tooltip:{ callbacks:{ label:function(c){ return c.label+': '+c.parsed.toLocaleString('es-DO')+' ('+Math.round(c.parsed/total*100)+'%)'; } } }
         }
       }
     });
   }
 
-  function renderBox(data) {
-    var competitivos = data.tipos
-      .filter(function(t){ return t.grupo === 'competitivo' && t.prom !== undefined; })
-      .sort(function(a,b){ return b.prom - a.prom; }); // orden descendente por promedio
-
-    var labels = competitivos.map(function(t){ return t.tipo; });
-    var rangos = competitivos.map(function(t){ return [t.p25, t.p75]; });
-    var medianas = competitivos.map(function(t,i){ return { x: i, y: t.med }; });
-    var promedios = competitivos.map(function(t,i){ return { x: i, y: t.prom }; });
-
+  function renderBox(tipos) {
+    var labels   = tipos.map(function(t){ return t.tipo; });
+    var rangos   = tipos.map(function(t){ return [t.p25, t.p75]; });
+    var medianas = tipos.map(function(t,i){ return { x:i, y:t.med }; });
+    var promedios= tipos.map(function(t,i){ return { x:i, y:t.prom }; });
     var ctx = document.getElementById('comp-box');
     if (!ctx) return;
     if (boxChart) boxChart.destroy();
     boxChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: 'P25-P75',
-            data: rangos,
-            backgroundColor: 'rgba(82,71,228,0.18)',
-            borderColor: '#5247e4',
-            borderWidth: 1.5,
-            borderSkipped: false,
-            barPercentage: 0.45
-          },
-          {
-            label: 'mediana',
-            type: 'scatter',
-            data: medianas,
-            pointStyle: 'line',
-            pointRadius: 16,
-            pointBorderWidth: 3,
-            pointBorderColor: '#5247e4',
-            backgroundColor: 'transparent'
-          },
-          {
-            label: 'promedio',
-            type: 'scatter',
-            data: promedios,
-            pointStyle: 'crossRot',
-            pointRadius: 7,
-            pointBorderWidth: 2,
-            pointBorderColor: '#aaa',
-            backgroundColor: 'transparent'
-          }
+      type:'bar',
+      data:{
+        labels:labels,
+        datasets:[
+          { label:'P25-P75', data:rangos, backgroundColor:'rgba(82,71,228,0.18)', borderColor:'#5247e4', borderWidth:1.5, borderSkipped:false, barPercentage:0.45 },
+          { label:'mediana', type:'scatter', data:medianas, pointStyle:'line', pointRadius:16, pointBorderWidth:3, pointBorderColor:'#5247e4', backgroundColor:'transparent' },
+          { label:'promedio', type:'scatter', data:promedios, pointStyle:'crossRot', pointRadius:7, pointBorderWidth:2, pointBorderColor:'#aaa', backgroundColor:'transparent' }
         ]
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function(ctx) {
-                var t = competitivos[ctx.dataIndex];
-                if (!t) return '';
-                if (ctx.datasetIndex === 0) return 'P25: ' + t.p25 + '  |  P75: ' + t.p75;
-                if (ctx.datasetIndex === 1) return 'Mediana: ' + t.med + ' dias';
-                return 'Promedio: ' + t.prom + ' dias';
-              }
-            }
-          }
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{
+          legend:{ display:false },
+          tooltip:{ callbacks:{ label:function(c){
+            var t=tipos[c.dataIndex];
+            if(!t) return '';
+            if(c.datasetIndex===0) return 'P25: '+t.p25+' | P75: '+t.p75;
+            if(c.datasetIndex===1) return 'Mediana: '+t.med+' días';
+            return 'Promedio: '+t.prom+' días';
+          }}}
         },
-        scales: {
-          x: {
-            ticks: { color: '#888', font: { size: 12 } },
-            grid: { display: false }
-          },
-          y: {
-            title: { display: true, text: 'dias calendario',
-                     color: '#aaa', font: { size: 11 } },
-            ticks: { color: '#888', font: { size: 11 } },
-            grid: { color: 'rgba(0,0,0,0.05)' },
-            min: 0
-          }
+        scales:{
+          x:{ ticks:{ color:'#888', font:{ size:12 } }, grid:{ display:false } },
+          y:{ title:{ display:true, text:'días calendario', color:'#aaa', font:{ size:11 } }, ticks:{ color:'#888', font:{ size:11 } }, grid:{ color:'rgba(0,0,0,0.05)' }, min:0 }
         }
       }
     });
-
-    // Tabla
-    var tbody = document.getElementById('comp-tabla');
-    if (!tbody) return;
-    tbody.innerHTML = competitivos.map(function(t) {
-      return '<tr style="border-bottom:1px solid var(--crema-borde);">'
-        + '<td style="padding:6px 8px;font-weight:600;color:var(--texto-oscuro);">' + t.tipo + '</td>'
-        + '<td style="text-align:right;padding:6px 8px;color:var(--texto-medio);">' + t.total.toLocaleString('es-DO') + '</td>'
-        + '<td style="text-align:right;padding:6px 8px;">' + t.p25 + '</td>'
-        + '<td style="text-align:right;padding:6px 8px;font-weight:600;">' + t.med + '</td>'
-        + '<td style="text-align:right;padding:6px 8px;">' + t.prom + '</td>'
-        + '<td style="text-align:right;padding:6px 8px;">' + t.p75 + '</td>'
-        + '</tr>';
-    }).join('');
   }
 
   function init() {
@@ -1839,23 +1843,22 @@ function actualizarGraficoEvidencia(datos, mesInfo) {
     fetch('/stats-2026.json')
       .then(function(r){ return r.json(); })
       .then(function(data) {
-        var comp = data.competitividad || FALLBACK;
-        renderPie(comp);
-        renderBox(comp);
+        var c = data.competitividad;
+        if (c) {
+          var comp = c.tipos.filter(function(t){ return t.grupo==='competitivo'; }).reduce(function(s,t){ return s+t.total; },0);
+          var cd   = (c.tipos.find(function(t){ return t.tipo==='CD'; })||{}).total||0;
+          renderPie({ total:c.total, competitivo:comp, cd:cd, pe:c.pe_total||0 });
+          renderBox(c.tipos.filter(function(t){ return t.grupo==='competitivo' && t.prom!==undefined; }));
+        } else {
+          renderPie(FALLBACK_COMP);
+          renderBox(FALLBACK_COMP.tipos_box);
+        }
       })
-      .catch(function(err) {
-        console.warn('Usando fallback para competitividad:', err);
-        renderPie(FALLBACK);
-        renderBox(FALLBACK);
-      });
+      .catch(function(){ renderPie(FALLBACK_COMP); renderBox(FALLBACK_COMP.tipos_box); });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-
+  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 </script>
 <!-- FIN SECCIÓN COMPETITIVIDAD -->
