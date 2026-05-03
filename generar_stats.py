@@ -2,7 +2,7 @@
 COMPITA - Generador de Estadísticas para Landing Page
 ======================================================
 Consulta la base de datos Neon y genera stats-2026.json
-para actualizar el gráfico del landing page automáticamente.
+para actualizar el grafico del landing page automaticamente.
 """
 
 import os
@@ -88,12 +88,6 @@ def generar_estadisticas():
         # ================================================================
         # 5. COMPETITIVIDAD POR TIPO DE PROCEDIMIENTO
         # ================================================================
-        # Grupos:
-        #   competitivo : LPN, LPI, CP, SI, CM
-        #   directa     : CD
-        #   excepcion   : todos los PE*
-        #   otro        : SO, DAF, CCC, etc.
-
         GRUPOS = {
             'LPN': 'competitivo',
             'LPI': 'competitivo',
@@ -103,38 +97,52 @@ def generar_estadisticas():
             'CD':  'directa',
         }
 
+        # Query A: totales reales por tipo (sin filtro de fechas)
+        # Se usa para el pie chart — incluye todos los registros
         cursor.execute("""
             SELECT
-                SPLIT_PART(referencia, '-', 3)          AS tipo,
-                COUNT(*)                                 AS total,
+                SPLIT_PART(referencia, '-', 3) AS tipo,
+                COUNT(*) AS total
+            FROM licitaciones
+            WHERE fecha_presentacion IS NOT NULL
+            GROUP BY tipo
+            ORDER BY total DESC
+        """)
+        totales_por_tipo = {row[0]: row[1] for row in cursor.fetchall()}
+
+        # Query B: percentiles solo para competitivos
+        # Requiere fecha_presentacion >= scrapeado_en para calcular dias validos
+        cursor.execute("""
+            SELECT
+                SPLIT_PART(referencia, '-', 3) AS tipo,
                 ROUND(AVG(EXTRACT(DAY FROM (
                     fecha_presentacion - scrapeado_en
-                ))))::int                                AS prom,
+                ))))::int AS prom,
                 PERCENTILE_CONT(0.25) WITHIN GROUP
                     (ORDER BY EXTRACT(DAY FROM (
                         fecha_presentacion - scrapeado_en
-                    )))::int                             AS p25,
+                    )))::int AS p25,
                 PERCENTILE_CONT(0.50) WITHIN GROUP
                     (ORDER BY EXTRACT(DAY FROM (
                         fecha_presentacion - scrapeado_en
-                    )))::int                             AS med,
+                    )))::int AS med,
                 PERCENTILE_CONT(0.75) WITHIN GROUP
                     (ORDER BY EXTRACT(DAY FROM (
                         fecha_presentacion - scrapeado_en
-                    )))::int                             AS p75
+                    )))::int AS p75
             FROM licitaciones
             WHERE fecha_presentacion IS NOT NULL
               AND scrapeado_en IS NOT NULL
               AND fecha_presentacion >= scrapeado_en
+              AND SPLIT_PART(referencia, '-', 3) IN ('LPN','LPI','CP','SI','CM')
             GROUP BY tipo
-            ORDER BY total DESC
         """)
+        percentiles = {row[0]: row[1:] for row in cursor.fetchall()}
 
-        tipos_raw = cursor.fetchall()
         tipos = []
         pe_total = 0
 
-        for tipo, total, prom, p25, med, p75 in tipos_raw:
+        for tipo, total in totales_por_tipo.items():
             if tipo.startswith('PE'):
                 grupo = 'excepcion'
                 pe_total += total
@@ -148,8 +156,8 @@ def generar_estadisticas():
                 'total': total,
                 'grupo': grupo,
             }
-            # Solo agregar percentiles a los competitivos (tiene sentido graficarlos)
-            if grupo == 'competitivo':
+            if grupo == 'competitivo' and tipo in percentiles:
+                prom, p25, med, p75 = percentiles[tipo]
                 entrada['prom'] = prom or 0
                 entrada['p25']  = p25  or 0
                 entrada['med']  = med  or 0
@@ -160,9 +168,10 @@ def generar_estadisticas():
         print(f"Tipos de procedimiento encontrados: {len(tipos)}")
         print(f"PE* total: {pe_total}")
 
+        total_todos_tipos = sum(t['total'] for t in tipos)
         competitividad = {
             'actualizado': datetime.now().strftime('%Y-%m-%d'),
-            'total':       total_licitaciones,
+            'total':       total_todos_tipos,
             'tipos':       tipos,
             'pe_total':    pe_total,
         }
