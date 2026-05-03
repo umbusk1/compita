@@ -15,10 +15,21 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Token no proporcionado' });
+// Bypass JWT para el cron de alertas
+if (req.method === 'POST') {
+  const { action, secret } = req.body || {};
+  if (action === 'perfil_licitador_alertas') {
+    if (secret !== process.env.CRON_SECRET) {
+      return res.status(401).json({ error: 'No autorizado' });
+    }
+    return handleEnviarAlertas(req, res);
   }
+}
+
+const authHeader = req.headers.authorization;
+if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  return res.status(401).json({ error: 'Token no proporcionado' });
+}
 
   const token = authHeader.split(' ')[1];
   let decoded;
@@ -319,6 +330,7 @@ async function handleUpdateEmpresa(req, res, empresaId, authHeader) {
   } catch (error) {
     console.error('Error al actualizar empresa:', error);
     return res.status(500).json({ error: 'Error al actualizar perfil de la empresa' });
+    }
   }
 
 async function handleEnviarAlertas(req, res) {
