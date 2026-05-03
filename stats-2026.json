@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-05-03 01:05:17",
+  "ultima_actualizacion": "2026-05-03 01:15:33",
   "stats": {
     "total": 21389,
     "por_estado": {
@@ -500,8 +500,13 @@
     "total": 21389,
     "tipos": [
       {
+        "tipo": "CD",
+        "total": 13155,
+        "grupo": "directa"
+      },
+      {
         "tipo": "CM",
-        "total": 5172,
+        "total": 5923,
         "grupo": "competitivo",
         "prom": 4,
         "p25": 2,
@@ -509,13 +514,8 @@
         "p75": 5
       },
       {
-        "tipo": "CD",
-        "total": 1771,
-        "grupo": "directa"
-      },
-      {
         "tipo": "CP",
-        "total": 783,
+        "total": 879,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -524,7 +524,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 396,
+        "total": 400,
         "grupo": "competitivo",
         "prom": 40,
         "p25": 36,
@@ -533,17 +533,27 @@
       },
       {
         "tipo": "PEPU",
-        "total": 135,
+        "total": 274,
+        "grupo": "excepcion"
+      },
+      {
+        "tipo": "PEPB",
+        "total": 228,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEX",
-        "total": 107,
+        "total": 209,
+        "grupo": "excepcion"
+      },
+      {
+        "tipo": "PEOR",
+        "total": 91,
         "grupo": "excepcion"
       },
       {
         "tipo": "SI",
-        "total": 67,
+        "total": 70,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -551,38 +561,33 @@
         "p75": 11
       },
       {
-        "tipo": "PEOR",
-        "total": 39,
-        "grupo": "excepcion"
+        "tipo": "DAF",
+        "total": 56,
+        "grupo": "otro"
       },
       {
         "tipo": "PEUR",
-        "total": 34,
-        "grupo": "excepcion"
-      },
-      {
-        "tipo": "PEPB",
-        "total": 27,
+        "total": 40,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEN",
-        "total": 22,
+        "total": 25,
         "grupo": "excepcion"
       },
       {
-        "tipo": "DAF",
-        "total": 16,
-        "grupo": "otro"
+        "tipo": "PEIN",
+        "total": 11,
+        "grupo": "excepcion"
       },
       {
         "tipo": "SO",
-        "total": 5,
+        "total": 6,
         "grupo": "otro"
       },
       {
-        "tipo": "PEIN",
-        "total": 5,
+        "tipo": "PEJU",
+        "total": 6,
         "grupo": "excepcion"
       },
       {
@@ -595,13 +600,18 @@
         "p75": 52
       },
       {
-        "tipo": "PEPS",
-        "total": 2,
+        "tipo": "PEAC",
+        "total": 4,
         "grupo": "excepcion"
       },
       {
-        "tipo": "PEJU",
-        "total": 2,
+        "tipo": "PERC",
+        "total": 4,
+        "grupo": "excepcion"
+      },
+      {
+        "tipo": "PEPS",
+        "total": 3,
         "grupo": "excepcion"
       },
       {
@@ -610,6 +620,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 373
+    "pe_total": 895
   }
 }
