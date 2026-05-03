@@ -14,7 +14,8 @@ jobs:
           RESPONSE=$(curl -s -o /tmp/response.json -w "%{http_code}" \
             -X POST https://compita.umbusk.com/api/perfil \
             -H "Content-Type: application/json" \
-            -d "{\"action\":\"perfil_licitador_alertas\",\"secret\":\"${{ secrets.CRON_SECRET }}\"}")
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -d "{\"action\":\"perfil_licitador_alertas\"}")
 
           echo "HTTP Status: $RESPONSE"
           cat /tmp/response.json
