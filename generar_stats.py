@@ -160,10 +160,9 @@ def generar_estadisticas():
         print(f"Tipos de procedimiento encontrados: {len(tipos)}")
         print(f"PE* total: {pe_total}")
 
-        total_todos_tipos = sum(t['total'] for t in tipos)
-	competitividad = {
-	    'actualizado': datetime.now().strftime('%Y-%m-%d'),
-            'total':       total_todos_tipos,
+        competitividad = {
+            'actualizado': datetime.now().strftime('%Y-%m-%d'),
+            'total':       total_licitaciones,
             'tipos':       tipos,
             'pe_total':    pe_total,
         }
