@@ -3006,12 +3006,11 @@ function mostrarDictamen(modal, dictamen, referencia, analisisDisponible, licita
     </div>`;
   }).join('');
 
-  // FIX: botón llama a crearPlanOferta con datos reales
-  const dictamenJson = encodeURIComponent(JSON.stringify(dictamen));
-  const licitacionJson = encodeURIComponent(JSON.stringify(licitacion || {}));
+  // Guardar datos en window para evitar problemas de encoding en onclick
+  window._organizadorData = { referencia, licitacion: licitacion || {}, dictamen };
 
   const botonAccion = v !== 'NO_GO'
-    ? `<button onclick="crearPlanOferta('${referencia}', decodeURIComponent('${licitacionJson}'), decodeURIComponent('${dictamenJson}'))"
+    ? `<button onclick="crearPlanOferta()"
         style="padding:8px 18px;background:${c.circulo};color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
         Crear plan de oferta →
       </button>`
@@ -3062,16 +3061,13 @@ function mostrarDictamen(modal, dictamen, referencia, analisisDisponible, licita
 // ORGANIZADOR DE LA OFERTA — Opción B
 // ============================================
 
-async function crearPlanOferta(referencia, licitacionStr, dictamenStr) {
+async function crearPlanOferta() {
   const modal = document.getElementById('coach-modal');
   if (!modal) return;
 
-  let licitacion, dictamen;
-  try {
-    licitacion = typeof licitacionStr === 'string' ? JSON.parse(licitacionStr) : licitacionStr;
-    dictamen   = typeof dictamenStr   === 'string' ? JSON.parse(dictamenStr)   : dictamenStr;
-  } catch(e) {
-    console.error('Error parseando datos:', e);
+  const { referencia, licitacion, dictamen } = window._organizadorData || {};
+  if (!referencia || !dictamen) {
+    console.error('Faltan datos del organizador');
     return;
   }
 
