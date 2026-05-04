@@ -17,10 +17,11 @@ export default async function handler(req, res) {
 
   // Bypass JWT para el cron de alertas
   if (req.method === 'POST') {
-    const { action, secret } = req.body || {};
+    const { action } = req.body || {};
     if (action === 'perfil_licitador_alertas') {
-      if (secret !== process.env.CRON_SECRET) {
-        return res.status(401).json({ error: 'No autorizado' });
+      const cronHeader = req.headers.authorization;
+      if (!cronHeader || cronHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return res.status(401).json({ error: 'No autorizado' });
       }
       return handleEnviarAlertas(req, res);
     }
