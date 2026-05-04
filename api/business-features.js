@@ -285,11 +285,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, error: 'referencia y licitacion requeridos' });
       }
 
-      // Verificar cupo de coach (columna coach_usados en uso_mensual)
-      // El limite Enterprise es ilimitado — registramos para métricas
       const coachUsados = uso.coach_usados || 0;
 
-      // Leer perfil licitador de la empresa
       const documentos = await sql`
         SELECT codigo, nombre, es_permanente, fecha_vencimiento
         FROM perfil_licitador
@@ -297,7 +294,6 @@ export default async function handler(req, res) {
         ORDER BY grupo ASC, orden ASC
       `;
 
-      // Leer análisis de pliego previo si existe
       const analisisPrevio = await sql`
         SELECT analisis_json FROM analisis_pliegos
         WHERE empresa_id = ${empresa_id} AND referencia = ${referencia}
@@ -307,11 +303,10 @@ export default async function handler(req, res) {
         ? JSON.parse(analisisPrevio[0].analisis_json)
         : null;
 
-      // Clasificar documentos del perfil
       const hoy = new Date(); hoy.setHours(0,0,0,0);
       const permanentes   = [];
       const vigentes      = [];
-      const porVencer     = []; // ≤30 días
+      const porVencer     = [];
       const sinRegistrar  = [];
       const vencidos      = [];
 
@@ -325,7 +320,6 @@ export default async function handler(req, res) {
         else                vigentes.push(doc.nombre);
       }
 
-      // Construir sección de análisis del pliego para el prompt
       const seccionPliego = analisisPliego ? `
 ## ANÁLISIS DEL PLIEGO (ya realizado)
 - Viabilidad: ${analisisPliego.viabilidad?.veredicto || 'No disponible'}
@@ -380,7 +374,6 @@ ${seccionPliego}
   ]
 }`;
 
-      // Llamar a Claude
       const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
       const message = await anthropic.messages.create({
         model: 'claude-sonnet-4-20250514',
@@ -388,7 +381,6 @@ ${seccionPliego}
         messages: [{ role: 'user', content: prompt }]
       });
 
-      // Parsear respuesta JSON
       let dictamen;
       try {
         const texto = message.content[0].text.trim();
@@ -401,7 +393,6 @@ ${seccionPliego}
         });
       }
 
-      // Registrar uso del coach para métricas
       await sql`
         UPDATE uso_mensual
         SET coach_usados = COALESCE(coach_usados, 0) + 1,
@@ -421,8 +412,10 @@ ${seccionPliego}
     // ACCIÓN: RE-ANALIZAR OPORTUNIDADES
     // ====================================================
     if (accion === 're-analizar') {
+      // FIX: Agregar usa_unspsc al SELECT del perfil
       const perfilEmpresa = await sql`
-        SELECT palabras_clave, exclusiones, monto_minimo_alta, regiones_interes, familias_unspsc
+        SELECT palabras_clave, exclusiones, monto_minimo_alta, regiones_interes,
+               familias_unspsc, usa_unspsc
         FROM empresas WHERE id = ${empresa_id} LIMIT 1
       `;
       if (perfilEmpresa.length === 0) {
@@ -509,7 +502,8 @@ ${seccionPliego}
         }
         if (esDescartada) { contadorDescartadas++; continue; }
 
-        if (familiasCodigos.length > 0 && codigoUNSPSC && codigoUNSPSC !== '99-99') {
+        // FIX: Solo aplicar filtro UNSPSC si usa_unspsc = true
+        if (perfil.usa_unspsc && familiasCodigos.length > 0 && codigoUNSPSC && codigoUNSPSC !== '99-99') {
           if (!familiasCodigos.includes(codigoUNSPSC)) {
             contadorDescartadas++;
             continue;
