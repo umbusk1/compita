@@ -2872,7 +2872,73 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
   const modal = document.getElementById('coach-modal');
   if (!modal) return;
 
-  // Mostrar spinner mientras Claude procesa
+  const empresaId = datosEmpresa?.id;
+
+  // Verificar si hay análisis previo del pliego
+  const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
+  const tieneAnalisis = !!analisisGuardados[referencia];
+
+  // Si no hay análisis, avisar y ejecutarlo primero
+  if (!tieneAnalisis) {
+    modal.querySelector('.bg-white').innerHTML = `
+      <div class="px-6 py-10 text-center">
+        <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
+        <p class="text-gray-700 text-sm font-semibold mb-2">Analizando el pliego...</p>
+        <p class="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
+          Como no se ha analizado el pliego, voy a hacerlo y esto tomará 2-3 minutos
+          antes de proceder con mi recomendación como Coach.
+        </p>
+      </div>
+    `;
+
+    try {
+      const analisisResponse = await fetch(`${RAILWAY_API}/analizar-pliego`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          referencia,
+          titulo: descripcion,
+          descripcion,
+          monto,
+          empresa_id: empresaId,
+          empresa_descripcion: datosEmpresa.descripcion || '',
+          empresa_website: datosEmpresa.website || '',
+          fecha_presentacion: ''
+        }),
+        signal: AbortSignal.timeout(180000)
+      });
+
+      const resultado = await analisisResponse.json();
+
+      if (resultado.success && resultado.analisis) {
+        // Guardar en localStorage
+        analisisGuardados[referencia] = resultado.analisis;
+        localStorage.setItem('compita_analisis', JSON.stringify(analisisGuardados));
+
+        // Guardar en Neon para que el Coach lo lea
+        try {
+          await fetch(`${API_BASE}/api/resultados`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('compita_token')}`
+            },
+            body: JSON.stringify({
+              action: 'guardar_analisis_pliego',
+              referencia,
+              analisis: resultado.analisis
+            })
+          });
+        } catch (e) {
+          console.warn('No se pudo guardar analisis en BD:', e);
+        }
+      }
+    } catch (e) {
+      console.warn('No se pudo analizar el pliego, el Coach procederá sin él:', e);
+    }
+  }
+
+  // Mostrar spinner del Coach
   modal.querySelector('.bg-white').innerHTML = `
     <div class="px-6 py-12 text-center">
       <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
