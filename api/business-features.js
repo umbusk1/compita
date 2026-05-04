@@ -360,7 +360,7 @@ ${seccionPliego}
 - El fundamento debe ser directo, en segunda persona, máximo 3 oraciones
 - Los badges son etiquetas cortas (3-4 palabras máximo)
 - Las condiciones deben ser acciones concretas o cosas a verificar, no generalidades
-- Si no hay análisis del pliego, incluye como condición que se recomienda analizarlo
+- Si no hay análisis del pliego, incluye como condición este texto exacto: "Analizar en más detalle el pliego de condiciones para evaluar requisitos técnicos específicos"
 - Responde ÚNICAMENTE con el JSON, sin texto adicional
 
 ## FORMATO DE RESPUESTA (JSON estricto):
@@ -588,6 +588,124 @@ ${seccionPliego}
         media: contadorMedia,
         descartadas: contadorDescartadas,
         excluidas_pepu_peex: contadorPepuPeex
+      });
+    }
+
+    // ====================================================
+    // ACCIÓN: ORGANIZADOR DE LA OFERTA
+    // Genera plan de 5 sprints para pegar en KanbanBonsai
+    // ====================================================
+    if (accion === 'organizador-oferta') {
+
+      if (plan !== 'enterprise') {
+        return res.status(403).json({
+          success: false,
+          error: 'El Organizador de la Oferta está disponible solo en el Plan Enterprise',
+          upgrade_required: true
+        });
+      }
+
+      const { licitacion, dictamen } = req.body;
+      if (!referencia || !licitacion || !dictamen) {
+        return res.status(400).json({ success: false, error: 'referencia, licitacion y dictamen requeridos' });
+      }
+
+      // Leer descripción de la empresa para contexto
+      const empresaInfo = await sql`
+        SELECT nombre, descripcion FROM empresas WHERE id = ${empresa_id} LIMIT 1
+      `;
+      const empresaDesc = empresaInfo.length > 0 ? empresaInfo[0].descripcion : '';
+
+      // Leer análisis del pliego si existe
+      const analisisPrevio = await sql`
+        SELECT analisis_json FROM analisis_pliegos
+        WHERE empresa_id = ${empresa_id} AND referencia = ${referencia}
+        LIMIT 1
+      `;
+      const analisisPliego = analisisPrevio.length > 0
+        ? JSON.parse(analisisPrevio[0].analisis_json)
+        : null;
+
+      const seccionPliego = analisisPliego ? `
+REQUISITOS DEL PLIEGO:
+${analisisPliego.requisitos?.slice(0, 5).map(r => `- ${r}`).join('\n') || '- No disponible'}
+Garantías exigidas: ${analisisPliego.viabilidad?.garantias || 'No especificado'}
+Experiencia previa: ${analisisPliego.viabilidad?.experiencia_previa || 'No especificado'}
+Certificaciones: ${analisisPliego.certificaciones_iso?.exige_iso === 'SI' ? analisisPliego.certificaciones_iso.listado?.join(', ') : 'Ninguna'}
+` : 'ANÁLISIS DEL PLIEGO: No disponible — usar descripción de la licitación como referencia.';
+
+      const condicionesTexto = (dictamen.condiciones || [])
+        .map(c => `- ${c.urgente ? '[URGENTE] ' : ''}${c.texto}`)
+        .join('\n');
+
+      const prompt = `Eres el Organizador de Oferta de Compita. Genera un plan de trabajo estructurado para que una empresa licitadora participe en una licitación pública específica de República Dominicana.
+
+El output será pegado directamente en KanbanBonsai para generar un Bonsai con 5 sprints. Cada hoja (tarea) debe ser concreta, accionable y específica para ESTA licitación — no genérica.
+
+LICITACIÓN:
+- Referencia: ${referencia}
+- Descripción: ${licitacion.descripcion}
+- Entidad: ${licitacion.entidad}
+- Tipo de proceso: ${licitacion.tipo}
+- Monto estimado: RD${Number(licitacion.monto || 0).toLocaleString()}
+- Días disponibles: ${licitacion.diasDisponibles}
+- Fecha límite: ${licitacion.fecha_presentacion || 'No especificada'}
+
+EMPRESA LICITADORA:
+${empresaDesc}
+
+VEREDICTO DEL COACH: ${dictamen.veredicto}
+CONDICIONES A ATENDER:
+${condicionesTexto}
+
+${seccionPliego}
+
+Responde ÚNICAMENTE con este formato, sin texto adicional ni explicaciones:
+
+PROYECTO: [nombre del Bonsai, máximo 8 palabras, específico para esta licitación]
+DESCRIPCIÓN: [2 líneas sobre el objetivo de este plan de oferta]
+
+SPRINT 1 — Análisis y Evaluación
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+
+SPRINT 2 — Documentación Legal
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+
+SPRINT 3 — Oferta Técnica
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+
+SPRINT 4 — Oferta Económica
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+
+SPRINT 5 — Entrega y Seguimiento
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]
+- [tarea específica para esta licitación]`;
+
+      const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      const message = await anthropic.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1200,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      const generatedPrompt = message.content[0].text.trim();
+
+      return res.status(200).json({
+        success: true,
+        prompt: generatedPrompt
       });
     }
 
