@@ -3079,19 +3079,18 @@ async function crearPlanOferta() {
     </div>
   `;
 
-  try {
-    const response = await fetch(`${API_BASE}/api/business-features`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        empresa_id: datosEmpresa?.id,
-        accion: 'organizador-oferta',
-        referencia,
-        licitacion,
-        dictamen
-      }),
-      signal: AbortSignal.timeout(60000)
-    });
+	try {
+	  const response = await fetch(`${RAILWAY_API}/organizador-oferta`, {
+		  method: 'POST',
+		  headers: { 'Content-Type': 'application/json' },
+		  body: JSON.stringify({
+			empresa_id: datosEmpresa?.id,
+			referencia,
+			licitacion,
+			dictamen
+		  }),
+		  signal: AbortSignal.timeout(90000)
+	});
 
     const data = await response.json();
     if (!data.success) throw new Error(data.error || 'Error generando el plan');
