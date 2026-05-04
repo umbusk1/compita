@@ -1,5 +1,6 @@
 // api/business-features.js - Gestión de recursos Business (ZIP y Análisis IA)
 import { neon } from '@neondatabase/serverless';
+import Anthropic from '@anthropic-ai/sdk';
 
 function normalizar(t) {
   return (t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');
@@ -17,7 +18,6 @@ function construirRegex(palabra) {
   return new RegExp('\\b' + raizEscapada + 's?\\b', 'i');
 }
 
-// Busca señales geográficas primero en unidad_compras, luego en descripcion
 function obtenerRegionLicitacion(unidad_compras, descripcion) {
   const mapeo = {
     'Cibao Norte':    ['santiago', 'puerto plata', 'espaillat', 'valverde', 'moca',
@@ -33,25 +33,19 @@ function obtenerRegionLicitacion(unidad_compras, descripcion) {
     'Valdesia':       ['san cristobal', 'peravia', 'azua', 'ocoa', 'bani'],
     'Yuma':           ['la romana', 'la altagracia', 'higuey'],
   };
-
-  // Buscar en unidad_compras primero
   const textoUnidad = normalizar((unidad_compras || '').toLowerCase());
   for (const [region, palabras] of Object.entries(mapeo)) {
     for (const palabra of palabras) {
       if (textoUnidad.includes(palabra)) return region;
     }
   }
-
-  // Si no hay señal en unidad_compras, buscar en descripcion
   const textoDesc = normalizar((descripcion || '').toLowerCase());
   for (const [region, palabras] of Object.entries(mapeo)) {
     for (const palabra of palabras) {
-      // Usar word boundary para evitar falsos positivos en la descripción
       const regex = new RegExp('\\b' + palabra.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
       if (regex.test(textoDesc)) return region;
     }
   }
-
   return 'Nacional';
 }
 
@@ -179,7 +173,7 @@ export default async function handler(req, res) {
     if (!['business', 'enterprise', 'free_trial'].includes(plan)) {
       return res.status(403).json({
         success: false,
-        error: 'Esta funcionalidad está disponible permanentemente solo para planes Business y Enterprise',
+        error: 'Esta funcionalidad esta disponible solo para planes Business y Enterprise',
         upgrade_required: true
       });
     }
@@ -241,7 +235,7 @@ export default async function handler(req, res) {
     if (tipo === 'zip') {
       const limite_total = limite_zips_mes + (uso.zip_adicionales || 0);
       if (uso.descargas_zip_usadas >= limite_total) {
-        return res.status(403).json({ success: false, error: 'Límite alcanzado', cupos_disponibles: 0 });
+        return res.status(403).json({ success: false, error: 'Limite alcanzado', cupos_disponibles: 0 });
       }
       await sql`
         UPDATE uso_mensual SET descargas_zip_usadas = descargas_zip_usadas + 1,
@@ -259,15 +253,167 @@ export default async function handler(req, res) {
     if (tipo === 'analisis') {
       const limite_total = limite_analisis_mes + (uso.analisis_adicionales || 0);
       if (uso.analisis_ia_usados >= limite_total) {
-        return res.status(403).json({ success: false, error: 'Límite alcanzado', cupos_disponibles: 0 });
+        return res.status(403).json({ success: false, error: 'Limite alcanzado', cupos_disponibles: 0 });
       }
       await sql`
         UPDATE uso_mensual SET analisis_ia_usados = analisis_ia_usados + 1,
         updated_at = CURRENT_TIMESTAMP WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
       `;
       return res.status(200).json({
-        success: true, message: 'Análisis IA registrado',
+        success: true, message: 'Analisis IA registrado',
         cupos_restantes: limite_total - uso.analisis_ia_usados - 1
+      });
+    }
+
+    // ====================================================
+    // ACCIÓN: COACH LICITADOR
+    // Solo Enterprise. Cupo propio (coach_usados en uso_mensual).
+    // ====================================================
+    if (accion === 'coach-licitador') {
+
+      // Solo Enterprise
+      if (plan !== 'enterprise') {
+        return res.status(403).json({
+          success: false,
+          error: 'El Coach Licitador esta disponible solo en el Plan Enterprise',
+          upgrade_required: true
+        });
+      }
+
+      const { licitacion } = req.body;
+      if (!referencia || !licitacion) {
+        return res.status(400).json({ success: false, error: 'referencia y licitacion requeridos' });
+      }
+
+      // Verificar cupo de coach (columna coach_usados en uso_mensual)
+      // El limite Enterprise es ilimitado — registramos para métricas
+      const coachUsados = uso.coach_usados || 0;
+
+      // Leer perfil licitador de la empresa
+      const documentos = await sql`
+        SELECT codigo, nombre, es_permanente, fecha_vencimiento
+        FROM perfil_licitador
+        WHERE empresa_id = ${empresa_id}
+        ORDER BY grupo ASC, orden ASC
+      `;
+
+      // Leer análisis de pliego previo si existe
+      const analisisPrevio = await sql`
+        SELECT analisis_json FROM analisis_pliegos
+        WHERE empresa_id = ${empresa_id} AND referencia = ${referencia}
+        LIMIT 1
+      `;
+      const analisisPliego = analisisPrevio.length > 0
+        ? JSON.parse(analisisPrevio[0].analisis_json)
+        : null;
+
+      // Clasificar documentos del perfil
+      const hoy = new Date(); hoy.setHours(0,0,0,0);
+      const permanentes   = [];
+      const vigentes      = [];
+      const porVencer     = []; // ≤30 días
+      const sinRegistrar  = [];
+      const vencidos      = [];
+
+      for (const doc of documentos) {
+        if (doc.es_permanente) { permanentes.push(doc.nombre); continue; }
+        if (!doc.fecha_vencimiento) { sinRegistrar.push(doc.nombre); continue; }
+        const venc = new Date(doc.fecha_vencimiento);
+        const diff = Math.round((venc - hoy) / 86400000);
+        if (diff < 0)       vencidos.push(`${doc.nombre} (vencio hace ${Math.abs(diff)} dias)`);
+        else if (diff <= 30) porVencer.push(`${doc.nombre} (vence en ${diff} dias)`);
+        else                vigentes.push(doc.nombre);
+      }
+
+      // Construir sección de análisis del pliego para el prompt
+      const seccionPliego = analisisPliego ? `
+## ANÁLISIS DEL PLIEGO (ya realizado)
+- Viabilidad: ${analisisPliego.viabilidad?.veredicto || 'No disponible'}
+- Garantias: ${analisisPliego.viabilidad?.garantias || 'No especificado'}
+- Experiencia previa requerida: ${analisisPliego.viabilidad?.experiencia_previa || 'No especificado'}
+- Certificaciones exigidas: ${analisisPliego.certificaciones_iso?.exige_iso === 'SI' ? analisisPliego.certificaciones_iso.listado?.join(', ') : 'Ninguna'}
+- Requisitos clave: ${analisisPliego.requisitos?.slice(0,3).join(' | ') || 'No disponible'}
+- Riesgos identificados: ${analisisPliego.riesgos?.slice(0,2).join(' | ') || 'Ninguno'}
+` : `
+## ANÁLISIS DEL PLIEGO
+No se ha analizado el pliego de esta licitación. Basa tu evaluación en los datos disponibles y señalalo en las condiciones.
+`;
+
+      const prompt = `Eres el Coach Licitador de Compita, un asistente experto en licitaciones públicas de República Dominicana. Tu rol es evaluar si una empresa debe participar en una licitación específica, basándote en su perfil documental y las características de la licitación.
+
+## PERFIL LICITADOR DE LA EMPRESA
+- Documentos permanentes (${permanentes.length}): ${permanentes.join(', ') || 'Ninguno'}
+- Documentos vigentes (${vigentes.length}): ${vigentes.join(', ') || 'Ninguno'}
+- Por vencer en ≤30 dias (${porVencer.length}): ${porVencer.join(', ') || 'Ninguno'}
+- Sin registrar (${sinRegistrar.length}): ${sinRegistrar.join(', ') || 'Ninguno'}
+- Vencidos (${vencidos.length}): ${vencidos.join(', ') || 'Ninguno'}
+${seccionPliego}
+## LICITACIÓN
+- Referencia: ${licitacion.referencia}
+- Tipo: ${licitacion.tipo}
+- Descripción: ${licitacion.descripcion}
+- Entidad: ${licitacion.entidad}
+- Monto estimado: RD$${Number(licitacion.monto || 0).toLocaleString('es-DO')}
+- Días disponibles: ${licitacion.dias_disponibles}
+- Mediana histórica para ${licitacion.tipo}: ${licitacion.mediana_dias || 'desconocida'} dias
+
+## REGLAS DE VEREDICTO
+- NO_GO si: hay documentos vencidos Y dias_disponibles < 10, O documentos criticos sin registrar (RPE, impuestos) con tiempo insuficiente para obtenerlos antes del cierre
+- GO_RIESGO si: hay documentos por vencer O sin registrar no criticos, O dias_disponibles < mediana_historica pero > 0
+- GO si: perfil completo o casi completo Y dias_disponibles >= mediana_historica
+
+## INSTRUCCIONES
+- El fundamento debe ser directo, en segunda persona, máximo 3 oraciones
+- Los badges son etiquetas cortas (3-4 palabras máximo)
+- Las condiciones deben ser acciones concretas o cosas a verificar, no generalidades
+- Si no hay análisis del pliego, incluye como condición que se recomienda analizarlo
+- Responde ÚNICAMENTE con el JSON, sin texto adicional
+
+## FORMATO DE RESPUESTA (JSON estricto):
+{
+  "veredicto": "GO" | "GO_RIESGO" | "NO_GO",
+  "fundamento": "texto directo en 2-3 oraciones",
+  "badges": ["etiqueta 1", "etiqueta 2", "etiqueta 3"],
+  "condiciones": [
+    {"urgente": true, "texto": "accion concreta a tomar"},
+    {"urgente": false, "texto": "cosa a verificar o considerar"}
+  ]
+}`;
+
+      // Llamar a Claude
+      const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      const message = await anthropic.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      // Parsear respuesta JSON
+      let dictamen;
+      try {
+        const texto = message.content[0].text.trim();
+        const jsonLimpio = texto.replace(/```json|```/g, '').trim();
+        dictamen = JSON.parse(jsonLimpio);
+      } catch {
+        return res.status(500).json({
+          success: false,
+          error: 'Error al parsear respuesta del Coach'
+        });
+      }
+
+      // Registrar uso del coach para métricas
+      await sql`
+        UPDATE uso_mensual
+        SET coach_usados = COALESCE(coach_usados, 0) + 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+      `;
+
+      return res.status(200).json({
+        success: true,
+        dictamen,
+        analisis_pliego_disponible: analisisPliego !== null,
+        coach_usados: coachUsados + 1
       });
     }
 
@@ -292,7 +438,6 @@ export default async function handler(req, res) {
         ? perfil.familias_unspsc
         : [];
 
-      // Parsear regiones
       let regionesRaw = perfil.regiones_interes;
       let regionesArr = [];
       if (Array.isArray(regionesRaw)) {
@@ -310,7 +455,6 @@ export default async function handler(req, res) {
         r => r !== 'Nacional' && r !== 'Nacional (todo el país)'
       );
 
-      // Memorizar qué licitaciones descartó el usuario
       const descartadasRows = await sql`
         SELECT licitacion_id FROM resultados
         WHERE empresa_id = ${empresa_id}
@@ -335,7 +479,6 @@ export default async function handler(req, res) {
         });
       }
 
-      // Solo borrar resultados NO descartados por el usuario
       await sql`
         DELETE FROM resultados
         WHERE empresa_id = ${empresa_id}
@@ -346,14 +489,10 @@ export default async function handler(req, res) {
           contadorDescartadas = 0, contadorPepuPeex = 0;
 
       for (const lic of licitacionesAbiertas) {
-
-        // Excluir PEPU y PEEX
         if (/-(PEPU|PEEX)-/i.test(lic.referencia || '')) {
           contadorPepuPeex++;
           continue;
         }
-
-        // Saltar las que el usuario descartó
         if (idsDescartados.has(lic.licitacion_id)) {
           contadorDescartadas++;
           continue;
@@ -363,7 +502,6 @@ export default async function handler(req, res) {
         const monto = parseFloat(lic.monto_estimado) || 0;
         const codigoUNSPSC = lic.codigo_unspsc || '';
 
-        // A. Verificar exclusiones
         let esDescartada = false;
         for (const excl of exclusiones) {
           const regex = construirRegex(excl.toLowerCase());
@@ -371,8 +509,6 @@ export default async function handler(req, res) {
         }
         if (esDescartada) { contadorDescartadas++; continue; }
 
-        // B. Pre-filtro UNSPSC: si la licitación tiene código conocido
-        //    y no coincide con las familias de la empresa, descartarla
         if (familiasCodigos.length > 0 && codigoUNSPSC && codigoUNSPSC !== '99-99') {
           if (!familiasCodigos.includes(codigoUNSPSC)) {
             contadorDescartadas++;
@@ -380,7 +516,6 @@ export default async function handler(req, res) {
           }
         }
 
-        // B2. Verificar coincidencia por palabras clave
         let coincideTema = false, razon = '';
         for (const palabra of palabrasClave) {
           const regex = construirRegex(palabra.toLowerCase());
@@ -392,52 +527,45 @@ export default async function handler(req, res) {
         }
         if (!coincideTema) continue;
 
-        // C. Criterio de MONTO
         const cumpleMonto = monto >= montoMinimoAlta;
 
-        // D. Criterio de REGIÓN
-        // - Sin filtro de región, o con las 10 regiones seleccionadas → cumple siempre
-        // - Con regiones parciales y licitación Nacional → MEDIA (región incierta)
-        // - Con regiones parciales y licitación regional → verifica coincidencia
         let cumpleRegion = true, regionLicitacion = 'Nacional';
         const todasLasRegiones = regionesEmpresa.length === 0 || regionesEmpresa.length >= 10;
         if (!todasLasRegiones) {
           regionLicitacion = obtenerRegionLicitacion(lic.unidad_compras, lic.descripcion);
           if (regionLicitacion === 'Nacional') {
-            cumpleRegion = false; // región incierta → no puede ser ALTA
+            cumpleRegion = false;
           } else {
             cumpleRegion = regionesEmpresa.includes(regionLicitacion);
           }
         }
 
-        // E. Clasificar relevancia
         let relevancia;
         if (cumpleMonto && cumpleRegion) {
           relevancia = 'ALTA';
           contadorAlta++;
           const montoFmt = `RD$${monto.toLocaleString()}`;
           razon += regionesEmpresa.length > 0
-            ? `. Monto ${montoFmt} supera mínimo configurado. Región ${regionLicitacion} dentro del área de operación.`
-            : `. Monto ${montoFmt} supera mínimo configurado.`;
+            ? `. Monto ${montoFmt} supera minimo configurado. Region ${regionLicitacion} dentro del area de operacion.`
+            : `. Monto ${montoFmt} supera minimo configurado.`;
         } else {
           relevancia = 'MEDIA';
           contadorMedia++;
           if (!cumpleMonto && !cumpleRegion) {
             const motivo = regionLicitacion === 'Nacional'
-              ? 'Región no determinada (organismo nacional)'
-              : `Región ${regionLicitacion} fuera del área configurada`;
-            razon = `${motivo} y monto por debajo del mínimo. ${razon}`;
+              ? 'Region no determinada (organismo nacional)'
+              : `Region ${regionLicitacion} fuera del area configurada`;
+            razon = `${motivo} y monto por debajo del minimo. ${razon}`;
           } else if (!cumpleMonto) {
-            razon += `. Monto RD$${monto.toLocaleString()} por debajo del mínimo configurado.`;
+            razon += `. Monto RD$${monto.toLocaleString()} por debajo del minimo configurado.`;
           } else {
             const motivo = regionLicitacion === 'Nacional'
-              ? 'Región no determinada (organismo nacional)'
-              : `Región ${regionLicitacion} fuera del área configurada`;
+              ? 'Region no determinada (organismo nacional)'
+              : `Region ${regionLicitacion} fuera del area configurada`;
             razon = `${motivo}. ${razon}`;
           }
         }
 
-        // F. INSERT
         const queVal   = (lic.descripcion    || '').substring(0, 99);
         const quienVal = (lic.unidad_compras  || '').substring(0, 99);
         const refVal   = (lic.referencia      || '').substring(0, 254);
@@ -460,7 +588,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         success: true,
-        message: 'Re-análisis completado',
+        message: 'Re-analisis completado',
         analizadas: licitacionesAbiertas.length,
         alta: contadorAlta,
         media: contadorMedia,
@@ -469,7 +597,7 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(400).json({ success: false, error: 'Parámetros inválidos' });
+    return res.status(400).json({ success: false, error: 'Parametros invalidos' });
 
   } catch (error) {
     console.error('Error en business-features:', error);
@@ -479,4 +607,4 @@ export default async function handler(req, res) {
   }
 }
 
-export const config = { maxDuration: 30 };
+export const config = { maxDuration: 60 };
