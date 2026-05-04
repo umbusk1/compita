@@ -325,7 +325,7 @@ async function handleEnviarAlertas(req, res) {
         u.email   AS admin_email
       FROM perfil_licitador pl
       JOIN empresas e ON e.id = pl.empresa_id
-      JOIN usuarios u ON u.empresa_id = e.id AND u.rol = 'admin'
+      JOIN usuarios u ON u.empresa_id = e.id AND u.rol IN ('admin', 'owner')
       WHERE e.plan           = 'enterprise'
         AND e.activo         = TRUE
         AND pl.es_permanente = FALSE
