@@ -2806,7 +2806,6 @@ function aplicarBusquedaHistorial() {
 // COACH LICITADOR — modal y lógica
 // ============================================
 
-// Medianas históricas por tipo (datos reales de la BD)
 const MEDIANAS_TIPO = {
   LPN: 44, LPI: 36, CP: 8, SI: 8, CM: 4, CD: 1
 };
@@ -2825,12 +2824,10 @@ function extraerTipo(referencia) {
 }
 
 async function abrirCoach(referencia, descripcion, entidad, monto, fecha_presentacion, tipo) {
-  // Calcular datos de la licitación
   const tipoReal = tipo || extraerTipo(referencia);
   const diasDisponibles = calcularDiasDisponibles(fecha_presentacion);
   const medianaHistorica = MEDIANAS_TIPO[tipoReal] || null;
 
-  // Crear modal con pantalla de confirmación
   const modal = document.createElement('div');
   modal.id = 'coach-modal';
   modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
@@ -2856,7 +2853,7 @@ async function abrirCoach(referencia, descripcion, entidad, monto, fecha_present
         <div class="flex gap-3 justify-end">
           <button onclick="document.getElementById('coach-modal').remove()"
             class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancelar</button>
-          <button onclick="ejecutarCoach('${referencia}', '${escapeHtml(descripcion)}', '${escapeHtml(entidad)}', ${monto}, '${tipoReal}', ${diasDisponibles}, ${medianaHistorica || 'null'})"
+          <button onclick="ejecutarCoach('${referencia}', '${escapeHtml(descripcion)}', '${escapeHtml(entidad)}', ${monto}, '${fecha_presentacion}', '${tipoReal}', ${diasDisponibles}, ${medianaHistorica || 'null'})"
             class="px-5 py-2 bg-violet-600 text-white text-sm font-semibold rounded-lg hover:bg-violet-700 transition">
             Consultar al Coach →
           </button>
@@ -2868,17 +2865,16 @@ async function abrirCoach(referencia, descripcion, entidad, monto, fecha_present
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
-async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, diasDisponibles, medianaHistorica) {
+// FIX: fecha_presentacion agregada a la firma
+async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_presentacion, tipo, diasDisponibles, medianaHistorica) {
   const modal = document.getElementById('coach-modal');
   if (!modal) return;
 
   const empresaId = datosEmpresa?.id;
 
-  // Verificar si hay análisis previo del pliego
   const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
   const tieneAnalisis = !!analisisGuardados[referencia];
 
-  // Si no hay análisis, avisar y ejecutarlo primero
   if (!tieneAnalisis) {
     modal.querySelector('.bg-white').innerHTML = `
       <div class="px-6 py-10 text-center">
@@ -2896,14 +2892,11 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          referencia,
-          titulo: descripcion,
-          descripcion,
-          monto,
+          referencia, titulo: descripcion, descripcion, monto,
           empresa_id: empresaId,
           empresa_descripcion: datosEmpresa.descripcion || '',
           empresa_website: datosEmpresa.website || '',
-          fecha_presentacion: ''
+          fecha_presentacion
         }),
         signal: AbortSignal.timeout(180000)
       });
@@ -2911,11 +2904,8 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
       const resultado = await analisisResponse.json();
 
       if (resultado.success && resultado.analisis) {
-        // Guardar en localStorage
         analisisGuardados[referencia] = resultado.analisis;
         localStorage.setItem('compita_analisis', JSON.stringify(analisisGuardados));
-
-        // Guardar en Neon para que el Coach lo lea
         try {
           await fetch(`${API_BASE}/api/resultados`, {
             method: 'POST',
@@ -2938,7 +2928,6 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
     }
   }
 
-  // Mostrar spinner del Coach
   modal.querySelector('.bg-white').innerHTML = `
     <div class="px-6 py-12 text-center">
       <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
@@ -2948,9 +2937,6 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
   `;
 
   try {
-    const token = localStorage.getItem('compita_token');
-    const empresaId = datosEmpresa?.id;
-
     const response = await fetch(`${API_BASE}/api/business-features`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -2961,7 +2947,8 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
         licitacion: {
           referencia, descripcion, entidad, monto, tipo,
           dias_disponibles: diasDisponibles,
-          mediana_dias: medianaHistorica
+          mediana_dias: medianaHistorica,
+          fecha_presentacion  // FIX: se pasa al Coach
         }
       }),
       signal: AbortSignal.timeout(60000)
@@ -2970,7 +2957,10 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
     const data = await response.json();
     if (!data.success) throw new Error(data.error || 'Error del Coach');
 
-    mostrarDictamen(modal, data.dictamen, referencia, data.analisis_pliego_disponible);
+    // FIX: se pasa objeto licitacion completo a mostrarDictamen
+    mostrarDictamen(modal, data.dictamen, referencia, data.analisis_pliego_disponible, {
+      descripcion, entidad, monto, tipo, diasDisponibles, fecha_presentacion
+    });
 
   } catch (error) {
     modal.querySelector('.bg-white').innerHTML = `
@@ -2984,7 +2974,8 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, dias
   }
 }
 
-function mostrarDictamen(modal, dictamen, referencia, analisisDisponible) {
+// FIX: recibe licitacion como nuevo parámetro
+function mostrarDictamen(modal, dictamen, referencia, analisisDisponible, licitacion) {
   const colores = {
     GO:        { circulo: '#3B6D11', etiqueta: '#3B6D11', badge_bg: '#EAF3DE', badge_txt: '#3B6D11' },
     GO_RIESGO: { circulo: '#f2b56b', etiqueta: '#92400E', badge_bg: '#FEF3C7', badge_txt: '#92400E' },
@@ -2995,7 +2986,7 @@ function mostrarDictamen(modal, dictamen, referencia, analisisDisponible) {
     GO_RIESGO: '<path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
     NO_GO:     '<path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'
   };
-  const etiquetas = { GO: 'GO', GO_RIESGO: 'GO con riesgo', NO_GO: 'NO GO' };
+  const etiquetas     = { GO: 'GO', GO_RIESGO: 'GO con riesgo', NO_GO: 'NO GO' };
   const titulosCondiciones = { GO: 'Antes de comprometerte', GO_RIESGO: 'Para poder participar', NO_GO: 'Por qué no es viable ahora' };
 
   const v = dictamen.veredicto;
@@ -3015,8 +3006,12 @@ function mostrarDictamen(modal, dictamen, referencia, analisisDisponible) {
     </div>`;
   }).join('');
 
+  // FIX: botón llama a crearPlanOferta con datos reales
+  const dictamenJson = encodeURIComponent(JSON.stringify(dictamen));
+  const licitacionJson = encodeURIComponent(JSON.stringify(licitacion || {}));
+
   const botonAccion = v !== 'NO_GO'
-    ? `<button onclick="alert('Próximamente: Crear plan de oferta en KanbanBonsai')"
+    ? `<button onclick="crearPlanOferta('${referencia}', decodeURIComponent('${licitacionJson}'), decodeURIComponent('${dictamenJson}'))"
         style="padding:8px 18px;background:${c.circulo};color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
         Crear plan de oferta →
       </button>`
@@ -3028,7 +3023,6 @@ function mostrarDictamen(modal, dictamen, referencia, analisisDisponible) {
         <div>
           <p style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">Coach Licitador</p>
           <p style="font-size:14px;font-weight:600;color:#111827;margin:0;">${referencia}</p>
-
         </div>
         <button onclick="document.getElementById('coach-modal').remove()"
           style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
@@ -3058,6 +3052,115 @@ function mostrarDictamen(modal, dictamen, referencia, analisisDisponible) {
           <button onclick="document.getElementById('coach-modal').remove()"
             style="padding:7px 14px;font-size:13px;color:#6B7280;background:none;border:1px solid #E5E7EB;border-radius:8px;cursor:pointer;">Cerrar</button>
           ${botonAccion}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// ORGANIZADOR DE LA OFERTA — Opción B
+// ============================================
+
+async function crearPlanOferta(referencia, licitacionStr, dictamenStr) {
+  const modal = document.getElementById('coach-modal');
+  if (!modal) return;
+
+  let licitacion, dictamen;
+  try {
+    licitacion = typeof licitacionStr === 'string' ? JSON.parse(licitacionStr) : licitacionStr;
+    dictamen   = typeof dictamenStr   === 'string' ? JSON.parse(dictamenStr)   : dictamenStr;
+  } catch(e) {
+    console.error('Error parseando datos:', e);
+    return;
+  }
+
+  modal.querySelector('.bg-white').innerHTML = `
+    <div style="padding:3rem 2rem;text-align:center;">
+      <div style="display:inline-block;width:40px;height:40px;border:4px solid #7C3AED;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:1rem;"></div>
+      <p style="font-size:14px;font-weight:600;color:#374151;margin:0 0 6px;">Generando plan de oferta...</p>
+      <p style="font-size:12px;color:#9CA3AF;margin:0;">Claude está estructurando los 5 sprints para esta licitación</p>
+    </div>
+  `;
+
+  try {
+    const response = await fetch(`${API_BASE}/api/business-features`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        empresa_id: datosEmpresa?.id,
+        accion: 'organizador-oferta',
+        referencia,
+        licitacion,
+        dictamen
+      }),
+      signal: AbortSignal.timeout(60000)
+    });
+
+    const data = await response.json();
+    if (!data.success) throw new Error(data.error || 'Error generando el plan');
+
+    // Copiar al portapapeles automáticamente
+    try {
+      await navigator.clipboard.writeText(data.prompt);
+    } catch(e) {
+      console.warn('No se pudo copiar automáticamente:', e);
+    }
+
+    mostrarResultadoOrganizador(modal, data.prompt, referencia);
+
+  } catch (error) {
+    modal.querySelector('.bg-white').innerHTML = `
+      <div style="padding:2rem;text-align:center;">
+        <p style="color:#DC2626;font-weight:600;margin-bottom:8px;">No se pudo generar el plan</p>
+        <p style="font-size:13px;color:#6B7280;margin-bottom:1.5rem;">${error.message}</p>
+        <button onclick="document.getElementById('coach-modal').remove()"
+          style="padding:8px 16px;background:#F3F4F6;color:#374151;border:none;border-radius:8px;cursor:pointer;font-size:13px;">Cerrar</button>
+      </div>
+    `;
+  }
+}
+
+function mostrarResultadoOrganizador(modal, prompt, referencia) {
+  const preview = prompt.substring(0, 320) + (prompt.length > 320 ? '...' : '');
+
+  modal.querySelector('.bg-white').innerHTML = `
+    <div>
+      <div style="padding:1rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <p style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">Organizador de la Oferta</p>
+          <p style="font-size:14px;font-weight:600;color:#111827;margin:0;">${referencia}</p>
+        </div>
+        <button onclick="document.getElementById('coach-modal').remove()"
+          style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+      </div>
+
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:32px;height:32px;border-radius:50%;background:#EAF3DE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M5 13l4 4L19 7" stroke="#3B6D11" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <p style="font-size:13px;font-weight:600;color:#3B6D11;margin:0;">Plan copiado al portapapeles</p>
+        </div>
+        <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:12px;max-height:160px;overflow-y:auto;">
+          <p style="font-size:11px;color:#6B7280;margin:0 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Vista previa</p>
+          <pre style="font-size:11px;color:#374151;margin:0;white-space:pre-wrap;line-height:1.6;font-family:inherit;">${preview}</pre>
+        </div>
+      </div>
+
+      <div style="padding:1rem 1.5rem;">
+        <p style="font-size:12px;color:#6B7280;margin:0 0 12px;line-height:1.5;">
+          En KanbanBonsai, crea un nuevo Bonsai, pega el plan en el campo de descripción y haz clic en <strong>Generar con Claude</strong>.
+        </p>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button onclick="document.getElementById('coach-modal').remove()"
+            style="padding:7px 14px;font-size:13px;color:#6B7280;background:none;border:1px solid #E5E7EB;border-radius:8px;cursor:pointer;">Cerrar</button>
+          <button onclick="window.open('https://kanban.umbusk.com', '_blank'); document.getElementById('coach-modal').remove();"
+            style="padding:8px 18px;background:#3B6D11;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+            Abrir KanbanBonsai →
+          </button>
         </div>
       </div>
     </div>
