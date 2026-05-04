@@ -1333,12 +1333,12 @@ function renderizarOportunidades() {
                             + '</button>'
                             + '<div id="mensaje-f033-' + op.referencia + '" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">✅ F033 generado y descargado.</div>'
                             + '</div>'
-                            + '<div title="Próximamente disponible">'
-                            + '<button disabled class="w-full flex items-center justify-center gap-2 bg-gray-300 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed font-medium text-sm">'
-                            + '<span>🗂️</span><span>Plan para ofertar (Agente Sprint)</span>'
-                            + '</button>'
-                            + '<p class="text-xs text-center text-gray-400 mt-1">Próximamente</p>'
-                            + '</div>';
+							+ '<div>'
+							+ '<button onclick="abrirCoach(\'' + op.referencia + '\', \'' + escapeHtml(op.que) + '\', \'' + escapeHtml(op.quien) + '\', ' + (op.monto_estimado || 0) + ', \'' + (op.fecha_presentacion || '') + '\', \'' + (op.tipo || '') + '\')" '
+							+ 'class="w-full flex items-center justify-center gap-2 bg-violet-600 text-white px-4 py-3 rounded-lg hover:bg-violet-700 transition font-medium text-sm">'
+							+ '<span>🗂️</span><span>Plan para ofertar (Agente Sprint)</span>'
+							+ '</button>'
+							+ '</div>';
                     })()}
 
                 </div>
@@ -2800,6 +2800,202 @@ function aplicarBusquedaHistorial() {
     );
 
     renderizarHistorial(listaFiltrada, cfg[tipo].msg, tipo);
+}
+
+// ============================================
+// COACH LICITADOR — modal y lógica
+// ============================================
+
+// Medianas históricas por tipo (datos reales de la BD)
+const MEDIANAS_TIPO = {
+  LPN: 44, LPI: 36, CP: 8, SI: 8, CM: 4, CD: 1
+};
+
+function calcularDiasDisponibles(fecha_presentacion) {
+  if (!fecha_presentacion) return 0;
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const cierre = new Date(fecha_presentacion);
+  return Math.max(0, Math.round((cierre - hoy) / 86400000));
+}
+
+function extraerTipo(referencia) {
+  if (!referencia) return '';
+  const partes = referencia.split('-');
+  return partes.length >= 3 ? partes[2] : '';
+}
+
+async function abrirCoach(referencia, descripcion, entidad, monto, fecha_presentacion, tipo) {
+  // Calcular datos de la licitación
+  const tipoReal = tipo || extraerTipo(referencia);
+  const diasDisponibles = calcularDiasDisponibles(fecha_presentacion);
+  const medianaHistorica = MEDIANAS_TIPO[tipoReal] || null;
+
+  // Crear modal con pantalla de confirmación
+  const modal = document.createElement('div');
+  modal.id = 'coach-modal';
+  modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+  modal.innerHTML = `
+    <div class="bg-white rounded-xl max-w-lg w-full shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-start">
+        <div>
+          <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Coach Licitador</p>
+          <p class="font-semibold text-gray-900 text-sm">${referencia}</p>
+          <p class="text-xs text-gray-500 mt-1">${tipoReal} · RD$${Number(monto).toLocaleString('es-DO')} · ${diasDisponibles} días disponibles</p>
+        </div>
+        <button onclick="document.getElementById('coach-modal').remove()"
+          class="text-gray-400 hover:text-gray-600 text-2xl leading-none ml-4">×</button>
+      </div>
+      <div class="px-6 py-6">
+        <p class="text-gray-700 text-sm leading-relaxed mb-4">
+          El Coach revisará tu <strong>Perfil Licitador</strong> y el análisis del pliego
+          para recomendarte si participar — con fundamento y condiciones concretas.
+        </p>
+        <div class="bg-violet-50 rounded-lg px-4 py-3 text-sm text-violet-700 mb-6">
+          El Coach Licitador está incluido en tu Plan Enterprise sin costo adicional.
+        </div>
+        <div class="flex gap-3 justify-end">
+          <button onclick="document.getElementById('coach-modal').remove()"
+            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancelar</button>
+          <button onclick="ejecutarCoach('${referencia}', '${escapeHtml(descripcion)}', '${escapeHtml(entidad)}', ${monto}, '${tipoReal}', ${diasDisponibles}, ${medianaHistorica || 'null'})"
+            class="px-5 py-2 bg-violet-600 text-white text-sm font-semibold rounded-lg hover:bg-violet-700 transition">
+            Consultar al Coach →
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+}
+
+async function ejecutarCoach(referencia, descripcion, entidad, monto, tipo, diasDisponibles, medianaHistorica) {
+  const modal = document.getElementById('coach-modal');
+  if (!modal) return;
+
+  // Mostrar spinner mientras Claude procesa
+  modal.querySelector('.bg-white').innerHTML = `
+    <div class="px-6 py-12 text-center">
+      <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
+      <p class="text-gray-600 text-sm">El Coach está analizando tu perfil y la licitación...</p>
+      <p class="text-gray-400 text-xs mt-2">Esto puede tomar hasta 30 segundos</p>
+    </div>
+  `;
+
+  try {
+    const token = localStorage.getItem('compita_token');
+    const empresaId = datosEmpresa?.id;
+
+    const response = await fetch(`${API_BASE}/api/business-features`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        empresa_id: empresaId,
+        accion: 'coach-licitador',
+        referencia,
+        licitacion: {
+          referencia, descripcion, entidad, monto, tipo,
+          dias_disponibles: diasDisponibles,
+          mediana_dias: medianaHistorica
+        }
+      }),
+      signal: AbortSignal.timeout(60000)
+    });
+
+    const data = await response.json();
+    if (!data.success) throw new Error(data.error || 'Error del Coach');
+
+    mostrarDictamen(modal, data.dictamen, referencia, data.analisis_pliego_disponible);
+
+  } catch (error) {
+    modal.querySelector('.bg-white').innerHTML = `
+      <div class="px-6 py-8 text-center">
+        <p class="text-red-600 font-semibold mb-2">No se pudo consultar al Coach</p>
+        <p class="text-gray-500 text-sm mb-6">${error.message}</p>
+        <button onclick="document.getElementById('coach-modal').remove()"
+          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Cerrar</button>
+      </div>
+    `;
+  }
+}
+
+function mostrarDictamen(modal, dictamen, referencia, analisisDisponible) {
+  const colores = {
+    GO:        { circulo: '#3B6D11', etiqueta: '#3B6D11', badge_bg: '#EAF3DE', badge_txt: '#3B6D11' },
+    GO_RIESGO: { circulo: '#D97706', etiqueta: '#B45309', badge_bg: '#FEF3C7', badge_txt: '#92400E' },
+    NO_GO:     { circulo: '#DC2626', etiqueta: '#991B1B', badge_bg: '#FCEBEB', badge_txt: '#991B1B' }
+  };
+  const iconos = {
+    GO:        '<path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
+    GO_RIESGO: '<path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+    NO_GO:     '<path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'
+  };
+  const etiquetas = { GO: 'GO', GO_RIESGO: 'GO con riesgo', NO_GO: 'NO GO' };
+  const titulosCondiciones = { GO: 'Antes de comprometerte', GO_RIESGO: 'Para poder participar', NO_GO: 'Por qué no es viable ahora' };
+
+  const v = dictamen.veredicto;
+  const c = colores[v] || colores.GO_RIESGO;
+
+  const badges = (dictamen.badges || []).map(b =>
+    `<span style="font-size:11px;padding:3px 10px;border-radius:6px;background:${c.badge_bg};color:${c.badge_txt};">${b}</span>`
+  ).join('');
+
+  const condiciones = (dictamen.condiciones || []).map(cd => {
+    const color = cd.urgente
+      ? (v === 'NO_GO' ? '#DC2626' : v === 'GO_RIESGO' ? '#DC2626' : '#D97706')
+      : '#9CA3AF';
+    return `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;">
+      <div style="width:6px;height:6px;border-radius:50%;background:${color};margin-top:5px;flex-shrink:0;"></div>
+      <p style="font-size:13px;color:#374151;margin:0;line-height:1.5;">${cd.texto}</p>
+    </div>`;
+  }).join('');
+
+  const botonAccion = v !== 'NO_GO'
+    ? `<button onclick="alert('Próximamente: Crear plan de oferta en KanbanBonsai')"
+        style="padding:8px 18px;background:${c.circulo};color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+        Crear plan de oferta →
+      </button>`
+    : '';
+
+  modal.querySelector('.bg-white').innerHTML = `
+    <div>
+      <div style="padding:1rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <p style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">Coach Licitador</p>
+          <p style="font-size:14px;font-weight:600;color:#111827;margin:0;">${referencia}</p>
+          ${!analisisDisponible ? '<p style="font-size:11px;color:#D97706;margin:4px 0 0;">⚠ Sin análisis de pliego — se recomienda analizarlo primero</p>' : ''}
+        </div>
+        <button onclick="document.getElementById('coach-modal').remove()"
+          style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+      </div>
+
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;gap:14px;align-items:flex-start;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+          <div style="width:52px;height:52px;border-radius:50%;background:${c.circulo};display:flex;align-items:center;justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">${iconos[v]}</svg>
+          </div>
+          <span style="font-size:11px;font-weight:600;color:${c.etiqueta};">${etiquetas[v]}</span>
+        </div>
+        <div style="flex:1;">
+          <p style="font-size:13px;color:#374151;line-height:1.65;margin:0 0 10px;">${dictamen.fundamento}</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">${badges}</div>
+        </div>
+      </div>
+
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
+        <p style="font-size:11px;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 10px;">${titulosCondiciones[v]}</p>
+        ${condiciones}
+      </div>
+
+      <div style="padding:1rem 1.5rem;display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;">
+        <p style="font-size:11px;color:#9CA3AF;margin:0;">Generado por Claude · Basado en tu Perfil Licitador</p>
+        <div style="display:flex;gap:8px;">
+          <button onclick="document.getElementById('coach-modal').remove()"
+            style="padding:7px 14px;font-size:13px;color:#6B7280;background:none;border:1px solid #E5E7EB;border-radius:8px;cursor:pointer;">Cerrar</button>
+          ${botonAccion}
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 </script>
