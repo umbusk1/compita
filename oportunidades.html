@@ -3010,9 +3010,9 @@ function mostrarDictamen(modal, dictamen, referencia, analisisDisponible, licita
   window._organizadorData = { referencia, licitacion: licitacion || {}, dictamen };
 
   const botonAccion = v !== 'NO_GO'
-    ? `<button onclick="crearPlanOferta()"
+    ? `<button onclick="prepararReporteCompita()"
         style="padding:8px 18px;background:${c.circulo};color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
-        Crear plan de oferta →
+        Preparar Reporte Compita →
       </button>`
     : '';
 
@@ -3079,18 +3079,18 @@ async function crearPlanOferta() {
     </div>
   `;
 
-	try {
-	  const response = await fetch(`${RAILWAY_API}/organizador-oferta`, {
-		  method: 'POST',
-		  headers: { 'Content-Type': 'application/json' },
-		  body: JSON.stringify({
-			empresa_id: datosEmpresa?.id,
-			referencia,
-			licitacion,
-			dictamen
-		  }),
-		  signal: AbortSignal.timeout(90000)
-	});
+  try {
+    const response = await fetch(`${RAILWAY_API}/organizador-oferta`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        empresa_id: datosEmpresa?.id,
+        referencia,
+        licitacion,
+        dictamen
+      }),
+      signal: AbortSignal.timeout(90000)
+    });
 
     const data = await response.json();
     if (!data.success) throw new Error(data.error || 'Error generando el plan');
