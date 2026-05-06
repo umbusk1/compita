@@ -2807,254 +2807,295 @@ function aplicarBusquedaHistorial() {
 // ============================================
 
 const MEDIANAS_TIPO = {
-  LPN: 44, LPI: 36, CP: 8, SI: 8, CM: 4, CD: 1
+    LPN: 44, LPI: 36, CP: 8, SI: 8, CM: 4, CD: 1
 };
 
 function calcularDiasDisponibles(fecha_presentacion) {
-  if (!fecha_presentacion) return 0;
-  const hoy = new Date(); hoy.setHours(0,0,0,0);
-  const cierre = new Date(fecha_presentacion);
-  return Math.max(0, Math.round((cierre - hoy) / 86400000));
+    if (!fecha_presentacion) return 0;
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const cierre = new Date(fecha_presentacion);
+    return Math.max(0, Math.round((cierre - hoy) / 86400000));
 }
 
 function extraerTipo(referencia) {
-  if (!referencia) return '';
-  const partes = referencia.split('-');
-  return partes.length >= 3 ? partes[2] : '';
+    if (!referencia) return '';
+    const partes = referencia.split('-');
+    return partes.length >= 3 ? partes[2] : '';
 }
 
 async function abrirCoach(referencia, descripcion, entidad, monto, fecha_presentacion, tipo) {
-  const tipoReal = tipo || extraerTipo(referencia);
-  const diasDisponibles = calcularDiasDisponibles(fecha_presentacion);
-  const medianaHistorica = MEDIANAS_TIPO[tipoReal] || null;
+    const tipoReal = tipo || extraerTipo(referencia);
+    const diasDisponibles = calcularDiasDisponibles(fecha_presentacion);
+    const medianaHistorica = MEDIANAS_TIPO[tipoReal] || null;
 
-  const modal = document.createElement('div');
-  modal.id = 'coach-modal';
-  modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
-  modal.innerHTML = `
-    <div class="bg-white rounded-xl max-w-lg w-full shadow-2xl overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-start">
-        <div>
-          <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Coach Licitador</p>
-          <p class="font-semibold text-gray-900 text-sm">${referencia}</p>
-          <p class="text-xs text-gray-500 mt-1">${tipoReal} · RD$${Number(monto).toLocaleString('es-DO')} · ${diasDisponibles} días disponibles</p>
+    const modal = document.createElement('div');
+    modal.id = 'coach-modal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl max-w-lg w-full shadow-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-start">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Coach Licitador</p>
+                    <p class="font-semibold text-gray-900 text-sm">${referencia}</p>
+                    <p class="text-xs text-gray-500 mt-1">${tipoReal} · RD$${Number(monto).toLocaleString('es-DO')} · ${diasDisponibles} días disponibles</p>
+                </div>
+                <button onclick="document.getElementById('coach-modal').remove()"
+                    class="text-gray-400 hover:text-gray-600 text-2xl leading-none ml-4">×</button>
+            </div>
+            <div class="px-6 py-6">
+                <p class="text-gray-700 text-sm leading-relaxed mb-4">
+                    El Coach revisará tu <strong>Perfil Licitador</strong> y el análisis del pliego
+                    para recomendarte si participar — con fundamento y condiciones concretas.
+                </p>
+                <div class="bg-violet-50 rounded-lg px-4 py-3 text-sm text-violet-700 mb-6">
+                    El Coach Licitador está incluido en tu Plan Enterprise sin costo adicional.
+                </div>
+                <div class="flex gap-3 justify-end">
+                    <button onclick="document.getElementById('coach-modal').remove()"
+                        class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancelar</button>
+                    <button onclick="ejecutarCoach('${referencia}', '${escapeHtml(descripcion)}', '${escapeHtml(entidad)}', ${monto}, '${fecha_presentacion}', '${tipoReal}', ${diasDisponibles}, ${medianaHistorica || 'null'})"
+                        class="px-5 py-2 bg-violet-600 text-white text-sm font-semibold rounded-lg hover:bg-violet-700 transition">
+                        Consultar al Coach →
+                    </button>
+                </div>
+            </div>
         </div>
-        <button onclick="document.getElementById('coach-modal').remove()"
-          class="text-gray-400 hover:text-gray-600 text-2xl leading-none ml-4">×</button>
-      </div>
-      <div class="px-6 py-6">
-        <p class="text-gray-700 text-sm leading-relaxed mb-4">
-          El Coach revisará tu <strong>Perfil Licitador</strong> y el análisis del pliego
-          para recomendarte si participar — con fundamento y condiciones concretas.
-        </p>
-        <div class="bg-violet-50 rounded-lg px-4 py-3 text-sm text-violet-700 mb-6">
-          El Coach Licitador está incluido en tu Plan Enterprise sin costo adicional.
-        </div>
-        <div class="flex gap-3 justify-end">
-          <button onclick="document.getElementById('coach-modal').remove()"
-            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Cancelar</button>
-          <button onclick="ejecutarCoach('${referencia}', '${escapeHtml(descripcion)}', '${escapeHtml(entidad)}', ${monto}, '${fecha_presentacion}', '${tipoReal}', ${diasDisponibles}, ${medianaHistorica || 'null'})"
-            class="px-5 py-2 bg-violet-600 text-white text-sm font-semibold rounded-lg hover:bg-violet-700 transition">
-            Consultar al Coach →
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
-// FIX: fecha_presentacion agregada a la firma
-async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_presentacion, tipo, diasDisponibles, medianaHistorica) {
-  const modal = document.getElementById('coach-modal');
-  if (!modal) return;
-
-  const empresaId = datosEmpresa?.id;
-
-  const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
-  const tieneAnalisis = !!analisisGuardados[referencia];
-
-  if (!tieneAnalisis) {
+function mostrarErrorSinPliego(modal, referencia, motivo) {
     modal.querySelector('.bg-white').innerHTML = `
-      <div class="px-6 py-10 text-center">
-        <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
-        <p class="text-gray-700 text-sm font-semibold mb-2">Analizando el pliego...</p>
-        <p class="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
-          Como no se ha analizado el pliego, voy a hacerlo y esto tomará 2-3 minutos
-          antes de proceder con mi recomendación como Coach.
-        </p>
-      </div>
+        <div style="padding:1.5rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <p style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin:0;">Coach Licitador</p>
+                <button onclick="document.getElementById('coach-modal').remove()"
+                    style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+            </div>
+            <div style="background:#FEF3C7;border-radius:10px;padding:1.25rem;margin-bottom:1rem;">
+                <p style="font-size:14px;font-weight:600;color:#92400E;margin:0 0 8px;">Sin pliego disponible</p>
+                <p style="font-size:13px;color:#92400E;margin:0;line-height:1.6;">
+                    No se pudo obtener ni analizar el pliego de <strong>${referencia}</strong>.
+                    Sin él, el Coach no tiene base suficiente para recomendar participar.
+                </p>
+            </div>
+            <p style="font-size:13px;color:#6B7280;margin:0 0 1.25rem;line-height:1.6;">
+                ${motivo}
+            </p>
+            <div style="display:flex;justify-content:flex-end;">
+                <button onclick="document.getElementById('coach-modal').remove()"
+                    style="padding:8px 18px;background:#92400E;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_presentacion, tipo, diasDisponibles, medianaHistorica) {
+    const modal = document.getElementById('coach-modal');
+    if (!modal) return;
+
+    const empresaId = datosEmpresa?.id;
+    const analisisGuardados = JSON.parse(localStorage.getItem('compita_analisis') || '{}');
+    const tieneAnalisis = !!analisisGuardados[referencia];
+
+    // ── Si no hay análisis del pliego, obtenerlo primero ─────────────────────
+    if (!tieneAnalisis) {
+        modal.querySelector('.bg-white').innerHTML = `
+            <div class="px-6 py-10 text-center">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
+                <p class="text-gray-700 text-sm font-semibold mb-2">Analizando el pliego...</p>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-sm mx-auto">
+                    Descargando y analizando el pliego de condiciones.
+                    Esto puede tomar 2-3 minutos.
+                </p>
+            </div>
+        `;
+
+        let analisisOk = false;
+        try {
+            const analisisResponse = await fetch(`${RAILWAY_API}/analizar-pliego`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    referencia, titulo: descripcion, descripcion, monto,
+                    empresa_id: empresaId,
+                    empresa_descripcion: datosEmpresa.descripcion || '',
+                    empresa_website: datosEmpresa.website || '',
+                    fecha_presentacion
+                }),
+                signal: AbortSignal.timeout(180000)
+            });
+
+            const resultado = await analisisResponse.json();
+
+            if (resultado.success && resultado.analisis) {
+                // Guardar en localStorage
+                analisisGuardados[referencia] = resultado.analisis;
+                localStorage.setItem('compita_analisis', JSON.stringify(analisisGuardados));
+                // Guardar en Neon
+                try {
+                    await fetch(`${API_BASE}/api/resultados`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('compita_token')}`
+                        },
+                        body: JSON.stringify({
+                            action: 'guardar_analisis_pliego',
+                            referencia,
+                            analisis: resultado.analisis
+                        })
+                    });
+                } catch (e) {
+                    console.warn('No se pudo guardar analisis en BD:', e);
+                }
+                analisisOk = true;
+            } else {
+                // El servidor respondió pero no pudo analizar el pliego
+                mostrarErrorSinPliego(modal, referencia,
+                    'El portal puede no tener el pliego publicado aún, o este proceso no cuenta con pliego público (exclusividad, comparación de precios sin adjuntos).'
+                );
+                return;
+            }
+        } catch (e) {
+            // Error de red o timeout
+            mostrarErrorSinPliego(modal, referencia,
+                'Hubo un error de conexión al intentar descargar el pliego. Intenta de nuevo en unos minutos.'
+            );
+            return;
+        }
+
+        if (!analisisOk) return;
+    }
+
+    // ── Con pliego confirmado, llamar al Coach ────────────────────────────────
+    modal.querySelector('.bg-white').innerHTML = `
+        <div class="px-6 py-12 text-center">
+            <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
+            <p class="text-gray-600 text-sm">El Coach está analizando tu perfil y la licitación...</p>
+            <p class="text-gray-400 text-xs mt-2">Esto puede tomar hasta 30 segundos</p>
+        </div>
     `;
 
     try {
-      const analisisResponse = await fetch(`${RAILWAY_API}/analizar-pliego`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          referencia, titulo: descripcion, descripcion, monto,
-          empresa_id: empresaId,
-          empresa_descripcion: datosEmpresa.descripcion || '',
-          empresa_website: datosEmpresa.website || '',
-          fecha_presentacion
-        }),
-        signal: AbortSignal.timeout(180000)
-      });
-
-      const resultado = await analisisResponse.json();
-
-      if (resultado.success && resultado.analisis) {
-        analisisGuardados[referencia] = resultado.analisis;
-        localStorage.setItem('compita_analisis', JSON.stringify(analisisGuardados));
-        try {
-          await fetch(`${API_BASE}/api/resultados`, {
+        const response = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('compita_token')}`
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              action: 'guardar_analisis_pliego',
-              referencia,
-              analisis: resultado.analisis
-            })
-          });
-        } catch (e) {
-          console.warn('No se pudo guardar analisis en BD:', e);
-        }
-      }
-    } catch (e) {
-      console.warn('No se pudo analizar el pliego, el Coach procederá sin él:', e);
+                empresa_id: empresaId,
+                accion: 'coach-licitador',
+                referencia,
+                licitacion: {
+                    referencia, descripcion, entidad, monto, tipo,
+                    dias_disponibles: diasDisponibles,
+                    mediana_dias: medianaHistorica,
+                    fecha_presentacion
+                }
+            }),
+            signal: AbortSignal.timeout(60000)
+        });
+
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Error del Coach');
+
+        mostrarDictamen(modal, data.dictamen, referencia, data.analisis_pliego_disponible, {
+            descripcion, entidad, monto, tipo, diasDisponibles, fecha_presentacion
+        });
+
+    } catch (error) {
+        modal.querySelector('.bg-white').innerHTML = `
+            <div class="px-6 py-8 text-center">
+                <p class="text-red-600 font-semibold mb-2">No se pudo consultar al Coach</p>
+                <p class="text-gray-500 text-sm mb-6">${error.message}</p>
+                <button onclick="document.getElementById('coach-modal').remove()"
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Cerrar</button>
+            </div>
+        `;
     }
-  }
-
-  modal.querySelector('.bg-white').innerHTML = `
-    <div class="px-6 py-12 text-center">
-      <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-violet-600 border-t-transparent mb-4"></div>
-      <p class="text-gray-600 text-sm">El Coach está analizando tu perfil y la licitación...</p>
-      <p class="text-gray-400 text-xs mt-2">Esto puede tomar hasta 30 segundos</p>
-    </div>
-  `;
-
-  try {
-    const response = await fetch(`${API_BASE}/api/business-features`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        empresa_id: empresaId,
-        accion: 'coach-licitador',
-        referencia,
-        licitacion: {
-          referencia, descripcion, entidad, monto, tipo,
-          dias_disponibles: diasDisponibles,
-          mediana_dias: medianaHistorica,
-          fecha_presentacion  // FIX: se pasa al Coach
-        }
-      }),
-      signal: AbortSignal.timeout(60000)
-    });
-
-    const data = await response.json();
-    if (!data.success) throw new Error(data.error || 'Error del Coach');
-
-    // FIX: se pasa objeto licitacion completo a mostrarDictamen
-    mostrarDictamen(modal, data.dictamen, referencia, data.analisis_pliego_disponible, {
-      descripcion, entidad, monto, tipo, diasDisponibles, fecha_presentacion
-    });
-
-  } catch (error) {
-    modal.querySelector('.bg-white').innerHTML = `
-      <div class="px-6 py-8 text-center">
-        <p class="text-red-600 font-semibold mb-2">No se pudo consultar al Coach</p>
-        <p class="text-gray-500 text-sm mb-6">${error.message}</p>
-        <button onclick="document.getElementById('coach-modal').remove()"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm">Cerrar</button>
-      </div>
-    `;
-  }
 }
 
-// FIX: recibe licitacion como nuevo parámetro
 function mostrarDictamen(modal, dictamen, referencia, analisisDisponible, licitacion) {
-  const colores = {
-    GO:        { circulo: '#3B6D11', etiqueta: '#3B6D11', badge_bg: '#EAF3DE', badge_txt: '#3B6D11' },
-    GO_RIESGO: { circulo: '#f2b56b', etiqueta: '#92400E', badge_bg: '#FEF3C7', badge_txt: '#92400E' },
-    NO_GO:     { circulo: '#DC2626', etiqueta: '#991B1B', badge_bg: '#FCEBEB', badge_txt: '#991B1B' }
-  };
-  const iconos = {
-    GO:        '<path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
-    GO_RIESGO: '<path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
-    NO_GO:     '<path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'
-  };
-  const etiquetas     = { GO: 'GO', GO_RIESGO: 'GO con riesgo', NO_GO: 'NO GO' };
-  const titulosCondiciones = { GO: 'Antes de comprometerte', GO_RIESGO: 'Para poder participar', NO_GO: 'Por qué no es viable ahora' };
+    const colores = {
+        GO:        { circulo: '#3B6D11', etiqueta: '#3B6D11', badge_bg: '#EAF3DE', badge_txt: '#3B6D11' },
+        GO_RIESGO: { circulo: '#f2b56b', etiqueta: '#92400E', badge_bg: '#FEF3C7', badge_txt: '#92400E' },
+        NO_GO:     { circulo: '#DC2626', etiqueta: '#991B1B', badge_bg: '#FCEBEB', badge_txt: '#991B1B' }
+    };
+    const iconos = {
+        GO:        '<path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
+        GO_RIESGO: '<path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+        NO_GO:     '<path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'
+    };
+    const etiquetas          = { GO: 'GO', GO_RIESGO: 'GO con riesgo', NO_GO: 'NO GO' };
+    const titulosCondiciones = { GO: 'Antes de comprometerte', GO_RIESGO: 'Para poder participar', NO_GO: 'Por qué no es viable ahora' };
 
-  const v = dictamen.veredicto;
-  const c = colores[v] || colores.GO_RIESGO;
+    const v = dictamen.veredicto;
+    const c = colores[v] || colores.GO_RIESGO;
 
-  const badges = (dictamen.badges || []).map(b =>
-    `<span style="font-size:11px;padding:3px 10px;border-radius:6px;background:${c.badge_bg};color:${c.badge_txt};">${b}</span>`
-  ).join('');
+    const badges = (dictamen.badges || []).map(b =>
+        `<span style="font-size:11px;padding:3px 10px;border-radius:6px;background:${c.badge_bg};color:${c.badge_txt};">${b}</span>`
+    ).join('');
 
-  const condiciones = (dictamen.condiciones || []).map(cd => {
-    const color = cd.urgente
-      ? (v === 'NO_GO' ? '#DC2626' : v === 'GO_RIESGO' ? '#DC2626' : '#D97706')
-      : '#9CA3AF';
-    return `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;">
-      <div style="width:6px;height:6px;border-radius:50%;background:${color};margin-top:5px;flex-shrink:0;"></div>
-      <p style="font-size:13px;color:#374151;margin:0;line-height:1.5;">${cd.texto}</p>
-    </div>`;
-  }).join('');
+    const condiciones = (dictamen.condiciones || []).map(cd => {
+        const color = cd.urgente
+            ? (v === 'NO_GO' ? '#DC2626' : '#D97706')
+            : '#9CA3AF';
+        return `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:6px;">
+            <div style="width:6px;height:6px;border-radius:50%;background:${color};margin-top:5px;flex-shrink:0;"></div>
+            <p style="font-size:13px;color:#374151;margin:0;line-height:1.5;">${cd.texto}</p>
+        </div>`;
+    }).join('');
 
-  // Guardar datos en window para evitar problemas de encoding en onclick
-  window._organizadorData = { referencia, licitacion: licitacion || {}, dictamen };
+    window._organizadorData = { referencia, licitacion: licitacion || {}, dictamen };
 
-  const botonAccion = v !== 'NO_GO'
-    ? `<button onclick="prepararReporteCompita()"
-        style="padding:8px 18px;background:${c.circulo};color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
-        Preparar Reporte Compita →
-      </button>`
-    : '';
+    const botonAccion = v !== 'NO_GO'
+        ? `<button onclick="prepararReporteCompita()"
+            style="padding:8px 18px;background:${c.circulo};color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+            Preparar Reporte Compita →
+          </button>`
+        : '';
 
-  modal.querySelector('.bg-white').innerHTML = `
-    <div>
-      <div style="padding:1rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
+    modal.querySelector('.bg-white').innerHTML = `
         <div>
-          <p style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">Coach Licitador</p>
-          <p style="font-size:14px;font-weight:600;color:#111827;margin:0;">${referencia}</p>
-        </div>
-        <button onclick="document.getElementById('coach-modal').remove()"
-          style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
-      </div>
+            <div style="padding:1rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
+                <div>
+                    <p style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">Coach Licitador</p>
+                    <p style="font-size:14px;font-weight:600;color:#111827;margin:0;">${referencia}</p>
+                </div>
+                <button onclick="document.getElementById('coach-modal').remove()"
+                    style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+            </div>
 
-      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;gap:14px;align-items:flex-start;">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
-          <div style="width:52px;height:52px;border-radius:50%;background:${c.circulo};display:flex;align-items:center;justify-content:center;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">${iconos[v]}</svg>
-          </div>
-          <span style="font-size:11px;font-weight:600;color:${c.etiqueta};">${etiquetas[v]}</span>
-        </div>
-        <div style="flex:1;">
-          <p style="font-size:13px;color:#374151;line-height:1.65;margin:0 0 10px;">${dictamen.fundamento}</p>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;">${badges}</div>
-        </div>
-      </div>
+            <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;gap:14px;align-items:flex-start;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;">
+                    <div style="width:52px;height:52px;border-radius:50%;background:${c.circulo};display:flex;align-items:center;justify-content:center;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">${iconos[v]}</svg>
+                    </div>
+                    <span style="font-size:11px;font-weight:600;color:${c.etiqueta};">${etiquetas[v]}</span>
+                </div>
+                <div style="flex:1;">
+                    <p style="font-size:13px;color:#374151;line-height:1.65;margin:0 0 10px;">${dictamen.fundamento}</p>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">${badges}</div>
+                </div>
+            </div>
 
-      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
-        <p style="font-size:11px;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 10px;">${titulosCondiciones[v]}</p>
-        ${condiciones}
-      </div>
+            <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f3f4f6;">
+                <p style="font-size:11px;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 10px;">${titulosCondiciones[v]}</p>
+                ${condiciones}
+            </div>
 
-      <div style="padding:1rem 1.5rem;display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;">
-        <p style="font-size:11px;color:#9CA3AF;margin:0;">Generado por Claude · Basado en tu Perfil Licitador</p>
-        <div style="display:flex;gap:8px;">
-          <button onclick="document.getElementById('coach-modal').remove()"
-            style="padding:7px 14px;font-size:13px;color:#6B7280;background:none;border:1px solid #E5E7EB;border-radius:8px;cursor:pointer;">Cerrar</button>
-          ${botonAccion}
+            <div style="padding:1rem 1.5rem;display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;">
+                <p style="font-size:11px;color:#9CA3AF;margin:0;">Generado por Claude · Basado en tu Perfil Licitador</p>
+                <div style="display:flex;gap:8px;">
+                    <button onclick="document.getElementById('coach-modal').remove()"
+                        style="padding:7px 14px;font-size:13px;color:#6B7280;background:none;border:1px solid #E5E7EB;border-radius:8px;cursor:pointer;">Cerrar</button>
+                    ${botonAccion}
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  `;
+    `;
 }
 
 // ============================================
@@ -3075,7 +3116,8 @@ async function prepararReporteCompita() {
         <div style="padding:3rem 2rem;text-align:center;">
             <div style="display:inline-block;width:40px;height:40px;border:4px solid #3B6D11;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:1rem;"></div>
             <p style="font-size:14px;font-weight:600;color:#374151;margin:0 0 6px;">Preparando Reporte Compita...</p>
-            <p style="font-size:12px;color:#9CA3AF;margin:0;">Claude está ejecutando el análisis — esto toma ~30 segundos</p>
+            <p style="font-size:12px;color:#9CA3AF;margin:0 0 4px;">Claude está ejecutando el análisis completo</p>
+            <p style="font-size:11px;color:#D1D5DB;margin:0;">Primera vez puede tomar 3-5 minutos · Las siguientes serán instantáneas</p>
         </div>
     `;
 
@@ -3089,7 +3131,7 @@ async function prepararReporteCompita() {
                 licitacion,
                 dictamen
             }),
-            signal: AbortSignal.timeout(120000)
+            signal: AbortSignal.timeout(300000)  // 5 minutos
         });
 
         const data = await response.json();
@@ -3112,7 +3154,9 @@ async function prepararReporteCompita() {
                                 <path d="M5 13l4 4L19 7" stroke="#3B6D11" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                         </div>
-                        <p style="font-size:14px;font-weight:600;color:#3B6D11;margin:0;">Reporte listo${data.cached ? ' (desde caché)' : ''}</p>
+                        <p style="font-size:14px;font-weight:600;color:#3B6D11;margin:0;">
+                            Reporte listo${data.cached ? ' (desde caché)' : ''}
+                        </p>
                     </div>
                     <p style="font-size:13px;color:#6B7280;margin:0 0 1.25rem;line-height:1.5;">
                         Claude pre-ejecutó el análisis completo. El Reporte incluye síntesis del pliego,
