@@ -3136,7 +3136,8 @@ async function prepararReporteCompita() {
                 empresa_id: datosEmpresa?.id,
                 referencia,
                 licitacion,
-                dictamen
+                dictamen,
+                force: true
             }),
             signal: AbortSignal.timeout(300000)  // 5 minutos
         });
