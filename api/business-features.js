@@ -491,7 +491,7 @@ ${seccionPliego}
           continue;
         }
 
-        const texto = normalizar(`${lic.referencia} ${lic.descripcion}`.toLowerCase());
+        const texto = normalizar(`${lic.referencia} ${lic.descripcion} ${lic.unidad_compras || ''}`.toLowerCase());
         const monto = parseFloat(lic.monto_estimado) || 0;
         const codigoUNSPSC = lic.codigo_unspsc || '';
 

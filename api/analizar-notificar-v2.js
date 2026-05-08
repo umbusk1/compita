@@ -246,7 +246,7 @@ async function procesarEtapa1(oportunidad, empresa) {
       : (empresa.palabras_clave || '').split(',')
   ).map(p => p.trim().toLowerCase()).filter(p => p.length > 0);
 
-  const textoCompleto = normalizar((oportunidad.descripcion || '').toLowerCase());
+  const textoCompleto = normalizar(`${oportunidad.descripcion || ''} ${oportunidad.unidad_compras || ''}`.toLowerCase());
 
   let palabraEncontrada = null;
   const tieneCoincidencia = palabrasClave.some(palabra => {
