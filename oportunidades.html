@@ -2982,23 +2982,30 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
 
     try {
         const response = await fetch(`${API_BASE}/api/business-features`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                empresa_id: empresaId,
-                accion: 'coach-licitador',
-                referencia,
-                licitacion: {
-                    referencia, descripcion, entidad, monto, tipo,
-                    dias_disponibles: diasDisponibles,
-                    mediana_dias: medianaHistorica,
-                    fecha_presentacion
-                }
-            }),
-            signal: AbortSignal.timeout(60000)
-        });
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/json' },
+		            body: JSON.stringify({
+		                empresa_id: empresaId,
+		                accion: 'coach-licitador',
+		                referencia,
+		                licitacion: {
+		                    referencia, descripcion, entidad, monto, tipo,
+		                    dias_disponibles: diasDisponibles,
+		                    mediana_dias: medianaHistorica,
+		                    fecha_presentacion
+		                }
+		            }),
+		            signal: AbortSignal.timeout(60000)
+		        });
 
-        const data = await response.json();
+		        if (!response.ok) {
+		            const msg = response.status === 504
+		                ? 'El servidor tardó demasiado. Intenta de nuevo en un momento.'
+		                : `Error del servidor (${response.status}). Intenta de nuevo.`;
+		            throw new Error(msg);
+		        }
+
+		        const data = await response.json();
         if (!data.success) throw new Error(data.error || 'Error del Coach');
 
         mostrarDictamen(modal, data.dictamen, referencia, data.analisis_pliego_disponible, {
