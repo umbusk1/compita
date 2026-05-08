@@ -1484,8 +1484,11 @@ async function descargarDocumentos(referencia, resultado_id) {
         });
 
         if (!scraperResponse.ok) {
-            const errorData = await scraperResponse.json();
-            throw new Error(errorData.error || 'Error al descargar documento');
+		            if (scraperResponse.status === 504) {
+		                throw new Error('El portal SECP tardó demasiado — el ZIP puede ser muy grande. Descárgalo manualmente desde el portal SECP.');
+		            }
+		            const errorData = await scraperResponse.json().catch(() => ({}));
+		            throw new Error(errorData.error || 'Error al descargar documento');
         }
 
         const blob = await scraperResponse.blob();
@@ -1649,26 +1652,27 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
             signal: AbortSignal.timeout(180000)
         });
 
-        const resultado = await analisisResponse.json();
-
-        // ✅ NUEVO: Manejo específico para pliego demasiado grande
         if (!analisisResponse.ok) {
-            botonAnalisis.innerHTML = textoOriginal;
-            botonAnalisis.disabled = false;
+		            botonAnalisis.innerHTML = textoOriginal;
+		            botonAnalisis.disabled = false;
+		            if (analisisResponse.status === 504) {
+		                mostrarMensaje(
+		                    '⏱️ El ZIP de esta licitación es muy grande y el servidor tardó demasiado.<br>' +
+		                    'Descarga el pliego manualmente desde el <a href="https://comunidad.comprasdominicana.gob.do" target="_blank" style="color:white;font-weight:bold;text-decoration:underline;">portal SECP</a> para revisarlo.',
+		                    'warning', 10000
+		                );
+		            } else {
+		                const errData = await analisisResponse.json().catch(() => ({}));
+		                if (errData.error && errData.error.includes('demasiado grande')) {
+		                    mostrarMensaje('📄 Este pliego es demasiado extenso. Descárgalo y revísalo manualmente.', 'warning', 8000);
+		                } else {
+		                    mostrarMensaje('Error al analizar: ' + (errData.error || 'Error desconocido'), 'error');
+		                }
+		            }
+		            return;
+		        }
 
-            if (resultado.error && resultado.error.includes('demasiado grande')) {
-                mostrarMensaje(
-                    '📄 Este pliego es demasiado extenso para el análisis automático.<br>' +
-                    'Te recomendamos descargarlo y revisarlo manualmente.<br>' +
-                    '<small>Límite actual: 10 MB</small>',
-                    'warning',
-                    8000
-                );
-            } else {
-                mostrarMensaje('Error al analizar: ' + (resultado.error || 'Error desconocido'), 'error');
-            }
-            return;
-        }
+        const resultado = await analisisResponse.json();
 
         if (!resultado.success) {
             throw new Error(resultado.error || 'Error al analizar');
@@ -3142,7 +3146,15 @@ async function prepararReporteCompita() {
             signal: AbortSignal.timeout(300000)  // 5 minutos
         });
 
-        const data = await response.json();
+        if (!response.ok) {
+		            if (response.status === 504) {
+		                throw new Error('El ZIP de esta licitación es muy grande. Descárgalo manualmente desde el portal SECP para revisarlo.');
+		            }
+		            const errData = await response.json().catch(() => ({}));
+		            throw new Error(errData.error || `Error del servidor (${response.status})`);
+		        }
+
+		        const data = await response.json();
         if (!data.success) throw new Error(data.error || 'Error generando el reporte');
 
         modal.querySelector('.bg-white').innerHTML = `
