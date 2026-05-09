@@ -2958,11 +2958,12 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
                 }
                 analisisOk = true;
             } else {
-                // El servidor respondió pero no pudo analizar el pliego
-                mostrarErrorSinPliego(modal, referencia,
-                    'El portal puede no tener el pliego publicado aún, o este proceso no cuenta con pliego público (exclusividad, comparación de precios sin adjuntos).'
-                );
-                return;
+			                const descargado = JSON.parse(localStorage.getItem('compita_descargas') || '{}')[referencia];
+			                const motivo = descargado
+			                    ? 'El pliego fue descargado pero el análisis automático falló. Por favor haz clic en <strong>Analizar Pliego con IA</strong> primero y luego vuelve al Coach.'
+			                    : 'El portal puede no tener el pliego publicado aún, o este proceso no cuenta con pliego público (exclusividad, comparación de precios sin adjuntos).';
+			                mostrarErrorSinPliego(modal, referencia, motivo);
+			                return;
             }
         } catch (e) {
             // Error de red o timeout
