@@ -145,9 +145,9 @@
                         <h3 class="text-lg font-bold text-gray-900">GOLD</h3>
                         <p class="text-3xl font-bold text-yellow-700 mt-2">$40<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
-                    <button onclick="solicitarEnterprise('gold')"
+                    <button onclick="procesarSuscripcion('enterprise_gold')"
                         class="w-full bg-yellow-500 text-white px-4 py-3 rounded-lg hover:bg-yellow-600 transition font-semibold mb-4">
-                        📩 Solicitar acceso
+                        💳 Suscribirse
                     </button>
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Todo lo del Business</span></li>
@@ -164,9 +164,9 @@
                         <h3 class="text-lg font-bold text-gray-900">PLATINUM</h3>
                         <p class="text-3xl font-bold text-purple-700 mt-2">$80<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
-                    <button onclick="solicitarEnterprise('platinum')"
+                    <button onclick="procesarSuscripcion('enterprise_platinum')"
                         class="w-full bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-semibold mb-4">
-                        📩 Solicitar acceso
+                        💳 Suscribirse
                     </button>
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Todo lo del GOLD</span></li>
@@ -317,16 +317,6 @@ async function procesarSuscripcion(plan) {
         console.error('Error:', error);
         alert('Error al procesar suscripción. Por favor intenta nuevamente.');
     }
-}
-
-function solicitarEnterprise(nivel) {
-    const plan = nivel === 'platinum' ? 'Enterprise PLATINUM 💎' : 'Enterprise GOLD ⭐';
-    const mensaje = encodeURIComponent(
-        `Hola, me interesa el Plan ${plan} de Compita.\n` +
-        `Empresa: ${datosRegistro.empresa || '(sin completar)'}\n` +
-        `Email: ${datosRegistro.email || '(sin completar)'}`
-    );
-    window.open(`https://wa.me/584122324636?text=${mensaje}`, '_blank');
 }
 
 async function procesarTrialGratuito() {
