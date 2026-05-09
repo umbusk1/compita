@@ -146,9 +146,13 @@ async function handleSubscriptionUpdated(subscription) {
 
   // Mapear price_id de Stripe a nuestros nombres de plan
   if (priceId === process.env.STRIPE_PRICE_ESTANDAR) {
-    plan = 'estandar';
-  } else if (priceId === process.env.STRIPE_PRICE_BUSINESS) {
-    plan = 'business';
+      plan = 'estandar';
+    } else if (priceId === process.env.STRIPE_PRICE_BUSINESS) {
+      plan = 'business';
+    } else if (priceId === process.env.STRIPE_PRICE_ENTERPRISE_GOLD) {
+      plan = 'enterprise_gold';
+    } else if (priceId === process.env.STRIPE_PRICE_ENTERPRISE_PLATINUM) {
+      plan = 'enterprise_platinum';
   }
 
   console.log(`📊 Price ID detectado: ${priceId} → Plan: ${plan}`);
@@ -290,7 +294,7 @@ async function handlePaymentSucceeded(invoice) {
 
         } else if (referidor.stripe_customer_id) {
           // Referidor con plan pago → crédito en Stripe para el próximo mes
-          const creditAmounts = { estandar: 1000, business: 2000 }; // centavos USD
+          const creditAmounts = { estandar: 1000, business: 2000, enterprise_gold: 4000, enterprise_platinum: 8000 }; // centavos USD
           const creditAmount = creditAmounts[referidor.plan] || 1000;
 
           await stripe.customers.createBalanceTransaction(
