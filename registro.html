@@ -9,38 +9,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-YBQQM365Q8"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'G-YBQQM365Q8');
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBQQM365Q8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YBQQM365Q8');
     </script>
 
     <!-- Meta Pixel Code -->
-	<script>
-	!function(f,b,e,v,n,t,s)
-	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-	n.queue=[];t=b.createElement(e);t.async=!0;
-	t.src=v;s=b.getElementsByTagName(e)[0];
-	s.parentNode.insertBefore(t,s)}(window, document,'script',
-	'https://connect.facebook.net/en_US/fbevents.js');
-	fbq('init', '1335366601961235');
-	fbq('track', 'PageView');
-	</script>
-	<noscript><img height="1" width="1" style="display:none"
-	src="https://www.facebook.com/tr?id=1335366601961235&ev=PageView&noscript=1"
-	/></noscript>
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1335366601961235');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1335366601961235&ev=PageView&noscript=1"
+    /></noscript>
     <!-- End Meta Pixel Code -->
-
-
-
 </head>
 <body class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-4xl">
+    <div class="w-full max-w-5xl">
         <!-- Logo y título -->
         <div class="text-center mb-8">
             <div class="flex items-center gap-2">
@@ -50,10 +46,7 @@
                      style="display: block; margin: 0 auto; max-width: 100%;">
             </div>
             <h1 class="text-2xl font-bold text-gray-900 mb-2">Registro</h1>
-            <p class="text-gray-600">7 días gratis sin TDC, luego pagas</p>
-			<p id="msg-invitar" class="text-sm text-indigo-600 mt-1">
-			    🎁 ¿Quieres 30 días sin TDC en vez de 7? Al confirmar tu email corporativo puedes invitar a alguien de otra empresa y en ambos casos obtienen los 30 días para usar Compita ¡gratis!
-				</p>
+            <p class="text-gray-600">Elige el plan que mejor se adapta a tu empresa</p>
         </div>
 
         <!-- Formulario de Registro -->
@@ -97,93 +90,108 @@
             </p>
         </div>
 
-<!-- Opciones de Pago (oculto inicialmente) -->
-<div id="opciones-pago" class="hidden bg-white rounded-2xl shadow-xl p-8">
-    <div class="text-center mb-6">
-        <div class="text-4xl mb-4">🎉</div>
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Casi listo!</h2>
-        <p class="text-gray-600">Elige el plan que mejor se adapta a tu empresa</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-
-        <!-- Plan Gratuito -->
-        <div class="border-2 border-gray-200 rounded-xl p-6 flex flex-col">
-            <div class="mb-4">
-                <h3 class="text-lg font-bold text-gray-900">Plan Gratuito</h3>
-                <p class="text-3xl font-bold text-gray-600 mt-2">$0<span class="text-sm text-gray-500 font-normal">/7 días</span></p>
+        <!-- Opciones de Pago (oculto inicialmente) -->
+        <div id="opciones-pago" class="hidden bg-white rounded-2xl shadow-xl p-8">
+            <div class="text-center mb-6">
+                <div class="text-4xl mb-4">🎉</div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Casi listo!</h2>
+                <p class="text-gray-600">Elige el plan que mejor se adapta a tu empresa</p>
             </div>
-            <!-- CTA arriba — B2 -->
-            <button onclick="procesarTrialGratuito()"
-                class="w-full bg-gray-700 text-white px-4 py-3 rounded-lg hover:bg-gray-800 transition font-semibold mb-4">
-                Comenzar gratis
-            </button>
-            <ul class="space-y-2 text-sm text-gray-600">
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Acceso completo 7 días</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Sin tarjeta de crédito</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Plan Business incluido</span></li>
-            </ul>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+
+                <!-- Plan Estándar -->
+                <div class="border-2 border-indigo-200 rounded-xl p-6 flex flex-col">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold text-gray-900">Plan Estándar</h3>
+                        <p class="text-3xl font-bold text-indigo-600 mt-2">$10<span class="text-sm text-gray-600 font-normal">/mes</span></p>
+                    </div>
+                    <button onclick="procesarSuscripcion('estandar')"
+                        class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold mb-4">
+                        💳 Suscribirse
+                    </button>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Monitoreo + email</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Análisis IA de oportunidades</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Dashboard de oportunidades</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Notificaciones por email</span></li>
+                    </ul>
+                </div>
+
+                <!-- Plan Business -->
+                <div class="border-2 border-orange-300 rounded-xl p-6 bg-gradient-to-br from-orange-50 to-yellow-50 flex flex-col">
+                    <div class="mb-4">
+                        <div class="flex gap-2 flex-wrap mb-2">
+                            <span class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">MÁS POPULAR</span>
+                            <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">7 días gratis</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900">Plan Business</h3>
+                        <p class="text-3xl font-bold text-orange-600 mt-2">$20<span class="text-sm text-gray-600 font-normal">/mes</span></p>
+                    </div>
+                    <button onclick="procesarSuscripcion('business')"
+                        class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold mb-4">
+                        🚀 Empezar gratis
+                    </button>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Todo lo del Estándar</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span><strong>PDF del pliego</strong> (10/mes)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span><strong>Análisis IA del pliego</strong> (5/mes)</span></li>
+                    </ul>
+                </div>
+
+                <!-- Plan Enterprise GOLD -->
+                <div class="border-2 border-yellow-400 rounded-xl p-6 bg-gradient-to-br from-yellow-50 to-amber-50 flex flex-col">
+                    <div class="mb-4">
+                        <div class="bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">⭐ ENTERPRISE</div>
+                        <h3 class="text-lg font-bold text-gray-900">GOLD</h3>
+                        <p class="text-3xl font-bold text-yellow-700 mt-2">$40<span class="text-sm text-gray-600 font-normal">/mes</span></p>
+                    </div>
+                    <button onclick="solicitarEnterprise('gold')"
+                        class="w-full bg-yellow-500 text-white px-4 py-3 rounded-lg hover:bg-yellow-600 transition font-semibold mb-4">
+                        📩 Solicitar acceso
+                    </button>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Todo lo del Business</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span><strong>Descargas ilimitadas</strong> de pliegos</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span><strong>Análisis IA ilimitado</strong></span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span><strong>Agente 033 / F033</strong> (5/mes)</span></li>
+                    </ul>
+                </div>
+
+                <!-- Plan Enterprise PLATINUM -->
+                <div class="border-2 border-purple-400 rounded-xl p-6 bg-gradient-to-br from-purple-50 to-indigo-50 flex flex-col">
+                    <div class="mb-4">
+                        <div class="bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">💎 ENTERPRISE</div>
+                        <h3 class="text-lg font-bold text-gray-900">PLATINUM</h3>
+                        <p class="text-3xl font-bold text-purple-700 mt-2">$80<span class="text-sm text-gray-600 font-normal">/mes</span></p>
+                    </div>
+                    <button onclick="solicitarEnterprise('platinum')"
+                        class="w-full bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-semibold mb-4">
+                        📩 Solicitar acceso
+                    </button>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Todo lo del GOLD</span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span><strong>Agente 033 ilimitado</strong></span></li>
+                        <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span><strong>Coach + Reporte + KB</strong> (5/mes)</span></li>
+                    </ul>
+                </div>
+
+            </div>
         </div>
 
-        <!-- Plan Estándar -->
-        <div class="border-2 border-indigo-200 rounded-xl p-6 flex flex-col">
-            <div class="mb-4">
-                <h3 class="text-lg font-bold text-gray-900">Plan Estándar</h3>
-                <p class="text-3xl font-bold text-indigo-600 mt-2">$10<span class="text-sm text-gray-600 font-normal">/mes</span></p>
+        <div id="confirmacion-email" class="hidden max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 text-center">
+            <div class="text-6xl mb-4">📬</div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-3">¡Revisa tu correo!</h2>
+            <p class="text-gray-600 mb-2">
+                Te enviamos un email de confirmación a:
+            </p>
+            <p id="email-confirmacion" class="text-indigo-600 font-bold text-lg mb-6"></p>
+            <p class="text-gray-500 text-sm mb-6">
+                Haz clic en el enlace del email para confirmar tu cuenta y comenzar a usar Compita.
+            </p>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
+                ⚠️ Si no lo ves en unos minutos, revisa tu carpeta de <strong>spam o correo no deseado</strong>.
             </div>
-            <!-- CTA arriba — B2 -->
-            <button onclick="procesarSuscripcion('estandar')"
-                class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold mb-4">
-                💳 Suscribirse
-            </button>
-            <ul class="space-y-2 text-sm">
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>2 categorías UNSPSC</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Scraping automático diario</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Análisis inteligente con IA</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Notificaciones por email</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Dashboard de oportunidades</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span>Historial de 1 mes</span></li>
-            </ul>
         </div>
-
-        <!-- Plan Business -->
-        <div class="border-2 border-orange-300 rounded-xl p-6 bg-gradient-to-br from-orange-50 to-yellow-50 flex flex-col">
-            <div class="mb-4">
-                <div class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded inline-block mb-2">MÁS POPULAR</div>
-                <h3 class="text-lg font-bold text-gray-900">Plan Business</h3>
-                <p class="text-3xl font-bold text-orange-600 mt-2">$20<span class="text-sm text-gray-600 font-normal">/mes</span></p>
-            </div>
-            <!-- CTA arriba — B2 -->
-            <button onclick="procesarSuscripcion('business')"
-                class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold mb-4">
-                💳 Suscribirse
-            </button>
-            <ul class="space-y-2 text-sm">
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Todo lo del Estándar, más:</strong></span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>5 categorías UNSPSC</strong></span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>PDF del pliego</strong> (10/mes)</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Análisis con IA</strong> (5/mes)</span></li>
-                <li class="flex items-center gap-2"><span class="text-green-600">✓</span><span><strong>Historial de 3 meses</strong></span></li>
-            </ul>
-        </div>
-
-    </div>
-    <!-- Botón ancho eliminado — B3 ✓ -->
-</div>
-
-<div id="confirmacion-email" class="hidden max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 text-center">
-    <div class="text-6xl mb-4">📬</div>
-    <h2 class="text-2xl font-bold text-gray-900 mb-3">¡Revisa tu correo!</h2>
-    <p class="text-gray-600 mb-2">
-        Te enviamos un email de confirmación a:
-    </p>
-    <p id="email-confirmacion" class="text-indigo-600 font-bold text-lg mb-6"></p>
-    <p class="text-gray-500 text-sm mb-6">
-        Haz clic en el enlace del email para confirmar tu cuenta y comenzar a usar Compita.
-    </p>
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
-        ⚠️ Si no lo ves en unos minutos, revisa tu carpeta de <strong>spam o correo no deseado</strong>.
-    </div>
-</div>
 
         <footer class="bg-gray-900 text-gray-400 py-12">
             <div class="container mx-auto px-4">
@@ -204,7 +212,7 @@
 const API_BASE = window.location.origin;
 let datosRegistro = {};
 
-// ========== CAPTURAR CÓDIGO DE REFERIDO O INVITADO ==========
+// ========== CAPTURAR TOKEN DE INVITADO (se mantiene para pre-llenar email) ==========
 const urlParams = new URLSearchParams(window.location.search);
 const tokenInv = urlParams.get('inv') || null;
 
@@ -215,18 +223,7 @@ if (emailInv && tokenInv) {
     campoEmail.readOnly = true;
     campoEmail.classList.add('bg-gray-100', 'cursor-not-allowed');
 }
-
-const msgExtra = document.getElementById('msg-invitar');
-if (tokenInv) {
-    const subtitulo = document.querySelector('p.text-gray-600');
-    if (subtitulo) {
-        subtitulo.textContent = '🎁 ¡Llegaste invitado! Disfruta 30 días gratis sin TDC, luego pagas';
-        subtitulo.classList.add('text-indigo-600', 'font-semibold');
-    }
-    if (msgExtra) msgExtra.classList.add('hidden');
-    console.log('✅ Token de invitación detectado:', tokenInv);
-}
-// ========== FIN CAPTURAR REFERIDO O INVITADO ==========
+// ========== FIN CAPTURAR TOKEN ==========
 
 function mostrarOpciones(event) {
     event.preventDefault();
@@ -258,7 +255,7 @@ async function procesarSuscripcion(plan) {
         const responseRegistro = await fetch(`${API_BASE}/api/auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
+            body: JSON.stringify({
                 action: 'registro',
                 email: datosRegistro.email,
                 password: datosRegistro.password,
@@ -270,7 +267,7 @@ async function procesarSuscripcion(plan) {
 
         if (!responseRegistro.ok) {
             const error = await responseRegistro.json();
-            alert('❌ Error: ' + error.error);
+            alert('Error: ' + error.error);
             return;
         }
 
@@ -285,7 +282,7 @@ async function procesarSuscripcion(plan) {
         });
 
         if (!responseLogin.ok) {
-            alert('❌ Cuenta creada pero error al iniciar sesión. Por favor inicia sesión manualmente.');
+            alert('Cuenta creada pero error al iniciar sesión. Por favor inicia sesión manualmente.');
             window.location.href = '/login.html';
             return;
         }
@@ -307,7 +304,7 @@ async function procesarSuscripcion(plan) {
 
         if (!responseCheckout.ok) {
             const error = await responseCheckout.json();
-            alert('❌ Error creando sesión de pago: ' + error.error);
+            alert('Error creando sesión de pago: ' + error.error);
             return;
         }
 
@@ -318,8 +315,18 @@ async function procesarSuscripcion(plan) {
 
     } catch (error) {
         console.error('Error:', error);
-        alert('❌ Error al procesar suscripción. Por favor intenta nuevamente.');
+        alert('Error al procesar suscripción. Por favor intenta nuevamente.');
     }
+}
+
+function solicitarEnterprise(nivel) {
+    const plan = nivel === 'platinum' ? 'Enterprise PLATINUM 💎' : 'Enterprise GOLD ⭐';
+    const mensaje = encodeURIComponent(
+        `Hola, me interesa el Plan ${plan} de Compita.\n` +
+        `Empresa: ${datosRegistro.empresa || '(sin completar)'}\n` +
+        `Email: ${datosRegistro.email || '(sin completar)'}`
+    );
+    window.open(`https://wa.me/584122324636?text=${mensaje}`, '_blank');
 }
 
 async function procesarTrialGratuito() {
@@ -341,85 +348,85 @@ async function procesarTrialGratuito() {
 
         if (response.ok) {
             fbq('track', 'CompleteRegistration', { content_name: 'trial' });
-            // Ocultar opciones de pago y mostrar mensaje de confirmación
             document.getElementById('opciones-pago').classList.add('hidden');
             document.getElementById('email-confirmacion').textContent = datosRegistro.email;
             document.getElementById('confirmacion-email').classList.remove('hidden');
         } else {
-            alert('❌ Error: ' + result.error);
+            alert('Error: ' + result.error);
             document.getElementById('opciones-pago').classList.add('hidden');
             document.getElementById('formulario-registro').classList.remove('hidden');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('❌ Error al crear cuenta. Por favor intenta nuevamente.');
+        alert('Error al crear cuenta. Por favor intenta nuevamente.');
     }
 }
-    </script>
+</script>
 
-	<!-- Botón flotante de WhatsApp -->
-	<style>
-	  .whatsapp-float {
-	    position: fixed;
-	    bottom: 30px;
-	    right: 30px;
-	    z-index: 9999;
-	    display: flex;
-	    align-items: center;
-	    gap: 10px;
-	    cursor: pointer;
-	    text-decoration: none;
-	  }
-	  .whatsapp-float .wa-label {
-	    background-color: #fff;
-	    color: #128c7e;
-	    font-size: 14px;
-	    font-weight: 600;
-	    padding: 8px 14px;
-	    border-radius: 20px;
-	    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-	    white-space: nowrap;
-	    opacity: 0;
-	    transform: translateX(10px);
-	    transition: all 0.3s ease;
-	  }
-	  .whatsapp-float:hover .wa-label {
-	    opacity: 1;
-	    transform: translateX(0);
-	  }
-	  .whatsapp-float .wa-icon {
-	    width: 58px;
-	    height: 58px;
-	    background-color: #25d366;
-	    border-radius: 50%;
-	    display: flex;
-	    align-items: center;
-	    justify-content: center;
-	    box-shadow: 0 4px 15px rgba(37,211,102,0.4);
-	    transition: transform 0.2s ease;
-	  }
-	  .whatsapp-float:hover .wa-icon {
-	    transform: scale(1.1);
-	  }
-	  .whatsapp-float .wa-icon svg {
-	    width: 32px;
-	    height: 32px;
-	    fill: white;
-	  }
-	</style>
+<!-- Botón flotante de WhatsApp -->
+<style>
+  .whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .whatsapp-float .wa-label {
+    background-color: #fff;
+    color: #128c7e;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+  }
+  .whatsapp-float:hover .wa-label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .whatsapp-float .wa-icon {
+    width: 58px;
+    height: 58px;
+    background-color: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(37,211,102,0.4);
+    transition: transform 0.2s ease;
+  }
+  .whatsapp-float:hover .wa-icon {
+    transform: scale(1.1);
+  }
+  .whatsapp-float .wa-icon svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+  }
+</style>
 
-	<a class="whatsapp-float"
-	   href="https://wa.me/584122324636?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20Compita"
-	   target="_blank"
-	   rel="noopener noreferrer"
-	   aria-label="Contactar por WhatsApp">
-	  <span class="wa-label">¿Tienes dudas? Escríbenos</span>
-	  <div class="wa-icon">
-	    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-	      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-	    </svg>
-	  </div>
-	</a>
+<a class="whatsapp-float"
+   href="https://wa.me/584122324636?text=Hola%2C%20me%20interesa%20conocer%20m%C3%A1s%20sobre%20Compita"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Contactar por WhatsApp">
+  <span class="wa-label">¿Tienes dudas? Escríbenos</span>
+  <div class="wa-icon">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </div>
+</a>
 <!-- Fin botón flotante de WhatsApp -->
+
 </body>
 </html>
