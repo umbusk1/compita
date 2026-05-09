@@ -986,9 +986,10 @@ async function cargarDatosUsuario() {
 			const badgePlan = document.getElementById('badge-plan');
 			const textoPlan = document.getElementById('texto-plan');
 			const nombres = {
-				'estandar': 'Plan Estándar',
-				'business': 'Plan Business',
-				'enterprise': 'Plan Enterprise'
+			    'estandar': 'Plan Estándar',
+			    'business': 'Plan Business',
+			    'enterprise_gold': 'Enterprise GOLD ',
+			    'enterprise_platinum': 'Enterprise PLATINUM'
 			};
 			if (nombres[planActual]) {
 				textoPlan.textContent = nombres[planActual];
@@ -1011,9 +1012,9 @@ async function cargarDatosUsuario() {
                 }
             }
 
-            if (planActual === 'business' || planActual === 'enterprise' || planActual === 'free_trial') {
-                await cargarCuposBusiness();
-            }
+            if (planActual === 'business' || planActual === 'enterprise_gold' || planActual === 'enterprise_platinum' || planActual === 'free_trial') {
+			    await cargarCuposBusiness();
+			}
         } else {
             cerrarSesion();
         }
@@ -1207,9 +1208,9 @@ function renderizarOportunidades() {
     const html = oportunidadesFiltradas.map(op => {
         // Verificar si tiene acceso Business (y que no esté expirado si es trial)
         let esBusiness = false;
-        if (planActual === 'business' || planActual === 'enterprise') {
-            esBusiness = true;
-        } else if (planActual === 'free_trial' && datosEmpresa && datosEmpresa.trial_fin) {
+        if (planActual === 'business' || planActual === 'enterprise_gold' || planActual === 'enterprise_platinum') {
+    	esBusiness = true;
+		} else if (planActual === 'free_trial' && datosEmpresa && datosEmpresa.trial_fin) {
             const ahora = new Date();
             const fin = new Date(datosEmpresa.trial_fin);
             const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
@@ -1285,19 +1286,20 @@ function renderizarOportunidades() {
 
                 <!-- Cabecera de cupos -->
                 <p class="text-sm font-bold text-gray-900 mb-3">
-                    ${planActual === 'enterprise' ? '⭐ PLAN ENTERPRISE:' : '🚀 PLAN BUSINESS:'}
+                    ${planActual === 'enterprise_platinum' ? '💎 PLAN PLATINUM:' : planActual === 'enterprise_gold' ? '⭐ PLAN GOLD:' : '🚀 PLAN BUSINESS:'}
                     <span class="font-normal text-xs">
-                        📄 Descargas PDF: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.zip_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.zip_limite : '?'}</span>
+                        📄 Descargas PDF: <span class="font-semibold">${(planActual === 'enterprise_gold' || planActual === 'enterprise_platinum') ? '∞' : (cuposDisponibles ? `${cuposDisponibles.zip_disponibles}/${cuposDisponibles.zip_limite}` : '?')}</span>
                         &nbsp;•&nbsp;
-                        🤖 Análisis IA: <span class="font-semibold">${cuposDisponibles ? cuposDisponibles.analisis_disponibles : '?'}/${cuposDisponibles ? cuposDisponibles.analisis_limite : '?'}</span>
+                        🤖 Análisis IA: <span class="font-semibold">${(planActual === 'enterprise_gold' || planActual === 'enterprise_platinum') ? '∞' : (cuposDisponibles ? `${cuposDisponibles.analisis_disponibles}/${cuposDisponibles.analisis_limite}` : '?')}</span>
                         &nbsp;•&nbsp;
                         Reinicia: <span class="font-semibold">${(() => { const hoy = new Date(); const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1); return proximoMes.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }); })()}</span>
-                        ${planActual === 'enterprise' ? '&nbsp;•&nbsp; 📋 Agente 033: <span class="font-semibold">1/sem</span> &nbsp;•&nbsp; 🗂️ Agente Sprint: <span class="font-semibold">1/sem</span> &nbsp;•&nbsp; Agentes reinician: <span class="font-semibold">lunes</span>' : ''}
+                        ${planActual === 'enterprise_gold' ? '&nbsp;•&nbsp; 📋 Agente 033: <span class="font-semibold">5/mes</span>' : ''}
+                        ${planActual === 'enterprise_platinum' ? '&nbsp;•&nbsp; 📋 Agente 033: <span class="font-semibold">∞</span> &nbsp;•&nbsp; 🗂️ Coach+KB: <span class="font-semibold">5/mes</span>' : ''}
                     </span>
                 </p>
 
                 <!-- Botones -->
-                <div class="grid grid-cols-1 ${planActual === 'enterprise' ? 'md:grid-cols-4' : 'md:grid-cols-2'} gap-3">
+                <div class="grid grid-cols-1 ${planActual === 'enterprise_platinum' ? 'md:grid-cols-4' : planActual === 'enterprise_gold' ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-3">
 
                     <!-- Botón 1: Descargar Pliego (PDF) -->
                     <div>
@@ -1326,19 +1328,22 @@ function renderizarOportunidades() {
 
                     <!-- Botones 3 y 4: solo Enterprise -->
                     ${(() => {
-                        if (planActual !== 'enterprise') return '';
-                        return '<div>'
-                            + '<button onclick="generarF033(\'' + op.referencia + '\')" class="w-full flex items-center justify-center gap-2 bg-indigo-700 text-white px-4 py-3 rounded-lg hover:bg-indigo-800 transition font-medium text-sm">'
-                            + '<span>📋</span><span>Generar F033 (Agente 033)</span>'
-                            + '</button>'
-                            + '<div id="mensaje-f033-' + op.referencia + '" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">✅ F033 generado y descargado.</div>'
-                            + '</div>'
-							+ '<div>'
-							+ '<button onclick="abrirCoach(\'' + op.referencia + '\', \'' + escapeHtml(op.que) + '\', \'' + escapeHtml(op.quien) + '\', ' + (op.monto_estimado || 0) + ', \'' + (op.fecha_presentacion || '') + '\', \'' + (op.tipo || '') + '\')" '
-							+ 'class="w-full flex items-center justify-center gap-2 bg-violet-600 text-white px-4 py-3 rounded-lg hover:bg-violet-700 transition font-medium text-sm">'
-							+ '<span>🗂️</span><span>Plan para ofertar (Agente Sprint)</span>'
-							+ '</button>'
-							+ '</div>';
+                    if (planActual !== 'enterprise_gold' && planActual !== 'enterprise_platinum') return '';
+                    let html = '<div>'
+                    + '<button onclick="generarF033(\'' + op.referencia + '\')" class="w-full flex items-center justify-center gap-2 bg-indigo-700 text-white px-4 py-3 rounded-lg hover:bg-indigo-800 transition font-medium text-sm">'
+                    + '<span>📋</span><span>Generar F033 (Agente 033)</span>'
+                    + '</button>'
+                    + '<div id="mensaje-f033-' + op.referencia + '" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">✅ F033 generado y descargado.</div>'
+                    + '</div>';
+                    if (planActual === 'enterprise_platinum') {
+                    html += '<div>'
+                    + '<button onclick="abrirCoach(\'' + op.referencia + '\', \'' + escapeHtml(op.que) + '\', \'' + escapeHtml(op.quien) + '\', ' + (op.monto_estimado || 0) + ', \'' + (op.fecha_presentacion || '') + '\', \'' + (op.tipo || '') + '\')" '
+                    + 'class="w-full flex items-center justify-center gap-2 bg-violet-600 text-white px-4 py-3 rounded-lg hover:bg-violet-700 transition font-medium text-sm">'
+                    + '<span>🗂️</span><span>Coach + Reporte + KB (B4)</span>'
+                    + '</button>'
+                    + '</div>';
+                    }
+                    return html;
                     })()}
 
                 </div>
