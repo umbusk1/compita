@@ -263,22 +263,7 @@
                         <p class="text-xs text-gray-500 mb-4">Los cupos mensuales se reinician el día 1 de cada mes. Los semanales, cada lunes a las 00:00 UTC.</p>
                         <div id="plan-cupos-display" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
                     </div>
-                    <div id="seccion-agentes-cupos" class="bg-white border border-indigo-200 rounded-xl p-6 mb-6">
-                        <h3 class="text-lg font-bold text-gray-900 mb-1">📦 Cupos adicionales (paquetes mensuales)</h3>
-                        <p class="text-xs text-gray-500 mb-4">Amplía tus cupos con paquetes según tu demanda.</p>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm">
-                                <thead><tr class="border-b border-gray-200"><th class="text-left py-2 pr-4 text-gray-600 font-semibold">Acción</th><th class="text-center py-2 px-3"><div class="text-xs font-semibold text-gray-700">Paquete S</div></th><th class="text-center py-2 px-3 bg-indigo-50 rounded"><div class="text-xs font-semibold text-indigo-700">Paquete M</div></th><th class="text-center py-2 px-3"><div class="text-xs font-semibold text-gray-700">Paquete L</div></th></tr></thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    <tr><td class="py-3 pr-4 text-gray-700">📄 Descargar Pliego (PDF)</td><td class="text-center py-3 px-3 font-bold text-gray-900">5</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">10</td><td class="text-center py-3 px-3 font-bold text-gray-900">20</td></tr>
-                                    <tr><td class="py-3 pr-4 text-gray-700">🤖 Analizar Pliego con IA</td><td class="text-center py-3 px-3 font-bold text-gray-900">2</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">4</td><td class="text-center py-3 px-3 font-bold text-gray-900">8</td></tr>
-                                    <tr><td class="py-3 pr-4 text-gray-700">📋 Generar F033 (Agente 033)</td><td class="text-center py-3 px-3 font-bold text-gray-900">5</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">10</td><td class="text-center py-3 px-3 font-bold text-gray-900">20</td></tr>
-                                    <tr><td class="py-3 pr-4 text-gray-700">🗂️ Plan para ofertar (Agente Sprint)</td><td class="text-center py-3 px-3 font-bold text-gray-900">2</td><td class="text-center py-3 px-3 font-bold text-indigo-700 bg-indigo-50">4</td><td class="text-center py-3 px-3 font-bold text-gray-900">8</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-4 text-center">Para adquirir paquetes adicionales, contacta a <a href="mailto:sales@umbusk.com" class="text-indigo-600 underline">sales@umbusk.com</a></p>
-                    </div>
+
                     <div class="bg-gray-50 border border-gray-200 rounded-xl p-6">
                         <h3 class="text-lg font-bold text-gray-900 mb-4">⚠️ Condiciones y avisos importantes</h3>
                         <ul class="space-y-3 text-sm text-gray-600">
@@ -670,49 +655,61 @@ async function iniciarUpgrade(plan){
 
 // ════════ PERFIL DE PLAN ════════
 function cargarPerfilPlan(plan){
-    const fe=['Análisis diario automático de licitaciones','Notificaciones por email de oportunidades ALTA y MEDIA','Dashboard con todas tus oportunidades','Filtros por relevancia, fecha y monto','Perfil empresarial personalizable','Hasta 5 familias UNSPSC para filtrado automático','Soporte por email'];
-    const fb=[...fe,'📄 Descargar pliego en PDF directamente desde el SECP (10/mes)','🤖 Análisis profundo del pliego con IA (5/mes)','Exportación a Excel de todas tus oportunidades','Soporte prioritario por email y chat'];
-    // CAMBIO: features para enterprise_gold
-    const fg=[
-        'Análisis diario automático de licitaciones',
-        'Notificaciones por email de oportunidades ALTA y MEDIA',
+    const fe=[
         'Dashboard con todas tus oportunidades',
         'Filtros por relevancia, fecha y monto',
+        'Análisis diario automático de licitaciones',
+        'Notificaciones por email de oportunidades ALTA y MEDIA',
+        'Perfil empresarial personalizable',
+        'Familias UNSPSC para filtrado automático',
+        'Exportación a Excel de todas tus oportunidades'
+    ];
+    const fb=[
+        'Dashboard con todas tus oportunidades',
+        'Filtros por relevancia, fecha y monto',
+        'Análisis diario automático de licitaciones',
+        'Notificaciones por email de oportunidades ALTA y MEDIA',
+        'Perfil empresarial personalizable',
+        'Familias UNSPSC para filtrado automático',
+        'Exportación a Excel de todas tus oportunidades',
+        '📄 Descargas de pliego en PDF — ilimitadas',
+        '🤖 Análisis profundo del pliego con IA — ilimitado'
+    ];
+    const fg=[
+        'Dashboard con todas tus oportunidades',
+        'Filtros por relevancia, fecha y monto',
+        'Análisis diario automático de licitaciones',
+        'Notificaciones por email de oportunidades ALTA y MEDIA',
         'Perfil empresarial personalizable',
         'Familias UNSPSC para filtrado automático',
         'Exportación a Excel de todas tus oportunidades',
         '📄 Descargas de pliego en PDF — ilimitadas',
         '🤖 Análisis profundo del pliego con IA — ilimitado',
-        '📋 Agente 033 / F033 (5/mes)',
-        '🔒 Perfil Licitador con seguimiento de documentos habilitantes',
-        'Soporte dedicado por WhatsApp',
-        'Acceso anticipado a nuevas funcionalidades'
+        '📋 Agente 033 / F033 (5/mes)'
     ];
-    // CAMBIO: features para enterprise_platinum
     const fp=[
-        'Análisis diario automático de licitaciones',
-        'Notificaciones por email de oportunidades ALTA y MEDIA',
         'Dashboard con todas tus oportunidades',
         'Filtros por relevancia, fecha y monto',
+        'Análisis diario automático de licitaciones',
+        'Notificaciones por email de oportunidades ALTA y MEDIA',
         'Perfil empresarial personalizable',
         'Familias UNSPSC para filtrado automático',
         'Exportación a Excel de todas tus oportunidades',
         '📄 Descargas de pliego en PDF — ilimitadas',
         '🤖 Análisis profundo del pliego con IA — ilimitado',
         '📋 Agente 033 / F033 — ilimitado',
-        '🗂️ Coach + Reporte + KB (5/mes)',
         '🔒 Perfil Licitador con seguimiento de documentos habilitantes',
+        '🗂️ Coach + Reporte + Prompt para KanbanBonsai (5/mes)',
         'Soporte dedicado por WhatsApp',
         'Acceso anticipado a nuevas funcionalidades'
     ];
 
-    // CAMBIO: cfg actualizado sin 'enterprise', con gold y platinum
     const cfg={
-        free_trial:{nombre:'Prueba Gratuita',subtitulo:'Acceso completo al Plan Estándar por 7 días',features:fe,mostrarAgentes:false},
-        estandar:{nombre:'Plan Estándar',subtitulo:'$10 / mes — renovación automática',features:fe,mostrarAgentes:false},
-        business:{nombre:'Plan Business',subtitulo:'$20 / mes — renovación automática',features:fb,mostrarAgentes:false},
-        enterprise_gold:{nombre:'Enterprise GOLD ⭐',subtitulo:'$40 / mes — renovación automática',features:fg,mostrarAgentes:true},
-        enterprise_platinum:{nombre:'Enterprise PLATINUM 💎',subtitulo:'$80 / mes — renovación automática',features:fp,mostrarAgentes:true}
+        free_trial:{nombre:'Prueba Gratuita',subtitulo:'Acceso completo al Plan Estándar por 7 días',features:fe},
+        estandar:{nombre:'Plan Estándar',subtitulo:'$10 / mes — renovación automática',features:fe},
+        business:{nombre:'Plan Business',subtitulo:'$20 / mes — renovación automática',features:fb},
+        enterprise_gold:{nombre:'Enterprise GOLD ⭐',subtitulo:'$40 / mes — renovación automática',features:fg},
+        enterprise_platinum:{nombre:'Enterprise PLATINUM 💎',subtitulo:'$80 / mes — renovación automática',features:fp}
     };
 
     const c=cfg[plan]||cfg['estandar'];
@@ -749,8 +746,7 @@ function cargarPerfilPlan(plan){
         if(sc)sc.style.display='none';
     }
 
-    const sa=document.getElementById('seccion-agentes-cupos');
-    if(sa)sa.style.display=c.mostrarAgentes?'block':'none';
+
 }
 
 // ════════ PERFIL LICITADOR ════════
