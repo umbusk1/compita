@@ -35,7 +35,6 @@
 
         <!-- Métricas Principales -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <!-- Total Empresas -->
             <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-4xl">🏢</span>
@@ -43,8 +42,6 @@
                 </div>
                 <p class="text-blue-100 text-sm font-medium">Total Empresas</p>
             </div>
-
-            <!-- Licitaciones Hoy -->
             <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-4xl">📋</span>
@@ -52,8 +49,6 @@
                 </div>
                 <p class="text-green-100 text-sm font-medium">Licitaciones Hoy</p>
             </div>
-
-            <!-- Oportunidades Generadas -->
             <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-4xl">✅</span>
@@ -61,8 +56,6 @@
                 </div>
                 <p class="text-yellow-100 text-sm font-medium">Oportunidades Generadas</p>
             </div>
-
-            <!-- Emails Enviados -->
             <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white">
                 <div class="flex items-center justify-between mb-4">
                     <span class="text-4xl">📧</span>
@@ -88,23 +81,20 @@
                 </nav>
             </div>
 
-            <!-- Contenido de Tabs -->
             <div class="p-6">
                 <!-- Tab: Empresas -->
                 <div id="content-empresas" class="tab-content">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-xl font-bold text-gray-900">Lista de Empresas</h2>
-						<button onclick="abrirModalCrear()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
-							+ Nueva Empresa
-						</button>
+                        <button onclick="abrirModalCrear()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
+                            + Nueva Empresa
+                        </button>
                     </div>
-
-                    <!-- Tabla de Empresas -->
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-gray-50 border-b border-gray-200">
                                 <tr>
-                                	<th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Empresa</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Email</th>
                                     <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Plan</th>
@@ -125,82 +115,68 @@
                     </div>
                 </div>
 
-<!-- Tab: Sistema — REEMPLAZAR BLOQUE COMPLETO -->
-<div id="content-sistema" class="tab-content hidden">
-    <h2 class="text-xl font-bold text-gray-900 mb-6">Estado del Sistema</h2>
-
-    <div class="space-y-4">
-
-        <!-- ── NUEVO: Panel de Contingencia ─────────────────────────── -->
-        <div id="panel-contingencia" class="rounded-lg p-5 border-2 border-gray-200 bg-gray-50">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-3">
-                    <span id="contingencia-icono" class="text-3xl">⏳</span>
-                    <div>
-                        <p class="font-bold text-gray-800" id="contingencia-titulo">Cargando estado...</p>
-                        <p class="text-sm text-gray-500 mt-0.5" id="contingencia-subtitulo"></p>
-                    </div>
-                </div>
-                <!-- Botones de acción — se muestran según el estado -->
-                <div class="flex gap-3" id="contingencia-acciones">
-                    <!-- Se inyectan dinámicamente -->
-                </div>
-            </div>
-            <!-- Detalles adicionales (fecha de falla, motivo, etc.) -->
-            <div id="contingencia-detalles" class="hidden mt-3 bg-white rounded-lg p-3 border border-gray-200 text-sm text-gray-700 space-y-1">
-            </div>
-        </div>
-        <!-- ─────────────────────────────────────────────────────────── -->
-
-        <!-- Último Scraping -->
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-semibold text-gray-700">Último Scraping</p>
-                    <p class="text-xs text-gray-500 mt-1" id="ultimo-scraping">Cargando...</p>
-                </div>
-                <button onclick="forzarScraping()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium">
-                    🔄 Forzar Scraping
-                </button>
-            </div>
-        </div>
-
-        <!-- Último Análisis -->
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-semibold text-gray-700">Último Análisis</p>
-                    <p class="text-xs text-gray-500 mt-1" id="ultimo-analisis">Cargando...</p>
-                </div>
-                <button onclick="forzarAnalisis()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
-                    🤖 Re-analizar Hoy
-                </button>
-            </div>
-        </div>
-
-        <!-- Uso de API -->
-        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <div class="flex items-center justify-between">
-                <div class="flex-1">
-                    <p class="text-sm font-semibold text-gray-700">💎 Uso Total de Claude API</p>
-                    <div class="mt-2 space-y-1">
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-xs text-gray-500">Total acumulado:</span>
-                            <span id="tokens-totales" class="text-lg font-bold text-indigo-600 font-mono">Calculando...</span>
+                <!-- Tab: Sistema -->
+                <div id="content-sistema" class="tab-content hidden">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6">Estado del Sistema</h2>
+                    <div class="space-y-4">
+                        <div id="panel-contingencia" class="rounded-lg p-5 border-2 border-gray-200 bg-gray-50">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <span id="contingencia-icono" class="text-3xl">⏳</span>
+                                    <div>
+                                        <p class="font-bold text-gray-800" id="contingencia-titulo">Cargando estado...</p>
+                                        <p class="text-sm text-gray-500 mt-0.5" id="contingencia-subtitulo"></p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-3" id="contingencia-acciones"></div>
+                            </div>
+                            <div id="contingencia-detalles" class="hidden mt-3 bg-white rounded-lg p-3 border border-gray-200 text-sm text-gray-700 space-y-1"></div>
                         </div>
-                        <div class="flex items-baseline gap-2">
-                            <span class="text-xs text-gray-500">Hoy:</span>
-                            <span id="tokens-hoy" class="text-sm font-semibold text-gray-700 font-mono">Calculando...</span>
+
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-700">Último Scraping</p>
+                                    <p class="text-xs text-gray-500 mt-1" id="ultimo-scraping">Cargando...</p>
+                                </div>
+                                <button onclick="forzarScraping()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium">
+                                    🔄 Forzar Scraping
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-700">Último Análisis</p>
+                                    <p class="text-xs text-gray-500 mt-1" id="ultimo-analisis">Cargando...</p>
+                                </div>
+                                <button onclick="forzarAnalisis()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
+                                    🤖 Re-analizar Hoy
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <p class="text-sm font-semibold text-gray-700">💎 Uso Total de Claude API</p>
+                                    <div class="mt-2 space-y-1">
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-xs text-gray-500">Total acumulado:</span>
+                                            <span id="tokens-totales" class="text-lg font-bold text-indigo-600 font-mono">Calculando...</span>
+                                        </div>
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="text-xs text-gray-500">Hoy:</span>
+                                            <span id="tokens-hoy" class="text-sm font-semibold text-gray-700 font-mono">Calculando...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-4xl opacity-20">🤖</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="text-4xl opacity-20">🤖</div>
-            </div>
-        </div>
-
-    </div>
-</div>
-<!-- FIN Tab: Sistema -->
 
                 <!-- Tab: Admins -->
                 <div id="content-admins" class="tab-content hidden">
@@ -210,7 +186,6 @@
                             + Invitar Admin
                         </button>
                     </div>
-
                     <div class="space-y-4" id="lista-admins">
                         <p class="text-gray-500 text-center py-8">🔄 Cargando administradores...</p>
                     </div>
@@ -222,7 +197,6 @@
 <!-- Modal Ver Empresa -->
 <div id="modal-ver-empresa" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <!-- Header -->
         <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
             <h3 class="text-xl font-bold text-white flex items-center gap-2">
                 <span>🏢</span>
@@ -230,10 +204,7 @@
             </h3>
             <button onclick="cerrarModalVer()" class="text-white hover:text-gray-200 text-2xl">×</button>
         </div>
-
-        <!-- Contenido -->
         <div class="p-6 space-y-6">
-            <!-- Información General -->
             <div>
                 <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Información General</h4>
                 <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
@@ -255,8 +226,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Configuración -->
             <div>
                 <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Configuración de Búsqueda</h4>
                 <div class="bg-gray-50 p-4 rounded-lg space-y-3">
@@ -278,8 +247,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Estadísticas de Uso -->
             <div>
                 <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Uso del Servicio</h4>
                 <div class="grid grid-cols-3 gap-4">
@@ -298,8 +265,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Footer -->
         <div class="bg-gray-50 px-6 py-4 flex justify-end gap-3 rounded-b-xl">
             <button onclick="cerrarModalVer()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium">
                 Cerrar
@@ -314,7 +279,6 @@
 <!-- Modal Editar Empresa -->
 <div id="modal-editar-empresa" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <!-- Header -->
         <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
             <h3 class="text-xl font-bold text-white flex items-center gap-2">
                 <span>✏️</span>
@@ -322,28 +286,25 @@
             </h3>
             <button onclick="cerrarModalEditar()" class="text-white hover:text-gray-200 text-2xl">×</button>
         </div>
-
-        <!-- Formulario -->
         <form onsubmit="guardarCambios(event)" class="p-6 space-y-6">
             <input type="hidden" id="editar-empresa-id">
 
-			    <!-- ⚠️ DISCLAIMER STRIPE -->
-			    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg mb-4">
-			        <div class="flex items-start gap-3">
-			            <span class="text-2xl">⚠️</span>
-			            <div>
-			                <p class="text-sm font-semibold text-yellow-800 mb-1">Importante - Sincronización con Stripe</p>
-			                <p class="text-sm text-yellow-700">
-			                    Los cambios aquí solo afectan la <strong>base de datos</strong> de Compita.
-			                    Si el usuario tiene una suscripción activa en Stripe, debes
-			                    <a href="https://dashboard.stripe.com/subscriptions" target="_blank" class="underline font-semibold hover:text-yellow-900">
-			                        modificarla directamente en Stripe
-			                    </a>
-			                    para evitar cobros incorrectos.
-			                </p>
-			            </div>
-			        </div>
-			    </div>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg mb-4">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">⚠️</span>
+                    <div>
+                        <p class="text-sm font-semibold text-yellow-800 mb-1">Importante - Sincronización con Stripe</p>
+                        <p class="text-sm text-yellow-700">
+                            Los cambios aquí solo afectan la <strong>base de datos</strong> de Compita.
+                            Si el usuario tiene una suscripción activa en Stripe, debes
+                            <a href="https://dashboard.stripe.com/subscriptions" target="_blank" class="underline font-semibold hover:text-yellow-900">
+                                modificarla directamente en Stripe
+                            </a>
+                            para evitar cobros incorrectos.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
             <!-- Plan -->
             <div>
@@ -353,7 +314,8 @@
                     <option value="free_trial">Prueba Gratis (7 días)</option>
                     <option value="estandar">Estándar - $10/mes</option>
                     <option value="business">Business - $20/mes</option>
-                    <option value="enterprise">Enterprise - Personalizado</option>
+                    <option value="enterprise_gold">Enterprise GOLD - $40/mes</option>
+                    <option value="enterprise_platinum">Enterprise PLATINUM - $80/mes</option>
                 </select>
             </div>
 
@@ -372,7 +334,7 @@
                 </div>
             </div>
 
-            <!-- Cuotas (solo para Business) -->
+            <!-- Cuotas -->
             <div id="cuotas-section" class="hidden space-y-3">
                 <h4 class="text-sm font-semibold text-gray-700">Resetear Cuotas Mensuales</h4>
                 <div class="grid grid-cols-2 gap-4">
@@ -386,7 +348,6 @@
                 <p class="text-xs text-gray-500">Las cuotas se resetean automáticamente cada mes, pero puedes hacerlo manualmente aquí.</p>
             </div>
 
-            <!-- Botones -->
             <div class="flex justify-end gap-3 pt-4 border-t">
                 <button type="button" onclick="cerrarModalEditar()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium">
                     Cancelar
@@ -402,7 +363,6 @@
 <!-- Modal Crear Nueva Empresa -->
 <div id="modal-crear-empresa" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <!-- Header -->
         <div class="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
             <h3 class="text-xl font-bold text-white flex items-center gap-2">
                 <span>➕</span>
@@ -410,23 +370,15 @@
             </h3>
             <button onclick="cerrarModalCrear()" class="text-white hover:text-gray-200 text-2xl">×</button>
         </div>
-
-        <!-- Formulario -->
         <form onsubmit="crearEmpresa(event)" class="p-6 space-y-6">
-
-            <!-- Información Básica -->
             <div class="space-y-4">
                 <h4 class="text-sm font-semibold text-gray-700 uppercase border-b pb-2">Información de la Empresa</h4>
-
-                <!-- Nombre -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre de la Empresa *</label>
                     <input type="text" id="crear-nombre" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                         placeholder="Ej: ECODIL Ingeniería">
                 </div>
-
-                <!-- Dominio -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Dominio / Sitio Web</label>
                     <input type="text" id="crear-dominio"
@@ -436,19 +388,14 @@
                 </div>
             </div>
 
-            <!-- Usuario Administrador -->
             <div class="space-y-4">
                 <h4 class="text-sm font-semibold text-gray-700 uppercase border-b pb-2">Usuario Administrador</h4>
-
-                <!-- Nombre del usuario -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre del Contacto *</label>
                     <input type="text" id="crear-contacto-nombre" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                         placeholder="Ej: Juan Pérez">
                 </div>
-
-                <!-- Email -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Email del Usuario *</label>
                     <input type="email" id="crear-email" required
@@ -456,8 +403,6 @@
                         placeholder="Ej: juan@ecodil.com.do">
                     <p class="text-xs text-gray-500 mt-1">Se enviará un correo con las credenciales de acceso</p>
                 </div>
-
-                <!-- Contraseña temporal (generada automáticamente) -->
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div class="flex items-center justify-between mb-2">
                         <label class="text-sm font-semibold text-blue-900">Contraseña Temporal</label>
@@ -473,11 +418,8 @@
                 </div>
             </div>
 
-            <!-- Plan y Configuración -->
             <div class="space-y-4">
                 <h4 class="text-sm font-semibold text-gray-700 uppercase border-b pb-2">Plan y Configuración</h4>
-
-                <!-- Plan -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Plan Inicial *</label>
                     <select id="crear-plan" required
@@ -486,11 +428,10 @@
                         <option value="free_trial">Prueba Gratis (7 días)</option>
                         <option value="estandar">Estándar - $10/mes</option>
                         <option value="business">Business - $20/mes</option>
-                        <option value="enterprise">Enterprise - Personalizado</option>
+                        <option value="enterprise_gold">Enterprise GOLD - $40/mes</option>
+                        <option value="enterprise_platinum">Enterprise PLATINUM - $80/mes</option>
                     </select>
                 </div>
-
-                <!-- Palabras clave iniciales -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Palabras Clave Iniciales</label>
                     <textarea id="crear-palabras-clave" rows="3"
@@ -500,7 +441,6 @@
                 </div>
             </div>
 
-            <!-- Nota informativa -->
             <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded-lg">
                 <div class="flex items-start gap-3">
                     <span class="text-xl">✉️</span>
@@ -513,7 +453,6 @@
                 </div>
             </div>
 
-            <!-- Botones -->
             <div class="flex justify-end gap-3 pt-4 border-t">
                 <button type="button" onclick="cerrarModalCrear()"
                     class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium">
@@ -531,7 +470,6 @@
 <!-- Modal Invitar Administrador -->
 <div id="modal-invitar-admin" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
-        <!-- Header -->
         <div class="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4 flex items-center justify-between rounded-t-xl">
             <h3 class="text-xl font-bold text-white flex items-center gap-2">
                 <span>👥</span>
@@ -539,23 +477,15 @@
             </h3>
             <button onclick="cerrarModalInvitar()" class="text-white hover:text-gray-200 text-2xl">×</button>
         </div>
-
-        <!-- Formulario -->
         <form onsubmit="invitarAdministrador(event)" class="p-6 space-y-6">
-
-            <!-- Información del Admin -->
             <div class="space-y-4">
                 <h4 class="text-sm font-semibold text-gray-700 uppercase border-b pb-2">Información del Administrador</h4>
-
-                <!-- Nombre -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre Completo *</label>
                     <input type="text" id="invitar-nombre" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                         placeholder="Ej: María González">
                 </div>
-
-                <!-- Email -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                     <input type="email" id="invitar-email" required
@@ -563,8 +493,6 @@
                         placeholder="Ej: maria@compita.com">
                     <p class="text-xs text-gray-500 mt-1">Se enviará un correo con las credenciales de acceso</p>
                 </div>
-
-                <!-- Rol -->
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Rol *</label>
                     <select id="invitar-rol" required
@@ -577,8 +505,6 @@
                         <strong>Superadmin:</strong> Puede todo + invitar otros administradores
                     </p>
                 </div>
-
-                <!-- Contraseña temporal (generada automáticamente) -->
                 <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
                     <div class="flex items-center justify-between mb-2">
                         <label class="text-sm font-semibold text-purple-900">Contraseña Temporal</label>
@@ -594,7 +520,6 @@
                 </div>
             </div>
 
-            <!-- Nota informativa -->
             <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
                 <div class="flex items-start gap-3">
                     <span class="text-xl">ℹ️</span>
@@ -607,7 +532,6 @@
                 </div>
             </div>
 
-            <!-- Botones -->
             <div class="flex justify-end gap-3 pt-4 border-t">
                 <button type="button" onclick="cerrarModalInvitar()"
                     class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition font-medium">
@@ -627,26 +551,25 @@
         let adminData = null;
         let tabActual = 'empresas';
 
-        // Función para traducir planes a español
-		function traducirPlan(plan) {
-		    const traducciones = {
-		        'prueba_gratis': 'Prueba Gratis',
-		        'free_trial': 'Prueba Gratis',
-		        'estandar': 'Estándar',
-		        'business': 'Business',
-		        'enterprise': 'Enterprise'
-		    };
-		    return traducciones[plan] || plan.toUpperCase();
-		}
+        // CAMBIO 1: traducirPlan actualizado con enterprise_gold y enterprise_platinum
+        function traducirPlan(plan) {
+            const traducciones = {
+                'prueba_gratis':       'Prueba Gratis',
+                'free_trial':          'Prueba Gratis',
+                'estandar':            'Estándar',
+                'business':            'Business',
+                'enterprise_gold':     'Enterprise GOLD ⭐',
+                'enterprise_platinum': 'Enterprise PLATINUM 💎'
+            };
+            return traducciones[plan] || plan.toUpperCase();
+        }
 
-        // Verificar autenticación
         window.addEventListener('DOMContentLoaded', async function() {
             const token = localStorage.getItem('admin_token');
             if (!token) {
                 window.location.href = '/admin-login.html';
                 return;
             }
-
             await cargarDatosAdmin();
             await cargarEstadisticas();
         });
@@ -657,7 +580,6 @@
                 const response = await fetch(`${API_BASE}/api/admin?action=verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-
                 if (response.ok) {
                     adminData = await response.json();
                     document.getElementById('nombre-admin').textContent = adminData.nombre;
@@ -671,11 +593,10 @@
             }
         }
 
-        // Cerrar sesión
-		function cerrarSesion() {
-		    localStorage.removeItem('admin_token');
-		    window.location.href = 'admin-login.html';
-		}
+        function cerrarSesion() {
+            localStorage.removeItem('admin_token');
+            window.location.href = 'admin-login.html';
+        }
 
         async function cargarEstadisticas() {
             try {
@@ -687,38 +608,31 @@
                 if (response.ok) {
                     const data = await response.json();
 
-                    // Actualizar métricas
                     document.getElementById('total-empresas').textContent = data.total_empresas || 0;
                     document.getElementById('licitaciones-hoy').textContent = data.licitaciones_hoy || 0;
                     document.getElementById('oportunidades-generadas').textContent = data.oportunidades_totales || 0;
                     document.getElementById('emails-enviados').textContent = data.emails_enviados_hoy || 0;
 
-					// Actualizar uso de API
-					const analisisHoy = data.analisis_ia_hoy || 0;
-					const tokensHoy = analisisHoy * 1500;
-					const tokensTotales = data.tokens_totales || 0;
+                    const analisisHoy = data.analisis_ia_hoy || 0;
+                    const tokensHoy = analisisHoy * 1500;
+                    const tokensTotales = data.tokens_totales || 0;
 
-					document.getElementById('tokens-totales').textContent =
-						`${tokensTotales.toLocaleString('es-DO')} tokens`;
+                    document.getElementById('tokens-totales').textContent =
+                        `${tokensTotales.toLocaleString('es-DO')} tokens`;
+                    document.getElementById('tokens-hoy').textContent =
+                        `${tokensHoy.toLocaleString('es-DO')} tokens (~${analisisHoy} análisis)`;
 
-					document.getElementById('tokens-hoy').textContent =
-						`${tokensHoy.toLocaleString('es-DO')} tokens (~${analisisHoy} análisis)`;
-
-                    // Cargar empresas
                     cargarTablaEmpresas(data.empresas || []);
 
-                    // Cargar info del sistema
                     if (data.ultimo_scraping) {
                         document.getElementById('ultimo-scraping').textContent =
                             `${new Date(data.ultimo_scraping).toLocaleString('es-DO')} - ${data.licitaciones_hoy} licitaciones`;
                     }
-
                     if (data.ultimo_analisis) {
                         document.getElementById('ultimo-analisis').textContent =
                             `${new Date(data.ultimo_analisis).toLocaleString('es-DO')}`;
                     }
 
-                    // Cargar admins
                     cargarListaAdmins(data.administradores || []);
                 }
             } catch (error) {
@@ -733,27 +647,30 @@
             if (empresas.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                        <td colspan="8" class="px-4 py-8 text-center text-gray-500">
                             📭 No hay empresas registradas
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
                 return;
             }
 
             const html = empresas.map(emp => `
                 <tr class="border-b border-gray-100 hover:bg-gray-50">
                     <td class="px-4 py-4">
-                    	<span class="font-mono text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">#${emp.id}</span>
+                        <span class="font-mono text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">#${emp.id}</span>
                         <p class="font-semibold text-gray-900">${emp.nombre}</p>
                         <p class="text-xs text-gray-500">${emp.dominio}</p>
                     </td>
                     <td class="px-4 py-4 text-sm text-gray-700">${emp.usuario_email || 'N/A'}</td>
                     <td class="px-4 py-4">
+                        <!-- CAMBIO 2: colores de badge para todos los planes -->
                         <span class="px-2 py-1 rounded-full text-xs font-semibold ${
-                            emp.plan === 'prueba_gratis' ? 'bg-blue-100 text-blue-800' :
-                            emp.plan === 'estandar' ? 'bg-green-100 text-green-800' :
-                            'bg-purple-100 text-purple-800'
+                            (emp.plan === 'prueba_gratis' || emp.plan === 'free_trial') ? 'bg-blue-100 text-blue-800' :
+                            emp.plan === 'estandar'            ? 'bg-green-100 text-green-800' :
+                            emp.plan === 'business'            ? 'bg-orange-100 text-orange-800' :
+                            emp.plan === 'enterprise_gold'     ? 'bg-yellow-100 text-yellow-800' :
+                            emp.plan === 'enterprise_platinum' ? 'bg-purple-100 text-purple-800' :
+                            'bg-gray-100 text-gray-800'
                         }">
                             ${traducirPlan(emp.plan)}
                         </span>
@@ -765,32 +682,22 @@
                             ${emp.activo ? 'Activa' : 'Inactiva'}
                         </span>
                     </td>
-					<td class="px-4 py-4 text-sm text-gray-700 font-semibold">${emp.oportunidades_count || 0}</td>
-					<td class="px-4 py-4">
+                    <td class="px-4 py-4 text-sm text-gray-700 font-semibold">${emp.oportunidades_count || 0}</td>
+                    <td class="px-4 py-4">
                         <div class="text-sm font-mono text-gray-900">${(emp.tokens_usados_total || 0).toLocaleString('es-DO')}</div>
                         <div class="text-xs text-gray-400">~${emp.oportunidades_count || 0} análisis</div>
                     </td>
-					<td class="px-4 py-4">
-						<div class="flex items-center gap-3">
-							<button onclick="verEmpresa(${emp.id})" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-								Ver
-							</button>
-							<button onclick="editarEmpresa(${emp.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-								Editar
-							</button>
-							${emp.activo ?
-								`<button onclick="desactivarEmpresa(${emp.id}, '${emp.nombre}')" class="text-yellow-600 hover:text-yellow-800 text-sm font-medium">
-									Desactivar
-								</button>` :
-								`<button onclick="reactivarEmpresa(${emp.id}, '${emp.nombre}')" class="text-green-600 hover:text-green-800 text-sm font-medium">
-									Reactivar
-								</button>`
-							}
-							<button onclick="eliminarEmpresa(${emp.id}, '${emp.nombre}')" class="text-red-600 hover:text-red-800 text-sm font-medium">
-								Eliminar
-							</button>
-						</div>
-					</td>
+                    <td class="px-4 py-4">
+                        <div class="flex items-center gap-3">
+                            <button onclick="verEmpresa(${emp.id})" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Ver</button>
+                            <button onclick="editarEmpresa(${emp.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Editar</button>
+                            ${emp.activo ?
+                                `<button onclick="desactivarEmpresa(${emp.id}, '${emp.nombre}')" class="text-yellow-600 hover:text-yellow-800 text-sm font-medium">Desactivar</button>` :
+                                `<button onclick="reactivarEmpresa(${emp.id}, '${emp.nombre}')" class="text-green-600 hover:text-green-800 text-sm font-medium">Reactivar</button>`
+                            }
+                            <button onclick="eliminarEmpresa(${emp.id}, '${emp.nombre}')" class="text-red-600 hover:text-red-800 text-sm font-medium">Eliminar</button>
+                        </div>
+                    </td>
                 </tr>
             `).join('');
 
@@ -836,805 +743,506 @@
         }
 
         function cambiarTab(tab) {
-            // Ocultar todos los contenidos
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-
-            // Quitar estilo activo de todos los tabs
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('border-indigo-600', 'text-indigo-600');
                 btn.classList.add('text-gray-600');
             });
-
-            // Mostrar contenido activo
             document.getElementById(`content-${tab}`).classList.remove('hidden');
-
-            // Activar tab
             const tabBtn = document.getElementById(`tab-${tab}`);
             tabBtn.classList.add('border-indigo-600', 'text-indigo-600');
             tabBtn.classList.remove('text-gray-600');
-
             tabActual = tab;
         }
 
-// Variable global para guardar el ID de la empresa actual
-let empresaActualId = null;
+        let empresaActualId = null;
 
-// ============================================
-// MODAL VER EMPRESA
-// ============================================
-async function verEmpresa(id) {
-    empresaActualId = id;
+        async function verEmpresa(id) {
+            empresaActualId = id;
+            try {
+                document.getElementById('modal-ver-empresa').classList.remove('hidden');
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=detalle&empresa_id=${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) {
+                    alert('Error al cargar los datos de la empresa');
+                    cerrarModalVer();
+                    return;
+                }
+                const data = await response.json();
 
-    try {
-        // Mostrar el modal primero
-        document.getElementById('modal-ver-empresa').classList.remove('hidden');
+                document.getElementById('ver-nombre-empresa').textContent = data.nombre;
+                document.getElementById('ver-dominio').textContent = data.dominio || '-';
+                document.getElementById('ver-email').textContent = data.usuario_email || '-';
+                document.getElementById('ver-plan').textContent = traducirPlan(data.plan);
+                document.getElementById('ver-estado').textContent = data.activo ? '✅ Activa' : '❌ Inactiva';
+                document.getElementById('ver-monto-minimo').textContent = data.monto_minimo ?
+                    `$${parseFloat(data.monto_minimo).toLocaleString('es-DO')}` : '-';
 
-        // Traer los datos de la empresa
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=detalle&empresa_id=${id}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
+                const palabrasHTML = (data.palabras_clave && data.palabras_clave.length > 0) ?
+                    data.palabras_clave.map(p => `<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${p}</span>`).join('') :
+                    '<span class="text-gray-500 text-sm">No configuradas</span>';
+                document.getElementById('ver-palabras-clave').innerHTML = palabrasHTML;
 
-        if (!response.ok) {
-            alert('❌ Error al cargar los datos de la empresa');
+                const familiasHTML = (data.familias_unspsc && data.familias_unspsc.length > 0) ?
+                    data.familias_unspsc.map(f => `<span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">${f}</span>`).join('') :
+                    '<span class="text-gray-500 text-sm">No configuradas</span>';
+                document.getElementById('ver-familias-unspsc').innerHTML = familiasHTML;
+
+                document.getElementById('ver-oportunidades').textContent = data.oportunidades_count || 0;
+                document.getElementById('ver-descargas').textContent = data.descargas_mes || 0;
+                document.getElementById('ver-analisis').textContent = data.analisis_ia_mes || 0;
+
+            } catch (error) {
+                console.error('Error al cargar empresa:', error);
+                alert('Error al cargar los datos');
+                cerrarModalVer();
+            }
+        }
+
+        function cerrarModalVer() {
+            document.getElementById('modal-ver-empresa').classList.add('hidden');
+        }
+
+        async function editarEmpresa(id) {
+            empresaActualId = id;
+            try {
+                document.getElementById('modal-editar-empresa').classList.remove('hidden');
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=detalle&empresa_id=${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) {
+                    alert('Error al cargar los datos de la empresa');
+                    cerrarModalEditar();
+                    return;
+                }
+                const data = await response.json();
+
+                document.getElementById('editar-empresa-id').value = data.id;
+                document.getElementById('editar-plan').value = data.plan;
+
+                if (data.activo) {
+                    document.getElementById('estado-activo').checked = true;
+                } else {
+                    document.getElementById('estado-inactivo').checked = true;
+                }
+
+                // CAMBIO 5: visibilidad cuotas al abrir modal
+                if (['business', 'enterprise_gold', 'enterprise_platinum'].includes(data.plan)) {
+                    document.getElementById('cuotas-section').classList.remove('hidden');
+                } else {
+                    document.getElementById('cuotas-section').classList.add('hidden');
+                }
+
+            } catch (error) {
+                console.error('Error al cargar empresa:', error);
+                alert('Error al cargar los datos');
+                cerrarModalEditar();
+            }
+        }
+
+        function cerrarModalEditar() {
+            document.getElementById('modal-editar-empresa').classList.add('hidden');
+        }
+
+        function abrirEditarDesdeVer() {
             cerrarModalVer();
-            return;
+            editarEmpresa(empresaActualId);
         }
 
-        const data = await response.json();
+        async function guardarCambios(event) {
+            event.preventDefault();
+            const empresaId = document.getElementById('editar-empresa-id').value;
+            const plan = document.getElementById('editar-plan').value;
+            const activo = document.querySelector('input[name="estado"]:checked').value === 'true';
 
-        // Llenar los datos en el modal
-        document.getElementById('ver-nombre-empresa').textContent = data.nombre;
-        document.getElementById('ver-dominio').textContent = data.dominio || '-';
-        document.getElementById('ver-email').textContent = data.usuario_email || '-';
-        document.getElementById('ver-plan').textContent = traducirPlan(data.plan);
-        document.getElementById('ver-estado').textContent = data.activo ? '✅ Activa' : '❌ Inactiva';
-        document.getElementById('ver-monto-minimo').textContent = data.monto_minimo ?
-            `$${parseFloat(data.monto_minimo).toLocaleString('es-DO')}` : '-';
+            if (!confirm('¿Guardar los cambios en esta empresa?')) return;
 
-        // Palabras clave
-        const palabrasHTML = (data.palabras_clave && data.palabras_clave.length > 0) ?
-            data.palabras_clave.map(p => `<span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">${p}</span>`).join('') :
-            '<span class="text-gray-500 text-sm">No configuradas</span>';
-        document.getElementById('ver-palabras-clave').innerHTML = palabrasHTML;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=actualizar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ empresa_id: parseInt(empresaId), plan, activo })
+                });
 
-        // Familias UNSPSC
-        const familiasHTML = (data.familias_unspsc && data.familias_unspsc.length > 0) ?
-            data.familias_unspsc.map(f => `<span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">${f}</span>`).join('') :
-            '<span class="text-gray-500 text-sm">No configuradas</span>';
-        document.getElementById('ver-familias-unspsc').innerHTML = familiasHTML;
+                if (response.ok) {
+                    alert('✅ Cambios guardados exitosamente');
+                    cerrarModalEditar();
+                    await cargarEstadisticas();
+                } else {
+                    const error = await response.json();
+                    alert(`Error al guardar: ${error.error}`);
+                }
+            } catch (error) {
+                console.error('Error al guardar cambios:', error);
+                alert('Error al guardar los cambios');
+            }
+        }
 
-        // Estadísticas
-        document.getElementById('ver-oportunidades').textContent = data.oportunidades_count || 0;
-        document.getElementById('ver-descargas').textContent = data.descargas_mes || 0;
-        document.getElementById('ver-analisis').textContent = data.analisis_ia_mes || 0;
+        async function resetearDescargas() {
+            if (!confirm('¿Resetear el contador de descargas a 0/10?')) return;
+            const empresaId = document.getElementById('editar-empresa-id').value;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=resetear_cuota`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ empresa_id: parseInt(empresaId), tipo: 'descargas' })
+                });
+                if (response.ok) { alert('✅ Cuota de descargas reseteada'); }
+                else { alert('Error al resetear descargas'); }
+            } catch (error) { alert('Error al resetear descargas'); }
+        }
 
-    } catch (error) {
-        console.error('Error al cargar empresa:', error);
-        alert('❌ Error al cargar los datos');
-        cerrarModalVer();
-    }
-}
+        async function resetearAnalisis() {
+            if (!confirm('¿Resetear el contador de análisis IA a 0/5?')) return;
+            const empresaId = document.getElementById('editar-empresa-id').value;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=resetear_cuota`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ empresa_id: parseInt(empresaId), tipo: 'analisis' })
+                });
+                if (response.ok) { alert('✅ Cuota de análisis IA reseteada'); }
+                else { alert('Error al resetear análisis'); }
+            } catch (error) { alert('Error al resetear análisis'); }
+        }
 
-function cerrarModalVer() {
-    document.getElementById('modal-ver-empresa').classList.add('hidden');
-}
+        async function desactivarEmpresa(id, nombre) {
+            if (!confirm(`¿Desactivar la empresa "${nombre}"?\n\nLa empresa dejará de recibir notificaciones y no podrá acceder al sistema.`)) return;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=desactivar_empresa`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ empresa_id: id })
+                });
+                if (response.ok) { alert('✅ Empresa desactivada exitosamente'); await cargarEstadisticas(); }
+                else { const error = await response.json(); alert(`Error: ${error.error}`); }
+            } catch (error) { alert('Error al desactivar la empresa'); }
+        }
 
-// ============================================
-// MODAL EDITAR EMPRESA
-// ============================================
-async function editarEmpresa(id) {
-    empresaActualId = id;
+        async function reactivarEmpresa(id, nombre) {
+            if (!confirm(`¿Reactivar la empresa "${nombre}"?`)) return;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=reactivar_empresa`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ empresa_id: id })
+                });
+                if (response.ok) { alert('✅ Empresa reactivada exitosamente'); await cargarEstadisticas(); }
+                else { const error = await response.json(); alert(`Error: ${error.error}`); }
+            } catch (error) { alert('Error al reactivar la empresa'); }
+        }
 
-    try {
-        // Mostrar el modal primero
-        document.getElementById('modal-editar-empresa').classList.remove('hidden');
+        async function eliminarEmpresa(id, nombre) {
+            if (!confirm(`🚨 ATENCIÓN: ¿Eliminar PERMANENTEMENTE la empresa "${nombre}"?\n\n⚠️ Esta acción NO SE PUEDE DESHACER.\n\nSe eliminarán:\n- La empresa y su configuración\n- Todos los usuarios asociados\n- Todas las oportunidades detectadas\n- Todo el historial\n\n¿Estás ABSOLUTAMENTE seguro?`)) return;
 
-        // Traer los datos de la empresa
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=detalle&empresa_id=${id}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            const confirmacion = prompt(`Para confirmar la eliminación, escribe el nombre exacto de la empresa:\n\n"${nombre}"`);
+            if (confirmacion !== nombre) { alert('Cancelado: El nombre no coincide'); return; }
+            if (!confirm(`⚠️ ÚLTIMA CONFIRMACIÓN\n\nEstás a punto de eliminar "${nombre}" PERMANENTEMENTE.\n\n¿Proceder con la eliminación?`)) return;
+
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=eliminar_empresa`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ empresa_id: id })
+                });
+                const data = await response.json();
+                if (response.ok) { alert(`✅ Empresa eliminada exitosamente\n\n${data.detalles}`); await cargarEstadisticas(); }
+                else { alert(`Error: ${data.error}`); }
+            } catch (error) { alert('Error al eliminar la empresa'); }
+        }
+
+        // CAMBIO 6: visibilidad cuotas al cambiar el select de plan
+        document.addEventListener('DOMContentLoaded', function() {
+            const planSelect = document.getElementById('editar-plan');
+            if (planSelect) {
+                planSelect.addEventListener('change', function() {
+                    const cuotasSection = document.getElementById('cuotas-section');
+                    if (['business', 'enterprise_gold', 'enterprise_platinum'].includes(this.value)) {
+                        cuotasSection.classList.remove('hidden');
+                    } else {
+                        cuotasSection.classList.add('hidden');
+                    }
+                });
+            }
         });
 
-        if (!response.ok) {
-            alert('❌ Error al cargar los datos de la empresa');
-            cerrarModalEditar();
-            return;
+        async function forzarScraping() {
+            if (!confirm('¿Ejecutar scraping manualmente?\n\nEsto puede tomar varios minutos.')) return;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=ejecutar_scraping`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok) { alert(`✅ ${data.mensaje}\n\nVer progreso en:\nhttps://github.com/umbusk1/compita/actions`); }
+                else { alert(`Error: ${data.error}`); }
+            } catch (error) { alert('Error al ejecutar scraping'); }
         }
 
-        const data = await response.json();
-
-        // Llenar el formulario
-        document.getElementById('editar-empresa-id').value = data.id;
-        document.getElementById('editar-plan').value = data.plan;
-
-        // Estado (radio buttons)
-        if (data.activo) {
-            document.getElementById('estado-activo').checked = true;
-        } else {
-            document.getElementById('estado-inactivo').checked = true;
+        async function forzarAnalisis() {
+            if (!confirm('¿Re-analizar licitaciones de hoy?\n\nEsto procesará todas las empresas activas con IA.')) return;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=ejecutar_analisis`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok) { alert(`✅ ${data.mensaje}\n\nVer progreso en:\nhttps://github.com/umbusk1/compita/actions`); }
+                else { alert(`Error: ${data.error}`); }
+            } catch (error) { alert('Error al ejecutar análisis'); }
         }
 
-        // Mostrar sección de cuotas solo si es Business
-        if (data.plan === 'business' || data.plan === 'enterprise') {
-            document.getElementById('cuotas-section').classList.remove('hidden');
-        } else {
-            document.getElementById('cuotas-section').classList.add('hidden');
+        function abrirModalInvitar() {
+            generarPasswordAdmin();
+            document.getElementById('modal-invitar-admin').classList.remove('hidden');
         }
 
-    } catch (error) {
-        console.error('Error al cargar empresa:', error);
-        alert('❌ Error al cargar los datos');
-        cerrarModalEditar();
-    }
-}
-
-function cerrarModalEditar() {
-    document.getElementById('modal-editar-empresa').classList.add('hidden');
-}
-
-// Abrir modal de editar desde el modal de ver
-function abrirEditarDesdeVer() {
-    cerrarModalVer();
-    editarEmpresa(empresaActualId);
-}
-
-// ============================================
-// GUARDAR CAMBIOS
-// ============================================
-async function guardarCambios(event) {
-    event.preventDefault(); // Evitar que el formulario recargue la página
-
-    const empresaId = document.getElementById('editar-empresa-id').value;
-    const plan = document.getElementById('editar-plan').value;
-    const activo = document.querySelector('input[name="estado"]:checked').value === 'true';
-
-    // Confirmación
-    if (!confirm('¿Guardar los cambios en esta empresa?')) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=actualizar`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                empresa_id: parseInt(empresaId),
-                plan: plan,
-                activo: activo
-            })
-        });
-
-        if (response.ok) {
-            alert('✅ Cambios guardados exitosamente');
-            cerrarModalEditar();
-            // Recargar las estadísticas para reflejar cambios
-            await cargarEstadisticas();
-        } else {
-            const error = await response.json();
-            alert(`❌ Error al guardar: ${error.error}`);
+        function cerrarModalInvitar() {
+            document.getElementById('invitar-nombre').value = '';
+            document.getElementById('invitar-email').value = '';
+            document.getElementById('invitar-rol').value = 'admin';
+            document.getElementById('modal-invitar-admin').classList.add('hidden');
         }
-    } catch (error) {
-        console.error('Error al guardar cambios:', error);
-        alert('❌ Error al guardar los cambios');
-    }
-}
 
-// ============================================
-// RESETEAR CUOTAS
-// ============================================
-async function resetearDescargas() {
-    if (!confirm('¿Resetear el contador de descargas a 0/10?')) {
-        return;
-    }
-
-    const empresaId = document.getElementById('editar-empresa-id').value;
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=resetear_cuota`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                empresa_id: parseInt(empresaId),
-                tipo: 'descargas'
-            })
-        });
-
-        if (response.ok) {
-            alert('✅ Cuota de descargas reseteada');
-        } else {
-            alert('❌ Error al resetear descargas');
+        function generarPasswordAdmin() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%&';
+            let pwd = '';
+            for (let i = 0; i < 12; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+            document.getElementById('invitar-password').value = pwd;
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error al resetear descargas');
-    }
-}
 
-async function resetearAnalisis() {
-    if (!confirm('¿Resetear el contador de análisis IA a 0/5?')) {
-        return;
-    }
+        async function invitarAdministrador(event) {
+            event.preventDefault();
+            const nombre   = document.getElementById('invitar-nombre').value.trim();
+            const email    = document.getElementById('invitar-email').value.trim().toLowerCase();
+            const password = document.getElementById('invitar-password').value;
+            const rol      = document.getElementById('invitar-rol').value;
 
-    const empresaId = document.getElementById('editar-empresa-id').value;
+            if (!nombre || !email || !password || !rol) { alert('Por favor completa todos los campos'); return; }
+            if (!email.includes('@')) { alert('El email no es válido'); return; }
+            if (!confirm(`¿Enviar invitación a ${nombre} (${email}) como ${rol.toUpperCase()}?`)) return;
 
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=resetear_cuota`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                empresa_id: parseInt(empresaId),
-                tipo: 'analisis'
-            })
-        });
-
-        if (response.ok) {
-            alert('✅ Cuota de análisis IA reseteada');
-        } else {
-            alert('❌ Error al resetear análisis');
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=invitar_admin`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ nombre, email, password, rol })
+                });
+                const data = await response.json();
+                if (response.ok) { alert(`✅ Invitación enviada exitosamente!\n\n📧 ${nombre} recibirá un email con sus credenciales de acceso.`); cerrarModalInvitar(); await cargarEstadisticas(); }
+                else { alert(`Error: ${data.error}`); }
+            } catch (error) { alert('Error al enviar la invitación'); }
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error al resetear análisis');
-    }
-}
 
-// ============================================
-// DESACTIVAR / REACTIVAR / ELIMINAR EMPRESA
-// ============================================
+        function invitarAdmin() { abrirModalInvitar(); }
 
-async function desactivarEmpresa(id, nombre) {
-    // Primera confirmación
-    if (!confirm(`⚠️ ¿Desactivar la empresa "${nombre}"?\n\nLa empresa dejará de recibir notificaciones y no podrá acceder al sistema.`)) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=desactivar_empresa`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ empresa_id: id })
-        });
-
-        if (response.ok) {
-            alert('✅ Empresa desactivada exitosamente');
-            await cargarEstadisticas();
-        } else {
-            const error = await response.json();
-            alert(`❌ Error: ${error.error}`);
+        function abrirModalCrear() {
+            generarPasswordTemporal();
+            document.getElementById('modal-crear-empresa').classList.remove('hidden');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error al desactivar la empresa');
-    }
-}
 
-async function reactivarEmpresa(id, nombre) {
-    if (!confirm(`✅ ¿Reactivar la empresa "${nombre}"?`)) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=reactivar_empresa`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ empresa_id: id })
-        });
-
-        if (response.ok) {
-            alert('✅ Empresa reactivada exitosamente');
-            await cargarEstadisticas();
-        } else {
-            const error = await response.json();
-            alert(`❌ Error: ${error.error}`);
+        function cerrarModalCrear() {
+            document.getElementById('crear-nombre').value = '';
+            document.getElementById('crear-dominio').value = '';
+            document.getElementById('crear-contacto-nombre').value = '';
+            document.getElementById('crear-email').value = '';
+            document.getElementById('crear-palabras-clave').value = '';
+            document.getElementById('crear-plan').value = 'prueba_gratis';
+            document.getElementById('modal-crear-empresa').classList.add('hidden');
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error al reactivar la empresa');
-    }
-}
 
-async function eliminarEmpresa(id, nombre) {
-    // Primera confirmación
-    if (!confirm(`🚨 ATENCIÓN: ¿Eliminar PERMANENTEMENTE la empresa "${nombre}"?\n\n⚠️ Esta acción NO SE PUEDE DESHACER.\n\nSe eliminarán:\n- La empresa y su configuración\n- Todos los usuarios asociados\n- Todas las oportunidades detectadas\n- Todo el historial\n\n¿Estás ABSOLUTAMENTE seguro?`)) {
-        return;
-    }
-
-    // Segunda confirmación: escribir el nombre
-    const confirmacion = prompt(`Para confirmar la eliminación, escribe el nombre exacto de la empresa:\n\n"${nombre}"`);
-
-    if (confirmacion !== nombre) {
-        alert('❌ Cancelado: El nombre no coincide');
-        return;
-    }
-
-    // Tercera confirmación final
-    if (!confirm(`⚠️ ÚLTIMA CONFIRMACIÓN\n\nEstás a punto de eliminar "${nombre}" PERMANENTEMENTE.\n\n¿Proceder con la eliminación?`)) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=eliminar_empresa`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ empresa_id: id })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert(`✅ Empresa eliminada exitosamente\n\n${data.detalles}`);
-            await cargarEstadisticas();
-        } else {
-            alert(`❌ Error: ${data.error}`);
+        function generarPasswordTemporal() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%&';
+            let pwd = '';
+            for (let i = 0; i < 12; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+            document.getElementById('crear-password').value = pwd;
         }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error al eliminar la empresa');
-    }
-}
 
-// ============================================
-// DETECTAR CAMBIO DE PLAN (mostrar/ocultar cuotas)
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    const planSelect = document.getElementById('editar-plan');
-    if (planSelect) {
-        planSelect.addEventListener('change', function() {
-            const cuotasSection = document.getElementById('cuotas-section');
-            if (this.value === 'business' || this.value === 'enterprise') {
-                cuotasSection.classList.remove('hidden');
+        async function crearEmpresa(event) {
+            event.preventDefault();
+            const nombre         = document.getElementById('crear-nombre').value.trim();
+            const dominio        = document.getElementById('crear-dominio').value.trim();
+            const contactoNombre = document.getElementById('crear-contacto-nombre').value.trim();
+            const email          = document.getElementById('crear-email').value.trim().toLowerCase();
+            const password       = document.getElementById('crear-password').value;
+            const plan           = document.getElementById('crear-plan').value;
+            const palabrasClave  = document.getElementById('crear-palabras-clave').value.trim();
+
+            if (!nombre || !contactoNombre || !email || !password) { alert('Por favor completa todos los campos obligatorios'); return; }
+            if (!email.includes('@')) { alert('El email no es válido'); return; }
+
+            let palabrasArray = [];
+            if (palabrasClave) {
+                palabrasArray = palabrasClave.split(',').map(p => p.trim().toLowerCase()).filter(p => p.length > 0);
+            }
+
+            if (!confirm(`¿Crear empresa "${nombre}" con usuario "${email}"?`)) return;
+
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin?action=crear_empresa`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ nombre, dominio: dominio || null, contacto_nombre: contactoNombre, email, password, plan, palabras_clave: palabrasArray })
+                });
+                const data = await response.json();
+                if (response.ok) { alert(`✅ Empresa creada exitosamente!\n\n📧 Se ha enviado un email a ${email} con las credenciales de acceso.`); cerrarModalCrear(); await cargarEstadisticas(); }
+                else { alert(`Error al crear empresa: ${data.error}`); }
+            } catch (error) { alert('Error al crear la empresa. Verifica la conexión.'); }
+        }
+
+        async function cargarEstadoContingencia() {
+            try {
+                const token = localStorage.getItem('admin_token');
+                const res = await fetch(`${API_BASE}/api/admin?action=estado_sistema`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) { renderContingencia({ estado: 'ERROR' }); return; }
+                const data = await res.json();
+                renderContingencia(data);
+            } catch (e) {
+                console.error('Error cargando estado contingencia:', e);
+                renderContingencia({ estado: 'ERROR' });
+            }
+        }
+
+        function renderContingencia(data) {
+            const panel     = document.getElementById('panel-contingencia');
+            const icono     = document.getElementById('contingencia-icono');
+            const titulo    = document.getElementById('contingencia-titulo');
+            const subtitulo = document.getElementById('contingencia-subtitulo');
+            const acciones  = document.getElementById('contingencia-acciones');
+            const detalles  = document.getElementById('contingencia-detalles');
+
+            const config = {
+                NORMAL: {
+                    color: 'border-green-300 bg-green-50',
+                    icono: '✅',
+                    titulo: 'Sistema operando con normalidad',
+                    subtitulo: 'El scraper funciona correctamente. No hay alertas activas.',
+                    botones: ''
+                },
+                ALERTA_PENDIENTE: {
+                    color: 'border-orange-400 bg-orange-50',
+                    icono: '⚠️',
+                    titulo: 'ALERTA ACTIVA — Falla de scraping detectada',
+                    subtitulo: 'El Admin fue notificado. Tienes ~1 hora antes de que se notifique a los usuarios.',
+                    botones: `<button onclick="abortarContingencia()"
+                        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+                        🛑 Abortar notificación a usuarios
+                    </button>`
+                },
+                ABORTADO: {
+                    color: 'border-blue-300 bg-blue-50',
+                    icono: '🔕',
+                    titulo: 'Notificación abortada por el Admin',
+                    subtitulo: 'Los usuarios NO serán notificados. El modal NO aparecerá. Sistema en standby.',
+                    botones: `<button onclick="restaurarSistema()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+                        ✅ Marcar como resuelto
+                    </button>`
+                },
+                SUSPENDIDO: {
+                    color: 'border-red-400 bg-red-50',
+                    icono: '🚨',
+                    titulo: 'SERVICIO SUSPENDIDO',
+                    subtitulo: 'Los usuarios fueron notificados y el modal está activo en el sitio.',
+                    botones: `<button onclick="restaurarSistema()"
+                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
+                        ✅ Restaurar servicio
+                    </button>`
+                },
+                ERROR: {
+                    color: 'border-gray-300 bg-gray-50',
+                    icono: '❓',
+                    titulo: 'No se pudo cargar el estado',
+                    subtitulo: 'Error de conexión con la base de datos.',
+                    botones: ''
+                }
+            };
+
+            const estado = data.estado || 'ERROR';
+            const cfg    = config[estado] || config['ERROR'];
+
+            panel.className           = `rounded-lg p-5 border-2 ${cfg.color}`;
+            icono.textContent         = cfg.icono;
+            titulo.textContent        = cfg.titulo;
+            subtitulo.textContent     = cfg.subtitulo;
+            acciones.innerHTML        = cfg.botones;
+
+            if (['ALERTA_PENDIENTE', 'SUSPENDIDO', 'ABORTADO'].includes(estado)) {
+                const motivoTextos = {
+                    portal_inaccesible:    '🔌 Portal no accesible (problema de conexión)',
+                    estructura_modificada: '🔧 Estructura del portal modificada (cambio en el HTML)'
+                };
+                const motivo     = motivoTextos[data.motivo] || data.motivo || 'No especificado';
+                const fechaFalla = data.fecha_falla ? new Date(data.fecha_falla).toLocaleString('es-DO') : 'No disponible';
+                const fechaAlerta = data.fecha_alerta_admin ? new Date(data.fecha_alerta_admin).toLocaleString('es-DO') : 'Pendiente';
+
+                let tiempoInfo = '';
+                if (estado === 'ALERTA_PENDIENTE' && data.fecha_alerta_admin) {
+                    const minTranscurridos = Math.floor((new Date() - new Date(data.fecha_alerta_admin)) / 60000);
+                    const minRestantes = Math.max(0, 60 - minTranscurridos);
+                    tiempoInfo = minRestantes > 0
+                        ? `<p>⏱️ <strong>Tiempo restante para notificar usuarios:</strong> ~${minRestantes} min</p>`
+                        : `<p>⏱️ <strong>El vigilante notificará en la próxima ejecución</strong></p>`;
+                }
+
+                detalles.innerHTML = `
+                    <p>🔍 <strong>Motivo:</strong> ${motivo}</p>
+                    <p>📅 <strong>Fecha de falla:</strong> ${fechaFalla}</p>
+                    <p>📧 <strong>Alerta enviada al Admin:</strong> ${fechaAlerta}</p>
+                    ${data.notas ? `<p>📝 <strong>Notas:</strong> ${data.notas}</p>` : ''}
+                    ${tiempoInfo}
+                `;
+                detalles.classList.remove('hidden');
             } else {
-                cuotasSection.classList.add('hidden');
+                detalles.classList.add('hidden');
             }
-        });
-    }
-});
-
-async function forzarScraping() {
-    if (!confirm('¿Ejecutar scraping manualmente?\n\nEsto puede tomar varios minutos.')) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=ejecutar_scraping`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert(`✅ ${data.mensaje}\n\nVer progreso en:\nhttps://github.com/umbusk1/compita/actions`);
-        } else {
-            alert(`❌ Error: ${data.error}`);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error al ejecutar scraping');
-    }
-}
-
-async function forzarAnalisis() {
-    if (!confirm('¿Re-analizar licitaciones de hoy?\n\nEsto procesará todas las empresas activas con IA.')) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=ejecutar_analisis`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert(`✅ ${data.mensaje}\n\nVer progreso en:\nhttps://github.com/umbusk1/compita/actions`);
-        } else {
-            alert(`❌ Error: ${data.error}`);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Error al ejecutar análisis');
-    }
-}
-
-// ============================================
-// MODAL INVITAR ADMINISTRADOR
-// ============================================
-function abrirModalInvitar() {
-    generarPasswordAdmin();
-    document.getElementById('modal-invitar-admin').classList.remove('hidden');
-}
-
-function cerrarModalInvitar() {
-    document.getElementById('invitar-nombre').value = '';
-    document.getElementById('invitar-email').value = '';
-    document.getElementById('invitar-rol').value = 'admin';
-    document.getElementById('modal-invitar-admin').classList.add('hidden');
-}
-
-function generarPasswordAdmin() {
-    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%&';
-    let password = '';
-    for (let i = 0; i < 12; i++) {
-        password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-    }
-    document.getElementById('invitar-password').value = password;
-}
-
-async function invitarAdministrador(event) {
-    event.preventDefault();
-
-    const nombre = document.getElementById('invitar-nombre').value.trim();
-    const email = document.getElementById('invitar-email').value.trim().toLowerCase();
-    const password = document.getElementById('invitar-password').value;
-    const rol = document.getElementById('invitar-rol').value;
-
-    if (!nombre || !email || !password || !rol) {
-        alert('❌ Por favor completa todos los campos');
-        return;
-    }
-
-    if (!email.includes('@')) {
-        alert('❌ El email no es válido');
-        return;
-    }
-
-    if (!confirm(`¿Enviar invitación a ${nombre} (${email}) como ${rol.toUpperCase()}?`)) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=invitar_admin`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                nombre: nombre,
-                email: email,
-                password: password,
-                rol: rol
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert(`✅ Invitación enviada exitosamente!\n\n📧 ${nombre} recibirá un email con sus credenciales de acceso.`);
-            cerrarModalInvitar();
-            await cargarEstadisticas();
-        } else {
-            alert(`❌ Error: ${data.error}`);
-        }
-    } catch (error) {
-        console.error('Error al invitar administrador:', error);
-        alert('❌ Error al enviar la invitación');
-    }
-}
-
-function invitarAdmin() {
-    abrirModalInvitar();
-}
-
-// ============================================
-// MODAL CREAR NUEVA EMPRESA
-// ============================================
-function abrirModalCrear() {
-    // Generar contraseña temporal automáticamente
-    generarPasswordTemporal();
-
-    // Mostrar modal
-    document.getElementById('modal-crear-empresa').classList.remove('hidden');
-}
-
-function cerrarModalCrear() {
-    // Limpiar formulario
-    document.getElementById('crear-nombre').value = '';
-    document.getElementById('crear-dominio').value = '';
-    document.getElementById('crear-contacto-nombre').value = '';
-    document.getElementById('crear-email').value = '';
-    document.getElementById('crear-palabras-clave').value = '';
-    document.getElementById('crear-plan').value = 'prueba_gratis';
-
-    // Ocultar modal
-    document.getElementById('modal-crear-empresa').classList.add('hidden');
-}
-
-function generarPasswordTemporal() {
-    // Generar contraseña aleatoria de 12 caracteres
-    const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$%&';
-    let password = '';
-    for (let i = 0; i < 12; i++) {
-        password += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-    }
-    document.getElementById('crear-password').value = password;
-}
-
-async function crearEmpresa(event) {
-    event.preventDefault();
-
-    // Recoger datos del formulario
-    const nombre = document.getElementById('crear-nombre').value.trim();
-    const dominio = document.getElementById('crear-dominio').value.trim();
-    const contactoNombre = document.getElementById('crear-contacto-nombre').value.trim();
-    const email = document.getElementById('crear-email').value.trim().toLowerCase();
-    const password = document.getElementById('crear-password').value;
-    const plan = document.getElementById('crear-plan').value;
-    const palabrasClave = document.getElementById('crear-palabras-clave').value.trim();
-
-    // Validaciones básicas
-    if (!nombre || !contactoNombre || !email || !password) {
-        alert('❌ Por favor completa todos los campos obligatorios');
-        return;
-    }
-
-    if (!email.includes('@')) {
-        alert('❌ El email no es válido');
-        return;
-    }
-
-    // Procesar palabras clave
-    let palabrasArray = [];
-    if (palabrasClave) {
-        palabrasArray = palabrasClave
-            .split(',')
-            .map(p => p.trim().toLowerCase())
-            .filter(p => p.length > 0);
-    }
-
-    // Confirmar creación
-    if (!confirm(`¿Crear empresa "${nombre}" con usuario "${email}"?`)) {
-        return;
-    }
-
-    try {
-        const token = localStorage.getItem('admin_token');
-        const response = await fetch(`${API_BASE}/api/admin?action=crear_empresa`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                nombre: nombre,
-                dominio: dominio || null,
-                contacto_nombre: contactoNombre,
-                email: email,
-                password: password,
-                plan: plan,
-                palabras_clave: palabrasArray
-            })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            alert(`✅ Empresa creada exitosamente!\n\n📧 Se ha enviado un email a ${email} con las credenciales de acceso.`);
-            cerrarModalCrear();
-            // Recargar estadísticas para mostrar la nueva empresa
-            await cargarEstadisticas();
-        } else {
-            alert(`❌ Error al crear empresa: ${data.error}`);
-        }
-    } catch (error) {
-        console.error('Error al crear empresa:', error);
-        alert('❌ Error al crear la empresa. Verifica la conexión.');
-    }
-}
-
-// ============================================================
-// CONTINGENCIA — cargar y renderizar panel
-// ============================================================
-async function cargarEstadoContingencia() {
-    try {
-        const token = localStorage.getItem('admin_token');
-        const res   = await fetch(`${API_BASE}/api/admin?action=estado_sistema`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (!res.ok) {
-            renderContingencia({ estado: 'ERROR' });
-            return;
         }
 
-        const data = await res.json();
-        renderContingencia(data);
-
-    } catch (e) {
-        console.error('Error cargando estado contingencia:', e);
-        renderContingencia({ estado: 'ERROR' });
-    }
-}
-
-function renderContingencia(data) {
-    const panel     = document.getElementById('panel-contingencia');
-    const icono     = document.getElementById('contingencia-icono');
-    const titulo    = document.getElementById('contingencia-titulo');
-    const subtitulo = document.getElementById('contingencia-subtitulo');
-    const acciones  = document.getElementById('contingencia-acciones');
-    const detalles  = document.getElementById('contingencia-detalles');
-
-    // Configuración visual por estado
-    const config = {
-        NORMAL: {
-            color:    'border-green-300 bg-green-50',
-            icono:    '✅',
-            titulo:   'Sistema operando con normalidad',
-            subtitulo: 'El scraper funciona correctamente. No hay alertas activas.',
-            botones:  ''
-        },
-        ALERTA_PENDIENTE: {
-            color:    'border-orange-400 bg-orange-50',
-            icono:    '⚠️',
-            titulo:   'ALERTA ACTIVA — Falla de scraping detectada',
-            subtitulo: 'El Admin fue notificado. Tienes ~1 hora antes de que se notifique a los usuarios.',
-            botones: `
-                <button onclick="abortarContingencia()"
-                    class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
-                    🛑 Abortar notificación a usuarios
-                </button>`
-        },
-        ABORTADO: {
-            color:    'border-blue-300 bg-blue-50',
-            icono:    '🔕',
-            titulo:   'Notificación abortada por el Admin',
-            subtitulo: 'Los usuarios NO serán notificados. El modal NO aparecerá. Sistema en standby.',
-            botones: `
-                <button onclick="restaurarSistema()"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
-                    ✅ Marcar como resuelto
-                </button>`
-        },
-        SUSPENDIDO: {
-            color:    'border-red-400 bg-red-50',
-            icono:    '🚨',
-            titulo:   'SERVICIO SUSPENDIDO',
-            subtitulo: 'Los usuarios fueron notificados y el modal está activo en el sitio.',
-            botones: `
-                <button onclick="restaurarSistema()"
-                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition">
-                    ✅ Restaurar servicio
-                </button>`
-        },
-        ERROR: {
-            color:    'border-gray-300 bg-gray-50',
-            icono:    '❓',
-            titulo:   'No se pudo cargar el estado',
-            subtitulo: 'Error de conexión con la base de datos.',
-            botones:  ''
-        }
-    };
-
-    const estado  = data.estado || 'ERROR';
-    const cfg     = config[estado] || config['ERROR'];
-
-    // Aplicar estilos
-    panel.className = `rounded-lg p-5 border-2 ${cfg.color}`;
-    icono.textContent   = cfg.icono;
-    titulo.textContent  = cfg.titulo;
-    subtitulo.textContent = cfg.subtitulo;
-    acciones.innerHTML  = cfg.botones;
-
-    // Mostrar detalles si hay falla
-    if (['ALERTA_PENDIENTE', 'SUSPENDIDO', 'ABORTADO'].includes(estado)) {
-        const motivoTextos = {
-            portal_inaccesible:    '🔌 Portal no accesible (problema de conexión)',
-            estructura_modificada: '🔧 Estructura del portal modificada (cambio en el HTML)'
-        };
-        const motivo = motivoTextos[data.motivo] || data.motivo || 'No especificado';
-
-        const fechaFalla = data.fecha_falla
-            ? new Date(data.fecha_falla).toLocaleString('es-DO')
-            : 'No disponible';
-
-        const fechaAlerta = data.fecha_alerta_admin
-            ? new Date(data.fecha_alerta_admin).toLocaleString('es-DO')
-            : 'Pendiente';
-
-        // Calcular minutos restantes para notificación a usuarios
-        let tiempoInfo = '';
-        if (estado === 'ALERTA_PENDIENTE' && data.fecha_alerta_admin) {
-            const ahora       = new Date();
-            const fechaAlertaDate = new Date(data.fecha_alerta_admin);
-            const minTranscurridos = Math.floor((ahora - fechaAlertaDate) / 60000);
-            const minRestantes = Math.max(0, 60 - minTranscurridos);
-            tiempoInfo = minRestantes > 0
-                ? `<p>⏱️ <strong>Tiempo restante para notificar usuarios:</strong> ~${minRestantes} min</p>`
-                : `<p>⏱️ <strong>El vigilante notificará en la próxima ejecución</strong> (si hay horario hábil)</p>`;
+        async function abortarContingencia() {
+            if (!confirm('🛑 ¿Abortar la notificación a usuarios?\n\nEl servicio se registrará como resuelto sin avisar a los suscriptores ni activar el modal.')) return;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const res = await fetch(`${API_BASE}/api/admin?action=abortar_contingencia`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (res.ok) { alert('✅ ' + data.mensaje); await cargarEstadoContingencia(); }
+                else { alert('Error: ' + data.error); }
+            } catch (e) { alert('Error al abortar la contingencia'); }
         }
 
-        detalles.innerHTML = `
-            <p>🔍 <strong>Motivo:</strong> ${motivo}</p>
-            <p>📅 <strong>Fecha de falla:</strong> ${fechaFalla}</p>
-            <p>📧 <strong>Alerta enviada al Admin:</strong> ${fechaAlerta}</p>
-            ${data.notas ? `<p>📝 <strong>Notas:</strong> ${data.notas}</p>` : ''}
-            ${tiempoInfo}
-        `;
-        detalles.classList.remove('hidden');
-    } else {
-        detalles.classList.add('hidden');
-    }
-}
-
-async function abortarContingencia() {
-    if (!confirm('🛑 ¿Abortar la notificación a usuarios?\n\nEl servicio se registrará como resuelto sin avisar a los suscriptores ni activar el modal.')) {
-        return;
-    }
-    try {
-        const token = localStorage.getItem('admin_token');
-        const res   = await fetch(`${API_BASE}/api/admin?action=abortar_contingencia`, {
-            method:  'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-        });
-        const data = await res.json();
-        if (res.ok) {
-            alert('✅ ' + data.mensaje);
-            await cargarEstadoContingencia();
-        } else {
-            alert('❌ ' + data.error);
+        async function restaurarSistema() {
+            if (!confirm('✅ ¿Marcar el sistema como restaurado?\n\nEsto desactivará el modal en el sitio y reiniciará el monitoreo normal.')) return;
+            try {
+                const token = localStorage.getItem('admin_token');
+                const res = await fetch(`${API_BASE}/api/admin?action=restaurar_sistema`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (res.ok) { alert('✅ ' + data.mensaje); await cargarEstadoContingencia(); }
+                else { alert('Error: ' + data.error); }
+            } catch (e) { alert('Error al restaurar el sistema'); }
         }
-    } catch (e) {
-        alert('❌ Error al abortar la contingencia');
-    }
-}
-
-async function restaurarSistema() {
-    if (!confirm('✅ ¿Marcar el sistema como restaurado?\n\nEsto desactivará el modal en el sitio y reiniciará el monitoreo normal.')) {
-        return;
-    }
-    try {
-        const token = localStorage.getItem('admin_token');
-        const res   = await fetch(`${API_BASE}/api/admin?action=restaurar_sistema`, {
-            method:  'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-        });
-        const data = await res.json();
-        if (res.ok) {
-            alert('✅ ' + data.mensaje);
-            await cargarEstadoContingencia();
-        } else {
-            alert('❌ ' + data.error);
-        }
-    } catch (e) {
-        alert('❌ Error al restaurar el sistema');
-    }
-}
 
     </script>
 </body>
