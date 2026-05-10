@@ -83,7 +83,7 @@
 
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
 
-        <!-- ══ TABS PRINCIPALES ══ -->
+        <!-- TABS PRINCIPALES -->
         <div class="flex border-b overflow-x-auto">
             <button onclick="showTab('perfil')" id="tab-perfil" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">🏢 Perfil de Empresa</button>
             <button onclick="showTab('perfil-licitador')" id="tab-perfil-licitador" class="tab-button hidden flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">
@@ -94,24 +94,17 @@
             <button onclick="showTab('facturacion')" id="tab-facturacion" class="tab-button flex-1 px-6 py-4 font-semibold text-gray-600 hover:text-indigo-600 border-b-2 border-transparent whitespace-nowrap">💳 Facturación y Seguridad</button>
         </div>
 
-        <!-- ══ BARRA SECUNDARIA DE SUB-TABS ══
-             Estructura espejo del tab bar: 4 slots flex-1 iguales.
-             Los sub-tabs aparecen en el slot de su pestaña padre,
-             alineados visualmente debajo de ella.           ══ -->
+        <!-- BARRA SECUNDARIA DE SUB-TABS -->
         <div id="secondary-subtab-bar" class="hidden border-b bg-gray-50">
             <div class="flex">
-                <!-- Slot 1: Perfil de Empresa — sin sub-tabs aquí (usa sub-tabs internos) -->
                 <div class="flex-1"></div>
-                <!-- Slot 2: Perfil Licitador — oculto hasta Enterprise -->
                 <div id="ss-licitador" class="flex-1 hidden"></div>
-                <!-- Slot 3: Perfil de Plan — siempre flex-1 para mantener alineación -->
                 <div class="flex-1 flex items-center px-4 py-2">
                     <div id="ss-plan" class="hidden flex gap-2">
                         <button onclick="showSubTab('plan','info')" id="st-plan-info" class="subtab-btn">📋 Perfil de Plan</button>
                         <button onclick="showSubTab('plan','invitar')" id="st-plan-invitar" class="subtab-btn">🤝 Invitar</button>
                     </div>
                 </div>
-                <!-- Slot 4: Facturación y Seguridad — siempre flex-1 para mantener alineación -->
                 <div class="flex-1 flex items-center px-4 py-2">
                     <div id="ss-facturacion" class="hidden flex gap-2">
                         <button onclick="showSubTab('facturacion','datos')" id="st-facturacion-datos" class="subtab-btn">💳 Facturación</button>
@@ -123,9 +116,8 @@
 
         <div class="p-8">
 
-            <!-- ══ TAB: PERFIL DE EMPRESA ══ -->
+            <!-- TAB: PERFIL DE EMPRESA -->
             <div id="content-perfil" class="tab-content hidden">
-                <!-- Sub-tabs internos (pestaña izquierda: alineación natural) -->
                 <div class="flex gap-2 mb-6 pb-4 border-b flex-wrap">
                     <button onclick="showSubTab('perfil','datos')" id="st-perfil-datos" class="subtab-btn">🏢 Perfil</button>
                     <button onclick="showSubTab('perfil','familias')" id="st-perfil-familias" class="subtab-btn">🏷️ Familias UNSPSC</button>
@@ -255,7 +247,7 @@
             </div><!-- fin content-perfil -->
 
 
-            <!-- ══ TAB: PERFIL DE PLAN ══ (sub-tabs en barra secundaria) -->
+            <!-- TAB: PERFIL DE PLAN -->
             <div id="content-plan" class="tab-content hidden">
                 <div id="sc-plan-info" class="hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">Perfil de Plan</h2>
@@ -312,7 +304,7 @@
             </div><!-- fin content-plan -->
 
 
-            <!-- ══ TAB: FACTURACIÓN Y SEGURIDAD ══ (sub-tabs en barra secundaria) -->
+            <!-- TAB: FACTURACIÓN Y SEGURIDAD -->
             <div id="content-facturacion" class="tab-content hidden">
                 <div id="sc-facturacion-datos" class="hidden">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Facturación</h2>
@@ -351,7 +343,7 @@
             </div><!-- fin content-facturacion -->
 
 
-            <!-- ══ TAB: PERFIL LICITADOR (Enterprise) ══ -->
+            <!-- TAB: PERFIL LICITADOR (Enterprise GOLD / PLATINUM) -->
             <div id="content-perfil-licitador" class="tab-content hidden">
                 <div class="flex items-start justify-between mb-6 flex-wrap gap-4">
                     <div>
@@ -418,24 +410,11 @@ function showTab(name) {
     document.querySelectorAll('.tab-button').forEach(el=>el.classList.remove('border-indigo-600','text-indigo-600'));
     document.getElementById(`content-${name}`).classList.remove('hidden');
     document.getElementById(`tab-${name}`).classList.add('border-indigo-600','text-indigo-600');
-
-    // Barra secundaria: mostrar sólo el slot de la pestaña activa
     const bar=document.getElementById('secondary-subtab-bar');
     ['plan','facturacion'].forEach(n=>document.getElementById(`ss-${n}`)?.classList.add('hidden'));
-
-    if(name==='plan'){
-        bar.classList.remove('hidden');
-        document.getElementById('ss-plan')?.classList.remove('hidden');
-        showSubTab('plan','info');
-    } else if(name==='facturacion'){
-        bar.classList.remove('hidden');
-        document.getElementById('ss-facturacion')?.classList.remove('hidden');
-        showSubTab('facturacion','datos');
-    } else {
-        bar.classList.add('hidden');
-        if(name==='perfil')          showSubTab('perfil','datos');
-        if(name==='perfil-licitador') plCargar();
-    }
+    if(name==='plan'){bar.classList.remove('hidden');document.getElementById('ss-plan')?.classList.remove('hidden');showSubTab('plan','info');}
+    else if(name==='facturacion'){bar.classList.remove('hidden');document.getElementById('ss-facturacion')?.classList.remove('hidden');showSubTab('facturacion','datos');}
+    else{bar.classList.add('hidden');if(name==='perfil')showSubTab('perfil','datos');if(name==='perfil-licitador')plCargar();}
 }
 
 function showSubTab(parent,sub) {
@@ -443,8 +422,8 @@ function showSubTab(parent,sub) {
     document.getElementById(`sc-${parent}-${sub}`)?.classList.remove('hidden');
     document.querySelectorAll(`[id^="st-${parent}-"]`).forEach(btn=>btn.classList.remove('active'));
     document.getElementById(`st-${parent}-${sub}`)?.classList.add('active');
-    if(parent==='perfil'&&sub==='familias') cargarFamiliasUNSPSC();
-    if(parent==='plan'&&sub==='invitar')    cargarInvitaciones();
+    if(parent==='perfil'&&sub==='familias')cargarFamiliasUNSPSC();
+    if(parent==='plan'&&sub==='invitar')cargarInvitaciones();
 }
 
 // ════════ INIT ════════
@@ -461,7 +440,8 @@ async function verificarAutenticacion(){
         await cargarInfoFacturacion();
         const r=await fetch(`${API_BASE}/api/perfil?type=usuario`,{headers:{'Authorization':`Bearer ${token}`}});
         if(r.ok){const d=await r.json();document.getElementById('nombre-empresa').textContent=d.empresa.nombre;document.getElementById('nombre-empresa-mobile').textContent=d.empresa.nombre;}
-        if(empresaActual?.plan==='enterprise') await plCargarSilencioso();
+        // CAMBIO: verificar enterprise_gold y enterprise_platinum
+        if(empresaActual?.plan==='enterprise_gold'||empresaActual?.plan==='enterprise_platinum') await plCargarSilencioso();
         evaluarCompletitud();
         showTab('perfil');
     }catch(e){console.error(e);window.location.href='/login.html';}
@@ -566,7 +546,14 @@ async function cargarFamiliasUNSPSC(){
         if(!r.ok){alert('Error al cargar familias UNSPSC');return;}
         const d=await r.json();limiteFamilias=d.limite_familias;familiasSeleccionadas=new Set(d.familias_unspsc||[]);
         document.getElementById('familias-limite').textContent=limiteFamilias;
-        document.getElementById('plan-familias').textContent=d.plan==='free_trial'?'Prueba Gratuita':d.plan==='estandar'?'Estándar':d.plan==='business'?'Business':d.plan;
+        // CAMBIO: añadir enterprise_gold y enterprise_platinum
+        document.getElementById('plan-familias').textContent=
+            d.plan==='free_trial'?'Prueba Gratuita':
+            d.plan==='estandar'?'Estándar':
+            d.plan==='business'?'Business':
+            d.plan==='enterprise_gold'?'Enterprise GOLD ⭐':
+            d.plan==='enterprise_platinum'?'Enterprise PLATINUM 💎':
+            d.plan;
         actualizarContador();renderizarFamilias();
     }catch(e){console.error(e);alert('Error al cargar familias UNSPSC');}
 }
@@ -636,23 +623,44 @@ async function cargarInfoFacturacion(){
         const token=localStorage.getItem('token')||sessionStorage.getItem('token');
         const r=await fetch(`${API_BASE}/api/perfil?type=usuario`,{headers:{'Authorization':`Bearer ${token}`}});
         if(!r.ok)return;const d=await r.json();
-        const pn={'free_trial':'Prueba Gratuita','estandar':'Estándar ($10/mes)','business':'Business ($20/mes)','cancelado':'Cancelado'};
+
+        // CAMBIO: añadir enterprise_gold y enterprise_platinum a nombres de plan
+        const pn={
+            'free_trial':'Prueba Gratuita',
+            'estandar':'Estándar ($10/mes)',
+            'business':'Business ($20/mes)',
+            'enterprise_gold':'Enterprise GOLD ($40/mes)',
+            'enterprise_platinum':'Enterprise PLATINUM ($80/mes)',
+            'cancelado':'Cancelado'
+        };
         document.getElementById('plan-actual').textContent=pn[d.empresa.plan]||d.empresa.plan;
-        const np={'estandar':'Plan Estándar','business':'Plan Business','enterprise':'Plan Enterprise'};
+
+        // CAMBIO: badge en navbar
+        const np={
+            'estandar':'Plan Estándar',
+            'business':'Plan Business',
+            'enterprise_gold':'Enterprise GOLD ⭐',
+            'enterprise_platinum':'Enterprise PLATINUM 💎'
+        };
         const badge=document.getElementById('badge-plan-cuenta');
         if(badge&&np[d.empresa.plan]){badge.textContent=np[d.empresa.plan];badge.classList.remove('hidden');}
+
         if(d.empresa.plan==='free_trial'){const dias=Math.ceil((new Date(d.empresa.trial_fin)-new Date())/(1000*60*60*24));document.getElementById('estado-plan').textContent=`${dias} días restantes de prueba`;}
         else if(d.empresa.plan==='cancelado'){document.getElementById('estado-plan').textContent='Suscripción cancelada';}
         else{document.getElementById('estado-plan').textContent='Renovación automática mensual';}
+
         const be=document.getElementById('badge-estado');
         if(d.empresa.activo){be.textContent='Activo';be.className='px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800';}
         else{be.textContent='Inactivo';be.className='px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800';}
+
         if(d.empresa.plan==='free_trial'){document.getElementById('upgrade-section').classList.remove('hidden');document.getElementById('portal-section').classList.add('hidden');}
         else{document.getElementById('upgrade-section').classList.add('hidden');document.getElementById('portal-section').classList.remove('hidden');}
+
         cargarPerfilPlan(d.empresa.plan);
         plMostrarSiEnterprise(d.empresa.plan);
     }catch(e){console.error(e);}
 }
+
 async function abrirPortalFacturacion(){
     try{const token=localStorage.getItem('token')||sessionStorage.getItem('token');const r=await fetch(`${API_BASE}/api/stripe`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({action:'create_portal'})});if(r.ok){const d=await r.json();window.location.href=d.portal_url;}else{const e=await r.json();alert('Error: '+e.error);}}catch(e){console.error(e);alert('Error al abrir portal de facturación');}
 }
@@ -664,29 +672,96 @@ async function iniciarUpgrade(plan){
 function cargarPerfilPlan(plan){
     const fe=['Análisis diario automático de licitaciones','Notificaciones por email de oportunidades ALTA y MEDIA','Dashboard con todas tus oportunidades','Filtros por relevancia, fecha y monto','Perfil empresarial personalizable','Hasta 5 familias UNSPSC para filtrado automático','Soporte por email'];
     const fb=[...fe,'📄 Descargar pliego en PDF directamente desde el SECP (10/mes)','🤖 Análisis profundo del pliego con IA (5/mes)','Exportación a Excel de todas tus oportunidades','Soporte prioritario por email y chat'];
-    const cfg={free_trial:{nombre:'Prueba Gratuita',subtitulo:'Acceso completo al Plan Estándar por 7 días',features:fe,mostrarAgentes:false},estandar:{nombre:'Plan Estándar',subtitulo:'$10 / mes — renovación automática',features:fe,mostrarAgentes:false},business:{nombre:'Plan Business',subtitulo:'$20 / mes — renovación automática',features:fb,mostrarAgentes:false},enterprise:{nombre:'Plan Enterprise',subtitulo:'Plan piloto — condiciones especiales',features:[...fb,'📋 Agente 033: genera el Formulario F033 pre-llenado (1/semana)','🗂️ Agente Sprint: genera un plan de trabajo en KanbanBonsai (1/semana)','Detección automática de política de ITBIS por licitación','Soporte dedicado por WhatsApp','Acceso anticipado a nuevas funcionalidades'],mostrarAgentes:true}};
+    // CAMBIO: features para enterprise_gold
+    const fg=[
+        'Análisis diario automático de licitaciones',
+        'Notificaciones por email de oportunidades ALTA y MEDIA',
+        'Dashboard con todas tus oportunidades',
+        'Filtros por relevancia, fecha y monto',
+        'Perfil empresarial personalizable',
+        'Familias UNSPSC para filtrado automático',
+        'Exportación a Excel de todas tus oportunidades',
+        '📄 Descargas de pliego en PDF — ilimitadas',
+        '🤖 Análisis profundo del pliego con IA — ilimitado',
+        '📋 Agente 033 / F033 (5/mes)',
+        '🔒 Perfil Licitador con seguimiento de documentos habilitantes',
+        'Soporte dedicado por WhatsApp',
+        'Acceso anticipado a nuevas funcionalidades'
+    ];
+    // CAMBIO: features para enterprise_platinum
+    const fp=[
+        'Análisis diario automático de licitaciones',
+        'Notificaciones por email de oportunidades ALTA y MEDIA',
+        'Dashboard con todas tus oportunidades',
+        'Filtros por relevancia, fecha y monto',
+        'Perfil empresarial personalizable',
+        'Familias UNSPSC para filtrado automático',
+        'Exportación a Excel de todas tus oportunidades',
+        '📄 Descargas de pliego en PDF — ilimitadas',
+        '🤖 Análisis profundo del pliego con IA — ilimitado',
+        '📋 Agente 033 / F033 — ilimitado',
+        '🗂️ Coach + Reporte + KB (5/mes)',
+        '🔒 Perfil Licitador con seguimiento de documentos habilitantes',
+        'Soporte dedicado por WhatsApp',
+        'Acceso anticipado a nuevas funcionalidades'
+    ];
+
+    // CAMBIO: cfg actualizado sin 'enterprise', con gold y platinum
+    const cfg={
+        free_trial:{nombre:'Prueba Gratuita',subtitulo:'Acceso completo al Plan Estándar por 7 días',features:fe,mostrarAgentes:false},
+        estandar:{nombre:'Plan Estándar',subtitulo:'$10 / mes — renovación automática',features:fe,mostrarAgentes:false},
+        business:{nombre:'Plan Business',subtitulo:'$20 / mes — renovación automática',features:fb,mostrarAgentes:false},
+        enterprise_gold:{nombre:'Enterprise GOLD ⭐',subtitulo:'$40 / mes — renovación automática',features:fg,mostrarAgentes:true},
+        enterprise_platinum:{nombre:'Enterprise PLATINUM 💎',subtitulo:'$80 / mes — renovación automática',features:fp,mostrarAgentes:true}
+    };
+
     const c=cfg[plan]||cfg['estandar'];
-    document.getElementById('plan-nombre-display').textContent=c.nombre;document.getElementById('plan-subtitulo-display').textContent=c.subtitulo;
-    const m=Math.ceil(c.features.length/2);const rc=items=>items.map(f=>`<div class="flex items-start gap-2"><span class="text-green-600 font-bold flex-shrink-0">✓</span><span class="text-gray-700 text-sm">${f}</span></div>`).join('');
+    document.getElementById('plan-nombre-display').textContent=c.nombre;
+    document.getElementById('plan-subtitulo-display').textContent=c.subtitulo;
+    const m=Math.ceil(c.features.length/2);
+    const rc=items=>items.map(f=>`<div class="flex items-start gap-2"><span class="text-green-600 font-bold flex-shrink-0">✓</span><span class="text-gray-700 text-sm">${f}</span></div>`).join('');
     document.getElementById('plan-features-display').innerHTML=`<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1"><div class="space-y-3">${rc(c.features.slice(0,m))}</div><div class="space-y-3">${rc(c.features.slice(m))}</div></div>`;
-    const ce=[{emoji:'📄',label:'Descargar Pliego (PDF)',valor:'10',periodo:'mes'},{emoji:'🤖',label:'Analizar Pliego con IA',valor:'5',periodo:'mes'},{emoji:'📋',label:'Generar F033 (Agente 033)',valor:'1',periodo:'semana'},{emoji:'🗂️',label:'Plan para ofertar (Agente Sprint)',valor:'1',periodo:'semana'}];
+
+    // Cupos: Business base
     const cb=[{emoji:'📄',label:'Descargar Pliego (PDF)',valor:'10',periodo:'mes'},{emoji:'🤖',label:'Analizar Pliego con IA',valor:'5',periodo:'mes'}];
+    // CAMBIO: cupos para enterprise_gold (∞ B1 y B2, 5/mes B3)
+    const cg=[{emoji:'📄',label:'Descargar Pliego (PDF)',valor:'∞',periodo:'mes'},{emoji:'🤖',label:'Analizar Pliego con IA',valor:'∞',periodo:'mes'},{emoji:'📋',label:'Agente 033 / F033',valor:'5',periodo:'mes'}];
+    // CAMBIO: cupos para enterprise_platinum (∞ B1, B2 y B3, 5/mes B4)
+    const cp=[{emoji:'📄',label:'Descargar Pliego (PDF)',valor:'∞',periodo:'mes'},{emoji:'🤖',label:'Analizar Pliego con IA',valor:'∞',periodo:'mes'},{emoji:'📋',label:'Agente 033 / F033',valor:'∞',periodo:'mes'},{emoji:'🗂️',label:'Coach + Reporte + KB',valor:'5',periodo:'mes'}];
+
     const sc=document.getElementById('seccion-cupos-incluidos'),ce2=document.getElementById('plan-cupos-display');
     const mk=q=>`<div class="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center"><p class="text-xl mb-1">${q.emoji}</p><p class="text-xs text-gray-500 mb-1 leading-tight">${q.label}</p><p class="text-xl font-bold text-indigo-700">${q.valor}</p><p class="text-xs text-gray-400">x ${q.periodo}</p></div>`;
-    if(plan==='enterprise'){if(sc)sc.style.display='block';ce2.innerHTML=ce.map(mk).join('');}
-    else if(plan==='business'||plan==='free_trial'){if(sc)sc.style.display='block';ce2.className='grid grid-cols-2 gap-3';ce2.innerHTML=cb.map(mk).join('');}
-    else{if(sc)sc.style.display='none';}
-    const sa=document.getElementById('seccion-agentes-cupos');if(sa)sa.style.display=c.mostrarAgentes?'block':'none';
+
+    // CAMBIO: lógica de cupos actualizada
+    if(plan==='enterprise_gold'){
+        if(sc)sc.style.display='block';
+        ce2.className='grid grid-cols-3 gap-4';
+        ce2.innerHTML=cg.map(mk).join('');
+    } else if(plan==='enterprise_platinum'){
+        if(sc)sc.style.display='block';
+        ce2.className='grid grid-cols-2 md:grid-cols-4 gap-4';
+        ce2.innerHTML=cp.map(mk).join('');
+    } else if(plan==='business'||plan==='free_trial'){
+        if(sc)sc.style.display='block';
+        ce2.className='grid grid-cols-2 gap-3';
+        ce2.innerHTML=cb.map(mk).join('');
+    } else {
+        if(sc)sc.style.display='none';
+    }
+
+    const sa=document.getElementById('seccion-agentes-cupos');
+    if(sa)sa.style.display=c.mostrarAgentes?'block':'none';
 }
 
 // ════════ PERFIL LICITADOR ════════
 let plDocumentos=[];
 const PL_GRUPOS={A:'A — Existencia legal de la empresa',B:'B — Cumplimiento tributario y laboral',C:'C — Habilitación para el Estado',D:'D — Capacidad financiera',E:'E — Situacional (certificaciones propias e institucionales)'};
 
+// CAMBIO: verificar enterprise_gold y enterprise_platinum
 function plMostrarSiEnterprise(plan){
-    if(plan==='enterprise'){
+    if(plan==='enterprise_gold'||plan==='enterprise_platinum'){
         document.getElementById('tab-perfil-licitador')?.classList.remove('hidden');
-        document.getElementById('ss-licitador')?.classList.remove('hidden'); // sincronizar barra secundaria
+        document.getElementById('ss-licitador')?.classList.remove('hidden');
     }
 }
 
@@ -775,6 +850,7 @@ async function plCargarSilencioso(){
         actualizarBadgeLicitador();
     }catch(e){console.error(e);}
 }
+
 let bannerDismissed=false;
 function dismissBanner(){bannerDismissed=true;document.getElementById('banner-onboarding').classList.add('hidden');}
 
@@ -789,7 +865,8 @@ function evaluarCompletitud(){
         if(!(Array.isArray(empresaActual.regiones_interes)?empresaActual.regiones_interes:[]).length)falta.push('regiones de interés');
         if(falta.length)issues.push({texto:`Perfil de Empresa: falta ${falta.join(' · ')}`,accion:`showTab('perfil');showSubTab('perfil','datos')`});
     }
-    if(empresaActual?.plan==='enterprise'&&plDocumentos.length){
+    // CAMBIO: verificar enterprise_gold y enterprise_platinum para Perfil Licitador
+    if((empresaActual?.plan==='enterprise_gold'||empresaActual?.plan==='enterprise_platinum')&&plDocumentos.length){
         const hoy=new Date();hoy.setHours(0,0,0,0);
         const criticos=plDocumentos.filter(d=>['A','B','C'].includes(d.grupo)&&!d.es_permanente);
         const sinFecha=criticos.filter(d=>!d.fecha_vencimiento).length;
