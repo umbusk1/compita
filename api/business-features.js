@@ -70,7 +70,8 @@ function capacidadesPlan(plan) {
     agente_033_disponible:     esPlatinum || esGold,
     agente_033_ilimitado:      esPlatinum,
     agente_033_limite_mes:     esGold ? 5 : (esPlatinum ? 9999 : 0),
-    // Botón 4 — Agente Sprint (Coach + Reporte)
+    // Botón 4 — Agente Sprint (Coach + Reporte) + KanbanBonsai IA
+    // Todos comparten el mismo contador agente_sprint en uso_mensual
     agente_sprint_disponible:  esPlatinum,
     agente_sprint_limite_mes:  esPlatinum ? 5 : 0,
   };
@@ -82,7 +83,15 @@ function capacidadesPlan(plan) {
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // ── CAMBIO 1: permitir también kanban.umbusk.com ──
+  const origensPermitidos = [
+    'https://compita.umbusk.com',
+    'https://kanban.umbusk.com',
+  ];
+  const origen = req.headers.origin;
+  if (origensPermitidos.includes(origen)) {
+    res.setHeader('Access-Control-Allow-Origin', origen);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -143,7 +152,6 @@ export default async function handler(req, res) {
             }
           } else {
             suscripcionActiva = true;
-            // Respetar límites manuales si están definidos en la BD
             if (empresa.limite_zips_mes)     zipLimite      = empresa.limite_zips_mes;
             if (empresa.limite_analisis_mes)  analisisLimite = empresa.limite_analisis_mes;
           }
@@ -153,7 +161,6 @@ export default async function handler(req, res) {
               SELECT id FROM uso_mensual WHERE empresa_id = ${empresa.id} AND mes = ${mesActual}
             `;
             if (existe.length === 0) {
-              // Transferir sobrantes de add-ons del mes anterior
               let zipSobrantes = 0, analisisSobrantes = 0, a033Sobrantes = 0, sprintSobrantes = 0;
               const anterior = await sql`
                 SELECT descargas_zip_usadas, analisis_ia_usados,
@@ -250,6 +257,72 @@ export default async function handler(req, res) {
         analisis_usados:      uso.analisis_ia_usados,
         analisis_limite:      cap.analisis_limite,
         analisis_disponibles: cap.analisis_ilimitado ? 9999 : Math.max(0, cap.analisis_limite - uso.analisis_ia_usados),
+      });
+    }
+
+    // ====================================================
+    // ── CAMBIO 2: KB-ENTITLEMENTS ──
+    // KanbanBonsai consulta si la empresa tiene cupo de IA
+    // Reutiliza agente_sprint_usados — sin nueva tabla ni columna
+    // ====================================================
+    if (accion === 'kb-entitlements') {
+      if (!cap.agente_sprint_disponible) {
+        return res.status(200).json({
+          success: true,
+          tiene_acceso: false,
+          razon: 'El plan actual no incluye KanbanBonsai IA. Requiere Enterprise PLATINUM.',
+          upgrade_required: true,
+        });
+      }
+      const usados    = uso.agente_sprint_usados || 0;
+      const adicional = uso.agente_sprint_adicionales || 0;
+      const limite    = cap.agente_sprint_limite_mes + adicional;
+      const restantes = Math.max(0, limite - usados);
+      return res.status(200).json({
+        success: true,
+        tiene_acceso: true,
+        plan,
+        usados,
+        limite,
+        restantes,
+        ilimitado: false, // Platinum tiene 5/mes base; crece con add-ons
+      });
+    }
+
+    // ====================================================
+    // ── CAMBIO 3: KB-CONSUMIR ──
+    // KanbanBonsai descuenta 1 cupo al generar un Bonsai con IA
+    // Reutiliza agente_sprint_usados — sin nueva tabla ni columna
+    // ====================================================
+    if (accion === 'kb-consumir') {
+      if (!cap.agente_sprint_disponible) {
+        return res.status(403).json({
+          success: false,
+          error: 'Generar Bonsai con IA requiere Plan Enterprise PLATINUM de Compita.',
+          upgrade_required: true,
+        });
+      }
+      const usados    = uso.agente_sprint_usados || 0;
+      const adicional = uso.agente_sprint_adicionales || 0;
+      const limite    = cap.agente_sprint_limite_mes + adicional;
+      if (usados >= limite) {
+        return res.status(403).json({
+          success: false,
+          error: `Alcanzaste el límite mensual de ${limite} usos de IA. Adquiere usos adicionales desde tu panel de Compita.`,
+          cupos_disponibles: 0,
+        });
+      }
+      await sql`
+        UPDATE uso_mensual
+        SET agente_sprint_usados = COALESCE(agente_sprint_usados, 0) + 1,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+      `;
+      return res.status(200).json({
+        success: true,
+        message: 'Uso registrado',
+        usados:    usados + 1,
+        restantes: Math.max(0, limite - usados - 1),
       });
     }
 
@@ -373,7 +446,6 @@ export default async function handler(req, res) {
         });
       }
 
-      // Verificar cupo de Agente Sprint
       const sprintUsados = uso.agente_sprint_usados || uso.coach_usados || 0;
       const sprintLimite = cap.agente_sprint_limite_mes + (uso.agente_sprint_adicionales || 0);
       if (sprintUsados >= sprintLimite) {
@@ -481,7 +553,6 @@ ${seccionPliego}
         return res.status(500).json({ success: false, error: 'Error al parsear respuesta del Coach' });
       }
 
-      // Registrar uso Agente Sprint
       await sql`UPDATE uso_mensual
         SET agente_sprint_usados = COALESCE(agente_sprint_usados, 0) + 1,
             coach_usados         = COALESCE(coach_usados, 0) + 1,
