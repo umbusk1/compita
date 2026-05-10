@@ -72,7 +72,7 @@ async function verificarEnterprise(empresaId) {
     'SELECT plan FROM empresas WHERE id = $1',
     [empresaId]
   );
-  return r.rows.length > 0 && r.rows[0].plan === 'enterprise';
+  return r.rows.length > 0 && r.rows[0].plan === 'enterprise_platinum';
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -326,7 +326,7 @@ async function handleEnviarAlertas(req, res) {
       FROM perfil_licitador pl
       JOIN empresas e ON e.id = pl.empresa_id
       JOIN usuarios u ON u.empresa_id = e.id AND u.rol IN ('admin', 'owner')
-      WHERE e.plan           = 'enterprise'
+      WHERE e.plan           = 'enterprise_platinum'
         AND e.activo         = TRUE
         AND pl.es_permanente = FALSE
         AND pl.fecha_vencimiento IS NOT NULL
