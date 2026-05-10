@@ -541,15 +541,13 @@ function toggleMobileMenu() {
         </p>
       </div>
 
-      <!-- Grid de tarjetas -->
-      <div class="grid md:grid-cols-3 gap-6 items-start">
+<!-- Grid de tarjetas -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
 
         <!-- ── Plan Estándar ── -->
         <div style="background:#fff; border:1px solid var(--crema-borde);
-                    border-radius:16px; padding:2.25rem 1.75rem;
-                    display:flex; flex-direction:column; gap:1.5rem;">
-
-          <!-- Etiqueta de escalón -->
+                    border-radius:16px; padding:2rem 1.5rem;
+                    display:flex; flex-direction:column; gap:1.25rem;">
           <div>
             <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
                          text-transform:uppercase; background:var(--crema);
@@ -557,79 +555,62 @@ function toggleMobileMenu() {
               Paso 1
             </span>
           </div>
-
-          <!-- Nombre y precio -->
           <div>
-            <h3 class="lora" style="font-size:1.25rem; font-weight:700;
+            <h3 class="lora" style="font-size:1.2rem; font-weight:700;
                                     color:var(--texto-oscuro); margin-bottom:0.5rem;">
               Plan Estándar
             </h3>
             <div style="display:flex; align-items:baseline; gap:4px;">
-              <span style="font-size:2.25rem; font-weight:800; color:var(--texto-oscuro);
+              <span style="font-size:2rem; font-weight:800; color:var(--texto-oscuro);
                            font-family:'Manrope',sans-serif;">$10</span>
               <span style="font-size:0.875rem; color:var(--texto-medio); font-weight:500;">/mes</span>
             </div>
           </div>
-
           <hr style="border:none; border-top:1px solid var(--crema-borde);">
-
-          <!-- Promesa -->
           <div>
             <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
                       text-transform:uppercase; color:var(--dorado); margin-bottom:0.5rem;">
               Atención
             </p>
-            <p style="font-size:0.9rem; line-height:1.7; color:var(--texto-medio);">
-              Sabes qué hay en el mercado público dominicano y cuándo
-              cierra cada oportunidad — antes que tu competencia.
+            <p style="font-size:0.85rem; line-height:1.7; color:var(--texto-medio);">
+              Sabes qué hay en el mercado público dominicano y cuándo cierra cada oportunidad.
             </p>
           </div>
-
-          <!-- Features -->
-          <ul style="display:flex; flex-direction:column; gap:0.65rem; list-style:none; padding:0; margin:0;">
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+          <ul style="display:flex; flex-direction:column; gap:0.6rem; list-style:none; padding:0; margin:0;">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
               Alertas diarias de licitaciones relevantes
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
               Filtrado por perfil de empresa
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
               Fechas de cierre y montos visibles
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
               Hasta 5 categorías UNSPSC
             </li>
           </ul>
-
-          <!-- CTA -->
           <a href="/registro.html"
              style="display:block; text-align:center; font-family:'Manrope',sans-serif;
-                    font-weight:600; font-size:0.9rem; padding:0.75rem 1rem;
+                    font-weight:600; font-size:0.875rem; padding:0.7rem 1rem;
                     border-radius:8px; border:1.5px solid var(--crema-borde);
                     color:var(--texto-oscuro); transition:border-color 0.2s;"
              onmouseover="this.style.borderColor='var(--texto-oscuro)'"
              onmouseout="this.style.borderColor='var(--crema-borde)'">
             Probar gratis 7 días
           </a>
-
         </div>
 
         <!-- ── Plan Business (destacado) ── -->
         <div style="background:var(--verde-oscuro);
-                    border-radius:16px; padding:2.25rem 1.75rem;
-                    display:flex; flex-direction:column; gap:1.5rem;
+                    border-radius:16px; padding:2rem 1.5rem;
+                    display:flex; flex-direction:column; gap:1.25rem;
                     position:relative;
                     box-shadow: 0 20px 60px rgba(22,51,50,0.25);">
-
-          <!-- Badge recomendado -->
           <div style="position:absolute; top:-14px; left:50%; transform:translateX(-50%);
                       background:var(--verde-cta); color:#fff;
                       font-size:0.65rem; font-weight:700; letter-spacing:0.08em;
@@ -637,8 +618,6 @@ function toggleMobileMenu() {
                       white-space:nowrap; font-family:'Manrope',sans-serif;">
             ★ Recomendado
           </div>
-
-          <!-- Etiqueta de escalón -->
           <div>
             <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
                          text-transform:uppercase; background:rgba(234,186,129,0.15);
@@ -646,68 +625,53 @@ function toggleMobileMenu() {
               Paso 2
             </span>
           </div>
-
-          <!-- Nombre y precio -->
           <div>
-            <h3 class="lora" style="font-size:1.25rem; font-weight:700;
+            <h3 class="lora" style="font-size:1.2rem; font-weight:700;
                                     color:#f5f0e8; margin-bottom:0.5rem;">
               Plan Business
             </h3>
             <div style="display:flex; align-items:baseline; gap:4px;">
-              <span style="font-size:2.25rem; font-weight:800; color:var(--dorado);
+              <span style="font-size:2rem; font-weight:800; color:var(--dorado);
                            font-family:'Manrope',sans-serif;">$20</span>
               <span style="font-size:0.875rem; color:var(--texto-claro); font-weight:500;">/mes</span>
             </div>
           </div>
-
           <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1);">
-
-          <!-- Promesa -->
           <div>
             <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
                       text-transform:uppercase; color:var(--dorado); margin-bottom:0.5rem;">
               Análisis
             </p>
-            <p style="font-size:0.9rem; line-height:1.7; color:var(--texto-claro);">
-              Además de saber, entiendes. Descargamos el pliego y Claude
-              lo analiza para que sepas si vale competir antes de invertir
-              un minuto de tu equipo.
+            <p style="font-size:0.85rem; line-height:1.7; color:var(--texto-claro);">
+              Descargamos el pliego y Claude lo analiza. Sabes si vale competir
+              antes de invertir un minuto de tu equipo.
             </p>
           </div>
-
-          <!-- Features -->
-          <ul style="display:flex; flex-direction:column; gap:0.65rem; list-style:none; padding:0; margin:0;">
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-claro);">
+          <ul style="display:flex; flex-direction:column; gap:0.6rem; list-style:none; padding:0; margin:0;">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-claro);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
               Todo lo del Plan Estándar
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-claro);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-claro);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
-              Descarga automática del pliego PDF
+              Descarga del pliego PDF (10/mes)
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-claro);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-claro);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
-              Análisis de pliego con IA (Claude)
+              Análisis de pliego con IA (5/mes)
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-claro);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-claro);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
-              Resumen ejecutivo: riesgos, requisitos, plazos
+              Resumen: riesgos, requisitos, plazos
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-claro);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-claro);">
               <span style="color:var(--verde-cta); font-size:1rem; flex-shrink:0;">✓</span>
               Hasta 10 categorías UNSPSC
             </li>
           </ul>
-
-          <!-- CTA -->
           <a href="/registro.html"
              style="display:block; text-align:center; font-family:'Manrope',sans-serif;
-                    font-weight:700; font-size:0.9rem; padding:0.875rem 1rem;
+                    font-weight:700; font-size:0.875rem; padding:0.8rem 1rem;
                     border-radius:8px; background:var(--verde-cta); color:#fff;
                     transition:background 0.2s;"
              onmouseover="this.style.background='#22a02d'"
@@ -718,95 +682,137 @@ function toggleMobileMenu() {
                  style="vertical-align:middle; margin-right:6px;">
             Empieza gratis 7 días
           </a>
-
-          <!-- Garantía bajo botón -->
           <p style="text-align:center; font-size:0.75rem; color:var(--texto-claro);">
             Sin tarjeta de crédito
           </p>
-
         </div>
 
-        <!-- ── Plan Enterprise ── -->
-        <div style="background:#fff; border:1px solid var(--crema-borde);
-                    border-radius:16px; padding:2.25rem 1.75rem;
-                    display:flex; flex-direction:column; gap:1.5rem;">
+        <!-- ── Enterprise GOLD ── -->
+        <div style="background:#fffbeb; border:1.5px solid #fcd34d;
+                    border-radius:16px; padding:2rem 1.5rem;
+                    display:flex; flex-direction:column; gap:1.25rem;">
+          <div>
+            <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
+                         text-transform:uppercase; background:#fef3c7;
+                         color:#92400e; padding:4px 12px; border-radius:99px;">
+              ⭐ Paso 3
+            </span>
+          </div>
+          <div>
+            <h3 class="lora" style="font-size:1.2rem; font-weight:700;
+                                    color:var(--texto-oscuro); margin-bottom:0.5rem;">
+              Enterprise GOLD
+            </h3>
+            <div style="display:flex; align-items:baseline; gap:4px;">
+              <span style="font-size:2rem; font-weight:800; color:#b45309;
+                           font-family:'Manrope',sans-serif;">$40</span>
+              <span style="font-size:0.875rem; color:var(--texto-medio); font-weight:500;">/mes</span>
+            </div>
+          </div>
+          <hr style="border:none; border-top:1px solid #fde68a;">
+          <div>
+            <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
+                      text-transform:uppercase; color:#b45309; margin-bottom:0.5rem;">
+              Ejecución
+            </p>
+            <p style="font-size:0.85rem; line-height:1.7; color:var(--texto-medio);">
+              Descargas y análisis ilimitados, más el Agente 033 que
+              pre-llena el Formulario F033 por ti.
+            </p>
+          </div>
+          <ul style="display:flex; flex-direction:column; gap:0.6rem; list-style:none; padding:0; margin:0;">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
+              <span style="color:#b45309; font-size:1rem; flex-shrink:0;">✓</span>
+              Todo lo del Plan Business
+            </li>
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
+              <span style="color:#b45309; font-size:1rem; flex-shrink:0;">✓</span>
+              Descarga del pliego PDF — <strong>ilimitada</strong>
+            </li>
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
+              <span style="color:#b45309; font-size:1rem; flex-shrink:0;">✓</span>
+              Análisis con IA — <strong>ilimitado</strong>
+            </li>
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
+              <span style="color:#b45309; font-size:1rem; flex-shrink:0;">✓</span>
+              Agente 033 / F033 (5/mes)
+            </li>
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
+              <span style="color:#b45309; font-size:1rem; flex-shrink:0;">✓</span>
+              Perfil Licitador con seguimiento documental
+            </li>
+          </ul>
+          <a href="/registro.html"
+             style="display:block; text-align:center; font-family:'Manrope',sans-serif;
+                    font-weight:600; font-size:0.875rem; padding:0.7rem 1rem;
+                    border-radius:8px; background:#f59e0b; color:#fff;
+                    transition:background 0.2s;"
+             onmouseover="this.style.background='#d97706'"
+             onmouseout="this.style.background='#f59e0b'">
+            Suscribirse
+          </a>
+        </div>
 
-          <!-- Etiqueta de escalón -->
+        <!-- ── Enterprise PLATINUM ── -->
+        <div style="background:#faf5ff; border:1.5px solid #c4b5fd;
+                    border-radius:16px; padding:2rem 1.5rem;
+                    display:flex; flex-direction:column; gap:1.25rem;">
           <div>
             <span style="font-size:0.65rem; font-weight:700; letter-spacing:0.1em;
                          text-transform:uppercase; background:#ede9fe;
-                         color:#6d28d9; padding:4px 12px; border-radius:99px;">
-              Paso 3
+                         color:#5b21b6; padding:4px 12px; border-radius:99px;">
+              💎 Paso 4
             </span>
           </div>
-
-          <!-- Nombre y precio -->
           <div>
-            <h3 class="lora" style="font-size:1.25rem; font-weight:700;
+            <h3 class="lora" style="font-size:1.2rem; font-weight:700;
                                     color:var(--texto-oscuro); margin-bottom:0.5rem;">
-              Plan Enterprise
+              Enterprise PLATINUM
             </h3>
             <div style="display:flex; align-items:baseline; gap:4px;">
-              <span class="lora" style="font-size:1.75rem; font-weight:700;
-                                        color:#6d28d9;">Custom</span>
+              <span style="font-size:2rem; font-weight:800; color:#6d28d9;
+                           font-family:'Manrope',sans-serif;">$80</span>
+              <span style="font-size:0.875rem; color:var(--texto-medio); font-weight:500;">/mes</span>
             </div>
           </div>
-
-          <hr style="border:none; border-top:1px solid var(--crema-borde);">
-
-          <!-- Promesa -->
+          <hr style="border:none; border-top:1px solid #ddd6fe;">
           <div>
             <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em;
                       text-transform:uppercase; color:#6d28d9; margin-bottom:0.5rem;">
-              Ejecución
+              Ganar
             </p>
-            <p style="font-size:0.9rem; line-height:1.7; color:var(--texto-medio);">
-              El cronograma del pliego se convierte en un plan de trabajo
-              para tu equipo. Llegas preparado, a tiempo, con todo listo
-              para ganar.
+            <p style="font-size:0.85rem; line-height:1.7; color:var(--texto-medio);">
+              El plan completo: todo ilimitado, más el Coach que crea
+              el plan de trabajo directamente desde el pliego.
             </p>
           </div>
-
-          <!-- Features -->
-          <ul style="display:flex; flex-direction:column; gap:0.65rem; list-style:none; padding:0; margin:0;">
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+          <ul style="display:flex; flex-direction:column; gap:0.6rem; list-style:none; padding:0; margin:0;">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
-              Todo lo del Plan Business
+              Todo lo del GOLD
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
-              Plan de trabajo generado desde el pliego
+              Agente 033 / F033 — <strong>ilimitado</strong>
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
-              Integración con KanbanBonsai
+              Coach + Reporte + KB (5/mes)
             </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
+            <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
-              Consultor dedicado
-            </li>
-            <li style="display:flex; gap:10px; align-items:flex-start;
-                       font-size:0.85rem; color:var(--texto-medio);">
-              <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
-              Categorías y usuarios ilimitados
+              Soporte dedicado por WhatsApp
             </li>
           </ul>
-
-          <!-- CTA -->
-          <a href="mailto:hola@umbusk.com"
+          <a href="/registro.html"
              style="display:block; text-align:center; font-family:'Manrope',sans-serif;
-                    font-weight:600; font-size:0.9rem; padding:0.75rem 1rem;
-                    border-radius:8px; border:1.5px solid #c4b5fd;
-                    color:#6d28d9; transition:background 0.2s, border-color 0.2s;"
-             onmouseover="this.style.background='#ede9fe'"
-             onmouseout="this.style.background='transparent'">
-            Conversemos
+                    font-weight:600; font-size:0.875rem; padding:0.7rem 1rem;
+                    border-radius:8px; background:#7c3aed; color:#fff;
+                    transition:background 0.2s;"
+             onmouseover="this.style.background='#6d28d9'"
+             onmouseout="this.style.background='#7c3aed'">
+            Suscribirse
           </a>
-
         </div>
 
       </div><!-- /grid -->
@@ -824,137 +830,184 @@ function toggleMobileMenu() {
   </div>
 
   <!-- Tabla comparativa -->
-  <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
-              padding:2rem; margin-top:2.5rem;">
+    <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
+                padding:2rem; margin-top:2.5rem;">
 
-    <h3 class="lora text-center"
-        style="font-size:1.25rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:1.75rem;">
-      Comparación detallada
-    </h3>
+      <h3 class="lora text-center"
+          style="font-size:1.25rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:1.75rem;">
+        Comparación detallada
+      </h3>
 
-    <!-- Desktop -->
-    <div class="hidden lg:block overflow-x-auto">
-      <table style="width:60%; margin:0 auto; text-align:left; border-collapse:collapse; font-size:0.85rem;">
-        <thead>
-          <tr style="border-bottom:2px solid var(--crema-borde);">
-            <th style="padding:10px 16px; color:var(--texto-medio); font-weight:600;">Funcionalidad</th>
-            <th style="padding:10px 16px; text-align:center; color:var(--violeta); font-weight:700;">Estándar</th>
-            <th style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:700;">Business</th>
-            <th style="padding:10px 16px; text-align:center; color:#6d28d9; font-weight:700;">Enterprise</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; font-weight:600; color:var(--texto-oscuro);">Precio</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--violeta); font-weight:700;">$10/mes</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:700;">$20/mes</td>
-            <td style="padding:10px 16px; text-align:center; color:#6d28d9; font-weight:700;">Custom</td>
-          </tr>
-          <tr style="background:var(--crema);">
-            <td colspan="4" style="padding:8px 16px; font-size:0.7rem; font-weight:700;
-                letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
-              Monitoreo
-            </td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Categorías UNSPSC</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio); font-weight:600;">2</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:700;">5</td>
-            <td style="padding:10px 16px; text-align:center; color:#6d28d9; font-weight:700;">Ilimitado</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Monitoreo automático</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Análisis con IA</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-          </tr>
-          <tr style="background:var(--crema);">
-            <td colspan="4" style="padding:8px 16px; font-size:0.7rem; font-weight:700;
-                letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
-              Pliegos
-            </td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Acceso al PDF del pliego</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Análisis del pliego con IA</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-          </tr>
-          <tr style="background:var(--crema);">
-            <td colspan="4" style="padding:8px 16px; font-size:0.7rem; font-weight:700;
-                letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
-              Historial y soporte
-            </td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Historial disponible</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-medio);">1 mes</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:600;">3 meses</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--texto-oscuro); font-weight:600;">3 meses</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Plan de trabajo desde el pliego</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--crema-borde);">
-            <td style="padding:10px 16px; color:var(--texto-medio);">Consultor dedicado</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--rojo, #cd2d2c);">✗</td>
-            <td style="padding:10px 16px; text-align:center; color:var(--verde-cta);">✓</td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- Desktop -->
+      <div class="hidden lg:block overflow-x-auto">
+        <table style="width:100%; text-align:left; border-collapse:collapse; font-size:0.85rem;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--crema-borde);">
+              <th style="padding:10px 12px; color:var(--texto-medio); font-weight:600; width:26%;">Funcionalidad</th>
+              <th style="padding:10px 12px; text-align:center; color:var(--violeta); font-weight:700;">Estándar</th>
+              <th style="padding:10px 12px; text-align:center; color:var(--texto-oscuro); font-weight:700;">Business</th>
+              <th style="padding:10px 12px; text-align:center; color:#b45309; font-weight:700;">GOLD ⭐</th>
+              <th style="padding:10px 12px; text-align:center; color:#6d28d9; font-weight:700;">PLATINUM 💎</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; font-weight:600; color:var(--texto-oscuro);">Precio</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--violeta); font-weight:700;">$10/mes</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-oscuro); font-weight:700;">$20/mes</td>
+              <td style="padding:10px 12px; text-align:center; color:#b45309; font-weight:700;">$40/mes</td>
+              <td style="padding:10px 12px; text-align:center; color:#6d28d9; font-weight:700;">$80/mes</td>
+            </tr>
+
+            <!-- Monitoreo -->
+            <tr style="background:var(--crema);">
+              <td colspan="5" style="padding:8px 12px; font-size:0.7rem; font-weight:700;
+                  letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
+                Monitoreo
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Categorías UNSPSC</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-medio); font-weight:600;">5</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-oscuro); font-weight:700;">10</td>
+              <td style="padding:10px 12px; text-align:center; color:#b45309; font-weight:700;">Ilimitado</td>
+              <td style="padding:10px 12px; text-align:center; color:#6d28d9; font-weight:700;">Ilimitado</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Monitoreo automático</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-medio);">2×/día · L-V</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Análisis con IA</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+            </tr>
+
+            <!-- Pliegos -->
+            <tr style="background:var(--crema);">
+              <td colspan="5" style="padding:8px 12px; font-size:0.7rem; font-weight:700;
+                  letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
+                Pliegos
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Acceso al PDF del pliego</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta); font-weight:600;">10/mes</td>
+              <td style="padding:10px 12px; text-align:center; color:#b45309; font-weight:700;">∞</td>
+              <td style="padding:10px 12px; text-align:center; color:#6d28d9; font-weight:700;">∞</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Análisis del pliego con IA</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta); font-weight:600;">5/mes</td>
+              <td style="padding:10px 12px; text-align:center; color:#b45309; font-weight:700;">∞</td>
+              <td style="padding:10px 12px; text-align:center; color:#6d28d9; font-weight:700;">∞</td>
+            </tr>
+
+            <!-- Agentes IA -->
+            <tr style="background:var(--crema);">
+              <td colspan="5" style="padding:8px 12px; font-size:0.7rem; font-weight:700;
+                  letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
+                Agentes IA
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Agente 033 / F033</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:#b45309; font-weight:700;">5/mes</td>
+              <td style="padding:10px 12px; text-align:center; color:#6d28d9; font-weight:700;">∞</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Coach + Reporte + KB</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:#6d28d9; font-weight:700;">5/mes</td>
+            </tr>
+
+            <!-- Otras funcionalidades -->
+            <tr style="background:var(--crema);">
+              <td colspan="5" style="padding:8px 12px; font-size:0.7rem; font-weight:700;
+                  letter-spacing:0.1em; text-transform:uppercase; color:var(--texto-medio);">
+                Otras funcionalidades
+              </td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Historial disponible</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-medio);">1 mes</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-oscuro); font-weight:600;">3 meses</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-oscuro); font-weight:600;">3 meses</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--texto-oscuro); font-weight:600;">3 meses</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--crema-borde);">
+              <td style="padding:10px 12px; color:var(--texto-medio);">Perfil Licitador</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 12px; color:var(--texto-medio);">Soporte por WhatsApp</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+              <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile -->
+      <div class="lg:hidden flex flex-col gap-4">
+        <div style="background:var(--crema); border-radius:12px; padding:1rem;">
+          <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Estándar — $10/mes</h4>
+          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--texto-oscuro); font-weight:600;">5</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Pliegos PDF</span><span style="color:#cd2d2c;">✗</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Historial</span><span style="color:var(--texto-oscuro); font-weight:600;">1 mes</span></div>
+          </div>
+        </div>
+        <div style="background:var(--crema); border-radius:12px; padding:1rem;">
+          <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Business — $20/mes</h4>
+          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--texto-oscuro); font-weight:600;">10</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Pliegos PDF</span><span style="color:var(--verde-cta); font-weight:600;">10/mes</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Análisis IA</span><span style="color:var(--verde-cta); font-weight:600;">5/mes</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Historial</span><span style="color:var(--texto-oscuro); font-weight:600;">3 meses</span></div>
+          </div>
+        </div>
+        <div style="background:#fffbeb; border:1px solid #fcd34d; border-radius:12px; padding:1rem;">
+          <h4 class="lora" style="font-weight:700; color:#92400e; margin-bottom:0.75rem;">Enterprise GOLD ⭐ — $40/mes</h4>
+          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #fde68a;"><span style="color:var(--texto-medio);">Pliegos PDF</span><span style="color:#b45309; font-weight:700;">∞</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #fde68a;"><span style="color:var(--texto-medio);">Análisis IA</span><span style="color:#b45309; font-weight:700;">∞</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #fde68a;"><span style="color:var(--texto-medio);">Agente 033</span><span style="color:#b45309; font-weight:700;">5/mes</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Perfil Licitador</span><span style="color:var(--verde-cta);">✓</span></div>
+          </div>
+        </div>
+        <div style="background:#faf5ff; border:1px solid #c4b5fd; border-radius:12px; padding:1rem;">
+          <h4 class="lora" style="font-weight:700; color:#5b21b6; margin-bottom:0.75rem;">Enterprise PLATINUM 💎 — $80/mes</h4>
+          <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #ddd6fe;"><span style="color:var(--texto-medio);">Agente 033</span><span style="color:#6d28d9; font-weight:700;">∞</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #ddd6fe;"><span style="color:var(--texto-medio);">Coach + KB</span><span style="color:#6d28d9; font-weight:700;">5/mes</span></div>
+            <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">WhatsApp</span><span style="color:var(--verde-cta);">✓</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-center" style="margin-top:1.5rem; font-size:0.85rem; color:var(--texto-claro);">
+        ¿Dudas sobre qué plan elegir?
+        <a href="mailto:hola@umbusk.com"
+           style="color:var(--violeta); font-weight:600; text-decoration:none;">Escríbenos</a>
+      </p>
     </div>
-
-    <!-- Mobile -->
-    <div class="lg:hidden flex flex-col gap-4">
-      <div style="background:var(--crema); border-radius:12px; padding:1rem;">
-        <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Estándar — $10/mes</h4>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--texto-oscuro); font-weight:600;">2</span></div>
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Pliegos PDF</span><span style="color:var(--rojo, #cd2d2c);">✗</span></div>
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Historial</span><span style="color:var(--texto-oscuro); font-weight:600;">1 mes</span></div>
-        </div>
-      </div>
-      <div style="background:var(--crema); border-radius:12px; padding:1rem;">
-        <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Business — $20/mes</h4>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--texto-oscuro); font-weight:600;">5</span></div>
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Pliegos PDF</span><span style="color:var(--verde-cta);">✓</span></div>
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Análisis IA del pliego</span><span style="color:var(--verde-cta);">✓</span></div>
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Historial</span><span style="color:var(--texto-oscuro); font-weight:600;">3 meses</span></div>
-        </div>
-      </div>
-      <div style="background:var(--crema); border-radius:12px; padding:1rem;">
-        <h4 class="lora" style="font-weight:700; color:var(--texto-oscuro); margin-bottom:0.75rem;">Enterprise — Custom</h4>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.85rem;">
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Categorías</span><span style="color:var(--verde-cta); font-weight:600;">Ilimitado</span></div>
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--crema-borde);"><span style="color:var(--texto-medio);">Plan de trabajo</span><span style="color:var(--verde-cta);">✓</span></div>
-          <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Consultor</span><span style="color:var(--verde-cta);">✓</span></div>
-        </div>
-      </div>
-    </div>
-
-    <p class="text-center" style="margin-top:1.5rem; font-size:0.85rem; color:var(--texto-claro);">
-      ¿Dudas sobre qué plan elegir?
-      <a href="mailto:hola@umbusk.com"
-         style="color:var(--violeta); font-weight:600; text-decoration:none;">Escríbenos</a>
-    </p>
-  </div>
 <!-- FIN TABLA COMPARATIVA -->
 
 </section>
