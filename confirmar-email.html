@@ -41,14 +41,7 @@
 				🚀 Configurar mi empresa →
 			</a>
 
-			<!-- CTA 2 → invitar / promo 30 días (nueva pestaña) -->
-			<a href="/invitar.html"
-			   target="_blank" rel="noopener noreferrer"
-			   class="block w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-4 rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-600 transition shadow-md mb-4">
-				🎁 Obtener 30 días gratis invitando →
-			</a>
-
-			<p class="text-xs text-gray-400">Ambas opciones se abren en una nueva pestaña para que puedas hacer las dos.</p>
+			<p class="text-xs text-gray-400 mt-2">Se abre en una nueva pestaña.</p>
 		</div>
 
         <!-- Card: ya confirmado -->
@@ -132,55 +125,6 @@
             document.getElementById('error-card').classList.remove('hidden');
         }
 
-        async function enviarInvitacionDesdeConfirmacion() {
-            const email = document.getElementById('email-invitado-confirmacion').value.trim();
-            const msg   = document.getElementById('invitacion-confirmacion-msg');
-            const tkn   = localStorage.getItem('token');
-
-            if (!email) {
-                msg.textContent = '⚠️ Por favor ingresa un email';
-                msg.className = 'text-xs mt-2 text-orange-600';
-                msg.classList.remove('hidden');
-                return;
-            }
-
-            if (!tkn) {
-                msg.textContent = '⚠️ Sesión expirada. Inicia sesión e invita desde Mi Cuenta.';
-                msg.className = 'text-xs mt-2 text-orange-600';
-                msg.classList.remove('hidden');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/auth', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${tkn}`
-                    },
-                    body: JSON.stringify({ action: 'invitar', email_invitado: email })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    msg.textContent = '✅ ¡Invitación enviada! Tienen 30 días de prueba.';
-                    msg.className = 'text-xs mt-2 text-green-700 font-semibold';
-                    msg.classList.remove('hidden');
-                    document.getElementById('email-invitado-confirmacion').value = '';
-                    // Redirigir al onboarding después de 2 segundos
-                    setTimeout(() => { window.location.href = '/onboarding.html'; }, 2000);
-                } else {
-                    msg.textContent = '❌ ' + result.error;
-                    msg.className = 'text-xs mt-2 text-red-600';
-                    msg.classList.remove('hidden');
-                }
-            } catch (error) {
-                msg.textContent = '❌ Error de conexión. Intenta desde Mi Cuenta.';
-                msg.className = 'text-xs mt-2 text-red-600';
-                msg.classList.remove('hidden');
-            }
-        }
     </script>
 </body>
 </html>
