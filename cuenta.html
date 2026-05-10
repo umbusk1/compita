@@ -425,8 +425,7 @@ async function verificarAutenticacion(){
         await cargarInfoFacturacion();
         const r=await fetch(`${API_BASE}/api/perfil?type=usuario`,{headers:{'Authorization':`Bearer ${token}`}});
         if(r.ok){const d=await r.json();document.getElementById('nombre-empresa').textContent=d.empresa.nombre;document.getElementById('nombre-empresa-mobile').textContent=d.empresa.nombre;}
-        // CAMBIO: verificar enterprise_gold y enterprise_platinum
-        if(empresaActual?.plan==='enterprise_gold'||empresaActual?.plan==='enterprise_platinum') await plCargarSilencioso();
+                if(empresaActual?.plan==='enterprise_platinum') await plCargarSilencioso();
         evaluarCompletitud();
         showTab('perfil');
     }catch(e){console.error(e);window.location.href='/login.html';}
@@ -753,9 +752,9 @@ function cargarPerfilPlan(plan){
 let plDocumentos=[];
 const PL_GRUPOS={A:'A — Existencia legal de la empresa',B:'B — Cumplimiento tributario y laboral',C:'C — Habilitación para el Estado',D:'D — Capacidad financiera',E:'E — Situacional (certificaciones propias e institucionales)'};
 
-// CAMBIO: verificar enterprise_gold y enterprise_platinum
+// CAMBIO: solo enterprise_platinum tiene Perfil Licitador
 function plMostrarSiEnterprise(plan){
-    if(plan==='enterprise_gold'||plan==='enterprise_platinum'){
+    if(plan==='enterprise_platinum'){
         document.getElementById('tab-perfil-licitador')?.classList.remove('hidden');
         document.getElementById('ss-licitador')?.classList.remove('hidden');
     }
@@ -861,8 +860,7 @@ function evaluarCompletitud(){
         if(!(Array.isArray(empresaActual.regiones_interes)?empresaActual.regiones_interes:[]).length)falta.push('regiones de interés');
         if(falta.length)issues.push({texto:`Perfil de Empresa: falta ${falta.join(' · ')}`,accion:`showTab('perfil');showSubTab('perfil','datos')`});
     }
-    // CAMBIO: verificar enterprise_gold y enterprise_platinum para Perfil Licitador
-    if((empresaActual?.plan==='enterprise_gold'||empresaActual?.plan==='enterprise_platinum')&&plDocumentos.length){
+    if(empresaActual?.plan==='enterprise_platinum'&&plDocumentos.length){
         const hoy=new Date();hoy.setHours(0,0,0,0);
         const criticos=plDocumentos.filter(d=>['A','B','C'].includes(d.grupo)&&!d.es_permanente);
         const sinFecha=criticos.filter(d=>!d.fecha_vencimiento).length;
