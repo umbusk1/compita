@@ -83,15 +83,7 @@ function capacidadesPlan(plan) {
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  // ── CAMBIO 1: permitir también kanban.umbusk.com ──
-  const origensPermitidos = [
-    'https://compita.umbusk.com',
-    'https://kanban.umbusk.com',
-  ];
-  const origen = req.headers.origin;
-  if (origensPermitidos.includes(origen)) {
-    res.setHeader('Access-Control-Allow-Origin', origen);
-  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -446,7 +438,7 @@ export default async function handler(req, res) {
         });
       }
 
-      const sprintUsados = uso.agente_sprint_usados || uso.coach_usados || 0;
+      const sprintUsados = (uso.agente_sprint_usados ?? 0) + 0; // agente_sprint_usados es la fuente canónica
       const sprintLimite = cap.agente_sprint_limite_mes + (uso.agente_sprint_adicionales || 0);
       if (sprintUsados >= sprintLimite) {
         return res.status(403).json({
