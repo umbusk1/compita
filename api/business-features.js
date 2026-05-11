@@ -86,6 +86,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type,x-kb-secret');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const sql = neon(process.env.DATABASE_URL);
@@ -252,71 +253,75 @@ export default async function handler(req, res) {
       });
     }
 
-    // ====================================================
-    // ── CAMBIO 2: KB-ENTITLEMENTS ──
-    // KanbanBonsai consulta si la empresa tiene cupo de IA
-    // Reutiliza agente_sprint_usados — sin nueva tabla ni columna
-    // ====================================================
-    if (accion === 'kb-entitlements') {
-      if (!cap.agente_sprint_disponible) {
-        return res.status(200).json({
-          success: true,
-          tiene_acceso: false,
-          razon: 'El plan actual no incluye KanbanBonsai IA. Requiere Enterprise PLATINUM.',
-          upgrade_required: true,
-        });
-      }
-      const usados    = uso.agente_sprint_usados || 0;
-      const adicional = uso.agente_sprint_adicionales || 0;
-      const limite    = cap.agente_sprint_limite_mes + adicional;
-      const restantes = Math.max(0, limite - usados);
-      return res.status(200).json({
-        success: true,
-        tiene_acceso: true,
-        plan,
-        usados,
-        limite,
-        restantes,
-        ilimitado: false, // Platinum tiene 5/mes base; crece con add-ons
-      });
-    }
+// ── BLOQUE KB-ENTITLEMENTS — reemplazar el bloque existente completo ──────────
+if (accion === 'kb-entitlements') {
+  // Solo KB puede llamar este endpoint (secreto compartido)
+  const kbSecret = req.headers['x-kb-secret'];
+  if (!kbSecret || kbSecret !== process.env.COMPITA_KB_SECRET) {
+    return res.status(401).json({ success: false, error: 'No autorizado' });
+  }
 
-    // ====================================================
-    // ── CAMBIO 3: KB-CONSUMIR ──
-    // KanbanBonsai descuenta 1 cupo al generar un Bonsai con IA
-    // Reutiliza agente_sprint_usados — sin nueva tabla ni columna
-    // ====================================================
-    if (accion === 'kb-consumir') {
-      if (!cap.agente_sprint_disponible) {
-        return res.status(403).json({
-          success: false,
-          error: 'Generar Bonsai con IA requiere Plan Enterprise PLATINUM de Compita.',
-          upgrade_required: true,
-        });
-      }
-      const usados    = uso.agente_sprint_usados || 0;
-      const adicional = uso.agente_sprint_adicionales || 0;
-      const limite    = cap.agente_sprint_limite_mes + adicional;
-      if (usados >= limite) {
-        return res.status(403).json({
-          success: false,
-          error: `Alcanzaste el límite mensual de ${limite} usos de IA. Adquiere usos adicionales desde tu panel de Compita.`,
-          cupos_disponibles: 0,
-        });
-      }
-      await sql`
-        UPDATE uso_mensual
-        SET agente_sprint_usados = COALESCE(agente_sprint_usados, 0) + 1,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
-      `;
-      return res.status(200).json({
-        success: true,
-        message: 'Uso registrado',
-        usados:    usados + 1,
-        restantes: Math.max(0, limite - usados - 1),
-      });
-    }
+  if (!cap.agente_sprint_disponible) {
+    return res.status(200).json({
+      success: true,
+      tiene_acceso: false,
+      razon: 'El plan actual no incluye KanbanBonsai IA. Requiere Enterprise PLATINUM.',
+      upgrade_required: true,
+    });
+  }
+  const usados    = uso.agente_sprint_usados || 0;
+  const adicional = uso.agente_sprint_adicionales || 0;
+  const limite    = cap.agente_sprint_limite_mes + adicional;
+  const restantes = Math.max(0, limite - usados);
+  return res.status(200).json({
+    success: true,
+    tiene_acceso: true,
+    plan,
+    usados,
+    limite,
+    restantes,
+    ilimitado: false,
+  });
+}
+
+// ── BLOQUE KB-CONSUMIR — reemplazar el bloque existente completo ──────────────
+if (accion === 'kb-consumir') {
+  // Solo KB puede llamar este endpoint (secreto compartido)
+  const kbSecret = req.headers['x-kb-secret'];
+  if (!kbSecret || kbSecret !== process.env.COMPITA_KB_SECRET) {
+    return res.status(401).json({ success: false, error: 'No autorizado' });
+  }
+
+  if (!cap.agente_sprint_disponible) {
+    return res.status(403).json({
+      success: false,
+      error: 'Generar Bonsai con IA requiere Plan Enterprise PLATINUM de Compita.',
+      upgrade_required: true,
+    });
+  }
+  const usados    = uso.agente_sprint_usados || 0;
+  const adicional = uso.agente_sprint_adicionales || 0;
+  const limite    = cap.agente_sprint_limite_mes + adicional;
+  if (usados >= limite) {
+    return res.status(403).json({
+      success: false,
+      error: `Alcanzaste el límite mensual de ${limite} usos de IA. Adquiere usos adicionales desde tu panel de Compita.`,
+      cupos_disponibles: 0,
+    });
+  }
+  await sql`
+    UPDATE uso_mensual
+    SET agente_sprint_usados = COALESCE(agente_sprint_usados, 0) + 1,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE empresa_id = ${empresa_id} AND mes = ${mesActual}
+  `;
+  return res.status(200).json({
+    success: true,
+    message: 'Uso registrado',
+    usados:    usados + 1,
+    restantes: Math.max(0, limite - usados - 1),
+  });
+}
 
     // ====================================================
     // VALIDAR CUPO
