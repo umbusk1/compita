@@ -1339,7 +1339,7 @@ function renderizarOportunidades() {
                     html += '<div>'
                     + '<button onclick="abrirCoach(\'' + op.referencia + '\', \'' + escapeHtml(op.que) + '\', \'' + escapeHtml(op.quien) + '\', ' + (op.monto_estimado || 0) + ', \'' + (op.fecha_presentacion || '') + '\', \'' + (op.tipo || '') + '\')" '
                     + 'class="w-full flex items-center justify-center gap-2 bg-violet-600 text-white px-4 py-3 rounded-lg hover:bg-violet-700 transition font-medium text-sm">'
-                    + '<span>🗂️</span><span>Coach + Reporte + KB (B4)</span>'
+                    + '<span>🗂️</span><span>Coach + Reporte + KB (Agente Sprint)</span>'
                     + '</button>'
                     + '</div>';
                     }
@@ -3143,11 +3143,12 @@ async function prepararReporteCompita() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                empresa_id: datosEmpresa?.id,
-                referencia,
-                licitacion,
-                dictamen,
-                force: true
+			                empresa_id: datosEmpresa?.id,
+			                referencia,
+			                licitacion,
+			                dictamen,
+			                force: true,
+			                token: localStorage.getItem('token') || sessionStorage.getItem('token') || ''
             }),
             signal: AbortSignal.timeout(300000)  // 5 minutos
         });
