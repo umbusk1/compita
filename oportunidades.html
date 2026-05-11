@@ -3009,11 +3009,45 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
 		        });
 
 		        if (!response.ok) {
-		            const msg = response.status === 504
-		                ? 'El servidor tardó demasiado. Intenta de nuevo en un momento.'
-		                : `Error del servidor (${response.status}). Intenta de nuevo.`;
-		            throw new Error(msg);
-		        }
+				            if (response.status === 403) {
+				                const errData = await response.json().catch(() => ({}));
+				                modal.querySelector('.bg-white').innerHTML = `
+				                    <div>
+				                        <div style="padding:1rem 1.5rem;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center;">
+				                            <div>
+				                                <p style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;">Agente Sprint</p>
+				                                <p style="font-size:14px;font-weight:600;color:#111827;margin:0;">Cupo mensual agotado</p>
+				                            </div>
+				                            <button onclick="document.getElementById('coach-modal').remove()"
+				                                style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
+				                        </div>
+				                        <div style="padding:1.25rem 1.5rem;">
+				                            <div style="background:#FEF3C7;border-radius:10px;padding:1rem;margin-bottom:1rem;">
+				                                <p style="font-size:13px;color:#92400E;margin:0;line-height:1.6;">
+				                                    ${errData.error || 'Has alcanzado el límite mensual de usos del Agente Sprint.'}
+				                                </p>
+				                            </div>
+				                            <p style="font-size:12px;color:#9CA3AF;margin:0 0 1.25rem;">
+				                                El contador se reinicia automáticamente el 1° del próximo mes.
+				                            </p>
+				                            <div style="display:flex;gap:8px;justify-content:flex-end;">
+				                                <button onclick="document.getElementById('coach-modal').remove()"
+				                                    style="padding:7px 14px;font-size:13px;color:#6B7280;background:none;border:1px solid #E5E7EB;border-radius:8px;cursor:pointer;">Cerrar</button>
+				                                <button onclick="comprarCuposAdicionales('agente_sprint'); document.getElementById('coach-modal').remove();"
+				                                    style="padding:8px 18px;background:#7C3AED;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+				                                    Comprar 5 usos adicionales — $10 →
+				                                </button>
+				                            </div>
+				                        </div>
+				                    </div>
+				                `;
+				                return;
+				            }
+				            const msg = response.status === 504
+				                ? 'El servidor tardó demasiado. Intenta de nuevo en un momento.'
+				                : `Error del servidor (${response.status}). Intenta de nuevo.`;
+				            throw new Error(msg);
+        }
 
 		        const data = await response.json();
         if (!data.success) throw new Error(data.error || 'Error del Coach');
