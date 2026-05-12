@@ -617,7 +617,7 @@ ${seccionPliego}
       let contadorAlta = 0, contadorMedia = 0, contadorDescartadas = 0, contadorPepuPeex = 0;
 
       for (const lic of licitacionesAbiertas) {
-        if (/-(PEPU|PEEX)-/i.test(lic.referencia || '')) { contadorPepuPeex++; continue; }
+        if (/-(PEPU|PEEX|CD)-/i.test(lic.referencia || '')) { contadorPepuPeex++; continue; }
         if (idsDescartados.has(lic.licitacion_id)) { contadorDescartadas++; continue; }
 
         const texto = normalizar(`${lic.referencia} ${lic.descripcion} ${lic.unidad_compras || ''}`.toLowerCase());
@@ -688,7 +688,7 @@ ${seccionPliego}
       return res.status(200).json({
         success: true, message: 'Re-analisis completado',
         analizadas: licitacionesAbiertas.length, alta: contadorAlta, media: contadorMedia,
-        descartadas: contadorDescartadas, excluidas_pepu_peex: contadorPepuPeex
+        descartadas: contadorDescartadas, excluidas_no_competitivas: contadorPepuPeex
       });
     }
 

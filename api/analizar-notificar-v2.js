@@ -504,9 +504,9 @@ async function analizarDiario() {
 
       // Excluir procedimientos de excepción no competitivos (PEPU y PEEX)
       const antePepuPeex = licitaciones.length;
-      licitaciones = licitaciones.filter(l => !/-(PEPU|PEEX)-/i.test(l.referencia || ''));
-      if (licitaciones.length < antePepuPeex) {
-        console.log(`   🚫 Excluidas PEPU/PEEX: ${antePepuPeex - licitaciones.length}`);
+      licitaciones = licitaciones.filter(l => !/-(PEPU|PEEX|CD)-/i.test(l.referencia || ''));
+	  if (licitaciones.length < antePepuPeex) {
+	      console.log(`   🚫 Excluidas PEPU/PEEX/CD: ${antePepuPeex - licitaciones.length}`);
       }
 
       if (empresa.familias_unspsc && empresa.familias_unspsc.length > 0) {
