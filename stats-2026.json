@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-05-25 21:59:26",
+  "ultima_actualizacion": "2026-05-26 19:32:58",
   "stats": {
-    "total": 26490,
+    "total": 26740,
     "por_estado": {
-      "abiertas": 26490,
+      "abiertas": 26740,
       "todas": {
         "Suspended": 3,
         "NonAwarded": 27,
         "Canceled": 53,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 6207,
-        "ClosedForReplies": 6509,
+        "Awarded": 6281,
+        "ClosedForReplies": 6588,
         "Proceso publicado": 510,
-        "Published": 10782,
+        "Published": 10879,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 205.3
+    "promedio_diario": 205.7
   },
   "por_dia": [
     {
@@ -408,35 +408,35 @@
     },
     {
       "fecha": "2026-05-26",
-      "cantidad": 146
+      "cantidad": 305
     },
     {
       "fecha": "2026-05-27",
-      "cantidad": 133
+      "cantidad": 146
     },
     {
       "fecha": "2026-05-28",
-      "cantidad": 107
+      "cantidad": 114
     },
     {
       "fecha": "2026-05-29",
-      "cantidad": 141
+      "cantidad": 147
     },
     {
       "fecha": "2026-06-01",
-      "cantidad": 21
+      "cantidad": 67
     },
     {
       "fecha": "2026-06-02",
-      "cantidad": 32
+      "cantidad": 36
     },
     {
       "fecha": "2026-06-03",
-      "cantidad": 3
+      "cantidad": 12
     },
     {
       "fecha": "2026-06-05",
-      "cantidad": 8
+      "cantidad": 9
     },
     {
       "fecha": "2026-06-08",
@@ -452,7 +452,7 @@
     },
     {
       "fecha": "2026-06-11",
-      "cantidad": 5
+      "cantidad": 6
     },
     {
       "fecha": "2026-06-12",
@@ -532,7 +532,11 @@
     },
     {
       "fecha": "2026-07-09",
-      "cantidad": 2
+      "cantidad": 5
+    },
+    {
+      "fecha": "2026-07-10",
+      "cantidad": 1
     },
     {
       "fecha": "2026-07-13",
@@ -540,17 +544,17 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-05-25",
-    "total": 26490,
+    "actualizado": "2026-05-26",
+    "total": 26740,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 16241,
+        "total": 16423,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 7370,
+        "total": 7420,
         "grupo": "competitivo",
         "prom": 4,
         "p25": 3,
@@ -559,16 +563,16 @@
       },
       {
         "tipo": "CP",
-        "total": 1051,
+        "total": 1061,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
         "med": 8,
-        "p75": 11
+        "p75": 10
       },
       {
         "tipo": "LPN",
-        "total": 466,
+        "total": 470,
         "grupo": "competitivo",
         "prom": 41,
         "p25": 37,
@@ -577,7 +581,7 @@
       },
       {
         "tipo": "PEPU",
-        "total": 344,
+        "total": 345,
         "grupo": "excepcion"
       },
       {
@@ -606,7 +610,7 @@
       },
       {
         "tipo": "DAF",
-        "total": 73,
+        "total": 75,
         "grupo": "otro"
       },
       {
@@ -625,13 +629,13 @@
         "grupo": "excepcion"
       },
       {
-        "tipo": "PEJU",
+        "tipo": "PEPS",
         "total": 13,
         "grupo": "excepcion"
       },
       {
-        "tipo": "PEPS",
-        "total": 12,
+        "tipo": "PEJU",
+        "total": 13,
         "grupo": "excepcion"
       },
       {
@@ -664,6 +668,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 1197
+    "pe_total": 1199
   }
 }
