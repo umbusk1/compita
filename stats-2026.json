@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-06-02 20:24:37",
+  "ultima_actualizacion": "2026-06-02 22:53:55",
   "stats": {
-    "total": 28156,
+    "total": 28181,
     "por_estado": {
-      "abiertas": 28156,
+      "abiertas": 28181,
       "todas": {
         "Suspended": 3,
         "NonAwarded": 32,
-        "Canceled": 57,
+        "Canceled": 58,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 6687,
-        "ClosedForReplies": 6942,
+        "Awarded": 6692,
+        "ClosedForReplies": 6950,
         "Proceso publicado": 510,
-        "Published": 11526,
+        "Published": 11537,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 210.1
+    "promedio_diario": 208.7
   },
   "por_dia": [
     {
@@ -428,11 +428,11 @@
     },
     {
       "fecha": "2026-06-02",
-      "cantidad": 286
+      "cantidad": 298
     },
     {
       "fecha": "2026-06-03",
-      "cantidad": 99
+      "cantidad": 100
     },
     {
       "fecha": "2026-06-05",
@@ -444,11 +444,11 @@
     },
     {
       "fecha": "2026-06-09",
-      "cantidad": 105
+      "cantidad": 113
     },
     {
       "fecha": "2026-06-10",
-      "cantidad": 27
+      "cantidad": 30
     },
     {
       "fecha": "2026-06-11",
@@ -557,20 +557,24 @@
     {
       "fecha": "2026-07-17",
       "cantidad": 4
+    },
+    {
+      "fecha": "2026-07-20",
+      "cantidad": 1
     }
   ],
   "competitividad": {
     "actualizado": "2026-06-02",
-    "total": 28156,
+    "total": 28181,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 17322,
+        "total": 17335,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 7785,
+        "total": 7795,
         "grupo": "competitivo",
         "prom": 4,
         "p25": 3,
@@ -588,7 +592,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 489,
+        "total": 490,
         "grupo": "competitivo",
         "prom": 41,
         "p25": 37,
@@ -631,7 +635,7 @@
       },
       {
         "tipo": "PEIN",
-        "total": 73,
+        "total": 74,
         "grupo": "excepcion"
       },
       {
@@ -684,6 +688,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 1269
+    "pe_total": 1270
   }
 }
