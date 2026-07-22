@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-07-21 21:51:26",
+  "ultima_actualizacion": "2026-07-22 18:39:28",
   "stats": {
-    "total": 39606,
+    "total": 39822,
     "por_estado": {
-      "abiertas": 39606,
+      "abiertas": 39822,
       "todas": {
         "Suspended": 4,
         "NonAwarded": 46,
         "Canceled": 75,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 10000,
-        "ClosedForReplies": 9876,
+        "Awarded": 10060,
+        "ClosedForReplies": 9939,
         "Proceso publicado": 510,
-        "Published": 16696,
+        "Published": 16789,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 233.0
+    "promedio_diario": 231.5
   },
   "por_dia": [
     {
@@ -568,15 +568,15 @@
     },
     {
       "fecha": "2026-07-22",
-      "cantidad": 143
+      "cantidad": 270
     },
     {
       "fecha": "2026-07-23",
-      "cantidad": 132
+      "cantidad": 140
     },
     {
       "fecha": "2026-07-24",
-      "cantidad": 143
+      "cantidad": 151
     },
     {
       "fecha": "2026-07-27",
@@ -584,19 +584,19 @@
     },
     {
       "fecha": "2026-07-28",
-      "cantidad": 40
+      "cantidad": 87
     },
     {
       "fecha": "2026-07-29",
-      "cantidad": 22
+      "cantidad": 35
     },
     {
       "fecha": "2026-07-30",
-      "cantidad": 12
+      "cantidad": 15
     },
     {
       "fecha": "2026-07-31",
-      "cantidad": 5
+      "cantidad": 9
     },
     {
       "fecha": "2026-08-03",
@@ -612,7 +612,7 @@
     },
     {
       "fecha": "2026-08-06",
-      "cantidad": 6
+      "cantidad": 7
     },
     {
       "fecha": "2026-08-07",
@@ -632,7 +632,7 @@
     },
     {
       "fecha": "2026-08-13",
-      "cantidad": 9
+      "cantidad": 10
     },
     {
       "fecha": "2026-08-14",
@@ -691,7 +691,15 @@
       "cantidad": 4
     },
     {
+      "fecha": "2026-09-03",
+      "cantidad": 3
+    },
+    {
       "fecha": "2026-09-04",
+      "cantidad": 1
+    },
+    {
+      "fecha": "2026-09-07",
       "cantidad": 1
     },
     {
@@ -704,17 +712,17 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-07-21",
-    "total": 39606,
+    "actualizado": "2026-07-22",
+    "total": 39822,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 24662,
+        "total": 24804,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 10770,
+        "total": 10824,
         "grupo": "competitivo",
         "prom": 4,
         "p25": 3,
@@ -723,7 +731,7 @@
       },
       {
         "tipo": "CP",
-        "total": 1490,
+        "total": 1494,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -732,7 +740,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 653,
+        "total": 657,
         "grupo": "competitivo",
         "prom": 42,
         "p25": 42,
@@ -741,12 +749,12 @@
       },
       {
         "tipo": "PEPU",
-        "total": 467,
+        "total": 468,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEPB",
-        "total": 412,
+        "total": 413,
         "grupo": "excepcion"
       },
       {
@@ -756,17 +764,17 @@
       },
       {
         "tipo": "PEIN",
-        "total": 193,
+        "total": 195,
         "grupo": "excepcion"
       },
       {
         "tipo": "DAF",
-        "total": 127,
+        "total": 128,
         "grupo": "otro"
       },
       {
         "tipo": "SI",
-        "total": 106,
+        "total": 108,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -790,7 +798,7 @@
       },
       {
         "tipo": "PEAC",
-        "total": 42,
+        "total": 46,
         "grupo": "excepcion"
       },
       {
@@ -800,7 +808,7 @@
       },
       {
         "tipo": "LPA",
-        "total": 28,
+        "total": 29,
         "grupo": "otro"
       },
       {
@@ -833,6 +841,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 1755
+    "pe_total": 1763
   }
 }
