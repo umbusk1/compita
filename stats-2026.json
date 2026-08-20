@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-08-20 17:54:31",
+  "ultima_actualizacion": "2026-08-20 21:16:14",
   "stats": {
-    "total": 46346,
+    "total": 46483,
     "por_estado": {
-      "abiertas": 46346,
+      "abiertas": 46483,
       "todas": {
         "Suspended": 5,
-        "NonAwarded": 59,
+        "NonAwarded": 60,
         "Canceled": 91,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 11998,
-        "ClosedForReplies": 11582,
+        "Awarded": 12050,
+        "ClosedForReplies": 11598,
         "Proceso publicado": 510,
-        "Published": 19702,
+        "Published": 19770,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 245.2
+    "promedio_diario": 245.9
   },
   "por_dia": [
     {
@@ -652,43 +652,43 @@
     },
     {
       "fecha": "2026-08-20",
-      "cantidad": 214
+      "cantidad": 275
     },
     {
       "fecha": "2026-08-21",
-      "cantidad": 129
+      "cantidad": 140
     },
     {
       "fecha": "2026-08-24",
-      "cantidad": 42
+      "cantidad": 49
     },
     {
       "fecha": "2026-08-25",
-      "cantidad": 117
+      "cantidad": 118
     },
     {
       "fecha": "2026-08-26",
-      "cantidad": 84
+      "cantidad": 119
     },
     {
       "fecha": "2026-08-27",
-      "cantidad": 26
+      "cantidad": 30
     },
     {
       "fecha": "2026-08-28",
-      "cantidad": 14
+      "cantidad": 24
     },
     {
       "fecha": "2026-08-31",
-      "cantidad": 6
-    },
-    {
-      "fecha": "2026-09-01",
       "cantidad": 10
     },
     {
+      "fecha": "2026-09-01",
+      "cantidad": 11
+    },
+    {
       "fecha": "2026-09-02",
-      "cantidad": 4
+      "cantidad": 5
     },
     {
       "fecha": "2026-09-03",
@@ -720,7 +720,7 @@
     },
     {
       "fecha": "2026-09-14",
-      "cantidad": 4
+      "cantidad": 5
     },
     {
       "fecha": "2026-09-15",
@@ -776,21 +776,21 @@
     },
     {
       "fecha": "2026-10-06",
-      "cantidad": 3
+      "cantidad": 4
     }
   ],
   "competitividad": {
     "actualizado": "2026-08-20",
-    "total": 46346,
+    "total": 46483,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 29088,
+        "total": 29171,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 12538,
+        "total": 12573,
         "grupo": "competitivo",
         "prom": 4,
         "p25": 3,
@@ -799,7 +799,7 @@
       },
       {
         "tipo": "CP",
-        "total": 1654,
+        "total": 1661,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -808,7 +808,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 750,
+        "total": 751,
         "grupo": "competitivo",
         "prom": 42,
         "p25": 42,
@@ -817,12 +817,12 @@
       },
       {
         "tipo": "PEPU",
-        "total": 534,
+        "total": 536,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEPB",
-        "total": 454,
+        "total": 458,
         "grupo": "excepcion"
       },
       {
@@ -842,7 +842,7 @@
       },
       {
         "tipo": "SI",
-        "total": 118,
+        "total": 120,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -856,12 +856,12 @@
       },
       {
         "tipo": "PEEN",
-        "total": 76,
+        "total": 77,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEUR",
-        "total": 73,
+        "total": 74,
         "grupo": "excepcion"
       },
       {
@@ -870,14 +870,14 @@
         "grupo": "excepcion"
       },
       {
+        "tipo": "LPA",
+        "total": 48,
+        "grupo": "otro"
+      },
+      {
         "tipo": "PEPS",
         "total": 47,
         "grupo": "excepcion"
-      },
-      {
-        "tipo": "LPA",
-        "total": 47,
-        "grupo": "otro"
       },
       {
         "tipo": "PEJU",
@@ -909,6 +909,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 1983
+    "pe_total": 1991
   }
 }
