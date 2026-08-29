@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-08-28 04:58:49",
+  "ultima_actualizacion": "2026-08-29 01:04:50",
   "stats": {
-    "total": 47984,
+    "total": 48261,
     "por_estado": {
-      "abiertas": 47984,
+      "abiertas": 48261,
       "todas": {
         "Suspended": 5,
         "NonAwarded": 62,
-        "Canceled": 93,
+        "Canceled": 94,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 12488,
-        "ClosedForReplies": 12028,
+        "Awarded": 12580,
+        "ClosedForReplies": 12094,
         "Proceso publicado": 510,
-        "Published": 20399,
+        "Published": 20517,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 247.3
+    "promedio_diario": 248.8
   },
   "por_dia": [
     {
@@ -676,31 +676,31 @@
     },
     {
       "fecha": "2026-08-28",
-      "cantidad": 154
+      "cantidad": 313
     },
     {
       "fecha": "2026-08-31",
-      "cantidad": 115
+      "cantidad": 126
     },
     {
       "fecha": "2026-09-01",
-      "cantidad": 111
+      "cantidad": 123
     },
     {
       "fecha": "2026-09-02",
-      "cantidad": 102
+      "cantidad": 113
     },
     {
       "fecha": "2026-09-03",
-      "cantidad": 40
+      "cantidad": 97
     },
     {
       "fecha": "2026-09-04",
-      "cantidad": 16
+      "cantidad": 32
     },
     {
       "fecha": "2026-09-07",
-      "cantidad": 7
+      "cantidad": 15
     },
     {
       "fecha": "2026-09-08",
@@ -708,7 +708,7 @@
     },
     {
       "fecha": "2026-09-09",
-      "cantidad": 13
+      "cantidad": 15
     },
     {
       "fecha": "2026-09-10",
@@ -792,7 +792,7 @@
     },
     {
       "fecha": "2026-10-13",
-      "cantidad": 3
+      "cantidad": 4
     },
     {
       "fecha": "2026-10-14",
@@ -800,17 +800,17 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-08-28",
-    "total": 47984,
+    "actualizado": "2026-08-29",
+    "total": 48261,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 30175,
+        "total": 30364,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 12932,
+        "total": 12998,
         "grupo": "competitivo",
         "prom": 5,
         "p25": 3,
@@ -819,7 +819,7 @@
       },
       {
         "tipo": "CP",
-        "total": 1697,
+        "total": 1702,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -828,7 +828,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 760,
+        "total": 761,
         "grupo": "competitivo",
         "prom": 42,
         "p25": 42,
@@ -837,32 +837,32 @@
       },
       {
         "tipo": "PEPU",
-        "total": 563,
+        "total": 566,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEPB",
-        "total": 472,
+        "total": 476,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEX",
-        "total": 386,
+        "total": 387,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEIN",
-        "total": 250,
+        "total": 252,
         "grupo": "excepcion"
       },
       {
         "tipo": "DAF",
-        "total": 171,
+        "total": 172,
         "grupo": "otro"
       },
       {
         "tipo": "SI",
-        "total": 125,
+        "total": 126,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -886,7 +886,12 @@
       },
       {
         "tipo": "PEAC",
-        "total": 53,
+        "total": 54,
+        "grupo": "excepcion"
+      },
+      {
+        "tipo": "PEPS",
+        "total": 51,
         "grupo": "excepcion"
       },
       {
@@ -895,13 +900,8 @@
         "grupo": "otro"
       },
       {
-        "tipo": "PEPS",
-        "total": 49,
-        "grupo": "excepcion"
-      },
-      {
         "tipo": "PEJU",
-        "total": 27,
+        "total": 28,
         "grupo": "excepcion"
       },
       {
@@ -929,6 +929,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 2057
+    "pe_total": 2071
   }
 }
