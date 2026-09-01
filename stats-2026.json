@@ -1,9 +1,9 @@
 {
-  "ultima_actualizacion": "2026-08-31 21:59:06",
+  "ultima_actualizacion": "2026-09-01 00:10:51",
   "stats": {
-    "total": 48625,
+    "total": 48626,
     "por_estado": {
-      "abiertas": 48625,
+      "abiertas": 48626,
       "todas": {
         "Suspended": 5,
         "NonAwarded": 62,
@@ -13,7 +13,7 @@
         "Awarded": 12681,
         "ClosedForReplies": 12193,
         "Proceso publicado": 510,
-        "Published": 20677,
+        "Published": 20678,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
@@ -696,7 +696,7 @@
     },
     {
       "fecha": "2026-09-04",
-      "cantidad": 137
+      "cantidad": 138
     },
     {
       "fecha": "2026-09-07",
@@ -800,8 +800,8 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-08-31",
-    "total": 48625,
+    "actualizado": "2026-09-01",
+    "total": 48626,
     "tipos": [
       {
         "tipo": "CD",
@@ -810,7 +810,7 @@
       },
       {
         "tipo": "CM",
-        "total": 13110,
+        "total": 13111,
         "grupo": "competitivo",
         "prom": 5,
         "p25": 3,
