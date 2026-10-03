@@ -784,12 +784,13 @@ SPRINT 5 — Entrega y Seguimiento
 
       const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
       const message = await anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-5',
         max_tokens: 1200,
+        thinking: { type: 'disabled' },
         messages: [{ role: 'user', content: prompt }]
       });
 
-      return res.status(200).json({ success: true, prompt: message.content[0].text.trim() });
+      return res.status(200).json({ success: true, prompt: message.content.find(b => b.type === 'text').text.trim()
     }
 
     return res.status(400).json({ success: false, error: 'Parametros invalidos' });
