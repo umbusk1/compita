@@ -1,6 +1,7 @@
 /*
 COMPITA - Análisis Diario y Notificaciones (Endpoint Vercel)
 =============================================================
+✨ ACTUALIZACIÓN: Cambio de modelo a claude-sonnet-5
 ✨ ACTUALIZACIÓN: Filtro por familias UNSPSC para optimizar costos de Claude AI
 ✨ ACTUALIZACIÓN: Fix stemming español (no stemizar vocal+s)
 ✨ ACTUALIZACIÓN: Re-evaluación automática al cambiar palabras clave/exclusiones
