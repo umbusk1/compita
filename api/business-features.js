@@ -1,4 +1,5 @@
 // api/business-features.js - Gestión de recursos Business / Enterprise
+// ACTUALIZACION: Cambio de modelo a claude-sonnet-5
 import { neon } from '@neondatabase/serverless';
 import Anthropic from '@anthropic-ai/sdk';
 
@@ -537,14 +538,15 @@ ${seccionPliego}
 
       const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
       const message = await anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-5',
         max_tokens: 800,
+        thinking: { type: 'disabled' },
         messages: [{ role: 'user', content: prompt }]
       });
 
       let dictamen;
       try {
-        const texto = message.content[0].text.trim();
+        const texto = message.content.find(b => b.type === 'text').text.trim();
         dictamen = JSON.parse(texto.replace(/```json|```/g, '').trim());
       } catch {
         return res.status(500).json({ success: false, error: 'Error al parsear respuesta del Coach' });
