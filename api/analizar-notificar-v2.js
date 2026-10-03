@@ -399,12 +399,13 @@ RAZÓN: [tu justificación aquí]${formatoRegion}`;
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-5',
       max_tokens: 500,
+      thinking: { type: 'disabled' },
       messages: [{ role: 'user', content: prompt }]
     });
 
-    const respuesta = message.content[0].text;
+    const respuesta = message.content.find(b => b.type === 'text').text;
 
     const relevanciaMatch = respuesta.match(/RELEVANCIA:\s*(ALTA|MEDIA|BAJA)/i);
     const queMatch        = respuesta.match(/QUÉ:\s*(.+)/i);
