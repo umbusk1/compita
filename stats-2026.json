@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-10-16 23:05:54",
+  "ultima_actualizacion": "2026-10-19 21:38:24",
   "stats": {
-    "total": 60476,
+    "total": 60864,
     "por_estado": {
-      "abiertas": 60476,
+      "abiertas": 60864,
       "todas": {
         "Suspended": 5,
-        "NonAwarded": 91,
-        "Canceled": 124,
+        "NonAwarded": 92,
+        "Canceled": 127,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 16300,
-        "ClosedForReplies": 15304,
+        "Awarded": 16403,
+        "ClosedForReplies": 15396,
         "Proceso publicado": 510,
-        "Published": 25743,
+        "Published": 25932,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 264.1
+    "promedio_diario": 264.6
   },
   "por_dia": [
     {
@@ -816,39 +816,39 @@
     },
     {
       "fecha": "2026-10-19",
-      "cantidad": 169
+      "cantidad": 373
     },
     {
       "fecha": "2026-10-20",
-      "cantidad": 152
+      "cantidad": 172
     },
     {
       "fecha": "2026-10-21",
-      "cantidad": 144
+      "cantidad": 158
     },
     {
       "fecha": "2026-10-22",
-      "cantidad": 121
+      "cantidad": 126
     },
     {
       "fecha": "2026-10-23",
-      "cantidad": 25
+      "cantidad": 140
     },
     {
       "fecha": "2026-10-26",
-      "cantidad": 33
+      "cantidad": 46
     },
     {
       "fecha": "2026-10-27",
-      "cantidad": 20
+      "cantidad": 28
     },
     {
       "fecha": "2026-10-28",
-      "cantidad": 8
+      "cantidad": 12
     },
     {
       "fecha": "2026-10-29",
-      "cantidad": 7
+      "cantidad": 8
     },
     {
       "fecha": "2026-10-30",
@@ -860,7 +860,7 @@
     },
     {
       "fecha": "2026-11-03",
-      "cantidad": 6
+      "cantidad": 7
     },
     {
       "fecha": "2026-11-04",
@@ -936,21 +936,25 @@
     },
     {
       "fecha": "2026-12-02",
-      "cantidad": 2
+      "cantidad": 4
+    },
+    {
+      "fecha": "2026-12-03",
+      "cantidad": 1
     }
   ],
   "competitividad": {
-    "actualizado": "2026-10-16",
-    "total": 60476,
+    "actualizado": "2026-10-19",
+    "total": 60864,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 38518,
+        "total": 38757,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 16000,
+        "total": 16114,
         "grupo": "competitivo",
         "prom": 5,
         "p25": 3,
@@ -959,7 +963,7 @@
       },
       {
         "tipo": "CP",
-        "total": 2087,
+        "total": 2099,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -968,7 +972,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 898,
+        "total": 901,
         "grupo": "competitivo",
         "prom": 42,
         "p25": 42,
@@ -982,22 +986,22 @@
       },
       {
         "tipo": "PEPB",
-        "total": 581,
+        "total": 589,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEX",
-        "total": 442,
+        "total": 444,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEIN",
-        "total": 367,
+        "total": 371,
         "grupo": "excepcion"
       },
       {
         "tipo": "DAF",
-        "total": 205,
+        "total": 207,
         "grupo": "otro"
       },
       {
@@ -1016,12 +1020,12 @@
       },
       {
         "tipo": "PEUR",
-        "total": 89,
+        "total": 90,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEN",
-        "total": 82,
+        "total": 83,
         "grupo": "excepcion"
       },
       {
@@ -1036,12 +1040,12 @@
       },
       {
         "tipo": "PEAC",
-        "total": 63,
+        "total": 64,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEJU",
-        "total": 41,
+        "total": 42,
         "grupo": "excepcion"
       },
       {
@@ -1069,6 +1073,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 2532
+    "pe_total": 2550
   }
 }
