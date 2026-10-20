@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-10-20 00:00:18",
+  "ultima_actualizacion": "2026-10-20 20:46:30",
   "stats": {
-    "total": 60868,
+    "total": 61275,
     "por_estado": {
-      "abiertas": 60868,
+      "abiertas": 61275,
       "todas": {
         "Suspended": 5,
         "NonAwarded": 92,
         "Canceled": 127,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 16406,
-        "ClosedForReplies": 15400,
+        "Awarded": 16542,
+        "ClosedForReplies": 15511,
         "Proceso publicado": 510,
-        "Published": 25929,
+        "Published": 26089,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 264.6
+    "promedio_diario": 264.1
   },
   "por_dia": [
     {
@@ -820,47 +820,47 @@
     },
     {
       "fecha": "2026-10-20",
-      "cantidad": 172
+      "cantidad": 431
     },
     {
       "fecha": "2026-10-21",
-      "cantidad": 158
+      "cantidad": 172
     },
     {
       "fecha": "2026-10-22",
-      "cantidad": 126
+      "cantidad": 144
     },
     {
       "fecha": "2026-10-23",
-      "cantidad": 141
+      "cantidad": 145
     },
     {
       "fecha": "2026-10-26",
-      "cantidad": 48
+      "cantidad": 125
     },
     {
       "fecha": "2026-10-27",
-      "cantidad": 28
+      "cantidad": 42
     },
     {
       "fecha": "2026-10-28",
-      "cantidad": 12
+      "cantidad": 22
     },
     {
       "fecha": "2026-10-29",
-      "cantidad": 8
+      "cantidad": 11
     },
     {
       "fecha": "2026-10-30",
-      "cantidad": 8
+      "cantidad": 9
     },
     {
       "fecha": "2026-11-02",
-      "cantidad": 5
+      "cantidad": 6
     },
     {
       "fecha": "2026-11-03",
-      "cantidad": 7
+      "cantidad": 8
     },
     {
       "fecha": "2026-11-04",
@@ -884,7 +884,7 @@
     },
     {
       "fecha": "2026-11-12",
-      "cantidad": 5
+      "cantidad": 6
     },
     {
       "fecha": "2026-11-13",
@@ -940,21 +940,29 @@
     },
     {
       "fecha": "2026-12-03",
+      "cantidad": 3
+    },
+    {
+      "fecha": "2026-12-10",
+      "cantidad": 1
+    },
+    {
+      "fecha": "2026-12-11",
       "cantidad": 1
     }
   ],
   "competitividad": {
     "actualizado": "2026-10-20",
-    "total": 60868,
+    "total": 61275,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 38758,
+        "total": 39048,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 16117,
+        "total": 16207,
         "grupo": "competitivo",
         "prom": 5,
         "p25": 3,
@@ -963,7 +971,7 @@
       },
       {
         "tipo": "CP",
-        "total": 2099,
+        "total": 2109,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -972,7 +980,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 901,
+        "total": 905,
         "grupo": "competitivo",
         "prom": 42,
         "p25": 42,
@@ -981,22 +989,22 @@
       },
       {
         "tipo": "PEPU",
-        "total": 689,
+        "total": 690,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEPB",
-        "total": 589,
+        "total": 593,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEX",
-        "total": 444,
+        "total": 447,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEIN",
-        "total": 371,
+        "total": 372,
         "grupo": "excepcion"
       },
       {
@@ -1006,7 +1014,7 @@
       },
       {
         "tipo": "SI",
-        "total": 149,
+        "total": 150,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -1035,7 +1043,7 @@
       },
       {
         "tipo": "LPA",
-        "total": 70,
+        "total": 71,
         "grupo": "otro"
       },
       {
@@ -1045,7 +1053,7 @@
       },
       {
         "tipo": "PEJU",
-        "total": 42,
+        "total": 44,
         "grupo": "excepcion"
       },
       {
@@ -1073,6 +1081,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 2550
+    "pe_total": 2561
   }
 }
