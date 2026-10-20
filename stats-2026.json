@@ -1,19 +1,19 @@
 {
-  "ultima_actualizacion": "2026-10-19 21:38:24",
+  "ultima_actualizacion": "2026-10-20 00:00:18",
   "stats": {
-    "total": 60864,
+    "total": 60868,
     "por_estado": {
-      "abiertas": 60864,
+      "abiertas": 60868,
       "todas": {
         "Suspended": 5,
         "NonAwarded": 92,
         "Canceled": 127,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 16403,
-        "ClosedForReplies": 15396,
+        "Awarded": 16406,
+        "ClosedForReplies": 15400,
         "Proceso publicado": 510,
-        "Published": 25932,
+        "Published": 25929,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
@@ -816,7 +816,7 @@
     },
     {
       "fecha": "2026-10-19",
-      "cantidad": 373
+      "cantidad": 374
     },
     {
       "fecha": "2026-10-20",
@@ -832,11 +832,11 @@
     },
     {
       "fecha": "2026-10-23",
-      "cantidad": 140
+      "cantidad": 141
     },
     {
       "fecha": "2026-10-26",
-      "cantidad": 46
+      "cantidad": 48
     },
     {
       "fecha": "2026-10-27",
@@ -944,17 +944,17 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-10-19",
-    "total": 60864,
+    "actualizado": "2026-10-20",
+    "total": 60868,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 38757,
+        "total": 38758,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 16114,
+        "total": 16117,
         "grupo": "competitivo",
         "prom": 5,
         "p25": 3,
