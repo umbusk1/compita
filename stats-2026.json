@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-10-21 23:47:08",
+  "ultima_actualizacion": "2026-10-22 20:41:43",
   "stats": {
-    "total": 61766,
+    "total": 62175,
     "por_estado": {
-      "abiertas": 61766,
+      "abiertas": 62175,
       "todas": {
         "Suspended": 5,
-        "NonAwarded": 94,
-        "Canceled": 129,
+        "NonAwarded": 95,
+        "Canceled": 131,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 16707,
-        "ClosedForReplies": 15643,
+        "Awarded": 16861,
+        "ClosedForReplies": 15741,
         "Proceso publicado": 510,
-        "Published": 26279,
+        "Published": 26433,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 265.1
+    "promedio_diario": 264.6
   },
   "por_dia": [
     {
@@ -828,35 +828,35 @@
     },
     {
       "fecha": "2026-10-22",
-      "cantidad": 156
+      "cantidad": 416
     },
     {
       "fecha": "2026-10-23",
-      "cantidad": 157
+      "cantidad": 173
     },
     {
       "fecha": "2026-10-26",
-      "cantidad": 141
+      "cantidad": 164
     },
     {
       "fecha": "2026-10-27",
-      "cantidad": 159
+      "cantidad": 167
     },
     {
       "fecha": "2026-10-28",
-      "cantidad": 33
+      "cantidad": 104
     },
     {
       "fecha": "2026-10-29",
-      "cantidad": 26
+      "cantidad": 34
     },
     {
       "fecha": "2026-10-30",
-      "cantidad": 12
+      "cantidad": 25
     },
     {
       "fecha": "2026-11-02",
-      "cantidad": 8
+      "cantidad": 11
     },
     {
       "fecha": "2026-11-03",
@@ -864,7 +864,7 @@
     },
     {
       "fecha": "2026-11-04",
-      "cantidad": 10
+      "cantidad": 11
     },
     {
       "fecha": "2026-11-05",
@@ -884,7 +884,7 @@
     },
     {
       "fecha": "2026-11-12",
-      "cantidad": 6
+      "cantidad": 7
     },
     {
       "fecha": "2026-11-13",
@@ -947,6 +947,14 @@
       "cantidad": 4
     },
     {
+      "fecha": "2026-12-07",
+      "cantidad": 4
+    },
+    {
+      "fecha": "2026-12-08",
+      "cantidad": 1
+    },
+    {
       "fecha": "2026-12-10",
       "cantidad": 1
     },
@@ -956,17 +964,17 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-10-21",
-    "total": 61766,
+    "actualizado": "2026-10-22",
+    "total": 62175,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 39372,
+        "total": 39669,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 16334,
+        "total": 16409,
         "grupo": "competitivo",
         "prom": 5,
         "p25": 3,
@@ -975,7 +983,7 @@
       },
       {
         "tipo": "CP",
-        "total": 2122,
+        "total": 2134,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -984,7 +992,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 910,
+        "total": 914,
         "grupo": "competitivo",
         "prom": 42,
         "p25": 42,
@@ -993,27 +1001,27 @@
       },
       {
         "tipo": "PEPU",
-        "total": 702,
+        "total": 704,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEPB",
-        "total": 595,
+        "total": 602,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEX",
-        "total": 447,
+        "total": 451,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEIN",
-        "total": 375,
+        "total": 380,
         "grupo": "excepcion"
       },
       {
         "tipo": "DAF",
-        "total": 209,
+        "total": 210,
         "grupo": "otro"
       },
       {
@@ -1042,12 +1050,12 @@
       },
       {
         "tipo": "PEPS",
-        "total": 74,
+        "total": 75,
         "grupo": "excepcion"
       },
       {
         "tipo": "LPA",
-        "total": 71,
+        "total": 72,
         "grupo": "otro"
       },
       {
@@ -1085,6 +1093,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 2581
+    "pe_total": 2600
   }
 }
