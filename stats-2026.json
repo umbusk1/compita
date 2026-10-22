@@ -1,25 +1,25 @@
 {
-  "ultima_actualizacion": "2026-10-22 20:41:43",
+  "ultima_actualizacion": "2026-10-22 23:43:50",
   "stats": {
-    "total": 62175,
+    "total": 62202,
     "por_estado": {
-      "abiertas": 62175,
+      "abiertas": 62202,
       "todas": {
         "Suspended": 5,
         "NonAwarded": 95,
         "Canceled": 131,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 16861,
-        "ClosedForReplies": 15741,
+        "Awarded": 16873,
+        "ClosedForReplies": 15746,
         "Proceso publicado": 510,
-        "Published": 26433,
+        "Published": 26443,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
       }
     },
-    "promedio_diario": 264.6
+    "promedio_diario": 264.7
   },
   "por_dia": [
     {
@@ -828,11 +828,11 @@
     },
     {
       "fecha": "2026-10-22",
-      "cantidad": 416
+      "cantidad": 431
     },
     {
       "fecha": "2026-10-23",
-      "cantidad": 173
+      "cantidad": 177
     },
     {
       "fecha": "2026-10-26",
@@ -844,11 +844,11 @@
     },
     {
       "fecha": "2026-10-28",
-      "cantidad": 104
+      "cantidad": 108
     },
     {
       "fecha": "2026-10-29",
-      "cantidad": 34
+      "cantidad": 36
     },
     {
       "fecha": "2026-10-30",
@@ -860,7 +860,7 @@
     },
     {
       "fecha": "2026-11-03",
-      "cantidad": 9
+      "cantidad": 10
     },
     {
       "fecha": "2026-11-04",
@@ -952,7 +952,7 @@
     },
     {
       "fecha": "2026-12-08",
-      "cantidad": 1
+      "cantidad": 2
     },
     {
       "fecha": "2026-12-10",
@@ -965,16 +965,16 @@
   ],
   "competitividad": {
     "actualizado": "2026-10-22",
-    "total": 62175,
+    "total": 62202,
     "tipos": [
       {
         "tipo": "CD",
-        "total": 39669,
+        "total": 39687,
         "grupo": "directa"
       },
       {
         "tipo": "CM",
-        "total": 16409,
+        "total": 16415,
         "grupo": "competitivo",
         "prom": 5,
         "p25": 3,
@@ -983,7 +983,7 @@
       },
       {
         "tipo": "CP",
-        "total": 2134,
+        "total": 2135,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -992,7 +992,7 @@
       },
       {
         "tipo": "LPN",
-        "total": 914,
+        "total": 915,
         "grupo": "competitivo",
         "prom": 42,
         "p25": 42,
@@ -1001,7 +1001,7 @@
       },
       {
         "tipo": "PEPU",
-        "total": 704,
+        "total": 705,
         "grupo": "excepcion"
       },
       {
@@ -1093,6 +1093,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 2600
+    "pe_total": 2601
   }
 }
