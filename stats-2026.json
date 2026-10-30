@@ -1,9 +1,9 @@
 {
-  "ultima_actualizacion": "2026-10-29 21:55:44",
+  "ultima_actualizacion": "2026-10-30 00:29:57",
   "stats": {
-    "total": 64140,
+    "total": 64149,
     "por_estado": {
-      "abiertas": 64140,
+      "abiertas": 64149,
       "todas": {
         "Suspended": 5,
         "NonAwarded": 97,
@@ -11,9 +11,9 @@
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
         "Awarded": 17389,
-        "ClosedForReplies": 16302,
+        "ClosedForReplies": 16305,
         "Proceso publicado": 510,
-        "Published": 27303,
+        "Published": 27309,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
@@ -876,15 +876,15 @@
     },
     {
       "fecha": "2026-11-10",
-      "cantidad": 12
+      "cantidad": 13
     },
     {
       "fecha": "2026-11-11",
-      "cantidad": 9
+      "cantidad": 10
     },
     {
       "fecha": "2026-11-12",
-      "cantidad": 7
+      "cantidad": 9
     },
     {
       "fecha": "2026-11-13",
@@ -904,7 +904,7 @@
     },
     {
       "fecha": "2026-11-19",
-      "cantidad": 6
+      "cantidad": 10
     },
     {
       "fecha": "2026-11-20",
@@ -920,7 +920,7 @@
     },
     {
       "fecha": "2026-11-26",
-      "cantidad": 2
+      "cantidad": 3
     },
     {
       "fecha": "2026-11-27",
@@ -980,8 +980,8 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-10-29",
-    "total": 64140,
+    "actualizado": "2026-10-30",
+    "total": 64149,
     "tipos": [
       {
         "tipo": "CD",
@@ -999,7 +999,7 @@
       },
       {
         "tipo": "CP",
-        "total": 2191,
+        "total": 2192,
         "grupo": "competitivo",
         "prom": 9,
         "p25": 7,
@@ -1056,12 +1056,12 @@
       },
       {
         "tipo": "PEUR",
-        "total": 93,
+        "total": 94,
         "grupo": "excepcion"
       },
       {
         "tipo": "PEEN",
-        "total": 87,
+        "total": 94,
         "grupo": "excepcion"
       },
       {
@@ -1109,6 +1109,6 @@
         "grupo": "otro"
       }
     ],
-    "pe_total": 2671
+    "pe_total": 2679
   }
 }
