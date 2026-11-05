@@ -790,7 +790,7 @@ SPRINT 5 — Entrega y Seguimiento
         messages: [{ role: 'user', content: prompt }]
       });
 
-      return res.status(200).json({ success: true, prompt: message.content.find(b => b.type === 'text').text.trim()
+      return res.status(200).json({ success: true, prompt: message.content.find(b => b.type === 'text').text.trim() });
     }
 
     return res.status(400).json({ success: false, error: 'Parametros invalidos' });
