@@ -902,6 +902,14 @@ async function enviarNotificaciones(resultados) {
 // GENERACIÓN DE EMAIL SEGÚN PLAN
 // ============================================================================
 
+// Fecha y hora de cierre en hora de RD, legible (nov 2026)
+function formatearCierreRD(fecha) {
+  if (!fecha) return 'N/A';
+  const d = new Date(fecha);
+  if (isNaN(d)) return String(fecha);
+  return d.toLocaleString('es-DO', { timeZone: 'America/Santo_Domingo', day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
 function generarEmailSegunPlan(resultado) {
   const { plan, nombre, alta, media, oportunidades_alta, oportunidades_media, referido_codigo } = resultado;
 
@@ -952,7 +960,7 @@ function generarEmailSegunPlan(resultado) {
             <p style="margin:5px 0;color:#6B7280;font-size:14px;">${op.que}</p>
             <div style="display:flex;justify-content:space-between;margin-top:8px;">
               <span style="font-size:14px;font-weight:bold;color:#4F46E5;">${Number(op.monto_estimado || 0).toLocaleString()} DOP</span>
-              <span style="font-size:13px;color:#6B7280;">Cierre: ${op.fecha_presentacion || 'N/A'}</span>
+              <span style="font-size:13px;color:#6B7280;">Cierre: ${formatearCierreRD(op.fecha_presentacion)}</span>
             </div>
           </div>`).join('')}
         ${todasOportunidades.length > 5 ? `<p style="color:#6B7280;text-align:center;">+ ${todasOportunidades.length - 5} más en el dashboard</p>` : ''}
@@ -979,7 +987,7 @@ function generarEmailSegunPlan(resultado) {
             <p style="margin:8px 0;font-weight:bold;font-size:16px;color:#111827;">${op.referencia}</p>
             <p style="margin:8px 0;color:#4B5563;"><strong>Qué:</strong> ${op.que}</p>
             <p style="margin:8px 0;color:#4B5563;"><strong>Quién:</strong> ${op.quien}</p>
-            <p style="margin:8px 0;color:#4B5563;"><strong>Cierre:</strong> ${op.fecha_presentacion || 'N/A'}</p>
+            <p style="margin:8px 0;color:#4B5563;"><strong>Cierre:</strong> ${formatearCierreRD(op.fecha_presentacion)}</p>
             <div style="background:#F9FAFB;padding:12px;border-radius:4px;margin-top:12px;">
               <p style="margin:0 0 5px 0;font-size:13px;color:#6B7280;font-weight:bold;">Por qué es relevante:</p>
               <p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">${op.razon}</p>

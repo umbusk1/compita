@@ -1,0 +1,31 @@
+name: Actualizar licitaciones vigentes
+# Revisa en el portal SECP las licitaciones que los clientes tienen en su tablero:
+# actualiza fechas de cierre y estados, y avisa por correo si algo cambió.
+on:
+  schedule:
+    - cron: "40 11 * * 1-5"  # 7:40 AM hora RD, lunes a viernes (antes de la jornada)
+    - cron: "40 16 * * 1-5"  # 12:40 PM hora RD, lunes a viernes
+  workflow_dispatch:
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: |
+          pip install playwright psycopg2-binary requests
+          playwright install --with-deps chromium
+
+      - name: Actualizar fechas y estados
+        env:
+          DATABASE_URL:   ${{ secrets.DATABASE_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: python actualizar_vigentes.py

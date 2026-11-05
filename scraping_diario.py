@@ -22,6 +22,11 @@ import os
 import time
 import requests
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
+# Las fechas del portal están en hora de RD (UTC-4). Desde nov 2026 se guardan
+# con su zona horaria (columnas timestamptz) para no correrse 4 horas.
+ZONA_RD = ZoneInfo('America/Santo_Domingo')
 from decimal import Decimal
 import re
 from playwright.sync_api import sync_playwright
@@ -243,7 +248,7 @@ def convertir_fecha(texto_fecha):
     formatos = ["%d/%m/%Y %H:%M", "%d/%m/%Y %H:%M:%S", "%d/%m/%Y", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d"]
     for fmt in formatos:
         try:
-            return datetime.strptime(texto_fecha.strip(), fmt)
+            return datetime.strptime(texto_fecha.strip(), fmt).replace(tzinfo=ZONA_RD)
         except:
             continue
     return None
@@ -768,6 +773,7 @@ def guardar_en_base_datos(licitaciones):
             VALUES %s
             ON CONFLICT (referencia) DO UPDATE SET
                 estado          = EXCLUDED.estado,
+                fecha_presentacion = EXCLUDED.fecha_presentacion,
                 codigo_unspsc   = EXCLUDED.codigo_unspsc,
                 familia_unspsc  = EXCLUDED.familia_unspsc,
                 segmento_unspsc = EXCLUDED.segmento_unspsc,

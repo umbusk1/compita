@@ -64,10 +64,10 @@ def generar_estadisticas():
         # 3. LICITACIONES POR DIA (para el grafico)
         # ================================================================
         cursor.execute("""
-            SELECT DATE(fecha_presentacion) as fecha, COUNT(*) as cantidad
+            SELECT DATE(fecha_presentacion AT TIME ZONE 'America/Santo_Domingo') as fecha, COUNT(*) as cantidad
             FROM licitaciones
             WHERE EXTRACT(YEAR FROM fecha_presentacion) >= 2026
-            GROUP BY DATE(fecha_presentacion)
+            GROUP BY DATE(fecha_presentacion AT TIME ZONE 'America/Santo_Domingo')
             ORDER BY fecha
         """)
         por_dia_raw = cursor.fetchall()

@@ -1241,7 +1241,7 @@ function renderizarOportunidades() {
                 </div>
                 <div class="flex-shrink-0">
                     <div class="flex items-center gap-3 text-sm text-gray-600">
-                        <span>📅 Cierre: ${formatearFecha(op.fecha_presentacion)}</span>
+                        <span>📅 Cierre: ${formatearCierre(op.fecha_presentacion)}</span>
                         <span>🕐 ${calcularDiasRestantes(op.fecha_presentacion)}</span>
                     </div>
                 </div>
@@ -1990,10 +1990,22 @@ const htmlAnalisis = `
 
         function formatearFecha(fecha) {
             if (!fecha) return 'N/A';
+            // Siempre en hora de RD, sin importar dónde esté el usuario (nov 2026)
             return new Date(fecha).toLocaleDateString('es-DO', {
+                timeZone: 'America/Santo_Domingo',
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
+            });
+        }
+
+        // Fecha y hora de cierre en hora de RD: la hora importa cuando cierra hoy
+        function formatearCierre(fecha) {
+            if (!fecha) return 'N/A';
+            return new Date(fecha).toLocaleString('es-DO', {
+                timeZone: 'America/Santo_Domingo',
+                year: 'numeric', month: 'short', day: 'numeric',
+                hour: 'numeric', minute: '2-digit'
             });
         }
 
@@ -2214,7 +2226,7 @@ function exportarAExcel() {
             'Descripción': lic.que || '',
             'Monto': lic.monto_estimado ? `RD$${Number(lic.monto_estimado).toLocaleString()}` : '',
             'Unidad de Compras': lic.quien || '',
-            'Fecha Cierre': lic.fecha_presentacion ? new Date(lic.fecha_presentacion).toLocaleDateString('es-DO') : '',
+            'Fecha Cierre': lic.fecha_presentacion ? formatearCierre(lic.fecha_presentacion) : '',
             'Días Restantes': diasRestantes,
             'Relevancia': lic.relevancia || '',
             'Estado': lic.es_nuevo ? 'NUEVO' : '',
