@@ -1,6 +1,10 @@
 import pg from 'pg';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+// Dirección pública del sitio para los enlaces de los correos (nov 2026).
+// Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
+const SITE_URL = process.env.SITE_URL || 'https://compita.umbusk.com';
+
 
 const { Pool } = pg;
 
@@ -434,7 +438,7 @@ async function handleCrearEmpresa(req, res) {
             from: 'Compita <no-reply@compita.umbusk.com>',
             to: [email],
             subject: '🎉 Bienvenido a Compita - Tus credenciales de acceso',
-            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🎉 ¡Bienvenido a Compita!</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${contacto_nombre}</strong>,</p><p>Tu cuenta en Compita ha sido creada exitosamente.</p><div style="background:white;border-left:4px solid #667eea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#667eea">📋 Tus credenciales:</h3><p><strong>Usuario:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Plan:</strong> ${plan.toUpperCase()}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/login.html" style="background:#667eea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🚀 Iniciar Sesión</a></div></div></body></html>`
+            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🎉 ¡Bienvenido a Compita!</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${contacto_nombre}</strong>,</p><p>Tu cuenta en Compita ha sido creada exitosamente.</p><div style="background:white;border-left:4px solid #667eea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#667eea">📋 Tus credenciales:</h3><p><strong>Usuario:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Plan:</strong> ${plan.toUpperCase()}</p></div><div style="text-align:center;margin:30px 0"><a href="${SITE_URL}/login.html" style="background:#667eea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🚀 Iniciar Sesión</a></div></div></body></html>`
           })
         });
       }
@@ -597,7 +601,7 @@ async function handleInvitarAdmin(req, res) {
             from: 'Compita <no-reply@compita.umbusk.com>',
             to: [email],
             subject: '🔐 Acceso al Dashboard Admin de Compita',
-            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#9333ea 0%,#7c3aed 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🔐 Acceso Admin - Compita</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${nombre}</strong>,</p><p>Has sido invitado como <strong>${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</strong> del sistema Compita.</p><div style="background:white;border-left:4px solid #9333ea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#9333ea">📋 Tus credenciales:</h3><p><strong>Email:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Rol:</strong> ${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</p></div><div style="text-align:center;margin:30px 0"><a href="https://compita.umbusk.com/admin-login.html" style="background:#9333ea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🔐 Acceder al Dashboard</a></div></div></body></html>`
+            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#9333ea 0%,#7c3aed 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🔐 Acceso Admin - Compita</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${nombre}</strong>,</p><p>Has sido invitado como <strong>${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</strong> del sistema Compita.</p><div style="background:white;border-left:4px solid #9333ea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#9333ea">📋 Tus credenciales:</h3><p><strong>Email:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Rol:</strong> ${rol === 'superadmin' ? 'Superadministrador' : 'Administrador'}</p></div><div style="text-align:center;margin:30px 0"><a href="${SITE_URL}/admin-login.html" style="background:#9333ea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🔐 Acceder al Dashboard</a></div></div></body></html>`
           })
         });
       }

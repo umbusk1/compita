@@ -1,7 +1,11 @@
 // api/perfil.js - Maneja datos de usuario, empresa y Perfil Licitador (Enterprise)
 import pkg from 'pg';
 const { Pool } = pkg;
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+// Dirección pública del sitio para los enlaces de los correos (nov 2026).
+// Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
+const SITE_URL = process.env.SITE_URL || 'https://compita.umbusk.com';
+
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -418,7 +422,7 @@ async function enviarEmailAlerta({ empresa_nombre, admin_email, threshold, docs 
       <tbody>${filas}</tbody>
     </table>
     <div style="margin-top:24px;text-align:center">
-      <a href="https://compita.umbusk.com/cuenta.html"
+      <a href="${SITE_URL}/cuenta.html"
          style="background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;padding:12px 28px;
                 border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;display:inline-block">
         Actualizar Perfil Licitador &rarr;

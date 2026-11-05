@@ -12,7 +12,11 @@ import Anthropic from '@anthropic-ai/sdk';
 import pkg from 'pg';
 const { Pool } = pkg;
 import { Resend } from 'resend';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+// Dirección pública del sitio para los enlaces de los correos (nov 2026).
+// Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
+const SITE_URL = process.env.SITE_URL || 'https://compita.umbusk.com';
+
 
 // ============================================================================
 // CONFIGURACIÓN
@@ -28,7 +32,7 @@ const pool = new Pool({
 });
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const DASHBOARD_URL = 'https://compita.umbusk.com/oportunidades.html';
+const DASHBOARD_URL = `${SITE_URL}/oportunidades.html`;
 
 // ============================================================================
 // HANDLER PRINCIPAL
@@ -902,7 +906,7 @@ function generarEmailSegunPlan(resultado) {
   const { plan, nombre, alta, media, oportunidades_alta, oportunidades_media, referido_codigo } = resultado;
 
   const linkReferido = referido_codigo
-    ? `https://compita.umbusk.com/registro.html?ref=${referido_codigo}`
+    ? `${SITE_URL}/registro.html?ref=${referido_codigo}`
     : null;
 
   const footerReferido = linkReferido ? `

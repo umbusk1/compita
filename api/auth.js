@@ -4,7 +4,11 @@ const { Pool } = pkg;
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Resend } from 'resend';
-import crypto from 'crypto';
+import crypto from 'crypto';
+// Dirección pública del sitio para los enlaces de los correos (nov 2026).
+// Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
+const SITE_URL = process.env.SITE_URL || 'https://compita.umbusk.com';
+
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -226,7 +230,7 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
           <p>Para activar tu cuenta, confirma tu email haciendo clic aquí:</p>
 
           <p style="margin: 24px 0;">
-            <a href="https://compita.umbusk.com/confirmar-email.html?token=${tokenConfirmacion}"
+            <a href="${SITE_URL}/confirmar-email.html?token=${tokenConfirmacion}"
                style="background-color: #4F46E5; color: white; padding: 12px 30px;
                       text-decoration: none; border-radius: 8px; font-weight: bold;
                       display: inline-block;">
@@ -411,7 +415,7 @@ async function handleInvitar(req, res, usuarioJWT) {
 
     // Enviar email de invitación
     const resend = new Resend(process.env.RESEND_API_KEY);
-	const linkRegistro = `https://compita.umbusk.com/registro.html?inv=${token}&email=${encodeURIComponent(email_invitado)}`;
+	const linkRegistro = `${SITE_URL}/registro.html?inv=${token}&email=${encodeURIComponent(email_invitado)}`;
 
     try {
       await resend.emails.send({
