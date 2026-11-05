@@ -954,6 +954,19 @@
 		                return;
 		            }
 
+		            // Si la empresa aún no completó la configuración inicial, llevarla allí primero
+		            try {
+		                const rEmp = await fetch(`${API_BASE}/api/perfil?type=empresa`, { headers: { 'Authorization': `Bearer ${token}` } });
+		                if (rEmp.ok) {
+		                    const emp = await rEmp.json();
+		                    const sinPalabras = !emp.palabras_clave || emp.palabras_clave.length === 0;
+		                    if (emp.onboarding_completado === false && sinPalabras) {
+		                        window.location.href = '/onboarding.html';
+		                        return;
+		                    }
+		                }
+		            } catch (e) { /* si falla, seguimos al tablero */ }
+
 		            await cargarDatosUsuario();
 		            await cargarOportunidades();
 
@@ -2277,14 +2290,20 @@ async function reAnalizarSilencioso() {
         document.querySelectorAll('.toast').forEach(t => t.remove());
 
         if (response.ok && resultado.success) {
-            mostrarMensaje(
-                `<strong>¡Tu dashboard está listo!</strong><br>` +
-                `🟢 ALTA: ${resultado.alta} &nbsp; 🟡 MEDIA: ${resultado.media} &nbsp; ` +
-                `📊 Analizadas: ${resultado.analizadas}`,
-                'success',
-                8000
-            );
             await cargarOportunidades();
+            const encontradas = (resultado.alta || 0) + (resultado.media || 0);
+            if (encontradas > 0) {
+                // Primera impresión: la IA revisa una por una las encontradas
+                await primerAnalisisIA(encontradas, resultado.analizadas);
+            } else {
+                mostrarMensaje(
+                    `Revisamos <strong>${resultado.analizadas}</strong> licitaciones abiertas y ninguna coincide todavía con tus palabras clave. ` +
+                    `Compita revisa el portal dos veces al día y te avisará por correo apenas aparezca una. ` +
+                    `Si quieres ampliar la búsqueda, agrega palabras más generales en Mi Cuenta.`,
+                    'info',
+                    15000
+                );
+            }
         } else {
             mostrarMensaje(
                 'No se pudo completar el análisis automático. ' +
@@ -2300,6 +2319,42 @@ async function reAnalizarSilencioso() {
             botonActualizar.disabled = false;
             botonActualizar.innerHTML = '<span>🔄</span><span>Actualizar</span>';
         }
+    }
+}
+
+// Primer análisis con IA (nov 2026): justo después de la configuración inicial,
+// la IA revisa cada oportunidad encontrada y le asigna ALTA, MEDIA o BAJA con su razón.
+async function primerAnalisisIA(encontradas, analizadas) {
+    mostrarMensaje(
+        `<strong>Encontramos ${encontradas} posibles oportunidades</strong> entre ${analizadas} licitaciones abiertas.<br>` +
+        `🤖 Ahora la IA las está leyendo una por una para decirte cuáles valen la pena. Tarda menos de un minuto…`,
+        'info',
+        120000
+    );
+    try {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await fetch(`${API_BASE}/api/analizar-notificar-v2?action=primer-analisis`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+            body: JSON.stringify({})
+        });
+        const r = await response.json();
+        document.querySelectorAll('.toast').forEach(t => t.remove());
+        if (response.ok && r.success && !r.ya_analizada) {
+            await cargarOportunidades();
+            mostrarMensaje(
+                `<strong>¡Listo! Tu primer análisis con IA está hecho.</strong><br>` +
+                `🟢 ALTA: ${r.alta} &nbsp; 🟡 MEDIA: ${r.media} &nbsp; ⚪ BAJA: ${r.baja}<br>` +
+                `Cada oportunidad trae la razón de su clasificación.` +
+                (r.correo_enviado ? ' También te lo enviamos por correo.' : ''),
+                'success',
+                15000
+            );
+        }
+    } catch (error) {
+        console.error('Error en primer análisis IA:', error);
+        document.querySelectorAll('.toast').forEach(t => t.remove());
+        mostrarMensaje('Tus oportunidades ya están en pantalla. La revisión con IA llegará en el próximo análisis automático.', 'info', 10000);
     }
 }
 

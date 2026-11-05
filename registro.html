@@ -96,6 +96,7 @@
                 <div class="text-4xl mb-4">🎉</div>
                 <h2 class="text-2xl font-bold text-gray-900 mb-2">¡Casi listo!</h2>
                 <p class="text-gray-600">Elige el plan que mejor se adapta a tu empresa</p>
+                <p class="text-sm text-green-700 font-semibold mt-2">Todos los planes empiezan con 7 días gratis del plan Business, sin tarjeta de crédito.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 
@@ -105,9 +106,9 @@
                         <h3 class="text-lg font-bold text-gray-900">Plan Estándar</h3>
                         <p class="text-3xl font-bold text-indigo-600 mt-2">$10<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
-                    <button onclick="procesarSuscripcion('estandar')"
+                    <button onclick="procesarTrialGratuito('estandar')"
                         class="w-full bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition font-semibold mb-4">
-                        💳 Suscribirse
+                        🚀 Empezar gratis
                     </button>
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Monitoreo + email</span></li>
@@ -127,7 +128,7 @@
                         <h3 class="text-lg font-bold text-gray-900">Plan Business</h3>
                         <p class="text-3xl font-bold text-orange-600 mt-2">$20<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
-                    <button onclick="procesarSuscripcion('business')"
+                    <button onclick="procesarTrialGratuito('business')"
                         class="w-full bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-3 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition font-semibold mb-4">
                         🚀 Empezar gratis
                     </button>
@@ -145,9 +146,9 @@
                         <h3 class="text-lg font-bold text-gray-900">GOLD</h3>
                         <p class="text-3xl font-bold text-yellow-700 mt-2">$40<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
-                    <button onclick="procesarSuscripcion('enterprise_gold')"
+                    <button onclick="procesarTrialGratuito('enterprise_gold')"
                         class="w-full bg-yellow-500 text-white px-4 py-3 rounded-lg hover:bg-yellow-600 transition font-semibold mb-4">
-                        💳 Suscribirse
+                        🚀 Empezar gratis
                     </button>
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Todo lo del Business</span></li>
@@ -164,9 +165,9 @@
                         <h3 class="text-lg font-bold text-gray-900">PLATINUM</h3>
                         <p class="text-3xl font-bold text-purple-700 mt-2">$80<span class="text-sm text-gray-600 font-normal">/mes</span></p>
                     </div>
-                    <button onclick="procesarSuscripcion('enterprise_platinum')"
+                    <button onclick="procesarTrialGratuito('enterprise_platinum')"
                         class="w-full bg-purple-600 text-white px-4 py-3 rounded-lg hover:bg-purple-700 transition font-semibold mb-4">
-                        💳 Suscribirse
+                        🚀 Empezar gratis
                     </button>
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li class="flex items-start gap-2"><span class="text-green-600">✓</span><span>Todo lo del GOLD</span></li>
@@ -188,6 +189,12 @@
             <p class="text-gray-500 text-sm mb-6">
                 Haz clic en el enlace del email para confirmar tu cuenta y comenzar a usar Compita.
             </p>
+            <p id="nota-plan" class="hidden text-sm text-indigo-700 bg-indigo-50 rounded-lg p-3 mb-4"></p>
+            <ol class="text-left text-sm text-gray-700 space-y-2 mb-6 bg-gray-50 rounded-xl p-4">
+                <li><strong>1.</strong> Confirma tu correo con el enlace que te enviamos.</li>
+                <li><strong>2.</strong> Configura tu empresa en 3 pasos (menos de 5 minutos).</li>
+                <li><strong>3.</strong> En menos de un minuto verás tus primeras oportunidades, revisadas con IA.</li>
+            </ol>
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
                 ⚠️ Si no lo ves en unos minutos, revisa tu carpeta de <strong>spam o correo no deseado</strong>.
             </div>
@@ -293,13 +300,13 @@ async function procesarSuscripcion(plan) {
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('user', JSON.stringify(loginData.user));
 
-        const responseCheckout = await fetch(`${API_BASE}/api/stripe-checkout`, {
+        const responseCheckout = await fetch(`${API_BASE}/api/stripe`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ plan: plan })
+            body: JSON.stringify({ action: 'create_checkout', plan: plan })
         });
 
         if (!responseCheckout.ok) {
@@ -319,7 +326,10 @@ async function procesarSuscripcion(plan) {
     }
 }
 
-async function procesarTrialGratuito() {
+// Nov 2026: todos los planes empiezan con la prueba gratis de 7 días (como promete la landing).
+// El plan elegido se recuerda para ofrecerlo al terminar la prueba.
+async function procesarTrialGratuito(planDeseado) {
+    try { if (planDeseado) localStorage.setItem('plan_deseado', planDeseado); } catch (e) {}
     try {
         const response = await fetch(`${API_BASE}/api/auth`, {
             method: 'POST',
@@ -340,6 +350,12 @@ async function procesarTrialGratuito() {
             fbq('track', 'CompleteRegistration', { content_name: 'trial' });
             document.getElementById('opciones-pago').classList.add('hidden');
             document.getElementById('email-confirmacion').textContent = datosRegistro.email;
+            const nombresPlan = {"estandar": "Estándar", "business": "Business", "enterprise_gold": "Enterprise GOLD", "enterprise_platinum": "Enterprise PLATINUM"};
+            const notaPlan = document.getElementById('nota-plan');
+            if (notaPlan && planDeseado && planDeseado !== 'business') {
+                notaPlan.textContent = `Elegiste el plan ${nombresPlan[planDeseado] || planDeseado}. Empiezas con 7 días gratis del plan Business y puedes activarlo cuando quieras desde Mi Cuenta.`;
+                notaPlan.classList.remove('hidden');
+            }
             document.getElementById('confirmacion-email').classList.remove('hidden');
         } else {
             alert('Error: ' + result.error);

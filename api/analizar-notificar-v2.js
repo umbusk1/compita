@@ -12,6 +12,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import pkg from 'pg';
 const { Pool } = pkg;
 import { Resend } from 'resend';
+import jwt from 'jsonwebtoken';
 
 // ============================================================================
 // CONFIGURACIÓN
@@ -34,10 +35,19 @@ const DASHBOARD_URL = 'https://compita.umbusk.com/oportunidades.html';
 // ============================================================================
 
 export default async function handler(req, res) {
-  // ── Re-evaluación al cambiar perfil (llamado desde perfil.js) ──────────────
+  // ── Primer análisis con IA (al terminar la configuración inicial) ──────────
+  if (req.method === 'POST' && req.query.action === 'primer-analisis') {
+    const sesion = verificarSesion(req);
+    if (!sesion) return res.status(401).json({ success: false, error: 'Debes iniciar sesión' });
+    return await handlePrimerAnalisis(sesion.empresaId, res);
+  }
+
+  // ── Re-evaluación al cambiar perfil ────────────────────────────────────────
+  // SEGURIDAD (nov 2026): exige sesión y usa la empresa de la sesión.
   if (req.method === 'POST' && req.query.action === 'reanalizar') {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(403).json({ error: 'No autorizado' });
+    const sesion = verificarSesion(req);
+    if (!sesion) return res.status(401).json({ error: 'No autorizado' });
+    req.body = { ...(req.body || {}), empresa_id: sesion.empresaId };
     return await handleReanalizar(req, res);
   }
 
@@ -97,6 +107,128 @@ export default async function handler(req, res) {
 // ============================================================================
 // RE-EVALUACIÓN AL CAMBIAR PERFIL
 // ============================================================================
+
+// ============================================================================
+// SESIÓN DE USUARIO
+// ============================================================================
+
+function verificarSesion(req) {
+  const authHeader = req.headers.authorization || '';
+  if (!authHeader.startsWith('Bearer ')) return null;
+  try {
+    const sesion = jwt.verify(authHeader.slice(7), process.env.JWT_SECRET);
+    if (!sesion.empresaId || sesion.tipo) return null;
+    return sesion;
+  } catch {
+    return null;
+  }
+}
+
+// ============================================================================
+// PRIMER ANÁLISIS CON IA (nov 2026)
+// ----------------------------------------------------------------------------
+// Al terminar la configuración inicial, el filtro instantáneo (re-analizar en
+// business-features) llena el tablero en segundos. Este paso hace que la IA
+// revise esos resultados uno por uno, para que la primera impresión ya traiga
+// ALTA / MEDIA / BAJA con razones, y manda el primer correo de alertas.
+// Solo corre una vez por empresa: si la IA ya la analizó, no repite (costos).
+// ============================================================================
+
+async function handlePrimerAnalisis(empresaId, res) {
+  try {
+    const empresaRes = await pool.query(`
+      SELECT e.id, e.nombre, e.descripcion, e.palabras_clave, e.exclusiones,
+             e.monto_minimo_alta, e.plan, e.familias_unspsc, e.regiones_interes, e.website,
+             u.email as owner_email, u.referido_codigo
+      FROM empresas e JOIN usuarios u ON u.empresa_id = e.id
+      WHERE e.id = $1 LIMIT 1
+    `, [empresaId]);
+    if (empresaRes.rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
+    }
+    const empresa = empresaRes.rows[0];
+
+    const previo = await pool.query('SELECT 1 FROM analisis WHERE empresa_id = $1 LIMIT 1', [empresaId]);
+    if (previo.rows.length > 0) {
+      return res.status(200).json({ success: true, ya_analizada: true });
+    }
+
+    const pendientes = await pool.query(`
+      SELECT r.id AS resultado_id, l.*
+      FROM resultados r JOIN licitaciones l ON l.id = r.licitacion_id
+      WHERE r.empresa_id = $1
+        AND (r.descartada IS NULL OR r.descartada = FALSE)
+        AND l.fecha_presentacion > NOW()
+      ORDER BY l.fecha_presentacion ASC
+      LIMIT 40
+    `, [empresaId]);
+    const items = pendientes.rows;
+    if (items.length === 0) {
+      return res.status(200).json({ success: true, revisadas: 0, alta: 0, media: 0, baja: 0 });
+    }
+
+    // La IA revisa de 5 en 5 para que la espera sea corta
+    const analizados = [];
+    for (let i = 0; i < items.length; i += 5) {
+      const lote = items.slice(i, i + 5);
+      const respuestas = await Promise.all(lote.map(lic => analizarConIA(lic, empresa, [])));
+      respuestas.forEach((a, k) => analizados.push({ ...a, resultado_id: lote[k].resultado_id }));
+    }
+
+    // Mismas reglas que el análisis diario: monto mínimo y región
+    const montoMinimo = empresa.monto_minimo_alta || 500000;
+    const regionesEmpresa = Array.isArray(empresa.regiones_interes)
+      ? empresa.regiones_interes.filter(r => r !== 'Nacional')
+      : [];
+    for (const a of analizados) {
+      if (a.relevancia === 'ALTA' && parseFloat(a.monto_estimado || 0) < montoMinimo) {
+        a.relevancia = 'MEDIA';
+        a.razon = `Monto ${parseFloat(a.monto_estimado || 0).toLocaleString()} DOP menor al mínimo. ${a.razon}`;
+      }
+      if (a.relevancia === 'ALTA' && regionesEmpresa.length > 0 && a.region_licitacion
+          && a.region_licitacion !== 'Nacional' && !regionesEmpresa.includes(a.region_licitacion)) {
+        a.relevancia = 'MEDIA';
+        a.razon = `Región ${a.region_licitacion} fuera del área configurada. ${a.razon}`;
+      }
+      await pool.query(
+        'UPDATE resultados SET relevancia = $1, razon = $2, que = $3, quien = $4 WHERE id = $5',
+        [a.relevancia, a.razon, a.que, a.quien, a.resultado_id]
+      );
+    }
+
+    const alta  = analizados.filter(a => a.relevancia === 'ALTA');
+    const media = analizados.filter(a => a.relevancia === 'MEDIA');
+    const baja  = analizados.filter(a => a.relevancia === 'BAJA');
+
+    // Deja constancia de que la IA ya analizó esta empresa
+    await pool.query(`
+      INSERT INTO analisis (empresa_id, total_descripciones, total_alta, total_media, total_baja, porcentaje_alta)
+      VALUES ($1, $2, $3, $4, $5, $6)
+    `, [empresaId, analizados.length, alta.length, media.length, baja.length,
+        Math.round((alta.length / analizados.length) * 100)]);
+
+    // Primer correo de alertas
+    let correoEnviado = false;
+    try {
+      correoEnviado = (await enviarNotificaciones([{
+        empresa_id: empresa.id, nombre: empresa.nombre, email: empresa.owner_email, plan: empresa.plan,
+        total: analizados.length, alta: alta.length, media: media.length, baja: baja.length,
+        oportunidades_alta: alta, oportunidades_media: media,
+        referido_codigo: empresa.referido_codigo || null,
+      }])) > 0;
+    } catch (e) {
+      console.error('Primer análisis: error enviando correo', e.message);
+    }
+
+    return res.status(200).json({
+      success: true, revisadas: analizados.length,
+      alta: alta.length, media: media.length, baja: baja.length, correo_enviado: correoEnviado
+    });
+  } catch (error) {
+    console.error('❌ Error en primer análisis:', error);
+    return res.status(500).json({ success: false, error: 'Error en el primer análisis' });
+  }
+}
 
 async function handleReanalizar(req, res) {
   const { empresa_id } = req.body;
@@ -785,7 +917,8 @@ function generarEmailSegunPlan(resultado) {
       Compita - Sistema de Análisis de Licitaciones con IA
     </p>`;
 
-  if (plan === 'trial_gratuito' || plan === 'free_trial') {
+  // La prueba gratis es del plan Business: recibe el correo completo (nov 2026)
+  if (plan === 'trial_gratuito') {
     return `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
         <h2 style="color:#4F46E5;">🎯 Nuevas Oportunidades Detectadas</h2>
@@ -824,7 +957,9 @@ function generarEmailSegunPlan(resultado) {
       </div>`;
   }
 
-  if (plan === 'business') {
+  // Business, prueba gratis y Enterprise reciben el correo completo.
+  // Antes, GOLD y PLATINUM no tenían plantilla y nunca recibían alertas (nov 2026).
+  if (['business', 'free_trial', 'prueba_gratis', 'enterprise', 'enterprise_gold', 'enterprise_platinum'].includes(plan)) {
     const todasOportunidades = [...oportunidades_alta, ...oportunidades_media];
     return `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
