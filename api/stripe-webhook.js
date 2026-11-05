@@ -101,6 +101,23 @@ async function handleCheckoutCompleted(session) {
   );
 
   console.log(`✅ Empresa ${empresaId} activada con plan ${plan}`);
+
+  // Sacar a los usuarios de esta empresa de la lista de prueba en Brevo (#5),
+  // para que no reciban los avisos de "tu prueba vence". Si falla, no afecta el pago.
+  try {
+    const usuarios = await pool.query('SELECT email FROM usuarios WHERE empresa_id = $1', [empresaId]);
+    const emails = usuarios.rows.map(u => u.email).filter(Boolean);
+    if (emails.length && process.env.BREVO_API_KEY) {
+      const r = await fetch('https://api.brevo.com/v3/contacts/lists/5/contacts/remove', {
+        method: 'POST',
+        headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emails })
+      });
+      console.log(`📤 Brevo: ${emails.length} contacto(s) fuera de la lista de prueba (status ${r.status})`);
+    }
+  } catch (e) {
+    console.error('⚠️ No se pudo sacar de la lista de prueba en Brevo:', e.message);
+  }
 }
 
 async function handleSubscriptionCreated(subscription) {
