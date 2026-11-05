@@ -1,15 +1,56 @@
 // api/empresas.js - Gestión de empresas y familias UNSPSC
+// SEGURIDAD (nov 2026): toda llamada exige sesión.
+//   - Un usuario solo puede leer o editar SU empresa (la de su sesión).
+//   - Listar, crear, editar en bloque o desactivar empresas: solo administradores.
 import { neon } from '@neondatabase/serverless';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const sql = neon(process.env.DATABASE_URL);
+
+  // ── Autenticación ──────────────────────────────────────────────────────────
+  const authHeader = req.headers.authorization || '';
+  if (!authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, error: 'Debes iniciar sesión' });
+  }
+  let sesion;
+  try {
+    sesion = jwt.verify(authHeader.slice(7), process.env.JWT_SECRET);
+  } catch {
+    return res.status(401).json({ success: false, error: 'Sesión inválida o vencida' });
+  }
+
+  // ¿Es un administrador de Compita? (token de admin: tiene id y no tiene empresaId)
+  let esAdmin = false;
+  if (sesion.id && !sesion.empresaId && !sesion.tipo) {
+    const adm = await sql`
+      SELECT id FROM administradores
+      WHERE id = ${sesion.id} AND email = ${sesion.email} AND activo = true LIMIT 1
+    `;
+    esAdmin = adm.length > 0;
+  }
+  const empresaDeSesion = sesion.empresaId && !sesion.tipo ? String(sesion.empresaId) : null;
+
+  if (!esAdmin && !empresaDeSesion) {
+    return res.status(401).json({ success: false, error: 'Sesión inválida' });
+  }
+
+  // Un usuario normal solo puede tocar su propia empresa
+  const idPedido = req.query.id != null ? String(req.query.id) : null;
+  if (!esAdmin) {
+    const esLecturaOEdicionDeFamilias = req.query.action === 'familias' && ['GET', 'PUT'].includes(req.method);
+    const esLecturaDeSuEmpresa = !req.query.action && req.method === 'GET';
+    if (!(esLecturaOEdicionDeFamilias || esLecturaDeSuEmpresa) || idPedido !== empresaDeSesion) {
+      return res.status(403).json({ success: false, error: 'No autorizado' });
+    }
+  }
 
   try {
     const { action } = req.query;

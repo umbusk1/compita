@@ -229,7 +229,7 @@
 
             try {
                 // Buscar la empresa por ID directamente
-                const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}`);
+                const response = await fetch(`${API_BASE}/api/empresas?id=${usuarioActual.empresa_id}`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` } });
                 const data = await response.json();
 
                 if (data.success && data.empresa) {

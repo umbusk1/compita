@@ -2,6 +2,7 @@
 // ACTUALIZACION: Cambio de modelo a claude-sonnet-5
 import { neon } from '@neondatabase/serverless';
 import Anthropic from '@anthropic-ai/sdk';
+import jwt from 'jsonwebtoken';
 
 // ============================================================================
 // HELPERS
@@ -93,7 +94,10 @@ export default async function handler(req, res) {
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-    const { empresa_id, tipo, accion, referencia, clave_secreta } = req.body;
+    const { tipo, referencia, clave_secreta } = req.body;
+    // KanbanBonsai envía 'action' en vez de 'accion' en kb-consumir: aceptar ambos
+    const accion = req.body.accion || req.body.action;
+    let { empresa_id } = req.body;
 
     // ====================================================
     // RESETEAR CUPOS MENSUAL (cron)
@@ -200,6 +204,33 @@ export default async function handler(req, res) {
         empresas_reseteadas: reseteadas, empresas_con_cupos_transferidos: cuposTransferidos,
         empresas_desactivadas: desactivadas, empresas_cancelacion_programada: cancelacionesProgramadas, errores
       });
+    }
+
+    // ====================================================
+    // AUTENTICACIÓN (nov 2026)
+    // - KanbanBonsai (servidor a servidor) entra con el secreto x-kb-secret.
+    // - Los usuarios entran con su sesión, y la empresa SIEMPRE sale de la
+    //   sesión, nunca del cuerpo de la petición.
+    // ====================================================
+    const esLlamadaKB = ['kb-entitlements', 'kb-consumir'].includes(accion)
+      && !!process.env.COMPITA_KB_SECRET
+      && req.headers['x-kb-secret'] === process.env.COMPITA_KB_SECRET;
+
+    if (!esLlamadaKB) {
+      const authHeader = req.headers.authorization || '';
+      if (!authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, error: 'Debes iniciar sesión' });
+      }
+      let sesion;
+      try {
+        sesion = jwt.verify(authHeader.slice(7), process.env.JWT_SECRET);
+      } catch {
+        return res.status(401).json({ success: false, error: 'Sesión inválida o vencida' });
+      }
+      if (!sesion.empresaId || sesion.tipo) {
+        return res.status(401).json({ success: false, error: 'Sesión inválida' });
+      }
+      empresa_id = sesion.empresaId;
     }
 
     // ====================================================

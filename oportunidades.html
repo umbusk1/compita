@@ -1053,7 +1053,7 @@ async function cargarCuposBusiness() {
 
         const responseZip = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
             body: JSON.stringify({
                 empresa_id: empresaId,
                 tipo: 'zip',
@@ -1063,7 +1063,7 @@ async function cargarCuposBusiness() {
 
         const responseAnalisis = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
             body: JSON.stringify({
                 empresa_id: empresaId,
                 tipo: 'analisis',
@@ -1439,7 +1439,7 @@ async function descargarDocumentos(referencia, resultado_id) {
         // 1. Validar cupo disponible
         const validacionResponse = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
             body: JSON.stringify({
                 empresa_id: empresaId,
                 tipo: 'zip',
@@ -1501,7 +1501,7 @@ async function descargarDocumentos(referencia, resultado_id) {
 		// 3a. Registrar uso del cupo
 		await fetch(`${API_BASE}/api/business-features`, {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
+			headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
 			body: JSON.stringify({
 				empresa_id: empresaId,
 				tipo: 'zip',
@@ -1591,7 +1591,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
 
         const validacionResponse = await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
             body: JSON.stringify({
                 empresa_id: empresaId,
                 tipo: 'analisis',
@@ -1704,7 +1704,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
         // Registrar uso del cupo
         await fetch(`${API_BASE}/api/business-features`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
             body: JSON.stringify({
                 empresa_id: empresaId,
                 tipo: 'analisis',
@@ -2993,7 +2993,7 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
     try {
         const response = await fetch(`${API_BASE}/api/business-features`, {
 		            method: 'POST',
-		            headers: { 'Content-Type': 'application/json' },
+		            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
 		            body: JSON.stringify({
 		                empresa_id: empresaId,
 		                accion: 'coach-licitador',
