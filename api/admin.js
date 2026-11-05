@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 // Dirección pública del sitio para los enlaces de los correos (nov 2026).
 // Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
-const SITE_URL = process.env.SITE_URL || 'https://compita.umbusk.com';
+const SITE_URL = process.env.SITE_URL || 'https://compita.do';
 
 
 const { Pool } = pg;
