@@ -917,12 +917,8 @@ function generarEmailSegunPlan(resultado) {
     ? `${SITE_URL}/registro.html?ref=${referido_codigo}`
     : null;
 
-  const footerReferido = linkReferido ? `
-    <div style="margin-top:20px;padding:16px;background:#EEF2FF;border-radius:8px;text-align:center;">
-      <p style="margin:0 0 8px 0;font-size:13px;color:#4F46E5;font-weight:bold;">🎁 ¿Conoces a alguien que necesite ganar licitaciones?</p>
-      <p style="margin:0 0 12px 0;font-size:12px;color:#6B7280;">Invítalos a Compita y obtén un mes gratis cuando se suscriban.</p>
-      <a href="${linkReferido}" style="display:inline-block;background:#4F46E5;color:white;padding:8px 20px;text-decoration:none;border-radius:6px;font-size:13px;font-weight:bold;">Compartir mi link →</a>
-    </div>` : '';
+  // Promoción de referidos retirada de los correos (nov 2026)
+  const footerReferido = '';
 
   const footerFirma = `
     <p style="margin-top:30px;padding-top:20px;border-top:1px solid #E5E7EB;font-size:11px;color:#9CA3AF;text-align:center;">

@@ -243,19 +243,7 @@ async function handleRegistro(req, res, email, password, nombre, empresa, ref, i
             Este enlace expira en 24 horas.
           </p>
 
-          <div style="background-color:#EEF2FF; border-left: 4px solid #4F46E5;
-                      padding: 12px 16px; margin: 28px 0; border-radius: 4px;">
-            <p style="margin:0; color:#4F46E5; font-weight:bold;">
-              ¿Quieres 30 días de prueba gratis en vez de 7?<br>
-              <span style="font-size:13px; font-weight:normal; color:#374151;">
-                (o un bono de 1 mes gratis si ya te suscribiste a un plan pago)
-              </span>
-            </p>
-            <p style="margin:10px 0 0 0; color:#374151; font-size:14px;">
-              Al confirmar tu email podrás invitar a alguien de otra empresa.
-              Si esa persona acepta suscribirse, obtienen 30 días gratis para cada quien.
-            </p>
-          </div>
+
         `
       });
       console.log('✅ [REGISTRO] Email de confirmación enviado');
