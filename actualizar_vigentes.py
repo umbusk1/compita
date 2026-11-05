@@ -186,7 +186,11 @@ def main():
             print(f"   ✏️  {referencia}: "
                   + (f"cierre {fecha_vieja} → {fecha_nueva} " if cambio_fecha else '')
                   + (f"estado {estado_viejo} → {estado_nuevo}" if cambio_estado else ''))
-            if cambio_fecha or cancelada:
+            # Solo se avisa de lo que todavía importa: cierres que aún no pasan
+            ahora = datetime.now(ZONA_RD)
+            cierre_ref = fecha_nueva or fecha_vieja
+            vigente = bool(cierre_ref and cierre_ref > ahora)
+            if vigente and (cambio_fecha or cancelada):
                 cambios.append({'id': lic_id, 'referencia': referencia, 'vieja': fecha_vieja,
                                 'nueva': fecha_nueva, 'estado_nuevo': estado_nuevo, 'cancelada': cancelada})
         browser.close()
