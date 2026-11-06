@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporte de licitaciones | Compita</title>
+  <meta name="description" content="Reporte gratuito y actualizado a diario de las licitaciones abiertas del Estado dominicano, por sector. Compita.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/favicon-umbusk.png">
+  <style>
+    body { font-family: 'Manrope', sans-serif; color: #1a2e2d; background: #f8f6f1; }
+    h1, h2, h3, .lora { font-family: 'Lora', serif; }
+    :root {
+      --verde-oscuro: #163332; --violeta: #5247e4; --verde-cta: #2bb738; --dorado: #eaba81;
+      --crema: #f8f6f1; --crema-borde: #e5e0d5; --texto-oscuro: #163332; --texto-medio: #4a6662; --texto-claro: #9ab8b0;
+    }
+    .chip { font-size: .8rem; font-weight: 600; padding: 6px 14px; border-radius: 99px; cursor: pointer;
+            border: 1px solid var(--crema-borde); background: #fff; color: var(--texto-medio); white-space: nowrap; }
+    .chip.activo { background: var(--verde-oscuro); color: #fff; border-color: var(--verde-oscuro); }
+    .tarjeta { background: #fff; border: 1px solid var(--crema-borde); border-radius: 14px; padding: 1.1rem 1.25rem; }
+    .pronto { background: #fff4e5; color: #9a5b00; }
+  </style>
+</head>
+<body>
+
+<nav class="w-full bg-white" style="border-bottom: 1px solid var(--crema-borde);">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a href="/"><img src="/LogoCompita_FondoBlanco_VT_Chato_Peq.png" alt="Compita" class="h-14 md:h-16"></a>
+    <div class="flex gap-4 md:gap-6 items-center text-sm">
+      <a href="/#reportes" class="hidden sm:inline font-medium" style="color:var(--texto-medio);">Todos los reportes</a>
+      <a href="/registro.html" class="font-semibold text-white px-4 py-2 rounded-lg" style="background:var(--verde-cta);">Empieza gratis</a>
+    </div>
+  </div>
+</nav>
+
+<header style="background: var(--verde-oscuro);">
+  <div class="max-w-6xl mx-auto px-4 py-12 md:py-16">
+    <p id="eyebrow" class="text-xs font-semibold tracking-widest uppercase mb-3" style="color:var(--dorado);">Reporte gratuito</p>
+    <h1 id="titulo" class="lora text-3xl md:text-5xl font-bold mb-3" style="color:#f5f0e8;">Cargando…</h1>
+    <p id="subtitulo" class="max-w-2xl text-base md:text-lg" style="color:var(--texto-claro);"></p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
+      <div class="rounded-xl p-5" style="background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);">
+        <div id="k-abiertas" class="lora text-3xl font-bold" style="color:var(--dorado);">—</div>
+        <div class="text-xs uppercase tracking-wider mt-1" style="color:var(--texto-claro);">licitaciones abiertas</div>
+      </div>
+      <div class="rounded-xl p-5" style="background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);">
+        <div id="k-valor" class="lora text-3xl font-bold" style="color:var(--dorado);">—</div>
+        <div class="text-xs uppercase tracking-wider mt-1" style="color:var(--texto-claro);">valor estimado en pesos</div>
+      </div>
+      <div class="rounded-xl p-5" style="background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);">
+        <div id="k-pronto" class="lora text-3xl font-bold" style="color:var(--dorado);">—</div>
+        <div class="text-xs uppercase tracking-wider mt-1" style="color:var(--texto-claro);">cierran en los próximos 7 días</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 py-10">
+
+  <section id="bloque-resumen" class="tarjeta mb-8 hidden" style="border-left: 4px solid var(--dorado);">
+    <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--violeta);">Resumen de hoy</p>
+    <p id="resumen" class="text-base leading-relaxed" style="color:var(--texto-oscuro);"></p>
+  </section>
+
+  <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+    <h2 class="lora text-2xl font-bold" style="color:var(--texto-oscuro);">Licitaciones abiertas</h2>
+    <label class="text-sm flex items-center gap-2 cursor-pointer" style="color:var(--texto-medio);">
+      <input type="checkbox" id="solo-pronto"> Solo las que cierran en 7 días
+    </label>
+  </div>
+  <div id="chips" class="flex flex-wrap gap-2 pb-2 mb-6"></div>
+
+  <div id="lista" class="grid gap-3"></div>
+  <div class="text-center mt-6">
+    <button id="ver-mas" class="hidden font-semibold px-5 py-2 rounded-lg" style="border:1px solid var(--crema-borde); background:#fff; color:var(--texto-medio);">Ver más</button>
+  </div>
+
+  <section class="mt-14 grid md:grid-cols-2 gap-6">
+    <div class="rounded-2xl p-7" style="background:var(--verde-oscuro);">
+      <h3 class="lora text-2xl font-bold mb-3" style="color:#f5f0e8;">¿Quieres solo las que le sirven a tu empresa?</h3>
+      <p class="text-sm leading-relaxed mb-5" style="color:var(--texto-claro);">
+        Este reporte muestra todo el sector. Con Compita, una IA revisa cada licitación según el perfil
+        de tu empresa, te avisa por correo y analiza el pliego por ti.
+      </p>
+      <a href="/registro.html" class="inline-block font-bold px-5 py-3 rounded-lg" style="background:var(--verde-cta); color:#fff;">Prueba gratis 7 días →</a>
+    </div>
+    <div class="rounded-2xl p-7 tarjeta">
+      <h3 class="lora text-2xl font-bold mb-3" style="color:var(--texto-oscuro);">Recíbelo por correo</h3>
+      <p class="text-sm leading-relaxed mb-5" style="color:var(--texto-medio);">
+        Cada lunes, el resumen de este reporte en tu bandeja. Gratis, y puedes darte de baja cuando quieras.
+      </p>
+      <a id="enlace-suscribir" href="/#reportes" class="inline-block font-bold px-5 py-3 rounded-lg" style="background:var(--violeta); color:#fff;">Suscribirme gratis →</a>
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <p class="text-xs font-semibold uppercase tracking-wider mb-3" style="color:var(--texto-medio);">Otros reportes gratuitos</p>
+    <div id="otros" class="flex flex-wrap gap-3"></div>
+  </section>
+
+  <p class="text-xs mt-12 leading-relaxed" style="color:var(--texto-medio);">
+    Fuente: portal de compras públicas de la DGCP. <span id="actualizado"></span>
+    La clasificación por sector la hace una IA y puede contener errores: verifica siempre los detalles en el portal antes de ofertar.
+    Compita es un servicio de <a href="https://umbusk.com" class="underline">Umbusk, LLC</a>.
+  </p>
+</main>
+
+<script>
+(function () {
+  var REPORTES = {
+    construccion: 'Construcción',
+    turismo: 'Turismo, hotelería y gastronomía',
+    mipymes: 'Oportunidades para MIPYMES'
+  };
+  var partes = location.pathname.split('/').filter(Boolean);
+  var clave = new URLSearchParams(location.search).get('s') || partes[partes.length - 1];
+  if (!REPORTES[clave]) clave = 'construccion';
+
+  var datos = null, filtro = 'Todos', soloPronto = false, mostrar = 30;
+
+  function esc(t) {
+    return String(t || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+  }
+  function capitalizar(t) {
+    t = String(t || '').trim();
+    if (t === t.toUpperCase()) t = t.toLowerCase();
+    return t.charAt(0).toUpperCase() + t.slice(1);
+  }
+
+  function filtradas() {
+    return datos.licitaciones.filter(function (l) {
+      return (filtro === 'Todos' || l.subsector === filtro) && (!soloPronto || l.dias <= 7);
+    });
+  }
+
+  function pintarChips() {
+    var cont = document.getElementById('chips');
+    var opciones = [{ nombre: 'Todos', cantidad: datos.licitaciones.length }].concat(datos.subsectores);
+    cont.innerHTML = '';
+    opciones.forEach(function (s) {
+      var b = document.createElement('button');
+      b.className = 'chip' + (s.nombre === filtro ? ' activo' : '');
+      b.textContent = s.nombre + ' (' + s.cantidad + ')';
+      b.onclick = function () { filtro = s.nombre; mostrar = 30; pintarChips(); pintarLista(); };
+      cont.appendChild(b);
+    });
+  }
+
+  function pintarLista() {
+    var items = filtradas();
+    var cont = document.getElementById('lista');
+    if (items.length === 0) {
+      cont.innerHTML = '<p class="tarjeta text-sm" style="color:var(--texto-medio);">No hay licitaciones abiertas con este filtro en este momento.</p>';
+    } else {
+      cont.innerHTML = items.slice(0, mostrar).map(function (l) {
+        var dias = l.dias === 0 ? 'Cierra hoy' : (l.dias === 1 ? 'Cierra mañana' : 'Cierra en ' + l.dias + ' días');
+        return '<article class="tarjeta">'
+          + '<div class="flex flex-wrap items-center gap-2 mb-2">'
+          + '<span class="text-xs font-semibold px-2 py-1 rounded" style="background:#eef2ff;color:var(--violeta);">' + esc(l.subsector) + '</span>'
+          + '<span class="text-xs font-semibold px-2 py-1 rounded ' + (l.dias <= 7 ? 'pronto' : '') + '" style="' + (l.dias <= 7 ? '' : 'background:var(--crema);color:var(--texto-medio);') + '">' + dias + '</span>'
+          + '</div>'
+          + '<h3 class="font-semibold text-base mb-1" style="color:var(--texto-oscuro); font-family:Manrope,sans-serif;">' + esc(capitalizar(l.descripcion)) + '</h3>'
+          + '<p class="text-sm mb-2" style="color:var(--texto-medio);">' + esc(l.institucion) + '</p>'
+          + '<div class="flex flex-wrap gap-x-6 gap-y-1 text-sm" style="color:var(--texto-oscuro);">'
+          + '<span><strong>' + esc(l.monto_texto) + '</strong></span>'
+          + '<span>Cierre: ' + esc(l.cierre_texto) + '</span>'
+          + '<span style="color:var(--texto-medio);">' + esc(l.referencia) + '</span>'
+          + (l.url ? '<a href="' + esc(l.url) + '" target="_blank" rel="noopener" class="font-semibold" style="color:var(--violeta);">Ver en el portal →</a>' : '')
+          + '</div></article>';
+      }).join('');
+    }
+    document.getElementById('ver-mas').classList.toggle('hidden', items.length <= mostrar);
+  }
+
+  function pintar() {
+    document.title = datos.titulo + ': licitaciones abiertas en República Dominicana | Compita';
+    document.getElementById('eyebrow').textContent = 'Reporte gratuito · actualizado el ' + datos.actualizado_texto;
+    document.getElementById('titulo').textContent = datos.titulo;
+    document.getElementById('subtitulo').textContent = datos.subtitulo;
+    document.getElementById('k-abiertas').textContent = datos.kpis.abiertas.toLocaleString('es-DO');
+    document.getElementById('k-valor').textContent = datos.kpis.valor_texto.replace('RD$', 'RD$ ');
+    document.getElementById('k-pronto').textContent = datos.kpis.cierran_7_dias.toLocaleString('es-DO');
+    if (datos.resumen) {
+      document.getElementById('resumen').textContent = datos.resumen;
+      document.getElementById('bloque-resumen').classList.remove('hidden');
+    }
+    document.getElementById('actualizado').textContent = 'Datos actualizados el ' + datos.actualizado_texto + ', de lunes a viernes, dos veces al día.';
+    document.getElementById('enlace-suscribir').href = '/?suscribir=' + clave + '#reportes';
+    document.getElementById('otros').innerHTML = Object.keys(REPORTES).filter(function (k) { return k !== clave; })
+      .map(function (k) { return '<a class="chip" href="/reportes/' + k + '">' + REPORTES[k] + ' →</a>'; }).join('')
+      + '<a class="chip" href="/#reporte">Reporte semanal general →</a>';
+    pintarChips();
+    pintarLista();
+  }
+
+  document.getElementById('solo-pronto').onchange = function (e) { soloPronto = e.target.checked; mostrar = 30; pintarLista(); };
+  document.getElementById('ver-mas').onclick = function () { mostrar += 30; pintarLista(); };
+
+  fetch('/data/reportes/' + clave + '.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      // Quitar las que ya cerraron desde la última actualización y recalcular los días
+      var ahora = new Date(), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+      d.licitaciones = d.licitaciones.filter(function (l) { return new Date(l.cierre) > ahora; });
+      d.licitaciones.forEach(function (l) {
+        var c = new Date(l.cierre); c.setHours(0, 0, 0, 0);
+        l.dias = Math.max(0, Math.round((c - hoy) / 86400000));
+      });
+      var conteo = {};
+      d.licitaciones.forEach(function (l) { conteo[l.subsector] = (conteo[l.subsector] || 0) + 1; });
+      d.subsectores = d.subsectores.filter(function (s) { return conteo[s.nombre]; })
+        .map(function (s) { return { nombre: s.nombre, cantidad: conteo[s.nombre] }; });
+      datos = d; pintar();
+    })
+    .catch(function () {
+      document.getElementById('titulo').textContent = REPORTES[clave];
+      document.getElementById('lista').innerHTML = '<p class="tarjeta text-sm">El reporte se está preparando. Vuelve a intentarlo en unos minutos.</p>';
+    });
+})();
+</script>
+</body>
+</html>

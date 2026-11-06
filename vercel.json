@@ -49,5 +49,11 @@
       "destination": "https://compita.do/$1",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/reportes/:clave",
+      "destination": "/reporte-sector.html"
+    }
   ]
 }

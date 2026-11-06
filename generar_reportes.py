@@ -213,7 +213,7 @@ Datos: {kpis['abiertas']} licitaciones abiertas, valor estimado total {kpis['val
 Algunas de ellas:
 {muestra}
 
-Reglas: entre 3 y 4 oraciones, en español claro y concreto. Destaca 2 o 3 oportunidades por institución y monto, y menciona cuántas cierran pronto.
+Reglas: exactamente 3 oraciones, en español claro y concreto. Destaca 2 o 3 oportunidades por institución y monto, y menciona cuántas cierran pronto.
 Usa solo los datos de arriba: no inventes cifras, fechas ni instituciones. Sin comillas dobles, sin títulos, sin viñetas, sin saludos."""
     texto = llamar_claude(MODELO_RESUMEN, prompt, 600)
     return (texto or "").strip().replace('"', "«")
@@ -224,6 +224,8 @@ def formato_monto(valor, moneda):
         return "Monto no indicado"
     simbolo = "US$" if (moneda or "").upper() in ("USD", "US$") else "RD$"
     v = float(valor)
+    if v >= 1_000_000_000:
+        return f"{simbolo}{v / 1_000_000_000:,.1f} mil millones".replace(".0 mil", " mil")
     if v >= 1_000_000:
         return f"{simbolo}{v / 1_000_000:,.1f} millones".replace(".0 millones", " millones")
     return f"{simbolo}{v:,.0f}"
