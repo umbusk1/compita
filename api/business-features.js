@@ -650,7 +650,7 @@ ${seccionPliego}
       let contadorAlta = 0, contadorMedia = 0, contadorDescartadas = 0, contadorPepuPeex = 0;
 
       for (const lic of licitacionesAbiertas) {
-        if (/-(PEPU|PEEX|CD)-/i.test(lic.referencia || '')) { contadorPepuPeex++; continue; }
+        if (/-(PEPU|PEEX|PEJU|CD)-/i.test(lic.referencia || '')) { contadorPepuPeex++; continue; }
         if (idsDescartados.has(lic.licitacion_id)) { contadorDescartadas++; continue; }
 
         const texto = normalizar(`${lic.referencia} ${lic.descripcion} ${lic.unidad_compras || ''}`.toLowerCase());

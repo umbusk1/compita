@@ -64,6 +64,11 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'No autorizado' });
   }
 
+  // ── Prueba del triaje semántico (solo lectura: no guarda ni envía correos) ──
+  if (req.method === 'POST' && req.query.action === 'probar-triaje') {
+    return await handleProbarTriaje(req, res);
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
@@ -137,6 +142,57 @@ function verificarSesion(req) {
 // ALTA / MEDIA / BAJA con razones, y manda el primer correo de alertas.
 // Solo corre una vez por empresa: si la IA ya la analizó, no repite (costos).
 // ============================================================================
+
+async function handleProbarTriaje(req, res) {
+  try {
+    const empresaId = parseInt((req.body && req.body.empresa_id) || req.query.empresa_id, 10);
+    const buscar = ((req.body && req.body.buscar) || []).map(s => String(s).toUpperCase());
+    const e = await pool.query(`
+      SELECT id, nombre, descripcion, palabras_clave, exclusiones, familias_unspsc
+      FROM empresas WHERE id = $1`, [empresaId]);
+    if (e.rows.length === 0) return res.status(404).json({ error: 'Empresa no encontrada' });
+    const empresa = e.rows[0];
+
+    // Con "buscar", se reproduce el lote del día en que se capturó esa licitación
+    // (así funciona el análisis diario); si no, las abiertas más recientes.
+    let r;
+    const dia = buscar.length
+      ? await pool.query('SELECT DATE(scrapeado_en) AS d FROM licitaciones WHERE UPPER(referencia) = $1 LIMIT 1', [buscar[0]])
+      : { rows: [] };
+    if (dia.rows.length) {
+      r = await pool.query('SELECT * FROM licitaciones WHERE DATE(scrapeado_en) = $1 ORDER BY scrapeado_en DESC LIMIT 450', [dia.rows[0].d]);
+    } else {
+      r = await pool.query(`SELECT * FROM licitaciones WHERE fecha_presentacion > NOW() ORDER BY scrapeado_en DESC LIMIT 450`);
+    }
+    const competitivas = r.rows.filter(l => !/-(PEPU|PEEX|PEJU|CD)-/i.test(l.referencia || ''));
+    const porPalabras = [];
+    for (const l of competitivas) {
+      const okUnspsc = !(empresa.familias_unspsc && empresa.familias_unspsc.length > 0)
+        || !l.codigo_unspsc || l.codigo_unspsc === '99-99'
+        || empresa.familias_unspsc.includes(l.codigo_unspsc);
+      if (okUnspsc && (await procesarEtapa1(l, empresa)).pasa_etapa1) porPalabras.push(l);
+    }
+    const elegidas = new Set(porPalabras.map(l => l.referencia));
+    const candidatas = competitivas.filter(l => !elegidas.has(l.referencia) && !contieneExclusion(l, empresa));
+    const rescatadas = await triajeSemantico(candidatas, empresa);
+    const resumir = l => ({ referencia: l.referencia, descripcion: (l.descripcion || '').substring(0, 140) });
+    return res.status(200).json({
+      empresa: empresa.nombre,
+      abiertas_revisadas: competitivas.length,
+      por_palabras: porPalabras.map(resumir),
+      rescatadas_por_triaje: rescatadas.map(resumir),
+      buscadas: buscar.map(ref => ({
+        referencia: ref,
+        entre_abiertas: competitivas.some(l => (l.referencia || '').toUpperCase() === ref),
+        por_palabras: porPalabras.some(l => (l.referencia || '').toUpperCase() === ref),
+        rescatada: rescatadas.some(l => (l.referencia || '').toUpperCase() === ref)
+      }))
+    });
+  } catch (error) {
+    console.error('❌ Error en prueba de triaje:', error);
+    return res.status(500).json({ error: error.message });
+  }
+}
 
 async function handlePrimerAnalisis(empresaId, res) {
   try {
@@ -442,6 +498,69 @@ async function procesarEtapa1(oportunidad, empresa) {
 }
 
 // ============================================================================
+// TRIAJE SEMÁNTICO (nov 2026)
+// El filtro de palabras clave deja fuera licitaciones relevantes que no usan
+// las palabras exactas del perfil (por ejemplo "certificación ISO 9001" para
+// una consultora de gestión). Un modelo económico revisa los títulos que el
+// filtro dejó fuera y rescata los que podrían interesarle a la empresa.
+// Luego pasan por el mismo análisis con IA que el resto.
+// ============================================================================
+
+const MODELO_TRIAJE = 'claude-haiku-5-5';
+const MAX_RESCATE_TRIAJE = 15;
+
+function contieneExclusion(oportunidad, empresa) {
+  const exclusiones = (
+    Array.isArray(empresa.exclusiones) ? empresa.exclusiones : (empresa.exclusiones || '').split(',')
+  ).map(e => normalizar(e.trim().toLowerCase())).filter(e => e.length > 0);
+  if (exclusiones.length === 0) return false;
+  const texto = normalizar(`${oportunidad.descripcion || ''} ${oportunidad.unidad_compras || ''}`.toLowerCase());
+  return exclusiones.some(ex => {
+    const esc = (ex.includes(' ') ? ex : obtenerRaiz(ex)).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = ex.includes(' ') ? new RegExp(esc, 'i') : new RegExp('\\b' + esc + 's?\\b', 'i');
+    return regex.test(texto);
+  });
+}
+
+async function triajeSemantico(candidatas, empresa) {
+  if (!candidatas.length) return [];
+  const lista = candidatas.slice(0, 450).map((l, i) =>
+    `${i + 1}. ${(l.descripcion || '').replace(/\s+/g, ' ').substring(0, 200)} [${(l.unidad_compras || '').substring(0, 60)}]`
+  ).join('\n');
+  const palabras = Array.isArray(empresa.palabras_clave) ? empresa.palabras_clave.join(', ') : (empresa.palabras_clave || '');
+
+  const prompt = `Eres un analista de licitaciones públicas de República Dominicana.
+
+EMPRESA:
+${empresa.descripcion || 'Sin descripción'}
+Palabras clave de referencia: ${palabras}
+
+Abajo hay licitaciones que NO contienen esas palabras exactas. Señala solo las que esta empresa podría ofertar de verdad por su tipo de servicio o producto, aunque usen otras palabras (sinónimos, normas, certificaciones, nombres técnicos). No señales las que solo comparten una palabra genérica como "servicios", "suministro" o "equipos".
+
+LICITACIONES:
+${lista}
+
+Responde SOLO con los números separados por comas (ejemplo: 4, 17, 230), o NINGUNA.`;
+
+  try {
+    const msg = await anthropic.messages.create({
+      model: MODELO_TRIAJE,
+      max_tokens: 300,
+      thinking: { type: 'disabled' },
+      messages: [{ role: 'user', content: prompt }]
+    });
+    const texto = (msg.content.find(b => b.type === 'text') || {}).text || '';
+    if (/NINGUNA/i.test(texto)) return [];
+    const nums = [...new Set((texto.match(/\d+/g) || []).map(n => parseInt(n, 10)))]
+      .filter(n => n >= 1 && n <= Math.min(candidatas.length, 450));
+    return nums.slice(0, MAX_RESCATE_TRIAJE).map(n => candidatas[n - 1]);
+  } catch (e) {
+    console.error('   ⚠️  Triaje semántico no disponible:', e.message);
+    return [];
+  }
+}
+
+// ============================================================================
 // OBTENER REGIÓN DE LA LICITACIÓN
 // ============================================================================
 
@@ -640,9 +759,11 @@ async function analizarDiario() {
 
       console.log(`   📊 Total a revisar: ${licitaciones.length}`);
 
-      // Excluir procedimientos de excepción no competitivos (PEPU y PEEX)
+      // Excluir procedimientos de excepción no competitivos (PEPU, PEEX, PEJU) y directas (CD)
       const antePepuPeex = licitaciones.length;
-      licitaciones = licitaciones.filter(l => !/-(PEPU|PEEX|CD)-/i.test(l.referencia || ''));
+      licitaciones = licitaciones.filter(l => !/-(PEPU|PEEX|PEJU|CD)-/i.test(l.referencia || ''));
+      // Todas las competitivas, antes del filtro UNSPSC: base del triaje semántico
+      const competitivas = licitaciones;
 	  if (licitaciones.length < antePepuPeex) {
 	      console.log(`   🚫 Excluidas PEPU/PEEX/CD: ${antePepuPeex - licitaciones.length}`);
       }
@@ -661,14 +782,13 @@ async function analizarDiario() {
       }
 
       if (licitaciones.length === 0) {
-        console.log('   ⚠️  No hay licitaciones después del filtro UNSPSC');
-        continue;
+        console.log('   ⚠️  No hay licitaciones después del filtro UNSPSC (sigue el triaje semántico)');
       }
 
       const yaAnalizadasRes = await pool.query(`
         SELECT DISTINCT referencia FROM resultados
         WHERE empresa_id = $1 AND referencia = ANY($2)
-      `, [empresa.id, licitaciones.map(l => l.referencia)]);
+      `, [empresa.id, competitivas.map(l => l.referencia)]);
 
       const referenciasAnalizadas = new Set(yaAnalizadasRes.rows.map(r => r.referencia));
       const licitacionesPorAnalizar = licitaciones.filter(l => !referenciasAnalizadas.has(l.referencia));
@@ -676,8 +796,7 @@ async function analizarDiario() {
       console.log(`   Ya analizadas: ${referenciasAnalizadas.size} | Por analizar: ${licitacionesPorAnalizar.length}`);
 
       if (licitacionesPorAnalizar.length === 0) {
-        console.log(`   ⏭️  Todo ya analizado`);
-        continue;
+        console.log(`   ⏭️  Lo filtrado por palabras ya está analizado (sigue el triaje semántico)`);
       }
 
       // Recopilar feedback negativo: licitaciones que este cliente rechazó
@@ -697,6 +816,20 @@ async function analizarDiario() {
       }
 
       console.log(`   Pre-filtro: ${paraAnalizarIA.length}/${licitacionesPorAnalizar.length} pasan a IA`);
+
+      // Triaje semántico: rescatar lo que el filtro de palabras dejó fuera
+      const yaElegidas = new Set(paraAnalizarIA.map(l => l.referencia));
+      const ahoraTriaje = new Date();
+      const candidatasTriaje = competitivas.filter(l =>
+        !referenciasAnalizadas.has(l.referencia) && !yaElegidas.has(l.referencia)
+        && l.fecha_presentacion && new Date(l.fecha_presentacion) > ahoraTriaje
+        && !contieneExclusion(l, empresa)
+      );
+      const rescatadas = await triajeSemantico(candidatasTriaje, empresa);
+      if (rescatadas.length > 0) {
+        console.log(`   🔎 Triaje semántico: ${rescatadas.length} rescatadas de ${candidatasTriaje.length} (${rescatadas.map(r => r.referencia).join(', ')})`);
+        paraAnalizarIA.push(...rescatadas);
+      }
 
       if (paraAnalizarIA.length === 0) continue;
 

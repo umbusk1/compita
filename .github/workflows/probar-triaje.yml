@@ -1,0 +1,22 @@
+name: Probar triaje semántico
+# Prueba de solo lectura: muestra qué licitaciones encuentra el filtro de palabras
+# y cuáles rescata el triaje semántico para una empresa. No guarda ni envía correos.
+# Se ejecuta al cambiar .github/pruebas/triaje.json o a mano.
+on:
+  push:
+    paths:
+      - ".github/pruebas/triaje.json"
+  workflow_dispatch:
+jobs:
+  probar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Esperar el despliegue de Vercel
+        run: sleep 120
+      - name: Llamar a la prueba
+        run: |
+          curl -s -X POST "https://compita.umbusk.com/api/analizar-notificar-v2?action=probar-triaje" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --data @.github/pruebas/triaje.json | jq .
