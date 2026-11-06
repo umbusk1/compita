@@ -2,19 +2,19 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Alojamiento, alimentación, eventos e infraestructura turística",
- "actualizado": "2026-11-06T09:32:57.471257-04:00",
+ "actualizado": "2026-11-06T10:26:18.144018-04:00",
  "actualizado_texto": "6 de noviembre de 2026",
  "kpis": {
-  "abiertas": 60,
-  "valor_total": 347146488,
-  "valor_texto": "RD$347.1 millones",
-  "cierran_7_dias": 52
+  "abiertas": 58,
+  "valor_total": 344496488,
+  "valor_texto": "RD$344.5 millones",
+  "cierran_7_dias": 50
  },
- "resumen": "El sector turismo, hotelería y gastronomía registra hoy 60 licitaciones abiertas por un valor estimado de RD$347.1 millones, con 52 de ellas cerrando en los próximos siete días. Destacan la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones (cierra el 18 de noviembre), el suministro de almuerzos y cenas de la Dirección General de Pasaportes por RD$60 millones (cierra el 12 de noviembre) y los servicios de producción de eventos del MIREX por RD$40 millones (cierra el 15 de diciembre). El resto del paquete lo completan numerosas oportunidades más pequeñas en catering, montaje de eventos y alojamiento convocadas por instituciones como el Servicio Nacional de Salud, el INFOTEP y varias dependencias militares, lo que exige a los empresarios del sector atención inmediata a los plazos de cierre.",
+ "resumen": "El Estado dominicano mantiene abiertas 58 licitaciones para el sector de turismo, hotelería y gastronomía, por un valor estimado de RD$344.5 millones, y 50 de ellas cierran en los próximos siete días. Las oportunidades más destacadas incluyen la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones, el suministro de almuerzos y cenas para la Dirección General de Pasaportes por RD$60 millones, y los servicios de producción de eventos del MIREX por RD$40 millones. Empresarios de catering, alojamiento y organización de eventos tienen una ventana corta para preparar sus ofertas antes de que se agote el plazo de la mayoría de estos procesos.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
-   "cantidad": 30
+   "cantidad": 28
   },
   {
    "nombre": "Alimentación, catering y restaurantes",
@@ -30,34 +30,6 @@
   }
  ],
  "licitaciones": [
-  {
-   "referencia": "AGN-DAF-CM-2026-0053",
-   "institucion": "Archivo General de la Nacion",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE ALQUILER DE Y MONTAJE DE CARPAS QUE SERÁN UTILIZADAS EN LA 13VA FERIA DEL LIBRO DE HISTORIA DOMINICANA DE ESTE ARCHIVO GENERAL DE LA NACIÓN",
-   "monto": 650000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$650,000",
-   "cierre": "2026-11-06T10:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:00 a.m.",
-   "dias": 0,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGM-DAF-CM-2026-0098",
-   "institucion": "Dirección General de Migración",
-   "descripcion": "SERVICIO DE GESTIÓN DEL EVENTO PARA EL ALQUILER DE EQUIPOS LOGISTICOS Y DECORACIÓN PARA LA 5.ª GRADUACIÓN (ARR), DE ESTA DIRECCION GENERAL DE MIGRACION (PROCESO DIRIGIDO A MIPYMES).",
-   "monto": 2000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "cierre": "2026-11-06T10:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:00 a.m.",
-   "dias": 0,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
   {
    "referencia": "INESPRE-CCC-CP-2026-0025",
    "institucion": "Instituto Estabilización de Precios",
@@ -143,20 +115,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "ITLA-DAF-CM-2026-0061",
-   "institucion": "Instituto Tecnológico de las Américas",
-   "descripcion": "Contratación de Servicios de Catering para Actividades Institucionales del ITLA, Dirigido a MIPYMES (Compras Sostenibles)",
-   "monto": 2000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "cierre": "2026-11-06T14:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 2:00 p.m.",
-   "dias": 0,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "SDS-DAF-CM-2026-0019",
    "institucion": "Superintendencia de Seguros",
    "descripcion": "Contratación de servicios de organización, gestión y ejecución de actividad institucional para los colaboradores de la Superintendencia de Seguro (Proceso dirigido a MiPymess.",
@@ -167,6 +125,20 @@
    "cierre_texto": "6 de noviembre, 2:00 p.m.",
    "dias": 0,
    "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ITLA-DAF-CM-2026-0061",
+   "institucion": "Instituto Tecnológico de las Américas",
+   "descripcion": "Contratación de Servicios de Catering para Actividades Institucionales del ITLA, Dirigido a MIPYMES (Compras Sostenibles)",
+   "monto": 2000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "cierre": "2026-11-06T14:00:00-04:00",
+   "cierre_texto": "6 de noviembre, 2:00 p.m.",
+   "dias": 0,
+   "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -182,6 +154,20 @@
    "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DIGEV-CCC-CP-2026-0008",
+   "institucion": "Dirección General de Escuelas Vocacionales de las FFAA",
+   "descripcion": "CONTRATACION DE SERVICIO DE CATERING (PICADERA FRIA Y CALIENTE).",
+   "monto": 5590000.01,
+   "moneda": "DOP",
+   "monto_texto": "RD$5.6 millones",
+   "cierre": "2026-11-06T15:00:00-04:00",
+   "cierre_texto": "6 de noviembre, 3:00 p.m.",
+   "dias": 0,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
@@ -213,20 +199,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DIGEV-CCC-CP-2026-0008",
-   "institucion": "Dirección General de Escuelas Vocacionales de las FFAA",
-   "descripcion": "CONTRATACION DE SERVICIO DE CATERING (PICADERA FRIA Y CALIENTE).",
-   "monto": 5590000.01,
-   "moneda": "DOP",
-   "monto_texto": "RD$5.6 millones",
-   "cierre": "2026-11-06T15:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 3:00 p.m.",
-   "dias": 0,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "MMUJER-DAF-CM-2026-0090",
    "institucion": "Ministerio de la Mujer",
    "descripcion": "Servicios de catering y refrigerios para jornadas de capacitación, talleres, encuentros y demás actividades institucionales del Ministerio de la Mujer, a nivel nacional, dirigido a Mipymes Mujeres.",
@@ -237,20 +209,6 @@
    "cierre_texto": "6 de noviembre, 3:20 p.m.",
    "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MMUJER-DAF-CM-2026-0089",
-   "institucion": "Ministerio de la Mujer",
-   "descripcion": "Servicios de alquiler de espacios para jornadas de capacitación y talleres institucionales del Ministerio de la Mujer dirigido a Mipymes Mujeres.",
-   "monto": 1860000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.9 millones",
-   "cierre": "2026-11-06T15:30:00-04:00",
-   "cierre_texto": "6 de noviembre, 3:30 p.m.",
-   "dias": 0,
-   "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -266,6 +224,20 @@
    "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MMUJER-DAF-CM-2026-0089",
+   "institucion": "Ministerio de la Mujer",
+   "descripcion": "Servicios de alquiler de espacios para jornadas de capacitación y talleres institucionales del Ministerio de la Mujer dirigido a Mipymes Mujeres.",
+   "monto": 1860000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "cierre": "2026-11-06T15:30:00-04:00",
+   "cierre_texto": "6 de noviembre, 3:30 p.m.",
+   "dias": 0,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -339,12 +311,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "MIMARENA-DAF-CM-2026-0155",
-   "institucion": "Ministerio de Medio Ambiente",
-   "descripcion": "Contratación del Servicio de Almuerzo para la Actividad de Reconocimiento de Guardaparques, MiPymes.",
-   "monto": 2000000.0,
+   "referencia": "CERTV-DAF-CM-2026-0020",
+   "institucion": "Corporación Estatal de Radio y Televisión",
+   "descripcion": "Servicio de Catering para varias actividades de esta RTVD, programadas por el Departamento de Protocolo y Eventos de esta CERTV”. Dirigido a MIPYME",
+   "monto": 1000000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
+   "monto_texto": "RD$1 millones",
    "cierre": "2026-11-10T12:00:00-04:00",
    "cierre_texto": "10 de noviembre, 12:00 p.m.",
    "dias": 4,
@@ -353,12 +325,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "CERTV-DAF-CM-2026-0020",
-   "institucion": "Corporación Estatal de Radio y Televisión",
-   "descripcion": "Servicio de Catering para varias actividades de esta RTVD, programadas por el Departamento de Protocolo y Eventos de esta CERTV”. Dirigido a MIPYME",
-   "monto": 1000000.0,
+   "referencia": "MIMARENA-DAF-CM-2026-0155",
+   "institucion": "Ministerio de Medio Ambiente",
+   "descripcion": "Contratación del Servicio de Almuerzo para la Actividad de Reconocimiento de Guardaparques, MiPymes.",
+   "monto": 2000000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1 millones",
+   "monto_texto": "RD$2 millones",
    "cierre": "2026-11-10T12:00:00-04:00",
    "cierre_texto": "10 de noviembre, 12:00 p.m.",
    "dias": 4,
@@ -605,20 +577,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DIGEIG-CCC-CP-2026-0011",
-   "institucion": "Dirección nacional de Ética e Integridad Gubernamental",
-   "descripcion": "Contratación de servicio almuerzo para el personal La Sede Central y Las Regionales de la de la DIGEIG capacitación de Normas ISO para miembros de la (CIGCN )",
-   "monto": 6436600.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$6.4 millones",
-   "cierre": "2026-11-12T10:00:00-04:00",
-   "cierre_texto": "12 de noviembre, 10:00 a.m.",
-   "dias": 6,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "SUPBANCO-DAF-CM-2026-0062",
    "institucion": "Superintendencia de Bancos",
    "descripcion": "[PRESENTAR OFERTA SIN ITBIS] Contratación del servicio integral de ambientación navideña para SEDE Principal, Prousuario y SB2 de la Superintendencia de Bancos.",
@@ -630,6 +588,20 @@
    "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DIGEIG-CCC-CP-2026-0011",
+   "institucion": "Dirección nacional de Ética e Integridad Gubernamental",
+   "descripcion": "Contratación de servicio almuerzo para el personal La Sede Central y Las Regionales de la de la DIGEIG capacitación de Normas ISO para miembros de la (CIGCN )",
+   "monto": 6436600.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$6.4 millones",
+   "cierre": "2026-11-12T10:00:00-04:00",
+   "cierre_texto": "12 de noviembre, 10:00 a.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
@@ -675,20 +647,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "URBE-DAF-CM-2026-0014",
-   "institucion": "Unidad Ejecutora para la Readecuación de Barrios y Entornos (URBE)",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE CATERING PARA DIFERENTES ACTIVIDADES DE URBE.",
-   "monto": 2000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "cierre": "2026-11-12T12:00:00-04:00",
-   "cierre_texto": "12 de noviembre, 12:00 p.m.",
-   "dias": 6,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "ERD-CCC-CP-2026-0014",
    "institucion": "Ejército de República Dominicana",
    "descripcion": "SERVICIO DE MONTAJE Y DESMONTAJE DE EVENTO, CON MOTIVO AL ACTO DE GRADUACIÓN DE LOS CADETES DE 4TO. AÑO DEL ERD.",
@@ -700,6 +658,20 @@
    "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "URBE-DAF-CM-2026-0014",
+   "institucion": "Unidad Ejecutora para la Readecuación de Barrios y Entornos (URBE)",
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE CATERING PARA DIFERENTES ACTIVIDADES DE URBE.",
+   "monto": 2000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "cierre": "2026-11-12T12:00:00-04:00",
+   "cierre_texto": "12 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -773,20 +745,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "INFOTEP-CCC-CP-2026-0014",
-   "institucion": "Instituto Nacional de formación Técnico Profesional",
-   "descripcion": "“CONTRATACIÓN DE SERVICIOS DE PRODUCCIÓN Y MONTAJES PARA ACTIVIDADES INSTITUCIONALES, DIRIGIDO A MIPYMES MUJER”",
-   "monto": 6400000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$6.4 millones",
-   "cierre": "2026-11-17T12:00:00-04:00",
-   "cierre_texto": "17 de noviembre, 12:00 p.m.",
-   "dias": 11,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "INFOTEP-CCC-CP-2026-0015",
    "institucion": "Instituto Nacional de formación Técnico Profesional",
    "descripcion": "“CONTRATACIÓN DE SERVICIOS DE ALOJAMIENTO Y ORGANIZACIÓN DE EVENTOS INSTITUCIONALES EN INSTALACIONES HOTELERAS, DIRIGIDO A MIPYMES MUJER\"",
@@ -797,6 +755,20 @@
    "cierre_texto": "17 de noviembre, 12:00 p.m.",
    "dias": 11,
    "subsector": "Alojamiento y hospedaje",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INFOTEP-CCC-CP-2026-0014",
+   "institucion": "Instituto Nacional de formación Técnico Profesional",
+   "descripcion": "“CONTRATACIÓN DE SERVICIOS DE PRODUCCIÓN Y MONTAJES PARA ACTIVIDADES INSTITUCIONALES, DIRIGIDO A MIPYMES MUJER”",
+   "monto": 6400000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$6.4 millones",
+   "cierre": "2026-11-17T12:00:00-04:00",
+   "cierre_texto": "17 de noviembre, 12:00 p.m.",
+   "dias": 11,
+   "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
   },
@@ -870,5 +842,192 @@
    "modalidad": "LPN",
    "url": "javascript:void(0);"
   }
- ]
+ ],
+ "mercado": {
+  "desde": "enero de 2026",
+  "total": {
+   "cantidad": 791,
+   "valor": 3178405705,
+   "valor_texto": "RD$3.2 mil millones"
+  },
+  "meses": [
+   {
+    "mes": "2026-01",
+    "etiqueta": "Ene",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-02",
+    "etiqueta": "Feb",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-03",
+    "etiqueta": "Mar",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-04",
+    "etiqueta": "Abr",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-05",
+    "etiqueta": "May",
+    "cantidad": 1,
+    "valor": 40000000,
+    "valor_texto": "RD$40 millones"
+   },
+   {
+    "mes": "2026-06",
+    "etiqueta": "Jun",
+    "cantidad": 12,
+    "valor": 760204991,
+    "valor_texto": "RD$760.2 millones"
+   },
+   {
+    "mes": "2026-07",
+    "etiqueta": "Jul",
+    "cantidad": 230,
+    "valor": 991382379,
+    "valor_texto": "RD$991.4 millones"
+   },
+   {
+    "mes": "2026-08",
+    "etiqueta": "Ago",
+    "cantidad": 179,
+    "valor": 377444608,
+    "valor_texto": "RD$377.4 millones"
+   },
+   {
+    "mes": "2026-09",
+    "etiqueta": "Sep",
+    "cantidad": 146,
+    "valor": 391662685,
+    "valor_texto": "RD$391.7 millones"
+   },
+   {
+    "mes": "2026-10",
+    "etiqueta": "Oct",
+    "cantidad": 177,
+    "valor": 525364140,
+    "valor_texto": "RD$525.4 millones"
+   },
+   {
+    "mes": "2026-11",
+    "etiqueta": "Nov",
+    "cantidad": 46,
+    "valor": 92346902,
+    "valor_texto": "RD$92.3 millones"
+   }
+  ],
+  "instituciones": [
+   {
+    "nombre": "Ministerio de Educación",
+    "cantidad": 209,
+    "valor": 1481422726,
+    "valor_texto": "RD$1.5 mil millones"
+   },
+   {
+    "nombre": "Gabinete de Coordinación de Políticas Sociales",
+    "cantidad": 29,
+    "valor": 35048773,
+    "valor_texto": "RD$35 millones"
+   },
+   {
+    "nombre": "Ayuntamiento del Distrito Nacional (ADN)",
+    "cantidad": 17,
+    "valor": 42492646,
+    "valor_texto": "RD$42.5 millones"
+   },
+   {
+    "nombre": "Instituto Superior de Formación Docente Salomé Ureña",
+    "cantidad": 17,
+    "valor": 29286207,
+    "valor_texto": "RD$29.3 millones"
+   },
+   {
+    "nombre": "Ministerio de Energía y Minas",
+    "cantidad": 14,
+    "valor": 62750000,
+    "valor_texto": "RD$62.8 millones"
+   },
+   {
+    "nombre": "Ministerio de Salud Pública y Asistencia Social",
+    "cantidad": 13,
+    "valor": 19183000,
+    "valor_texto": "RD$19.2 millones"
+   },
+   {
+    "nombre": "Dirección General de Migración",
+    "cantidad": 10,
+    "valor": 17493250,
+    "valor_texto": "RD$17.5 millones"
+   },
+   {
+    "nombre": "Servicio Nacional de Salud",
+    "cantidad": 9,
+    "valor": 103281938,
+    "valor_texto": "RD$103.3 millones"
+   },
+   {
+    "nombre": "Seguro Nacional de Salud (SENASA)",
+    "cantidad": 9,
+    "valor": 17987164,
+    "valor_texto": "RD$18 millones"
+   },
+   {
+    "nombre": "Instituto Tecnológico de las Américas",
+    "cantidad": 9,
+    "valor": 23192565,
+    "valor_texto": "RD$23.2 millones"
+   }
+  ],
+  "subsectores": [
+   {
+    "nombre": "Eventos y actividades",
+    "cantidad": 366,
+    "valor": 986705738,
+    "valor_texto": "RD$986.7 millones"
+   },
+   {
+    "nombre": "Alimentación, catering y restaurantes",
+    "cantidad": 289,
+    "valor": 1180398220,
+    "valor_texto": "RD$1.2 mil millones"
+   },
+   {
+    "nombre": "Alojamiento y hospedaje",
+    "cantidad": 124,
+    "valor": 862330749,
+    "valor_texto": "RD$862.3 millones"
+   },
+   {
+    "nombre": "Promoción y gestión turística",
+    "cantidad": 8,
+    "valor": 104117575,
+    "valor_texto": "RD$104.1 millones"
+   },
+   {
+    "nombre": "Infraestructura y servicios turísticos",
+    "cantidad": 4,
+    "valor": 44853422,
+    "valor_texto": "RD$44.9 millones"
+   }
+  ],
+  "plazo": {
+   "mediana": 6,
+   "p25": 6,
+   "p75": 7,
+   "muestras": 791
+  }
+ }
 }

@@ -2,15 +2,15 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-06T09:32:54.351499-04:00",
+ "actualizado": "2026-11-06T10:26:14.069719-04:00",
  "actualizado_texto": "6 de noviembre de 2026",
  "kpis": {
-  "abiertas": 88,
-  "valor_total": 6953620097,
-  "valor_texto": "RD$7 mil millones",
-  "cierran_7_dias": 72
+  "abiertas": 83,
+  "valor_total": 6453060322,
+  "valor_texto": "RD$6.5 mil millones",
+  "cierran_7_dias": 67
  },
- "resumen": "Hoy el sector Construcción registra 88 licitaciones abiertas por un valor estimado de RD$7 mil millones, con 72 de ellas cerrando en los próximos siete días. Destaca la contratación de obras en centros educativos a nivel nacional de la Dirección Infraestructura Escolar por RD$1.9 mil millones, la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas por RD$1.4 mil millones, y la obra de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD por RD$600 millones. Con tantos cierres inminentes, los empresarios del sector deben revisar cuanto antes los pliegos y plazos para no perder estas oportunidades.",
+ "resumen": "El sector construcción tiene hoy 83 licitaciones abiertas por un valor estimado de RD$6.5 mil millones, encabezadas por la Dirección de Infraestructura Escolar con RD$1.9 mil millones para adecuaciones en centros educativos, el Ministerio de Obras Públicas con RD$1.4 mil millones en carreteras para La Vega y Hato Mayor, y la Corporación del Acueducto y Alcantarillado de Santo Domingo con RD$600 millones para obras de recolección de aguas residuales en la Av. Jacobo Majluta. A esto se suman otras oportunidades relevantes de CAASD por RD$392.4 millones y RD$227.2 millones para construcción y electrificación de pozos en el Gran Santo Domingo. De las 83 licitaciones vigentes, 67 cierran en los próximos siete días, por lo que se recomienda priorizar la revisión de pliegos y plazos cuanto antes.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
@@ -18,11 +18,11 @@
   },
   {
    "nombre": "Obras civiles e infraestructura",
-   "cantidad": 26
+   "cantidad": 22
   },
   {
    "nombre": "Materiales y equipos de construcción",
-   "cantidad": 20
+   "cantidad": 19
   },
   {
    "nombre": "Edificaciones y viviendas",
@@ -35,86 +35,16 @@
  ],
  "licitaciones": [
   {
-   "referencia": "URBE-CCC-LPN-2026-0005",
-   "institucion": "Unidad Ejecutora para la Readecuación de Barrios y Entornos (URBE)",
-   "descripcion": "Construcción de Obras del Parque Recreativo y Ecológico en la Margen del Rio Isabela en el Barrio La Zurza, Distrito Nacional.",
-   "monto": 490000000.0,
+   "referencia": "SREV-DAF-CM-2026-0064",
+   "institucion": "Servicio Regional de Salud El Valle",
+   "descripcion": "Adquisición e Instalación de paneles Solares",
+   "monto": 2000000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$490 millones",
-   "cierre": "2026-11-06T10:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:00 a.m.",
-   "dias": 0,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "LPN",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "AMTI-DAF-CM-2026-0002",
-   "institucion": "Ayuntamiento Municipal de Tireo",
-   "descripcion": "CONSTRUCCIÓN DE ACERAS, CONTENES, CANALETA Y BADÉN EN LA CALLE JOSÉ ANÍBAL SURIEL, TIREO ARRIBA",
-   "monto": 5299363.85,
-   "moneda": "DOP",
-   "monto_texto": "RD$5.3 millones",
-   "cierre": "2026-11-06T10:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:00 a.m.",
-   "dias": 0,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "JDMR-DAF-CM-2026-0002",
-   "institucion": "Junta Distrito Municipal El Rosario (Azua)",
-   "descripcion": "SEGUNDA ETAPA CONSTRUCCION DE PROYECTO DE CONSTRUCCION DE 900 METROS CUADRADOS DE ACERAS Y 900 METROS LINEALES DE CONTENES EN LA CALLE PRINCIPAL DEL ROSARIO Y CALLE PRINCIPAL DE LAS CIENEGAS, DISTRITO",
-   "monto": 3643881.23,
-   "moneda": "DOP",
-   "monto_texto": "RD$3.6 millones",
-   "cierre": "2026-11-06T10:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:00 a.m.",
-   "dias": 0,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CORAMON-DAF-CM-2026-0032",
-   "institucion": "Corporación de Acueducto y Alcantarillado de Monseñor Nouel",
-   "descripcion": "ADQUISICIÓN E INSTALACIÓN DE SISTEMA DE BOMBEO, TANQUE PRECARGADO Y ACCESORIOS ELÉCTRICOS PARA EL ABASTECIMIENTO DEL ALMACEN CORAMON",
-   "monto": 766530.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$766,530",
-   "cierre": "2026-11-06T10:00:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:00 a.m.",
-   "dias": 0,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "Ayto. Verón-DAF-CM-2026-0078",
-   "institucion": "Ayuntamiento Distrito Municipal Turístico Verón Punta Cana",
-   "descripcion": "SELECCIÓN DE UN CONTRATISTA PARA LA CONSTRUCCIÓN DE UNA PARED PERIMETRAL, ACERAS Y CONTENES",
-   "monto": 850000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$850,000",
-   "cierre": "2026-11-06T10:15:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:15 a.m.",
-   "dias": 0,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "Bellas Artes-DAF-CM-2026-0038",
-   "institucion": "Dirección General de Bellas Artes",
-   "descripcion": "Adquisición e instalación de bambalinas en terciopelo para las cortinas principales y para las barras de luces de la Sala Máximo Avilés Blonda.",
-   "monto": 635000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$635,000",
+   "monto_texto": "RD$2 millones",
    "cierre": "2026-11-06T12:00:00-04:00",
    "cierre_texto": "6 de noviembre, 12:00 p.m.",
    "dias": 0,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -133,16 +63,16 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "SREV-DAF-CM-2026-0064",
-   "institucion": "Servicio Regional de Salud El Valle",
-   "descripcion": "Adquisición e Instalación de paneles Solares",
-   "monto": 2000000.0,
+   "referencia": "Bellas Artes-DAF-CM-2026-0038",
+   "institucion": "Dirección General de Bellas Artes",
+   "descripcion": "Adquisición e instalación de bambalinas en terciopelo para las cortinas principales y para las barras de luces de la Sala Máximo Avilés Blonda.",
+   "monto": 635000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
+   "monto_texto": "RD$635,000",
    "cierre": "2026-11-06T12:00:00-04:00",
    "cierre_texto": "6 de noviembre, 12:00 p.m.",
    "dias": 0,
-   "subsector": "Materiales y equipos de construcción",
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -231,12 +161,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "CEIRD-DAF-CM-2026-0080",
-   "institucion": "Centro de Exportación e Inversión de la Republica Dominicana",
-   "descripcion": "AP-Impermeabilización de techo edificio 2 (área social) de la Institución",
-   "monto": 1117718.3,
+   "referencia": "SRS-Higuamo-DAF-CM-2026-0071",
+   "institucion": "Servicio Regional de Salud Higuamo (Región 9)",
+   "descripcion": "REPARACION DE ELEVADOR DEL CENTRO DIAGNOSTICO HATO MAYOR",
+   "monto": 2000562.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1.1 millones",
+   "monto_texto": "RD$2 millones",
    "cierre": "2026-11-06T15:30:00-04:00",
    "cierre_texto": "6 de noviembre, 3:30 p.m.",
    "dias": 0,
@@ -259,12 +189,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "SRS-Higuamo-DAF-CM-2026-0071",
-   "institucion": "Servicio Regional de Salud Higuamo (Región 9)",
-   "descripcion": "REPARACION DE ELEVADOR DEL CENTRO DIAGNOSTICO HATO MAYOR",
-   "monto": 2000562.0,
+   "referencia": "CEIRD-DAF-CM-2026-0080",
+   "institucion": "Centro de Exportación e Inversión de la Republica Dominicana",
+   "descripcion": "AP-Impermeabilización de techo edificio 2 (área social) de la Institución",
+   "monto": 1117718.3,
    "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
+   "monto_texto": "RD$1.1 millones",
    "cierre": "2026-11-06T15:30:00-04:00",
    "cierre_texto": "6 de noviembre, 3:30 p.m.",
    "dias": 0,
@@ -329,20 +259,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "ASC-CCC-CP-2026-0007",
-   "institucion": "Ayuntamiento del Municipio de San Cristóbal",
-   "descripcion": "CONSTRUCCIÓN DE DIFERENTES OBRAS EN EL MUNICIPIO DE SAN CRISTOBAL",
-   "monto": 46453116.73,
-   "moneda": "DOP",
-   "monto_texto": "RD$46.5 millones",
-   "cierre": "2026-11-10T10:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 10:00 a.m.",
-   "dias": 4,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "SNS-CCC-CP-2026-0039",
    "institucion": "Servicio Nacional de Salud",
    "descripcion": "CONTRATACIÓN DE OBRAS PARA EL REMOZAMIENTO DE LAS ÁREAS DE CONSULTAS, LABORATORIO, IMÁGENES Y ÁREAS DE SERVICIOS DEL HOSPITAL DOCENTE UNIVERSITARIO DR. DARÍO CONTRERAS, MUNICIPIO SANTO DOMINGO ESTE, P",
@@ -353,6 +269,20 @@
    "cierre_texto": "10 de noviembre, 10:00 a.m.",
    "dias": 4,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ASC-CCC-CP-2026-0007",
+   "institucion": "Ayuntamiento del Municipio de San Cristóbal",
+   "descripcion": "CONSTRUCCIÓN DE DIFERENTES OBRAS EN EL MUNICIPIO DE SAN CRISTOBAL",
+   "monto": 46453116.73,
+   "moneda": "DOP",
+   "monto_texto": "RD$46.5 millones",
+   "cierre": "2026-11-10T10:00:00-04:00",
+   "cierre_texto": "10 de noviembre, 10:00 a.m.",
+   "dias": 4,
+   "subsector": "Obras civiles e infraestructura",
    "modalidad": "CP",
    "url": "javascript:void(0);"
   },
@@ -371,20 +301,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "SNS-CCC-CP-2026-0031",
-   "institucion": "Servicio Nacional de Salud",
-   "descripcion": "Remozamiento y Ampliación del Hospital Municipal Carlos Alberto Zafra",
-   "monto": 110489881.59,
-   "moneda": "DOP",
-   "monto_texto": "RD$110.5 millones",
-   "cierre": "2026-11-10T11:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 11:00 a.m.",
-   "dias": 4,
-   "subsector": "Edificaciones y viviendas",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "CAID-DAF-CM-2026-0119",
    "institucion": "Centro de Atención Integral para la Discapacidad",
    "descripcion": "Relanzamiento de Contratación de servicios de suministro e instalación de sistema de aire acondicionado tipo cassette inverter para la sede del CAID Santo Domingo Este, dirigido a MIPYMES, declarado d",
@@ -396,6 +312,20 @@
    "dias": 4,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SNS-CCC-CP-2026-0031",
+   "institucion": "Servicio Nacional de Salud",
+   "descripcion": "Remozamiento y Ampliación del Hospital Municipal Carlos Alberto Zafra",
+   "monto": 110489881.59,
+   "moneda": "DOP",
+   "monto_texto": "RD$110.5 millones",
+   "cierre": "2026-11-10T11:00:00-04:00",
+   "cierre_texto": "10 de noviembre, 11:00 a.m.",
+   "dias": 4,
+   "subsector": "Edificaciones y viviendas",
+   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
@@ -413,12 +343,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DGEACCC-DAF-CM-2026-0038",
-   "institucion": "Dir Gral Embellecimiento Ave., Carret y Cruzada Cívica",
-   "descripcion": "Adquisición de pintura y accesorios para pintar",
-   "monto": 438368.82,
+   "referencia": "PROCURADURIA-DAF-CM-2026-0207",
+   "institucion": "Procuraduría General de la República",
+   "descripcion": "SUMINISTRO E INSTALACION DE TOPE DE GRANITOS PARA LA PGR",
+   "monto": 1690000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$438,369",
+   "monto_texto": "RD$1.7 millones",
    "cierre": "2026-11-10T12:00:00-04:00",
    "cierre_texto": "10 de noviembre, 12:00 p.m.",
    "dias": 4,
@@ -441,12 +371,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROCURADURIA-DAF-CM-2026-0207",
-   "institucion": "Procuraduría General de la República",
-   "descripcion": "SUMINISTRO E INSTALACION DE TOPE DE GRANITOS PARA LA PGR",
-   "monto": 1690000.0,
+   "referencia": "DGEACCC-DAF-CM-2026-0038",
+   "institucion": "Dir Gral Embellecimiento Ave., Carret y Cruzada Cívica",
+   "descripcion": "Adquisición de pintura y accesorios para pintar",
+   "monto": 438368.82,
    "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
+   "monto_texto": "RD$438,369",
    "cierre": "2026-11-10T12:00:00-04:00",
    "cierre_texto": "10 de noviembre, 12:00 p.m.",
    "dias": 4,
@@ -721,12 +651,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "CAASD-CCC-SO-2026-0002",
+   "referencia": "CAASD-CCC-SO-2026-0001",
    "institucion": "Corporación del Acueducto y Alcantarillado de Santo Domingo",
-   "descripcion": "“CONTRATACIÓN DE LA EJECUCIÓN DE OBRAS PARA LA CONSTRUCCIÓN Y ELECTRIFICACIÓN DE POZOS EN EL GRAN SANTO DOMINGO, DIRIGIDO A MIPYMES MUJER”",
-   "monto": 227179504.86,
+   "descripcion": "“CONTRATACIÓN DE LA EJECUCIÓN DE OBRAS PARA LA CONSTRUCCIÓN Y ELECTRIFICACIÓN DE POZOS EN EL GRAN SANTO DOMINGO”",
+   "monto": 392400962.94,
    "moneda": "DOP",
-   "monto_texto": "RD$227.2 millones",
+   "monto_texto": "RD$392.4 millones",
    "cierre": "2026-11-11T16:30:00-04:00",
    "cierre_texto": "11 de noviembre, 4:30 p.m.",
    "dias": 5,
@@ -735,12 +665,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "CAASD-CCC-SO-2026-0001",
+   "referencia": "CAASD-CCC-SO-2026-0002",
    "institucion": "Corporación del Acueducto y Alcantarillado de Santo Domingo",
-   "descripcion": "“CONTRATACIÓN DE LA EJECUCIÓN DE OBRAS PARA LA CONSTRUCCIÓN Y ELECTRIFICACIÓN DE POZOS EN EL GRAN SANTO DOMINGO”",
-   "monto": 392400962.94,
+   "descripcion": "“CONTRATACIÓN DE LA EJECUCIÓN DE OBRAS PARA LA CONSTRUCCIÓN Y ELECTRIFICACIÓN DE POZOS EN EL GRAN SANTO DOMINGO, DIRIGIDO A MIPYMES MUJER”",
+   "monto": 227179504.86,
    "moneda": "DOP",
-   "monto_texto": "RD$392.4 millones",
+   "monto_texto": "RD$227.2 millones",
    "cierre": "2026-11-11T16:30:00-04:00",
    "cierre_texto": "11 de noviembre, 4:30 p.m.",
    "dias": 5,
@@ -903,6 +833,48 @@
    "url": "javascript:void(0);"
   },
   {
+   "referencia": "DGAP-DAF-CM-2026-0173",
+   "institucion": "Dirección General de Aduanas y Puertos",
+   "descripcion": "Servicio de Mantenimiento de Pintura en Puertas de Madera de la Sede Central, DGA. Proceso dirigido a MIPYMES",
+   "monto": 1126888.2,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.1 millones",
+   "cierre": "2026-11-12T15:00:00-04:00",
+   "cierre_texto": "12 de noviembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "JDMHD-DAF-CM-2026-0003",
+   "institucion": "Junta Municipal del Distrito de Hato Damas",
+   "descripcion": "DISEÑO Y CONSTRUCCION DEL PARADOR FOTOGRAFICO DE JAMEY",
+   "monto": 567294.72,
+   "moneda": "DOP",
+   "monto_texto": "RD$567,295",
+   "cierre": "2026-11-12T15:00:00-04:00",
+   "cierre_texto": "12 de noviembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Edificaciones y viviendas",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "IDOPPRIL-DAF-CM-2026-0084",
+   "institucion": "Instituto Dominicano de la Prevención y Protección de Riesgos Laborales",
+   "descripcion": "SERVICIO DE CORRECIONES Y SELLADO DE GRIETAS, EXTRACCION DE HUMEDAD Y LIMPIEZA PROFUNDA, MANTENIMIENTO DE IMPERMEABILIZANTE PROTECTOR EN TRES CISTERNAS. DIGIDO EXCLUSIVAMENTE A MIPYMES MUJER.",
+   "monto": 2010000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "cierre": "2026-11-12T15:00:00-04:00",
+   "cierre_texto": "12 de noviembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
    "referencia": "INAFOCAM-DAF-CM-2026-0081",
    "institucion": "Instituto Nacional de Formacion y Capacitacion del Magisterio",
    "descripcion": "Contratación de servicio de mantenimiento de pintura exterior institucional para el acondicionamiento y preservación del edificio",
@@ -934,48 +906,6 @@
    "referencia": "IDOPPRIL-DAF-CM-2026-0082",
    "institucion": "Instituto Dominicano de la Prevención y Protección de Riesgos Laborales",
    "descripcion": "SERVICIO DE REPARACION , PULIDO Y BRILLADO DE PISOS DE CERAMICA Y GRANITOS, DIRIGIDO EXCLUSIVAMENTE A MIPYMES MUJER",
-   "monto": 2010000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "cierre": "2026-11-12T15:00:00-04:00",
-   "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 6,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "JDMHD-DAF-CM-2026-0003",
-   "institucion": "Junta Municipal del Distrito de Hato Damas",
-   "descripcion": "DISEÑO Y CONSTRUCCION DEL PARADOR FOTOGRAFICO DE JAMEY",
-   "monto": 567294.72,
-   "moneda": "DOP",
-   "monto_texto": "RD$567,295",
-   "cierre": "2026-11-12T15:00:00-04:00",
-   "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 6,
-   "subsector": "Edificaciones y viviendas",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGAP-DAF-CM-2026-0173",
-   "institucion": "Dirección General de Aduanas y Puertos",
-   "descripcion": "Servicio de Mantenimiento de Pintura en Puertas de Madera de la Sede Central, DGA. Proceso dirigido a MIPYMES",
-   "monto": 1126888.2,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.1 millones",
-   "cierre": "2026-11-12T15:00:00-04:00",
-   "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 6,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "IDOPPRIL-DAF-CM-2026-0084",
-   "institucion": "Instituto Dominicano de la Prevención y Protección de Riesgos Laborales",
-   "descripcion": "SERVICIO DE CORRECIONES Y SELLADO DE GRIETAS, EXTRACCION DE HUMEDAD Y LIMPIEZA PROFUNDA, MANTENIMIENTO DE IMPERMEABILIZANTE PROTECTOR EN TRES CISTERNAS. DIGIDO EXCLUSIVAMENTE A MIPYMES MUJER.",
    "monto": 2010000.0,
    "moneda": "DOP",
    "monto_texto": "RD$2 millones",
@@ -1071,12 +1001,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "IDAC-DAF-CM-2026-0119",
-   "institucion": "Instituto Dominicano de Aviación Civíl",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE CONSTRUCCION DE CASETA PARA PLANTA ELECTRICA DE ARROYO BARRIL.",
-   "monto": 1064670.06,
+   "referencia": "APORDOM-DAF-CM-2026-0031",
+   "institucion": "APORDOM (Autoridad Portuaria Dominicana)",
+   "descripcion": "Relanzamiento de Construcción Muelle Pesquero en los Negros, Azua",
+   "monto": 23588467.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1.1 millones",
+   "monto_texto": "RD$23.6 millones",
    "cierre": "2026-11-17T10:00:00-04:00",
    "cierre_texto": "17 de noviembre, 10:00 a.m.",
    "dias": 11,
@@ -1085,12 +1015,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "APORDOM-DAF-CM-2026-0031",
-   "institucion": "APORDOM (Autoridad Portuaria Dominicana)",
-   "descripcion": "Relanzamiento de Construcción Muelle Pesquero en los Negros, Azua",
-   "monto": 23588467.0,
+   "referencia": "IDAC-DAF-CM-2026-0119",
+   "institucion": "Instituto Dominicano de Aviación Civíl",
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE CONSTRUCCION DE CASETA PARA PLANTA ELECTRICA DE ARROYO BARRIL.",
+   "monto": 1064670.06,
    "moneda": "DOP",
-   "monto_texto": "RD$23.6 millones",
+   "monto_texto": "RD$1.1 millones",
    "cierre": "2026-11-17T10:00:00-04:00",
    "cierre_texto": "17 de noviembre, 10:00 a.m.",
    "dias": 11,
@@ -1266,5 +1196,192 @@
    "modalidad": "LPN",
    "url": "javascript:void(0);"
   }
- ]
+ ],
+ "mercado": {
+  "desde": "enero de 2026",
+  "total": {
+   "cantidad": 1282,
+   "valor": 65984102770,
+   "valor_texto": "RD$66 mil millones"
+  },
+  "meses": [
+   {
+    "mes": "2026-01",
+    "etiqueta": "Ene",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-02",
+    "etiqueta": "Feb",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-03",
+    "etiqueta": "Mar",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-04",
+    "etiqueta": "Abr",
+    "cantidad": 0,
+    "valor": 0,
+    "valor_texto": "—"
+   },
+   {
+    "mes": "2026-05",
+    "etiqueta": "May",
+    "cantidad": 3,
+    "valor": 697937979,
+    "valor_texto": "RD$697.9 millones"
+   },
+   {
+    "mes": "2026-06",
+    "etiqueta": "Jun",
+    "cantidad": 29,
+    "valor": 28953645629,
+    "valor_texto": "RD$29 mil millones"
+   },
+   {
+    "mes": "2026-07",
+    "etiqueta": "Jul",
+    "cantidad": 256,
+    "valor": 7220274109,
+    "valor_texto": "RD$7.2 mil millones"
+   },
+   {
+    "mes": "2026-08",
+    "etiqueta": "Ago",
+    "cantidad": 249,
+    "valor": 6473576325,
+    "valor_texto": "RD$6.5 mil millones"
+   },
+   {
+    "mes": "2026-09",
+    "etiqueta": "Sep",
+    "cantidad": 307,
+    "valor": 12420032464,
+    "valor_texto": "RD$12.4 mil millones"
+   },
+   {
+    "mes": "2026-10",
+    "etiqueta": "Oct",
+    "cantidad": 370,
+    "valor": 8382643434,
+    "valor_texto": "RD$8.4 mil millones"
+   },
+   {
+    "mes": "2026-11",
+    "etiqueta": "Nov",
+    "cantidad": 68,
+    "valor": 1835992830,
+    "valor_texto": "RD$1.8 mil millones"
+   }
+  ],
+  "instituciones": [
+   {
+    "nombre": "Ayuntamiento Municipal de Los Alcarrizos",
+    "cantidad": 33,
+    "valor": 357569171,
+    "valor_texto": "RD$357.6 millones"
+   },
+   {
+    "nombre": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
+    "cantidad": 28,
+    "valor": 2053464516,
+    "valor_texto": "RD$2.1 mil millones"
+   },
+   {
+    "nombre": "Servicio Nacional de Salud",
+    "cantidad": 28,
+    "valor": 3211245050,
+    "valor_texto": "RD$3.2 mil millones"
+   },
+   {
+    "nombre": "Dirección General de Aduanas y Puertos",
+    "cantidad": 26,
+    "valor": 213368283,
+    "valor_texto": "RD$213.4 millones"
+   },
+   {
+    "nombre": "Empresa de Transmisión Eléctrica Dominicana",
+    "cantidad": 21,
+    "valor": 96534452,
+    "valor_texto": "RD$96.5 millones"
+   },
+   {
+    "nombre": "Dirección Infraestructura Escolar",
+    "cantidad": 21,
+    "valor": 3607756884,
+    "valor_texto": "RD$3.6 mil millones"
+   },
+   {
+    "nombre": "Instituto Superior de Formación Docente Salomé Ureña",
+    "cantidad": 19,
+    "valor": 51468432,
+    "valor_texto": "RD$51.5 millones"
+   },
+   {
+    "nombre": "Servicio Regional de Salud Cibao Sur",
+    "cantidad": 17,
+    "valor": 41902640,
+    "valor_texto": "RD$41.9 millones"
+   },
+   {
+    "nombre": "Corporación del Acueducto y Alcantarillado de Santo Domingo",
+    "cantidad": 17,
+    "valor": 2645096188,
+    "valor_texto": "RD$2.6 mil millones"
+   },
+   {
+    "nombre": "Ayuntamiento del Distrito Nacional (ADN)",
+    "cantidad": 15,
+    "valor": 874415316,
+    "valor_texto": "RD$874.4 millones"
+   }
+  ],
+  "subsectores": [
+   {
+    "nombre": "Rehabilitación y mantenimiento de edificaciones",
+    "cantidad": 529,
+    "valor": 9651753179,
+    "valor_texto": "RD$9.7 mil millones"
+   },
+   {
+    "nombre": "Obras civiles e infraestructura",
+    "cantidad": 409,
+    "valor": 42844290608,
+    "valor_texto": "RD$42.8 mil millones"
+   },
+   {
+    "nombre": "Materiales y equipos de construcción",
+    "cantidad": 268,
+    "valor": 10405800448,
+    "valor_texto": "RD$10.4 mil millones"
+   },
+   {
+    "nombre": "Edificaciones y viviendas",
+    "cantidad": 40,
+    "valor": 1736424294,
+    "valor_texto": "RD$1.7 mil millones"
+   },
+   {
+    "nombre": "Diseño, supervisión y estudios técnicos",
+    "cantidad": 36,
+    "valor": 1345834241,
+    "valor_texto": "RD$1.3 mil millones"
+   }
+  ],
+  "plazo": {
+   "mediana": 6,
+   "p25": 6,
+   "p75": 8,
+   "muestras": 1282
+  }
+ }
 }
