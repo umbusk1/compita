@@ -121,7 +121,7 @@
         <a href="#como-funciona" class="nav-link">Cómo funciona</a>
         <a href="#pricing"       class="nav-link">Precios</a>
         <a href="#faq"           class="nav-link">FAQ</a>
-        <a href="#reporte"       class="nav-link">Reporte semanal</a>
+        <a href="#reportes"       class="nav-link">Reportes</a>
         <a href="#socios"        class="nav-link">Socios</a>
         <a href="/login.html"    class="nav-link" style="color: var(--violeta); font-weight:600;">Iniciar sesión</a>
         <a href="/registro.html" class="btn-nav-primary">
@@ -150,7 +150,7 @@
         <a href="#como-funciona" onclick="toggleMobileMenu()" class="nav-link py-1">Cómo funciona</a>
         <a href="#pricing"       onclick="toggleMobileMenu()" class="nav-link py-1">Precios</a>
         <a href="#faq"           onclick="toggleMobileMenu()" class="nav-link py-1">FAQ</a>
-        <a href="#reporte"       onclick="toggleMobileMenu()" class="nav-link py-1">Reporte semanal</a>
+        <a href="#reportes"       onclick="toggleMobileMenu()" class="nav-link py-1">Reportes</a>
         <a href="#socios"        onclick="toggleMobileMenu()" class="nav-link py-1">Socios</a>
         <a href="/login.html"    class="nav-link py-1" style="color:var(--violeta);font-weight:600;">Iniciar sesión</a>
         <a href="/registro.html" class="btn-nav-primary justify-center py-3 mt-1">
@@ -1573,106 +1573,145 @@ function toggleMobileMenu() {
 <!-- ══════════════════════════════════════════════════════
      REPORTE SEMANAL
      ══════════════════════════════════════════════════════ -->
-<section id="reporte" style="background: var(--verde-oscuro); padding: 6rem 0;">
+<section id="reportes" style="background: var(--crema); padding: 6rem 0;">
+  <span id="reporte" style="position:relative; top:-120px;"></span>
   <div class="container mx-auto px-4">
-    <div class="max-w-2xl mx-auto text-center">
+    <div class="max-w-5xl mx-auto">
 
-      <p class="section-eyebrow mb-4" style="color: var(--dorado);">
-        <span style="display:inline-block; width:24px; height:2px; background:var(--dorado);
-                     border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
-        Gratis · Sin cuenta requerida
-      </p>
-
-      <h2 class="lora mb-6"
-          style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
-                 color:#f5f0e8; line-height:1.25;">
-        El pulso semanal del mercado de licitaciones
-      </h2>
-
-      <p style="font-size:1rem; line-height:1.8; color:var(--texto-claro); margin-bottom:2rem;">
-        Cada lunes recibirás un vistazo a este mercado: las oportunidades más grandes
-        y las más pequeñas, las que vencen pronto y las que dan más tiempo,
-        las más complejas y las más simples. Una radiografía de las compras públicas
-        en República Dominicana en tu bandeja de entrada.
-      </p>
-
-      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
-                  border-radius:16px; padding:2rem;">
-        <div id="form-suscripcion">
-          <div class="flex flex-col sm:flex-row gap-3 mb-3">
-            <input type="text" id="sub-nombre" placeholder="Tu nombre"
-                   style="flex:1; padding:0.75rem 1rem; border-radius:8px;
-                          border:1px solid rgba(255,255,255,0.15);
-                          background:rgba(255,255,255,0.07); color:#f5f0e8;
-                          font-family:'Manrope',sans-serif; font-size:0.9rem; outline:none;">
-            <input type="email" id="sub-email" placeholder="Tu email"
-                   style="flex:1; padding:0.75rem 1rem; border-radius:8px;
-                          border:1px solid rgba(255,255,255,0.15);
-                          background:rgba(255,255,255,0.07); color:#f5f0e8;
-                          font-family:'Manrope',sans-serif; font-size:0.9rem; outline:none;">
-          </div>
-          <button onclick="suscribirReporte()"
-                  style="width:100%; background:var(--verde-cta); color:#fff;
-                         padding:0.875rem 1rem; border-radius:8px; border:none; cursor:pointer;
-                         font-family:'Manrope',sans-serif; font-weight:700; font-size:0.95rem;
-                         transition:background 0.2s;"
-                  onmouseover="this.style.background='#22a02d'"
-                  onmouseout="this.style.background='var(--verde-cta)'">
-            📋 Suscribirme al Reporte Semanal — es gratis
-          </button>
-          <p id="sub-mensaje" style="margin-top:0.75rem; font-size:0.8rem;
-                                     color:var(--texto-claro); min-height:20px;"></p>
-        </div>
+      <div class="text-center mb-12">
+        <p class="section-eyebrow mb-4" style="color: var(--violeta);">Gratis · Sin cuenta requerida</p>
+        <h2 class="lora mb-4"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700; color:var(--texto-oscuro); line-height:1.25;">
+          Reportes gratuitos de licitaciones
+        </h2>
+        <p style="font-size:1rem; line-height:1.8; color:var(--texto-medio); max-width:620px; margin:0 auto;">
+          Las licitaciones abiertas del Estado dominicano, organizadas por sector y actualizadas
+          de lunes a viernes. Míralas aquí cuando quieras, o elige los reportes que quieres recibir cada lunes en tu correo.
+        </p>
       </div>
 
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <label class="rep-card" data-rep="construccion">
+          <input type="checkbox" class="rep-check" value="construccion">
+          <span class="rep-titulo">🏗️ Construcción</span>
+          <span class="rep-texto">Obras, edificaciones, mantenimiento, materiales y estudios técnicos.</span>
+          <span class="rep-cifra" data-cifra="construccion">&nbsp;</span>
+          <a class="rep-ver" href="/reportes/construccion">Ver el reporte de hoy →</a>
+        </label>
+        <label class="rep-card" data-rep="turismo">
+          <input type="checkbox" class="rep-check" value="turismo">
+          <span class="rep-titulo">🏨 Turismo, hotelería y gastronomía</span>
+          <span class="rep-texto">Alojamiento, alimentación, catering, eventos e infraestructura turística.</span>
+          <span class="rep-cifra" data-cifra="turismo">&nbsp;</span>
+          <a class="rep-ver" href="/reportes/turismo">Ver el reporte de hoy →</a>
+        </label>
+        <label class="rep-card" data-rep="mipymes">
+          <input type="checkbox" class="rep-check" value="mipymes">
+          <span class="rep-titulo">🏪 Oportunidades para MIPYMES</span>
+          <span class="rep-texto">Compras Menores y Comparaciones de Precios de todos los rubros, donde una empresa pequeña puede competir.</span>
+          <span class="rep-cifra" data-cifra="mipymes">&nbsp;</span>
+          <a class="rep-ver" href="/reportes/mipymes">Ver el reporte de hoy →</a>
+        </label>
+        <label class="rep-card" data-rep="semanal">
+          <input type="checkbox" class="rep-check" value="semanal">
+          <span class="rep-titulo">📋 Reporte Semanal</span>
+          <span class="rep-texto">El pulso del mercado completo: las licitaciones más grandes y más pequeñas, las más urgentes y las más holgadas, las más complejas y las más simples.</span>
+          <span class="rep-cifra">Solo por correo, cada lunes</span>
+        </label>
+      </div>
+
+      <div id="form-suscripcion" class="max-w-2xl mx-auto"
+           style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px; padding:2rem;">
+        <p class="lora" style="font-size:1.15rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:0.35rem;">Recíbelos cada lunes en tu correo</p>
+        <p style="font-size:0.85rem; color:var(--texto-medio); margin-bottom:1.25rem;">
+          Marca arriba uno, varios o todos. Puedes darte de baja cuando quieras.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 mb-3">
+          <input type="text" id="sub-nombre" placeholder="Tu nombre" class="rep-input">
+          <input type="email" id="sub-email" placeholder="Tu correo" class="rep-input">
+        </div>
+        <button id="sub-boton" onclick="suscribirReporte()"
+                style="width:100%; background:var(--verde-cta); color:#fff; padding:0.875rem 1rem; border-radius:8px; border:none; cursor:pointer;
+                       font-family:'Manrope',sans-serif; font-weight:700; font-size:0.95rem;">
+          Suscribirme gratis
+        </button>
+        <p id="sub-mensaje" style="margin-top:0.75rem; font-size:0.8rem; color:var(--texto-medio); min-height:20px;"></p>
+      </div>
+
+      <p class="text-center" style="font-size:0.85rem; color:var(--texto-medio); margin-top:2rem;">
+        ¿Diriges una asociación o un gremio? Comparte gratis el reporte de tu sector con tus miembros: los enlaces son públicos.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- JS del reporte — sin cambios respecto al original -->
-<script>
-async function suscribirReporte() {
-  const nombre  = document.getElementById('sub-nombre').value.trim();
-  const email   = document.getElementById('sub-email').value.trim();
-  const mensaje = document.getElementById('sub-mensaje');
-  const boton   = document.querySelector('[onclick="suscribirReporte()"]');
+<style>
+  .rep-card { position:relative; display:flex; flex-direction:column; gap:0.5rem; background:#fff; border:1px solid var(--crema-borde);
+              border-radius:16px; padding:1.5rem 1.25rem 1.25rem; cursor:pointer; transition:border-color .2s, box-shadow .2s; }
+  .rep-card:hover { box-shadow:0 10px 30px rgba(22,51,50,.08); }
+  .rep-card.elegido { border-color:var(--violeta); box-shadow:0 0 0 2px rgba(82,71,228,.15); }
+  .rep-check { position:absolute; top:1rem; right:1rem; width:18px; height:18px; accent-color:var(--violeta); }
+  .rep-titulo { font-family:'Lora',serif; font-weight:700; font-size:1.05rem; color:var(--texto-oscuro); padding-right:1.5rem; }
+  .rep-texto { font-size:0.82rem; line-height:1.6; color:var(--texto-medio); flex:1; }
+  .rep-cifra { font-size:0.8rem; font-weight:600; color:var(--violeta); }
+  .rep-ver { font-size:0.85rem; font-weight:700; color:var(--verde-oscuro); text-decoration:underline; }
+  .rep-input { flex:1; padding:0.75rem 1rem; border-radius:8px; border:1px solid var(--crema-borde); background:var(--crema);
+               color:var(--texto-oscuro); font-family:'Manrope',sans-serif; font-size:0.9rem; outline:none; }
+</style>
 
-  if (!nombre || !email) {
-    mensaje.textContent = '⚠️ Por favor completa tu nombre y email.';
-    mensaje.style.color = '#cd2d2c';
-    return;
-  }
-  boton.disabled = true;
-  boton.textContent = 'Procesando...';
-  mensaje.textContent = '';
+<script>
+(function () {
+  var marcados = new URLSearchParams(location.search).get('suscribir');
+  document.querySelectorAll('.rep-card').forEach(function (card) {
+    var check = card.querySelector('.rep-check');
+    if (marcados && marcados.split(',').indexOf(check.value) >= 0) check.checked = true;
+    card.classList.toggle('elegido', check.checked);
+    check.addEventListener('change', function () { card.classList.toggle('elegido', check.checked); });
+    var ver = card.querySelector('.rep-ver');
+    if (ver) ver.addEventListener('click', function (e) { e.stopPropagation(); });
+  });
+  if (marcados) setTimeout(function () {
+    var s = document.getElementById('reportes'); if (s) s.scrollIntoView();
+  }, 300);
+  ['construccion', 'turismo', 'mipymes'].forEach(function (clave) {
+    fetch('/data/reportes/' + clave + '.json').then(function (r) { return r.json(); }).then(function (d) {
+      var el = document.querySelector('[data-cifra="' + clave + '"]');
+      if (el) el.textContent = d.kpis.abiertas.toLocaleString('es-DO') + ' licitaciones abiertas hoy';
+    }).catch(function () {});
+  });
+})();
+
+async function suscribirReporte() {
+  var nombre  = document.getElementById('sub-nombre').value.trim();
+  var email   = document.getElementById('sub-email').value.trim();
+  var mensaje = document.getElementById('sub-mensaje');
+  var boton   = document.getElementById('sub-boton');
+  var reportes = Array.prototype.map.call(document.querySelectorAll('.rep-check:checked'), function (c) { return c.value; });
+
+  if (reportes.length === 0) { mensaje.textContent = '⚠️ Marca al menos un reporte arriba.'; mensaje.style.color = '#cd2d2c'; return; }
+  if (!nombre || !email) { mensaje.textContent = '⚠️ Por favor completa tu nombre y tu correo.'; mensaje.style.color = '#cd2d2c'; return; }
+  boton.disabled = true; boton.textContent = 'Procesando...'; mensaje.textContent = '';
 
   try {
-    const res  = await fetch('https://compita-reporte-semanal.vercel.app/api/suscribir', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombre, email })
+    var res = await fetch('https://compita-reporte-semanal.vercel.app/api/suscribir', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre: nombre, email: email, reportes: reportes })
     });
     if (res.ok) {
       document.getElementById('form-suscripcion').innerHTML =
-        '<div style="text-align:center; padding:1.5rem;">'
-        + '<div style="font-size:3rem; margin-bottom:1rem;">🎉</div>'
-        + '<h3 class="lora" style="font-size:1.4rem; font-weight:700; color:var(--dorado); margin-bottom:0.5rem;">'
-        + '¡Listo, ' + nombre + '!</h3>'
-        + '<p style="color:var(--texto-claro); font-size:0.9rem; line-height:1.7;">'
-        + 'Revisa tu bandeja de entrada — ya te enviamos un email de bienvenida.<br>'
-        + 'Tu primer reporte llega el próximo lunes.</p>'
-        + '</div>';
+        '<div style="text-align:center; padding:1rem;">'
+        + '<div style="font-size:2.5rem; margin-bottom:0.75rem;">🎉</div>'
+        + '<p class="lora" style="font-size:1.3rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:0.5rem;">¡Listo!</p>'
+        + '<p style="color:var(--texto-medio); font-size:0.9rem; line-height:1.7;">Te enviamos un correo de bienvenida.<br>'
+        + (reportes.length === 1 ? 'Tu primer reporte llega' : 'Tus reportes llegan') + ' el próximo lunes.</p></div>';
     } else {
-      mensaje.textContent = '⚠️ Hubo un problema. Intenta de nuevo.';
-      mensaje.style.color = '#cd2d2c';
-      boton.disabled = false;
-      boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
+      var d = await res.json().catch(function () { return {}; });
+      mensaje.textContent = '⚠️ ' + (d.error || 'Hubo un problema. Intenta de nuevo.'); mensaje.style.color = '#cd2d2c';
+      boton.disabled = false; boton.textContent = 'Suscribirme gratis';
     }
-  } catch(err) {
-    mensaje.textContent = '⚠️ Error de conexión. Intenta de nuevo.';
-    mensaje.style.color = '#cd2d2c';
-    boton.disabled = false;
-    boton.textContent = '📋 Suscribirme al Reporte Semanal — es gratis';
+  } catch (err) {
+    mensaje.textContent = '⚠️ Error de conexión. Intenta de nuevo.'; mensaje.style.color = '#cd2d2c';
+    boton.disabled = false; boton.textContent = 'Suscribirme gratis';
   }
 }
 </script>
@@ -1761,223 +1800,7 @@ async function suscribirReporte() {
 
 
 
-<!-- ══════════════════════════════════════════════════════
-     ASOCIACIONES
-     ══════════════════════════════════════════════════════ -->
-<section id="asociaciones" style="background: var(--crema); padding: 6rem 0;">
-  <div class="container mx-auto px-4">
-    <div class="max-w-5xl mx-auto">
 
-      <div class="text-center mb-14">
-        <p class="section-eyebrow mb-4" style="color: var(--violeta);">
-          <span style="display:inline-block; width:24px; height:2px; background:var(--violeta);
-                       border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
-          Para asociaciones empresariales
-        </p>
-        <h2 class="lora mb-4"
-            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
-                   color: var(--texto-oscuro); line-height:1.25;">
-          Compita llega a tu sector<br>a través de tu asociación
-        </h2>
-        <p style="font-size:1rem; line-height:1.8; color:var(--texto-medio);
-                  max-width:540px; margin:0 auto;">
-          Proponemos a las asociaciones empresariales de República Dominicana un reporte
-          mensual gratuito con las licitaciones de su sector, listo para enviar a sus miembros.
-          Estas son nuestras propuestas para tres de ellas.
-        </p>
-      </div>
-
-      <!-- Mecánica -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-0 mb-14">
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 1.5rem;">
-          <div style="width:48px; height:48px; background:var(--violeta); color:#fff; border-radius:50%;
-                      display:flex; align-items:center; justify-content:center;
-                      font-family:'Lora',serif; font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">1</div>
-          <p style="font-size:0.8rem; color:var(--texto-medio); max-width:110px;">Compita filtra las licitaciones del sector</p>
-        </div>
-        <div class="hidden sm:block" style="color:var(--dorado); font-size:1.5rem;">→</div>
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 1.5rem;">
-          <div style="width:48px; height:48px; background:var(--violeta); color:#fff; border-radius:50%;
-                      display:flex; align-items:center; justify-content:center;
-                      font-family:'Lora',serif; font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">2</div>
-          <p style="font-size:0.8rem; color:var(--texto-medio); max-width:110px;">La asociación recibe el reporte co-branded</p>
-        </div>
-        <div class="hidden sm:block" style="color:var(--dorado); font-size:1.5rem;">→</div>
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:0 1.5rem;">
-          <div style="width:48px; height:48px; background:var(--violeta); color:#fff; border-radius:50%;
-                      display:flex; align-items:center; justify-content:center;
-                      font-family:'Lora',serif; font-weight:700; font-size:1.1rem; margin-bottom:0.5rem;">3</div>
-          <p style="font-size:0.8rem; color:var(--texto-medio); max-width:110px;">Los miembros reciben las oportunidades a tiempo</p>
-        </div>
-      </div>
-
-      <!-- Tarjetas -->
-      <div class="grid md:grid-cols-3 gap-6">
-
-        <!-- CODOPYME -->
-        <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
-                    overflow:hidden; transition:box-shadow 0.2s;"
-             onmouseover="this.style.boxShadow='0 12px 40px rgba(22,51,50,0.12)'"
-             onmouseout="this.style.boxShadow='none'">
-          <div style="height:4px; background:linear-gradient(90deg, #1e3a6e, #3b6cb7);"></div>
-          <div style="padding:1.5rem;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
-              <span style="background:#eff6ff; color:#1d4ed8; font-size:0.7rem; font-weight:800;
-                           letter-spacing:0.06em; padding:4px 10px; border-radius:6px;">CODOPYME</span>
-              <span style="font-size:0.65rem; color:var(--texto-claro); text-transform:uppercase;
-                           letter-spacing:0.08em; font-weight:600;">MIPYMES</span>
-            </div>
-            <h3 class="lora" style="font-size:0.95rem; font-weight:700; color:var(--texto-oscuro);
-                                    margin-bottom:0.5rem; line-height:1.4;">
-              Confederación Dominicana de la Micro, Pequeña y Mediana Empresa
-            </h3>
-            <p style="font-size:0.8rem; color:var(--texto-medio); line-height:1.6; margin-bottom:1.25rem;">
-              Suministros, servicios profesionales, tecnología y capacitación para
-              más de 7,500 empresas miembros.
-            </p>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <a href="/docs/onepager-codopyme.pdf" target="_blank" rel="noopener"
-                 style="display:flex; align-items:center; justify-content:center; gap:8px;
-                        background:#1d4ed8; color:#fff; font-size:0.8rem; font-weight:600;
-                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
-                        transition:background 0.2s;"
-                 onmouseover="this.style.background='#1e40af'"
-                 onmouseout="this.style.background='#1d4ed8'">
-                ↓ Descargar Propuesta
-              </a>
-              <a href="/docs/reporte-muestra-codopyme.pdf" target="_blank" rel="noopener"
-                 style="display:flex; align-items:center; justify-content:center; gap:8px;
-                        border:1.5px solid #1d4ed8; color:#1d4ed8; font-size:0.8rem; font-weight:600;
-                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
-                        transition:background 0.2s;"
-                 onmouseover="this.style.background='#eff6ff'"
-                 onmouseout="this.style.background='transparent'">
-                Ver Reporte de Muestra
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- ASONAHORES -->
-        <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
-                    overflow:hidden; transition:box-shadow 0.2s;"
-             onmouseover="this.style.boxShadow='0 12px 40px rgba(22,51,50,0.12)'"
-             onmouseout="this.style.boxShadow='none'">
-          <div style="height:4px; background:linear-gradient(90deg, #14532d, #16a34a);"></div>
-          <div style="padding:1.5rem;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
-              <span style="background:#f0fdf4; color:#15803d; font-size:0.7rem; font-weight:800;
-                           letter-spacing:0.06em; padding:4px 10px; border-radius:6px;">ASONAHORES</span>
-              <span style="font-size:0.65rem; color:var(--texto-claro); text-transform:uppercase;
-                           letter-spacing:0.08em; font-weight:600;">Turismo</span>
-            </div>
-            <h3 class="lora" style="font-size:0.95rem; font-weight:700; color:var(--texto-oscuro);
-                                    margin-bottom:0.5rem; line-height:1.4;">
-              Asociación de Hoteles y Turismo de la República Dominicana
-            </h3>
-            <p style="font-size:0.8rem; color:var(--texto-medio); line-height:1.6; margin-bottom:1.25rem;">
-              Alimentos, equipamiento hotelero, mantenimiento, consultoría turística
-              e infraestructura para el sector de hospitalidad.
-            </p>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <a href="/docs/onepager-asonahores.pdf" target="_blank" rel="noopener"
-                 style="display:flex; align-items:center; justify-content:center; gap:8px;
-                        background:#16a34a; color:#fff; font-size:0.8rem; font-weight:600;
-                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
-                        transition:background 0.2s;"
-                 onmouseover="this.style.background='#15803d'"
-                 onmouseout="this.style.background='#16a34a'">
-                ↓ Descargar Propuesta
-              </a>
-              <a href="/docs/reporte-muestra-asonahores.pdf" target="_blank" rel="noopener"
-                 style="display:flex; align-items:center; justify-content:center; gap:8px;
-                        border:1.5px solid #16a34a; color:#16a34a; font-size:0.8rem; font-weight:600;
-                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
-                        transition:background 0.2s;"
-                 onmouseover="this.style.background='#f0fdf4'"
-                 onmouseout="this.style.background='transparent'">
-                Ver Reporte de Muestra
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- ACOPROVI -->
-        <div style="background:#fff; border:1px solid var(--crema-borde); border-radius:16px;
-                    overflow:hidden; transition:box-shadow 0.2s;"
-             onmouseover="this.style.boxShadow='0 12px 40px rgba(22,51,50,0.12)'"
-             onmouseout="this.style.boxShadow='none'">
-          <div style="height:4px; background:linear-gradient(90deg, #92400e, #f97316);"></div>
-          <div style="padding:1.5rem;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
-              <span style="background:#fff7ed; color:#c2410c; font-size:0.7rem; font-weight:800;
-                           letter-spacing:0.06em; padding:4px 10px; border-radius:6px;">ACOPROVI</span>
-              <span style="font-size:0.65rem; color:var(--texto-claro); text-transform:uppercase;
-                           letter-spacing:0.08em; font-weight:600;">Construcción</span>
-            </div>
-            <h3 class="lora" style="font-size:0.95rem; font-weight:700; color:var(--texto-oscuro);
-                                    margin-bottom:0.5rem; line-height:1.4;">
-              Asociación Dominicana de Constructores y Promotores de Viviendas
-            </h3>
-            <p style="font-size:0.8rem; color:var(--texto-medio); line-height:1.6; margin-bottom:1.25rem;">
-              Obras civiles, materiales, supervisión técnica e ingeniería para el sector
-              que mueve más del 10% del PIB dominicano.
-            </p>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <a href="/docs/onepager-acoprovi.pdf" target="_blank" rel="noopener"
-                 style="display:flex; align-items:center; justify-content:center; gap:8px;
-                        background:#ea580c; color:#fff; font-size:0.8rem; font-weight:600;
-                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
-                        transition:background 0.2s;"
-                 onmouseover="this.style.background='#c2410c'"
-                 onmouseout="this.style.background='#ea580c'">
-                ↓ Descargar Propuesta
-              </a>
-              <a href="/docs/reporte-muestra-acoprovi.pdf" target="_blank" rel="noopener"
-                 style="display:flex; align-items:center; justify-content:center; gap:8px;
-                        border:1.5px solid #ea580c; color:#ea580c; font-size:0.8rem; font-weight:600;
-                        padding:0.6rem 1rem; border-radius:8px; text-decoration:none;
-                        transition:background 0.2s;"
-                 onmouseover="this.style.background='#fff7ed'"
-                 onmouseout="this.style.background='transparent'">
-                Ver Reporte de Muestra
-              </a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- CTA para otras asociaciones -->
-      <div style="margin-top:2.5rem; background:#fff; border:1px solid var(--crema-borde);
-                  border-radius:16px; padding:1.5rem 2rem;
-                  display:flex; flex-direction:column; gap:1rem;
-                  align-items:flex-start;">
-        <div class="sm:flex sm:items-center sm:justify-between sm:gap-4 w-full">
-          <div>
-            <p style="font-weight:700; color:var(--texto-oscuro); margin-bottom:4px; font-size:0.95rem;">
-              ¿Representas otra asociación empresarial?
-            </p>
-            <p style="font-size:0.85rem; color:var(--texto-medio);">
-              Ofrecemos este servicio gratuito a todas las asociaciones del sector productivo dominicano.
-            </p>
-          </div>
-          <a href="mailto:hola@umbusk.com?subject=Propuesta Reporte Sectorial para mi Asociación"
-             style="flex-shrink:0; background:var(--violeta); color:#fff;
-                    padding:0.75rem 1.5rem; border-radius:8px; font-weight:600; font-size:0.875rem;
-                    text-decoration:none; white-space:nowrap; transition:background 0.2s;
-                    display:inline-block; margin-top:0.5rem;"
-             onmouseover="this.style.background='#4338ca'"
-             onmouseout="this.style.background='var(--violeta)'">
-            Contáctanos →
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-<!-- FIN ASOCIACIONES -->
 
 <!-- ════════════════════════════════════════
      SECCIÓN 06 · TESTIMONIOS
