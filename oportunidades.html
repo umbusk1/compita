@@ -6,9 +6,9 @@
     <title>Oportunidades - Compita</title>
     <script src="https://cdn.tailwindcss.com"></script>
             <!-- Favicon simple que funciona en todos lados -->
-			<link rel="icon" type="image/png" href="favicon-umbusk.png">
+			<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 			<!-- Específico para Apple/iOS -->
-		<link rel="apple-touch-icon" href="favicon-umbusk.png">
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <style>
         /* Menú móvil */
         .mobile-menu {
@@ -253,6 +253,10 @@
                         <span>📥</span>
                         <span>Exportar Excel</span>
                     </button>
+                    <button onclick="exportarACalendario()" title="Descarga los cierres como calendario (.ics) para Google Calendar, Outlook, Apple o YouRadar" class="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition font-medium">
+                        <span>🗓️</span>
+                        <span>Calendario</span>
+                    </button>
 					<button onclick="reAnalizarOportunidades()" class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-medium">
 						<span>🔄</span>
 						<span>Actualizar</span>
@@ -321,6 +325,10 @@
                     <button onclick="exportarExcel()" class="flex-1 flex items-center justify-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition font-medium text-sm">
                         <span>📥</span>
                         <span>Excel</span>
+                    </button>
+                    <button onclick="exportarACalendario()" class="flex-1 flex items-center justify-center gap-2 bg-teal-600 text-white px-3 py-2 rounded-lg hover:bg-teal-700 transition font-medium text-sm">
+                        <span>🗓️</span>
+                        <span>Calendario</span>
                     </button>
                     <button onclick="cargarOportunidades()" class="flex-1 flex items-center justify-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition font-medium text-sm">
                         <span>🔄</span>
@@ -2200,6 +2208,69 @@ async function comprarCuposAdicionales(tipo) {
         // ============================================
 		// FUNCIÓN: EXPORTAR OPORTUNIDADES A EXCEL
         // ============================================
+
+// ============================================================
+// Exportar los cierres a calendario (.ics) — nov 2026
+// Cada licitación abierta se vuelve una cita a la hora de su cierre, con aviso
+// un día antes. Sirve para Google Calendar, Outlook, Apple y YouRadar.
+// ============================================================
+function exportarACalendario() {
+    const base = oportunidadesFiltradas.length > 0 ? oportunidadesFiltradas : todasOportunidades;
+    const ahora = new Date();
+    const abiertas = (base || []).filter(l => l.fecha_presentacion && new Date(l.fecha_presentacion) > ahora);
+    if (abiertas.length === 0) {
+        mostrarMensaje('No hay licitaciones abiertas para exportar', 'warning');
+        return;
+    }
+    const pad = n => String(n).padStart(2, '0');
+    const utc = d => `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+    const esc = t => String(t || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+    const enc = new TextEncoder();
+    const doblar = linea => {
+        if (enc.encode(linea).length <= 75) return linea;
+        const partes = []; let actual = '';
+        for (const ch of linea) {
+            if (enc.encode(actual + ch).length > (partes.length ? 74 : 75)) { partes.push(actual); actual = ''; }
+            actual += ch;
+        }
+        partes.push(actual);
+        return partes.join('\r\n ');
+    };
+    const sello = utc(ahora);
+    const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Compita//Cierres de licitaciones//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+               'X-WR-CALNAME:Compita · Cierres de licitaciones', 'X-WR-TIMEZONE:America/Santo_Domingo'];
+    abiertas.forEach(l => {
+        const cierre = new Date(l.fecha_presentacion);
+        const fin = new Date(cierre.getTime() + 15 * 60000);
+        const notas = [
+            l.referencia ? `Referencia: ${l.referencia}` : '',
+            l.quien ? `Institución: ${l.quien}` : '',
+            l.monto_estimado ? `Monto estimado: RD$${Number(l.monto_estimado).toLocaleString('es-DO')}` : '',
+            l.relevancia ? `Relevancia para tu empresa: ${l.relevancia}` : '',
+            l.razon ? `\n${l.razon}` : '',
+            '\nVer en Compita: https://compita.do/oportunidades.html'
+        ].filter(Boolean).join('\n');
+        L.push('BEGIN:VEVENT',
+            `UID:lic-${String(l.referencia || l.id || Math.random()).replace(/[^A-Za-z0-9-]/g, '')}@compita`,
+            `DTSTAMP:${sello}`,
+            `DTSTART:${utc(cierre)}`,
+            `DTEND:${utc(fin)}`,
+            'SUMMARY:' + esc(`Cierra: ${l.que || l.descripcion || l.referencia}`),
+            'DESCRIPTION:' + esc(notas),
+            'CATEGORIES:Compita',
+            'STATUS:CONFIRMED',
+            'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + esc('Mañana cierra una licitación de tu tablero'), 'TRIGGER:-P1D', 'END:VALARM',
+            'END:VEVENT');
+    });
+    L.push('END:VCALENDAR');
+    const blob = new Blob([L.map(doblar).join('\r\n') + '\r\n'], { type: 'text/calendar;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Compita_Cierres_${new Date().toISOString().slice(0, 10)}.ics`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    mostrarMensaje(`Exportados ${abiertas.length} cierres al calendario`, 'success');
+}
 
 function exportarAExcel() {
     // 1. Obtener las licitaciones que están visibles (respetando filtros)
