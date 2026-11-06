@@ -66,6 +66,7 @@
     .mobile-menu.active { display: block; }
 
     /* ── Utilidades generales ── */
+    html { scroll-padding-top: 120px; }
     .section-eyebrow {
       font-family: 'Manrope', sans-serif;
       font-size: 0.7rem;
@@ -121,7 +122,7 @@
         <a href="#pricing"       class="nav-link">Precios</a>
         <a href="#faq"           class="nav-link">FAQ</a>
         <a href="#reporte"       class="nav-link">Reporte semanal</a>
-        <a href="#asociaciones"  class="nav-link">Asociaciones</a>
+        <a href="#socios"        class="nav-link">Socios</a>
         <a href="/login.html"    class="nav-link" style="color: var(--violeta); font-weight:600;">Iniciar sesión</a>
         <a href="/registro.html" class="btn-nav-primary">
           <img src="https://flagcdn.com/20x15/do.png"
@@ -150,7 +151,7 @@
         <a href="#pricing"       onclick="toggleMobileMenu()" class="nav-link py-1">Precios</a>
         <a href="#faq"           onclick="toggleMobileMenu()" class="nav-link py-1">FAQ</a>
         <a href="#reporte"       onclick="toggleMobileMenu()" class="nav-link py-1">Reporte semanal</a>
-        <a href="#asociaciones"  onclick="toggleMobileMenu()" class="nav-link py-1">Asociaciones</a>
+        <a href="#socios"        onclick="toggleMobileMenu()" class="nav-link py-1">Socios</a>
         <a href="/login.html"    class="nav-link py-1" style="color:var(--violeta);font-weight:600;">Iniciar sesión</a>
         <a href="/registro.html" class="btn-nav-primary justify-center py-3 mt-1">
           <img src="https://flagcdn.com/20x15/do.png"
@@ -259,8 +260,8 @@ function toggleMobileMenu() {
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-around gap-6 text-center">
 
         <div>
-          <div class="lora" style="font-size:1.75rem; font-weight:700; color:var(--dorado);">198+</div>
-          <div style="font-size:0.75rem; font-weight:500; color:var(--texto-claro); margin-top:2px; text-transform:uppercase; letter-spacing:0.06em;">licitaciones monitoreadas cada día</div>
+          <div id="banda-promedio" class="lora" style="font-size:1.75rem; font-weight:700; color:var(--dorado);">270</div>
+          <div style="font-size:0.75rem; font-weight:500; color:var(--texto-claro); margin-top:2px; text-transform:uppercase; letter-spacing:0.06em;">licitaciones en promedio por día hábil</div>
         </div>
 
         <!-- Separador visible solo en pantallas medianas+ -->
@@ -494,7 +495,7 @@ function toggleMobileMenu() {
             <p style="font-size:0.9rem; line-height:1.8; color:var(--texto-claro);">
               De cien licitaciones publicadas, tres o cuatro son verdaderas
               oportunidades para ti. Compita ya lo sabe. Te las entregamos
-              organizadas, claras y listas para decidir, como trabajando a tu lado, sin ruido.
+              organizadas, claras y listas para decidir, sin ruido.
             </p>
           </div>
         </div>
@@ -796,7 +797,7 @@ function toggleMobileMenu() {
             </li>
             <li style="display:flex; gap:8px; align-items:flex-start; font-size:0.82rem; color:var(--texto-medio);">
               <span style="color:#6d28d9; font-size:1rem; flex-shrink:0;">✓</span>
-              Soporte dedicado por WhatsApp
+              Soporte prioritario por correo
             </li>
           </ul>
           <a href="/registro.html"
@@ -932,10 +933,10 @@ function toggleMobileMenu() {
                   <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
                 </tr>
                 <tr>
-                  <td style="padding:10px 12px; color:var(--texto-medio);">Soporte por WhatsApp</td>
+                  <td style="padding:10px 12px; color:var(--texto-medio);">Soporte prioritario por correo</td>
                   <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
                   <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
-                  <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
+                  <td style="padding:10px 12px; text-align:center; color:#cd2d2c;">✗</td>
                   <td style="padding:10px 12px; text-align:center; color:var(--verde-cta);">✓</td>
                 </tr>
               </tbody>
@@ -974,7 +975,7 @@ function toggleMobileMenu() {
                 <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #ddd6fe;"><span style="color:var(--texto-medio);">Agente 033</span><span style="color:#6d28d9; font-weight:700;">∞</span></div>
                 <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #ddd6fe;"><span style="color:var(--texto-medio);">Coach + Prompt KB</span><span style="color:#6d28d9; font-weight:700;">5/mes</span></div>
                 <div style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid #ddd6fe;"><span style="color:var(--texto-medio);">Perfil Licitador</span><span style="color:var(--verde-cta);">✓</span></div>
-                <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">WhatsApp</span><span style="color:var(--verde-cta);">✓</span></div>
+                <div style="display:flex; justify-content:space-between; padding:0.4rem 0;"><span style="color:var(--texto-medio);">Soporte prioritario</span><span style="color:var(--verde-cta);">✓</span></div>
               </div>
             </div>
           </div>
@@ -1032,9 +1033,9 @@ function toggleMobileMenu() {
 
         <hr style="border:none; border-top:1px solid rgba(255,255,255,0.08); margin-bottom:2rem;">
 
-        <p class="lora text-center"
+        <p id="titulo-grafico-evidencia" class="lora text-center"
            style="font-size:1rem; font-weight:600; color:#f5f0e8; margin-bottom:1.25rem;">
-          Licitaciones abiertas por mes y día
+          Licitaciones por fecha de cierre
         </p>
 
         <div class="flex justify-center gap-1 md:gap-2 mb-6 overflow-x-auto"
@@ -1060,6 +1061,10 @@ function toggleMobileMenu() {
     var chartEvidencia = null;
     var datosEvidencia = null;
     var maxEvidencia   = 50;
+
+    // Las fechas vienen como 'AAAA-MM-DD'; se leen como fecha local para que
+    // el día 1 de cada mes no caiga en el mes anterior por la zona horaria.
+    function fechaLocal(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
 
     var NOMBRES_CORTOS  = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
     var NOMBRES_LARGOS  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -1111,9 +1116,11 @@ function toggleMobileMenu() {
         btn.style.color       = activo ? 'var(--verde-oscuro)' : 'var(--texto-claro)';
       });
       var datosMes = datosEvidencia.por_dia.filter(function(d) {
-        var f = new Date(d.fecha);
+        var f = fechaLocal(d.fecha);
         return f.getMonth() === mesSeleccionado.numero - 1 && f.getFullYear() === mesSeleccionado.año;
       });
+      var titulo = document.getElementById('titulo-grafico-evidencia');
+      if (titulo) titulo.textContent = 'Licitaciones por fecha de cierre · ' + mesSeleccionado.nombreCompleto + ' ' + mesSeleccionado.año;
       dibujarGrafico(datosMes, mesSeleccionado);
     }
 
@@ -1171,9 +1178,9 @@ function toggleMobileMenu() {
 
           var hoy = new Date(); hoy.setHours(0,0,0,0);
           var abiertas = data.por_dia
-            .filter(function(d){ return new Date(d.fecha) >= hoy; })
+            .filter(function(d){ return fechaLocal(d.fecha) >= hoy; })
             .reduce(function(s,d){ return s + d.cantidad; }, 0);
-          var cerrados = data.por_dia.filter(function(d){ return new Date(d.fecha) < hoy && d.cantidad > 0; });
+          var cerrados = data.por_dia.filter(function(d){ return fechaLocal(d.fecha) < hoy && d.cantidad > 0; });
           var prom = cerrados.length > 0
             ? Math.round(cerrados.reduce(function(s,d){ return s+d.cantidad; },0) / cerrados.length)
             : 0;
@@ -1189,6 +1196,9 @@ function toggleMobileMenu() {
             + '<div style="font-size:0.7rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--texto-claro);margin-top:4px;">Promedio diario</div>'
             + '<div style="font-size:0.75rem;color:var(--texto-claro);margin-top:4px;">en días laborables</div>'
             + '</div>';
+
+          var banda = document.getElementById('banda-promedio');
+          if (banda && prom > 0) banda.textContent = prom.toLocaleString('es-DO');
 
           var meses = obtenerMeses();
           crearPestanas(meses);
@@ -1668,6 +1678,86 @@ async function suscribirReporte() {
 </script>
 <!-- FIN REPORTE SEMANAL -->
 
+<!-- ══════════════════════════════════════════════════════
+     SOCIOS: ASEGURADORAS, BANCOS Y GREMIOS
+══════════════════════════════════════════════════════ -->
+<section id="socios" style="background: var(--verde-oscuro); padding: 6rem 0;">
+  <div class="container mx-auto px-4">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="text-center mb-14">
+        <p class="section-eyebrow mb-4" style="color: var(--dorado);">
+          Para aseguradoras, bancos y gremios
+        </p>
+        <h2 class="lora mb-4"
+            style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700; color:#f5f0e8; line-height:1.25;">
+          Compita, el motor detrás de tu servicio
+        </h2>
+        <p style="font-size:1rem; line-height:1.8; color:var(--texto-claro); max-width:620px; margin:0 auto;">
+          Si tu institución acompaña a empresas que le venden al Estado, con fianzas, crédito
+          o representación gremial, Compita puede trabajar dentro de tu servicio. Tus clientes
+          reciben solo las licitaciones que les convienen y llegan mejor preparados a presentar su oferta.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:1.75rem;">
+          <div style="font-size:1.6rem; margin-bottom:0.75rem;">🎯</div>
+          <h3 class="lora" style="font-size:1.1rem; font-weight:600; color:#f5f0e8; margin-bottom:0.6rem;">
+            Alertas que sí sirven
+          </h3>
+          <p style="font-size:0.88rem; line-height:1.7; color:var(--texto-claro);">
+            Compita lee a diario el portal de compras del Estado, filtra según el perfil de cada
+            empresa y una IA evalúa cada coincidencia. Descarta las contrataciones directas y otros
+            procesos donde no se puede competir.
+          </p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:1.75rem;">
+          <div style="font-size:1.6rem; margin-bottom:0.75rem;">🤝</div>
+          <h3 class="lora" style="font-size:1.1rem; font-weight:600; color:#f5f0e8; margin-bottom:0.6rem;">
+            Con tu nombre
+          </h3>
+          <p style="font-size:0.88rem; line-height:1.7; color:var(--texto-claro);">
+            Las alertas y los reportes pueden llegar a tus clientes con tu marca, dentro de los
+            canales que ya usas con ellos. Tú cuidas la relación; Compita hace el trabajo de fondo.
+          </p>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:1.75rem;">
+          <div style="font-size:1.6rem; margin-bottom:0.75rem;">📈</div>
+          <h3 class="lora" style="font-size:1.1rem; font-weight:600; color:#f5f0e8; margin-bottom:0.6rem;">
+            Hasta la oferta presentada
+          </h3>
+          <p style="font-size:0.88rem; line-height:1.7; color:var(--texto-claro);">
+            Descarga de pliegos, análisis del pliego con IA y el Agente 033 para el formulario F033
+            ayudan a cada empresa a pasar de la alerta a una oferta completa. Más ofertas presentadas
+            y más adjudicaciones significan más negocio para ti.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="text-center">
+        <p style="font-size:0.85rem; color:var(--texto-claro); margin-bottom:1.5rem;">
+          Aseguradoras que emiten fianzas &nbsp;·&nbsp; Bancos con productos para proveedores del Estado
+          &nbsp;·&nbsp; Gremios y asociaciones empresariales
+        </p>
+        <a href="mailto:sales@umbusk.com?subject=Alianza%20con%20Compita"
+           style="display:inline-block; font-family:'Manrope',sans-serif; font-weight:700; font-size:0.95rem;
+                  padding:0.85rem 1.75rem; border-radius:10px; background:var(--dorado); color:var(--verde-oscuro);
+                  text-decoration:none;">
+          Conversemos sobre una alianza →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- FIN SOCIOS -->
+
+
 
 
 
@@ -1682,7 +1772,7 @@ async function suscribirReporte() {
         <p class="section-eyebrow mb-4" style="color: var(--violeta);">
           <span style="display:inline-block; width:24px; height:2px; background:var(--violeta);
                        border-radius:2px; vertical-align:middle; margin-right:8px;"></span>
-          Alianzas sectoriales
+          Para asociaciones empresariales
         </p>
         <h2 class="lora mb-4"
             style="font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight:700;
@@ -1691,9 +1781,9 @@ async function suscribirReporte() {
         </h2>
         <p style="font-size:1rem; line-height:1.8; color:var(--texto-medio);
                   max-width:540px; margin:0 auto;">
-          Trabajamos con las principales asociaciones empresariales de República Dominicana
-          para entregar cada mes un reporte gratuito de licitaciones relevantes
-          directamente a sus miembros.
+          Proponemos a las asociaciones empresariales de República Dominicana un reporte
+          mensual gratuito con las licitaciones de su sector, listo para enviar a sus miembros.
+          Estas son nuestras propuestas para tres de ellas.
         </p>
       </div>
 
@@ -2072,8 +2162,8 @@ async function suscribirReporte() {
                 <h3 class="text-white font-semibold mb-4">Contacto</h3>
                 <ul class="space-y-2 text-sm">
                     <li>
-                        <a href="https://compitaforms.netlify.app/index.html" target="_blank" rel="noopener noreferrer" class="hover:text-white transition">
-                            Llenar forma de contacto
+                        <a href="mailto:sales@umbusk.com?subject=Consulta%20sobre%20Compita" class="hover:text-white transition">
+                            sales@umbusk.com
                         </a>
                     </li>
                     <li><a href="https://umbusk.com" target="_blank" class="hover:text-white transition">umbusk.com</a></li>
@@ -2102,68 +2192,9 @@ function toggleMobileMenu() {
 </script>
 
 <!-- Botón flotante de WhatsApp -->
-<style>
-  .whatsapp-float {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  .whatsapp-float .wa-label {
-    background-color: #fff;
-    color: #128c7e;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateX(10px);
-    transition: all 0.3s ease;
-  }
-  .whatsapp-float:hover .wa-label {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  .whatsapp-float .wa-icon {
-    width: 58px;
-    height: 58px;
-    background-color: #25d366;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(37,211,102,0.4);
-    transition: transform 0.2s ease;
-  }
-  .whatsapp-float:hover .wa-icon {
-    transform: scale(1.1);
-  }
-  .whatsapp-float .wa-icon svg {
-    width: 32px;
-    height: 32px;
-    fill: white;
-  }
-</style>
 
-<a class="whatsapp-float"
-   href="https://wa.me/584122324636?text=Quisiera información sobre Compita"
-   target="_blank"
-   rel="noopener noreferrer"
-   aria-label="Contactar por WhatsApp">
-  <span class="wa-label">¿Tienes dudas? Escríbenos</span>
-  <div class="wa-icon">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-    </svg>
-  </div>
-</a>
+
+
 <!-- Fin botón flotante de WhatsApp -->
 
 </body>
