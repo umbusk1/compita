@@ -2,7 +2,7 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-06T10:26:14.069719-04:00",
+ "actualizado": "2026-11-06T10:35:43.191649-04:00",
  "actualizado_texto": "6 de noviembre de 2026",
  "kpis": {
   "abiertas": 83,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$6.5 mil millones",
   "cierran_7_dias": 67
  },
- "resumen": "El sector construcción tiene hoy 83 licitaciones abiertas por un valor estimado de RD$6.5 mil millones, encabezadas por la Dirección de Infraestructura Escolar con RD$1.9 mil millones para adecuaciones en centros educativos, el Ministerio de Obras Públicas con RD$1.4 mil millones en carreteras para La Vega y Hato Mayor, y la Corporación del Acueducto y Alcantarillado de Santo Domingo con RD$600 millones para obras de recolección de aguas residuales en la Av. Jacobo Majluta. A esto se suman otras oportunidades relevantes de CAASD por RD$392.4 millones y RD$227.2 millones para construcción y electrificación de pozos en el Gran Santo Domingo. De las 83 licitaciones vigentes, 67 cierran en los próximos siete días, por lo que se recomienda priorizar la revisión de pliegos y plazos cuanto antes.",
+ "resumen": "Hoy el sector construcción registra 83 licitaciones abiertas por un valor estimado de RD$6.5 mil millones, con 67 procesos cerrando en los próximos 7 días. Destacan la contratación de obras para adecuaciones y reparaciones en centros educativos a nivel nacional de la Dirección de Infraestructura Escolar por RD$1.9 mil millones, la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas y Comunicaciones por RD$1.4 mil millones, y las obras de recolección de aguas residuales en la Av. Jacobo Majluta de la Corporación del Acueducto y Alcantarillado de Santo Domingo por RD$600 millones. Con dos tercios de los procesos venciendo esta semana, las empresas interesadas deben priorizar revisión de pliegos y preparación de ofertas de inmediato.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
@@ -1200,59 +1200,59 @@
  "mercado": {
   "desde": "enero de 2026",
   "total": {
-   "cantidad": 1282,
-   "valor": 65984102770,
-   "valor_texto": "RD$66 mil millones"
+   "cantidad": 2680,
+   "valor": 105174103439,
+   "valor_texto": "RD$105.2 mil millones"
   },
   "meses": [
    {
     "mes": "2026-01",
     "etiqueta": "Ene",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 92,
+    "valor": 9300175242,
+    "valor_texto": "RD$9.3 mil millones"
    },
    {
     "mes": "2026-02",
     "etiqueta": "Feb",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 179,
+    "valor": 3411225790,
+    "valor_texto": "RD$3.4 mil millones"
    },
    {
     "mes": "2026-03",
     "etiqueta": "Mar",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 288,
+    "valor": 8147285800,
+    "valor_texto": "RD$8.1 mil millones"
    },
    {
     "mes": "2026-04",
     "etiqueta": "Abr",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 224,
+    "valor": 10612209298,
+    "valor_texto": "RD$10.6 mil millones"
    },
    {
     "mes": "2026-05",
     "etiqueta": "May",
-    "cantidad": 3,
-    "valor": 697937979,
-    "valor_texto": "RD$697.9 millones"
+    "cantidad": 278,
+    "valor": 4621655987,
+    "valor_texto": "RD$4.6 mil millones"
    },
    {
     "mes": "2026-06",
     "etiqueta": "Jun",
-    "cantidad": 29,
-    "valor": 28953645629,
-    "valor_texto": "RD$29 mil millones"
+    "cantidad": 359,
+    "valor": 32664521344,
+    "valor_texto": "RD$32.7 mil millones"
    },
    {
     "mes": "2026-07",
     "etiqueta": "Jul",
-    "cantidad": 256,
-    "valor": 7220274109,
-    "valor_texto": "RD$7.2 mil millones"
+    "cantidad": 266,
+    "valor": 7304784926,
+    "valor_texto": "RD$7.3 mil millones"
    },
    {
     "mes": "2026-08",
@@ -1285,103 +1285,103 @@
   ],
   "instituciones": [
    {
-    "nombre": "Ayuntamiento Municipal de Los Alcarrizos",
-    "cantidad": 33,
-    "valor": 357569171,
-    "valor_texto": "RD$357.6 millones"
-   },
-   {
     "nombre": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
-    "cantidad": 28,
-    "valor": 2053464516,
-    "valor_texto": "RD$2.1 mil millones"
-   },
-   {
-    "nombre": "Servicio Nacional de Salud",
-    "cantidad": 28,
-    "valor": 3211245050,
-    "valor_texto": "RD$3.2 mil millones"
-   },
-   {
-    "nombre": "Dirección General de Aduanas y Puertos",
-    "cantidad": 26,
-    "valor": 213368283,
-    "valor_texto": "RD$213.4 millones"
-   },
-   {
-    "nombre": "Empresa de Transmisión Eléctrica Dominicana",
-    "cantidad": 21,
-    "valor": 96534452,
-    "valor_texto": "RD$96.5 millones"
-   },
-   {
-    "nombre": "Dirección Infraestructura Escolar",
-    "cantidad": 21,
-    "valor": 3607756884,
+    "cantidad": 50,
+    "valor": 3616249796,
     "valor_texto": "RD$3.6 mil millones"
    },
    {
+    "nombre": "Dirección General de Aduanas y Puertos",
+    "cantidad": 49,
+    "valor": 235281625,
+    "valor_texto": "RD$235.3 millones"
+   },
+   {
+    "nombre": "Ayuntamiento Municipal de Los Alcarrizos",
+    "cantidad": 40,
+    "valor": 410794543,
+    "valor_texto": "RD$410.8 millones"
+   },
+   {
     "nombre": "Instituto Superior de Formación Docente Salomé Ureña",
-    "cantidad": 19,
-    "valor": 51468432,
-    "valor_texto": "RD$51.5 millones"
-   },
-   {
-    "nombre": "Servicio Regional de Salud Cibao Sur",
-    "cantidad": 17,
-    "valor": 41902640,
-    "valor_texto": "RD$41.9 millones"
-   },
-   {
-    "nombre": "Corporación del Acueducto y Alcantarillado de Santo Domingo",
-    "cantidad": 17,
-    "valor": 2645096188,
-    "valor_texto": "RD$2.6 mil millones"
+    "cantidad": 37,
+    "valor": 199464703,
+    "valor_texto": "RD$199.5 millones"
    },
    {
     "nombre": "Ayuntamiento del Distrito Nacional (ADN)",
-    "cantidad": 15,
-    "valor": 874415316,
-    "valor_texto": "RD$874.4 millones"
+    "cantidad": 37,
+    "valor": 1430333358,
+    "valor_texto": "RD$1.4 mil millones"
+   },
+   {
+    "nombre": "Corporación de Acueducto y Alcantarillado de Santiago",
+    "cantidad": 35,
+    "valor": 5494165844,
+    "valor_texto": "RD$5.5 mil millones"
+   },
+   {
+    "nombre": "Empresa de Transmisión Eléctrica Dominicana",
+    "cantidad": 34,
+    "valor": 248206250,
+    "valor_texto": "RD$248.2 millones"
+   },
+   {
+    "nombre": "Centro de Atención Integral para la Discapacidad",
+    "cantidad": 34,
+    "valor": 68875303,
+    "valor_texto": "RD$68.9 millones"
+   },
+   {
+    "nombre": "Servicio Regional de Salud Cibao Sur",
+    "cantidad": 33,
+    "valor": 62415690,
+    "valor_texto": "RD$62.4 millones"
+   },
+   {
+    "nombre": "Servicio Nacional de Salud",
+    "cantidad": 33,
+    "valor": 3541761992,
+    "valor_texto": "RD$3.5 mil millones"
    }
   ],
   "subsectores": [
    {
     "nombre": "Rehabilitación y mantenimiento de edificaciones",
-    "cantidad": 529,
-    "valor": 9651753179,
-    "valor_texto": "RD$9.7 mil millones"
+    "cantidad": 1117,
+    "valor": 18461620873,
+    "valor_texto": "RD$18.5 mil millones"
    },
    {
     "nombre": "Obras civiles e infraestructura",
-    "cantidad": 409,
-    "valor": 42844290608,
-    "valor_texto": "RD$42.8 mil millones"
+    "cantidad": 765,
+    "valor": 63890694965,
+    "valor_texto": "RD$63.9 mil millones"
    },
    {
     "nombre": "Materiales y equipos de construcción",
-    "cantidad": 268,
-    "valor": 10405800448,
-    "valor_texto": "RD$10.4 mil millones"
-   },
-   {
-    "nombre": "Edificaciones y viviendas",
-    "cantidad": 40,
-    "valor": 1736424294,
-    "valor_texto": "RD$1.7 mil millones"
+    "cantidad": 612,
+    "valor": 11686014621,
+    "valor_texto": "RD$11.7 mil millones"
    },
    {
     "nombre": "Diseño, supervisión y estudios técnicos",
-    "cantidad": 36,
-    "valor": 1345834241,
-    "valor_texto": "RD$1.3 mil millones"
+    "cantidad": 101,
+    "valor": 1589269667,
+    "valor_texto": "RD$1.6 mil millones"
+   },
+   {
+    "nombre": "Edificaciones y viviendas",
+    "cantidad": 85,
+    "valor": 9546503314,
+    "valor_texto": "RD$9.5 mil millones"
    }
   ],
   "plazo": {
    "mediana": 6,
-   "p25": 6,
+   "p25": 5,
    "p75": 8,
-   "muestras": 1282
+   "muestras": 2680
   }
  }
 }

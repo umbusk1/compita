@@ -2,19 +2,19 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Alojamiento, alimentación, eventos e infraestructura turística",
- "actualizado": "2026-11-06T10:26:18.144018-04:00",
+ "actualizado": "2026-11-06T10:35:47.357623-04:00",
  "actualizado_texto": "6 de noviembre de 2026",
  "kpis": {
-  "abiertas": 58,
-  "valor_total": 344496488,
-  "valor_texto": "RD$344.5 millones",
-  "cierran_7_dias": 50
+  "abiertas": 56,
+  "valor_total": 336437488,
+  "valor_texto": "RD$336.4 millones",
+  "cierran_7_dias": 48
  },
- "resumen": "El Estado dominicano mantiene abiertas 58 licitaciones para el sector de turismo, hotelería y gastronomía, por un valor estimado de RD$344.5 millones, y 50 de ellas cierran en los próximos siete días. Las oportunidades más destacadas incluyen la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones, el suministro de almuerzos y cenas para la Dirección General de Pasaportes por RD$60 millones, y los servicios de producción de eventos del MIREX por RD$40 millones. Empresarios de catering, alojamiento y organización de eventos tienen una ventana corta para preparar sus ofertas antes de que se agote el plazo de la mayoría de estos procesos.",
+ "resumen": "El sector turismo, hotelería y gastronomía registra hoy 56 licitaciones abiertas por un valor estimado de RD$336.4 millones, con 48 procesos cerrando en los próximos 7 días. Entre las oportunidades de mayor monto destacan la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones, el suministro de almuerzos y cenas de la Dirección General de Pasaportes por RD$60 millones, y los servicios de producción de eventos del mismo MIREX por RD$40 millones. Con casi el 86% de los procesos próximos a cerrar, las empresas del sector deben actuar con rapidez para presentar sus ofertas.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
-   "cantidad": 28
+   "cantidad": 26
   },
   {
    "nombre": "Alimentación, catering y restaurantes",
@@ -30,34 +30,6 @@
   }
  ],
  "licitaciones": [
-  {
-   "referencia": "INESPRE-CCC-CP-2026-0025",
-   "institucion": "Instituto Estabilización de Precios",
-   "descripcion": "CONTRATACIÓN DE SERVICIOS DE MONTAJE PROVISIONAL PARA LAS FERIAS NAVIDEÑAS 2026 DEL INESPRE.”",
-   "monto": 6400000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$6.4 millones",
-   "cierre": "2026-11-06T10:30:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:30 a.m.",
-   "dias": 0,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "IMDH-DAF-CM-2026-0010",
-   "institucion": "Instituto Militar Derechos Humanos y Derecho Internacional Humanitario",
-   "descripcion": "CONTRATACIÓN DE UN SERVICIO PARA LA ORGANIZACIÓN Y REALIZACIÓN DEL PRIMER CONGRESO INTERNACIONAL DESAFÍOS GLOBALES, REALIDADES REGIONALES, EL FUTURO DEL DIH Y LOS DERECHOS HUMANOS EN LA ERA DIGITAL,",
-   "monto": 1659000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
-   "cierre": "2026-11-06T10:35:00-04:00",
-   "cierre_texto": "6 de noviembre, 10:35 a.m.",
-   "dias": 0,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
   {
    "referencia": "CNE-DAF-CM-2026-0060",
    "institucion": "Comisión Nacional de Energía",
@@ -846,59 +818,59 @@
  "mercado": {
   "desde": "enero de 2026",
   "total": {
-   "cantidad": 791,
-   "valor": 3178405705,
-   "valor_texto": "RD$3.2 mil millones"
+   "cantidad": 1472,
+   "valor": 4806652757,
+   "valor_texto": "RD$4.8 mil millones"
   },
   "meses": [
    {
     "mes": "2026-01",
     "etiqueta": "Ene",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 48,
+    "valor": 112287018,
+    "valor_texto": "RD$112.3 millones"
    },
    {
     "mes": "2026-02",
     "etiqueta": "Feb",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 102,
+    "valor": 194869553,
+    "valor_texto": "RD$194.9 millones"
    },
    {
     "mes": "2026-03",
     "etiqueta": "Mar",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 132,
+    "valor": 351354222,
+    "valor_texto": "RD$351.4 millones"
    },
    {
     "mes": "2026-04",
     "etiqueta": "Abr",
-    "cantidad": 0,
-    "valor": 0,
-    "valor_texto": "—"
+    "cantidad": 123,
+    "valor": 358069864,
+    "valor_texto": "RD$358.1 millones"
    },
    {
     "mes": "2026-05",
     "etiqueta": "May",
-    "cantidad": 1,
-    "valor": 40000000,
-    "valor_texto": "RD$40 millones"
+    "cantidad": 125,
+    "valor": 367431490,
+    "valor_texto": "RD$367.4 millones"
    },
    {
     "mes": "2026-06",
     "etiqueta": "Jun",
-    "cantidad": 12,
-    "valor": 760204991,
-    "valor_texto": "RD$760.2 millones"
+    "cantidad": 155,
+    "valor": 1027174408,
+    "valor_texto": "RD$1 mil millones"
    },
    {
     "mes": "2026-07",
     "etiqueta": "Jul",
-    "cantidad": 230,
-    "valor": 991382379,
-    "valor_texto": "RD$991.4 millones"
+    "cantidad": 239,
+    "valor": 1008647868,
+    "valor_texto": "RD$1 mil millones"
    },
    {
     "mes": "2026-08",
@@ -932,102 +904,102 @@
   "instituciones": [
    {
     "nombre": "Ministerio de Educación",
-    "cantidad": 209,
-    "valor": 1481422726,
-    "valor_texto": "RD$1.5 mil millones"
+    "cantidad": 277,
+    "valor": 1615749049,
+    "valor_texto": "RD$1.6 mil millones"
    },
    {
     "nombre": "Gabinete de Coordinación de Políticas Sociales",
-    "cantidad": 29,
-    "valor": 35048773,
-    "valor_texto": "RD$35 millones"
+    "cantidad": 39,
+    "valor": 46533797,
+    "valor_texto": "RD$46.5 millones"
    },
    {
     "nombre": "Ayuntamiento del Distrito Nacional (ADN)",
-    "cantidad": 17,
-    "valor": 42492646,
-    "valor_texto": "RD$42.5 millones"
+    "cantidad": 38,
+    "valor": 92718976,
+    "valor_texto": "RD$92.7 millones"
    },
    {
     "nombre": "Instituto Superior de Formación Docente Salomé Ureña",
-    "cantidad": 17,
-    "valor": 29286207,
-    "valor_texto": "RD$29.3 millones"
-   },
-   {
-    "nombre": "Ministerio de Energía y Minas",
-    "cantidad": 14,
-    "valor": 62750000,
-    "valor_texto": "RD$62.8 millones"
+    "cantidad": 37,
+    "valor": 48688597,
+    "valor_texto": "RD$48.7 millones"
    },
    {
     "nombre": "Ministerio de Salud Pública y Asistencia Social",
-    "cantidad": 13,
-    "valor": 19183000,
-    "valor_texto": "RD$19.2 millones"
+    "cantidad": 26,
+    "valor": 53559249,
+    "valor_texto": "RD$53.6 millones"
    },
    {
-    "nombre": "Dirección General de Migración",
-    "cantidad": 10,
-    "valor": 17493250,
-    "valor_texto": "RD$17.5 millones"
+    "nombre": "Centro de Exportación e Inversión de la Republica Dominicana",
+    "cantidad": 24,
+    "valor": 48319273,
+    "valor_texto": "RD$48.3 millones"
    },
    {
-    "nombre": "Servicio Nacional de Salud",
-    "cantidad": 9,
-    "valor": 103281938,
-    "valor_texto": "RD$103.3 millones"
+    "nombre": "Procuraduría General de la República",
+    "cantidad": 22,
+    "valor": 40540000,
+    "valor_texto": "RD$40.5 millones"
    },
    {
-    "nombre": "Seguro Nacional de Salud (SENASA)",
-    "cantidad": 9,
-    "valor": 17987164,
-    "valor_texto": "RD$18 millones"
+    "nombre": "Instituto Nacional de Educacion Fisica",
+    "cantidad": 19,
+    "valor": 64241990,
+    "valor_texto": "RD$64.2 millones"
    },
    {
-    "nombre": "Instituto Tecnológico de las Américas",
-    "cantidad": 9,
-    "valor": 23192565,
-    "valor_texto": "RD$23.2 millones"
+    "nombre": "Ministerio de Cultura",
+    "cantidad": 19,
+    "valor": 31265981,
+    "valor_texto": "RD$31.3 millones"
+   },
+   {
+    "nombre": "Ministerio de Energía y Minas",
+    "cantidad": 18,
+    "valor": 66768000,
+    "valor_texto": "RD$66.8 millones"
    }
   ],
   "subsectores": [
    {
     "nombre": "Eventos y actividades",
-    "cantidad": 366,
-    "valor": 986705738,
-    "valor_texto": "RD$986.7 millones"
+    "cantidad": 656,
+    "valor": 1649745056,
+    "valor_texto": "RD$1.6 mil millones"
    },
    {
     "nombre": "Alimentación, catering y restaurantes",
-    "cantidad": 289,
-    "valor": 1180398220,
-    "valor_texto": "RD$1.2 mil millones"
+    "cantidad": 608,
+    "valor": 1997693882,
+    "valor_texto": "RD$2 mil millones"
    },
    {
     "nombre": "Alojamiento y hospedaje",
-    "cantidad": 124,
-    "valor": 862330749,
-    "valor_texto": "RD$862.3 millones"
+    "cantidad": 182,
+    "valor": 972219472,
+    "valor_texto": "RD$972.2 millones"
    },
    {
     "nombre": "Promoción y gestión turística",
-    "cantidad": 8,
-    "valor": 104117575,
-    "valor_texto": "RD$104.1 millones"
+    "cantidad": 20,
+    "valor": 139897975,
+    "valor_texto": "RD$139.9 millones"
    },
    {
     "nombre": "Infraestructura y servicios turísticos",
-    "cantidad": 4,
-    "valor": 44853422,
-    "valor_texto": "RD$44.9 millones"
+    "cantidad": 6,
+    "valor": 47096372,
+    "valor_texto": "RD$47.1 millones"
    }
   ],
   "plazo": {
    "mediana": 6,
-   "p25": 6,
+   "p25": 5,
    "p75": 7,
-   "muestras": 791
+   "muestras": 1472
   }
  }
 }
