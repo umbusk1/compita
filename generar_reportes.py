@@ -172,12 +172,14 @@ def clasificar_pendientes(conn, historial=False):
         cur.execute("""
             SELECT id, referencia, descripcion, unidad_compras FROM licitaciones
             WHERE clasificado_en IS NULL AND fecha_presentacion >= '2026-01-01'
+              AND substring(upper(referencia) from '-([A-Z]+)-[0-9]{4}-[0-9]+\\s*$') IN ('LPN','LPI','CP','CM','SI','SO')
             ORDER BY fecha_presentacion DESC LIMIT 30000
         """)
     else:
         cur.execute("""
             SELECT id, referencia, descripcion, unidad_compras FROM licitaciones
             WHERE fecha_presentacion > NOW() AND clasificado_en IS NULL
+              AND substring(upper(referencia) from '-([A-Z]+)-[0-9]{4}-[0-9]+\\s*$') IN ('LPN','LPI','CP','CM','SI','SO')
             ORDER BY fecha_presentacion ASC LIMIT 1500
         """)
     pendientes = [l for l in cur.fetchall() if modalidad(l["referencia"]) in COMPETITIVAS]

@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="/favicon-umbusk.png">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: 'Manrope', sans-serif; color: #1a2e2d; background: #f8f6f1; }
     h1, h2, h3, .lora { font-family: 'Lora', serif; }
@@ -78,6 +79,46 @@
   <div class="text-center mt-6">
     <button id="ver-mas" class="hidden font-semibold px-5 py-2 rounded-lg" style="border:1px solid var(--crema-borde); background:#fff; color:var(--texto-medio);">Ver más</button>
   </div>
+
+  <section id="bloque-mercado" class="mt-16 hidden">
+    <p class="text-xs font-semibold uppercase tracking-wider mb-2" style="color:var(--violeta);">Historial</p>
+    <h2 class="lora text-2xl md:text-3xl font-bold mb-2" style="color:var(--texto-oscuro);">El mercado de este sector en 2026</h2>
+    <p id="mercado-intro" class="text-sm mb-6" style="color:var(--texto-medio);"></p>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div class="tarjeta"><div id="m-cantidad" class="lora text-3xl font-bold" style="color:var(--texto-oscuro);">—</div>
+        <div class="text-xs uppercase tracking-wider mt-1" style="color:var(--texto-medio);">licitaciones publicadas</div></div>
+      <div class="tarjeta"><div id="m-valor" class="lora text-3xl font-bold" style="color:var(--texto-oscuro);">—</div>
+        <div class="text-xs uppercase tracking-wider mt-1" style="color:var(--texto-medio);">valor estimado en pesos</div></div>
+      <div class="tarjeta"><div id="m-plazo" class="lora text-3xl font-bold" style="color:var(--texto-oscuro);">—</div>
+        <div id="m-plazo-nota" class="text-xs uppercase tracking-wider mt-1" style="color:var(--texto-medio);">plazo típico para ofertar</div></div>
+    </div>
+
+    <div class="tarjeta mb-8">
+      <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+        <h3 class="lora text-lg font-bold" style="color:var(--texto-oscuro);">¿Cuándo compra el Estado?</h3>
+        <div class="flex gap-2">
+          <button class="chip activo" id="ver-cantidad">Cantidad</button>
+          <button class="chip" id="ver-valor">Monto</button>
+        </div>
+      </div>
+      <div style="position:relative; height:280px;"><canvas id="grafico-meses" aria-label="Licitaciones publicadas por mes"></canvas></div>
+      <p class="text-xs mt-3" style="color:var(--texto-medio);">Licitaciones publicadas cada mes. El último mes está en curso.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="tarjeta">
+        <h3 class="lora text-lg font-bold mb-1" style="color:var(--texto-oscuro);">¿Quién compra?</h3>
+        <p class="text-xs mb-4" style="color:var(--texto-medio);">Las 10 instituciones con más licitaciones del sector en 2026.</p>
+        <div id="m-instituciones" class="grid gap-3"></div>
+      </div>
+      <div class="tarjeta">
+        <h3 class="lora text-lg font-bold mb-1" style="color:var(--texto-oscuro);">¿Qué se compra?</h3>
+        <p class="text-xs mb-4" style="color:var(--texto-medio);">Licitaciones de 2026 por subsector.</p>
+        <div id="m-subsectores" class="grid gap-3"></div>
+      </div>
+    </div>
+  </section>
 
   <section class="mt-14 grid md:grid-cols-2 gap-6">
     <div class="rounded-2xl p-7" style="background:var(--verde-oscuro);">
@@ -176,6 +217,64 @@
     document.getElementById('ver-mas').classList.toggle('hidden', items.length <= mostrar);
   }
 
+  function barras(id, lista) {
+    var max = Math.max.apply(null, lista.map(function (x) { return x.cantidad; }).concat([1]));
+    document.getElementById(id).innerHTML = lista.map(function (x) {
+      return '<div title="' + esc(x.nombre) + '">'
+        + '<div class="flex justify-between gap-3 text-sm mb-1"><span style="color:var(--texto-oscuro);">' + esc(capitalizar(x.nombre)) + '</span>'
+        + '<span class="whitespace-nowrap" style="color:var(--texto-medio);">' + x.cantidad.toLocaleString('es-DO') + ' · ' + esc(x.valor_texto) + '</span></div>'
+        + '<div style="height:8px; border-radius:4px; background:var(--crema);"><div style="height:8px; border-radius:4px; background:var(--violeta); width:' + Math.max(2, Math.round(x.cantidad / max * 100)) + '%;"></div></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function pintarMercado(m) {
+    if (!m || !m.total || !m.total.cantidad) return;
+    document.getElementById('bloque-mercado').classList.remove('hidden');
+    document.getElementById('mercado-intro').textContent = 'Todas las licitaciones competitivas del sector publicadas desde ' + m.desde
+      + ', con o sin cierre. Sirve para ver el tamaño del mercado, sus temporadas y a qué instituciones les vende.';
+    document.getElementById('m-cantidad').textContent = m.total.cantidad.toLocaleString('es-DO');
+    document.getElementById('m-valor').textContent = m.total.valor_texto.replace('RD$', 'RD$ ');
+    if (m.plazo && m.plazo.mediana !== null) {
+      document.getElementById('m-plazo').textContent = m.plazo.mediana + ' días';
+      document.getElementById('m-plazo-nota').textContent = 'plazo típico para ofertar (la mitad, entre ' + m.plazo.p25 + ' y ' + m.plazo.p75 + ' días)';
+    }
+    barras('m-instituciones', m.instituciones);
+    barras('m-subsectores', m.subsectores);
+
+    var ctx = document.getElementById('grafico-meses');
+    var etiquetas = m.meses.map(function (x) { return x.etiqueta; });
+    var grafico = new Chart(ctx, {
+      type: 'bar',
+      data: { labels: etiquetas, datasets: [{ data: m.meses.map(function (x) { return x.cantidad; }),
+        backgroundColor: '#5247e4', borderRadius: 4, maxBarThickness: 36 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: {
+          label: function (c) {
+            var x = m.meses[c.dataIndex];
+            return x.cantidad.toLocaleString('es-DO') + ' licitaciones · ' + x.valor_texto;
+          } } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#4a6662', font: { family: 'Manrope' } } },
+          y: { beginAtZero: true, grid: { color: 'rgba(22,51,50,0.06)' }, border: { display: false },
+               ticks: { color: '#4a6662', font: { family: 'Manrope' }, callback: function (v) {
+                 return grafico && grafico._modoValor ? (v >= 1e9 ? (v / 1e9).toLocaleString('es-DO') + ' mil M' : (v / 1e6).toLocaleString('es-DO') + ' M') : v.toLocaleString('es-DO');
+               } } }
+        }
+      }
+    });
+    function modo(valor) {
+      grafico._modoValor = valor;
+      grafico.data.datasets[0].data = m.meses.map(function (x) { return valor ? x.valor : x.cantidad; });
+      grafico.update();
+      document.getElementById('ver-valor').classList.toggle('activo', valor);
+      document.getElementById('ver-cantidad').classList.toggle('activo', !valor);
+    }
+    document.getElementById('ver-cantidad').onclick = function () { modo(false); };
+    document.getElementById('ver-valor').onclick = function () { modo(true); };
+  }
+
   function pintar() {
     document.title = datos.titulo + ': licitaciones abiertas en República Dominicana | Compita';
     document.getElementById('eyebrow').textContent = 'Reporte gratuito · actualizado el ' + datos.actualizado_texto;
@@ -195,6 +294,7 @@
       + '<a class="chip" href="/#reporte">Reporte semanal general →</a>';
     pintarChips();
     pintarLista();
+    pintarMercado(datos.mercado);
   }
 
   document.getElementById('solo-pronto').onchange = function (e) { soloPronto = e.target.checked; mostrar = 30; pintarLista(); };
