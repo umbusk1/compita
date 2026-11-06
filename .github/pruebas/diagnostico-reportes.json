@@ -1,0 +1,5 @@
+[
+  {"sector": "TURISMO", "institucion": "Ministerio de Educación", "muestra": 40},
+  {"sector": "CONSTRUCCION", "institucion": "Zona Tur", "muestra": 15},
+  {"sector": "CONSTRUCCION", "institucion": "Aduanas", "muestra": 10, "mayores": ["2026-06-01", "2026-07-01"]}
+]
