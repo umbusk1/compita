@@ -71,7 +71,7 @@ REPORTES = {
     },
     "turismo": {
         "titulo": "Turismo, hotelería y gastronomía",
-        "subtitulo": "Alojamiento, alimentación, eventos e infraestructura turística",
+        "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
     },
     "mipymes": {
         "titulo": "Oportunidades para MIPYMES",
@@ -123,7 +123,10 @@ def asegurar_columnas(cur):
         ALTER TABLE licitaciones
           ADD COLUMN IF NOT EXISTS sector_ia TEXT,
           ADD COLUMN IF NOT EXISTS subsector_ia TEXT,
-          ADD COLUMN IF NOT EXISTS clasificado_en TIMESTAMPTZ
+          ADD COLUMN IF NOT EXISTS clasificado_en TIMESTAMPTZ,
+          ADD COLUMN IF NOT EXISTS monto_plausible BOOLEAN,
+          ADD COLUMN IF NOT EXISTS monto_revisado_en TIMESTAMPTZ,
+          ADD COLUMN IF NOT EXISTS monto_nota TEXT
     """)
 
 
@@ -202,6 +205,76 @@ def clasificar_pendientes(conn, historial=False):
 
 
 # ----------------------------------------------------------------------------
+# 1b. REVISIÓN DE MONTOS GRANDES
+# Algunos montos del portal están mal capturados (por ejemplo, RD$8,500 millones
+# por "un gredal"). La IA revisa cada monto grande una sola vez; si no es creíble
+# para lo que describe la licitación, se excluye de las sumas.
+# ----------------------------------------------------------------------------
+
+UMBRAL_REVISION = 500_000_000
+
+
+def revisar_montos(conn):
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT id, referencia, unidad_compras, descripcion, monto_estimado
+        FROM licitaciones
+        WHERE sector_ia IS NOT NULL AND monto_revisado_en IS NULL
+          AND COALESCE(moneda, 'DOP') = 'DOP' AND monto_estimado >= %s
+        ORDER BY monto_estimado DESC
+    """, (UMBRAL_REVISION,))
+    pendientes = cur.fetchall()
+    print(f"Montos grandes por revisar: {len(pendientes)}")
+    for i in range(0, len(pendientes), 30):
+        lote = pendientes[i:i + 30]
+        lista = "\n".join(
+            f"{k + 1}. [{(l['unidad_compras'] or '')[:60]}] {(l['descripcion'] or '').strip()[:220]} — RD${float(l['monto_estimado']):,.0f}"
+            for k, l in enumerate(lote)
+        )
+        prompt = f"""Revisa estos montos estimados de licitaciones públicas de República Dominicana (pesos dominicanos).
+Para cada una, decide si el monto es CREÍBLE para lo que se describe, o si parece un error de captura
+(por ejemplo, ceros de más: un solo equipo, un servicio pequeño o un suministro menor por cientos o miles de millones).
+Obras grandes (carreteras, acueductos, hospitales, programas nacionales, contratos plurianuales) sí pueden costar miles de millones.
+
+{lista}
+
+Responde una línea por licitación, en este formato exacto y sin nada más:
+número|SI o NO|razón breve (máximo 12 palabras)"""
+        respuesta = llamar_claude(MODELO_CLASIFICADOR, prompt, 2500)
+        if not respuesta:
+            continue
+        cur2 = conn.cursor()
+        for linea in respuesta.splitlines():
+            partes = [p.strip() for p in linea.split("|")]
+            if len(partes) < 2 or not partes[0].isdigit():
+                continue
+            n = int(partes[0])
+            if not (1 <= n <= len(lote)) or partes[1].upper() not in ("SI", "SÍ", "NO"):
+                continue
+            plausible = partes[1].upper() != "NO"
+            nota = partes[2][:200] if len(partes) > 2 else ""
+            cur2.execute(
+                "UPDATE licitaciones SET monto_plausible=%s, monto_nota=%s, monto_revisado_en=NOW() WHERE id=%s",
+                (plausible, nota, lote[n - 1]["id"]),
+            )
+        conn.commit()
+
+    # Lista pública de los montos descartados, para poder revisarlos
+    cur.execute("""
+        SELECT referencia, unidad_compras, LEFT(descripcion, 200) AS descripcion, monto_estimado, monto_nota
+        FROM licitaciones WHERE monto_plausible = FALSE ORDER BY monto_estimado DESC
+    """)
+    dudosos = [{"referencia": r["referencia"], "institucion": r["unidad_compras"], "descripcion": r["descripcion"],
+                "monto": float(r["monto_estimado"]), "nota": r["monto_nota"]} for r in cur.fetchall()]
+    os.makedirs(CARPETA, exist_ok=True)
+    with open(os.path.join(CARPETA, "montos-dudosos.json"), "w", encoding="utf-8") as fh:
+        json.dump({"actualizado": datetime.now(ZONA_RD).isoformat(), "montos": dudosos}, fh, ensure_ascii=False, indent=1)
+    print(f"Montos excluidos por dudosos: {len(dudosos)}")
+    for d in dudosos[:15]:
+        print(f"   RD${d['monto']/1e6:,.1f} M · {d['referencia']} · {d['descripcion'][:70]} · {d['nota']}")
+
+
+# ----------------------------------------------------------------------------
 # 2. REPORTES
 # ----------------------------------------------------------------------------
 
@@ -274,7 +347,7 @@ def mercado(conn, clave):
     """Historial del sector desde enero de 2026: por mes, quién compra, plazos y subsectores."""
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("""
-        SELECT referencia, unidad_compras, monto_estimado, moneda, sector_ia, subsector_ia,
+        SELECT referencia, unidad_compras, monto_estimado, moneda, sector_ia, subsector_ia, monto_plausible,
                COALESCE(fecha_publicacion, scrapeado_en) AS publicada, fecha_presentacion
         FROM licitaciones
         WHERE sector_ia IS NOT NULL
@@ -283,7 +356,7 @@ def mercado(conn, clave):
     filas = [f for f in cur.fetchall() if pertenece(clave, f["sector_ia"], f["referencia"])]
 
     def valor(f):
-        if not f["monto_estimado"] or (f["moneda"] or "DOP") != "DOP":
+        if not f["monto_estimado"] or (f["moneda"] or "DOP") != "DOP" or f["monto_plausible"] is False:
             return 0.0
         v = float(f["monto_estimado"])
         return v if v <= MAX_MONTO_CREIBLE else 0.0
@@ -338,7 +411,7 @@ def generar_reporte(conn, clave):
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("""
         SELECT referencia, descripcion, unidad_compras, monto_estimado, moneda,
-               fecha_presentacion, url_detalle, sector_ia, subsector_ia
+               fecha_presentacion, url_detalle, sector_ia, subsector_ia, monto_plausible
         FROM licitaciones
         WHERE fecha_presentacion > NOW()
           AND sector_ia IS NOT NULL
@@ -359,7 +432,9 @@ def generar_reporte(conn, clave):
             "descripcion": (f["descripcion"] or "").strip(),
             "monto": float(f["monto_estimado"]) if f["monto_estimado"] else None,
             "moneda": f["moneda"] or "DOP",
-            "monto_texto": formato_monto(f["monto_estimado"], f["moneda"]),
+            "monto_texto": formato_monto(f["monto_estimado"], f["moneda"])
+                           + (" (monto por verificar)" if f["monto_plausible"] is False else ""),
+            "monto_dudoso": f["monto_plausible"] is False,
             "cierre": cierre.isoformat(),
             "cierre_texto": texto_fecha(cierre) + cierre.strftime(", %-I:%M %p").lower().replace("am", "a.m.").replace("pm", "p.m."),
             "dias": max(0, (cierre.date() - ahora.date()).days),
@@ -368,7 +443,8 @@ def generar_reporte(conn, clave):
             "url": f["url_detalle"] or "",
         })
 
-    valor = sum(i["monto"] for i in items if i["monto"] and i["moneda"] in ("DOP", "RD$", ""))
+    valor = sum(i["monto"] for i in items
+                if i["monto"] and i["moneda"] in ("DOP", "RD$", "") and not i["monto_dudoso"])
     kpis = {
         "abiertas": len(items),
         "valor_total": round(valor),
@@ -382,7 +458,7 @@ def generar_reporte(conn, clave):
                          key=lambda s: -s["cantidad"])
 
     # Para el resumen, las de mayor monto primero
-    destacadas = sorted(items, key=lambda i: -(i["monto"] or 0))
+    destacadas = sorted(items, key=lambda i: -((i["monto"] or 0) if not i["monto_dudoso"] else 0))
     datos = {
         "clave": clave,
         "titulo": REPORTES[clave]["titulo"],
@@ -412,6 +488,7 @@ def main():
     clasificar_pendientes(conn)
     if os.getenv("HISTORIAL") == "1":
         clasificar_pendientes(conn, historial=True)
+    revisar_montos(conn)
     for clave in REPORTES:
         generar_reporte(conn, clave)
     conn.close()
