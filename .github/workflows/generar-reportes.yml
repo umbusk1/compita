@@ -1,0 +1,38 @@
+name: Reportes sectoriales
+# Clasifica con IA las licitaciones abiertas por sector y publica los reportes
+# gratuitos de Construcción, Turismo y MIPYMES (data/reportes/*.json).
+on:
+  schedule:
+    - cron: "10 18 * * 1-5"  # 2:10 PM hora RD, después del scraping de la 1:30 PM
+    - cron: "40 21 * * 1-5"  # 5:40 PM hora RD, después del scraping de las 5:00 PM
+  push:
+    paths:
+      - "generar_reportes.py"
+  workflow_dispatch:
+jobs:
+  reportes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Instalar dependencias
+        run: pip install psycopg2-binary requests
+      - name: Clasificar y generar reportes
+        env:
+          DATABASE_URL:      ${{ secrets.DATABASE_URL }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python generar_reportes.py
+      - name: Publicar los reportes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/reportes
+          if git diff --staged --quiet; then
+            echo "Sin cambios en los reportes"
+          else
+            git commit -m "🤖 Actualizar reportes sectoriales - $(date '+%Y-%m-%d %H:%M')"
+            for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+          fi
