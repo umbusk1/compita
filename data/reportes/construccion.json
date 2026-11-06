@@ -2,15 +2,15 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-06T09:31:18.402667-04:00",
+ "actualizado": "2026-11-06T09:32:54.351499-04:00",
  "actualizado_texto": "6 de noviembre de 2026",
  "kpis": {
   "abiertas": 88,
   "valor_total": 6953620097,
-  "valor_texto": "RD$6,953.6 millones",
+  "valor_texto": "RD$7 mil millones",
   "cierran_7_dias": 72
  },
- "resumen": "El sector construcción registra hoy 88 licitaciones abiertas por un valor estimado de RD$6,953.6 millones, con 72 procesos que cierran en los próximos siete días, por lo que conviene revisar los plazos cuanto antes. Entre las oportunidades de mayor peso destaca la convocatoria de la Dirección de Infraestructura Escolar para adecuaciones y reparaciones en centros educativos a nivel nacional, valorada en RD$1,900 millones, seguida por la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas, por RD$1,387.1 millones. La Corporación del Acueducto y Alcantarillado de Santo Domingo también suma dos licitaciones relevantes: la recolección de aguas residuales en la Av. Jacobo Majluta por RD$600 millones y la construcción y electrificación de pozos en el Gran Santo Domingo por RD$392.4 millones. Con un volumen tan alto de cierres inminentes, las empresas interesadas deben priorizar la revisión de pliegos y fechas límite esta misma semana.",
+ "resumen": "Hoy el sector Construcción registra 88 licitaciones abiertas por un valor estimado de RD$7 mil millones, con 72 de ellas cerrando en los próximos siete días. Destaca la contratación de obras en centros educativos a nivel nacional de la Dirección Infraestructura Escolar por RD$1.9 mil millones, la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas por RD$1.4 mil millones, y la obra de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD por RD$600 millones. Con tantos cierres inminentes, los empresarios del sector deben revisar cuanto antes los pliegos y plazos para no perder estas oportunidades.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
@@ -824,7 +824,7 @@
    "descripcion": "CONSTRUCCION Y RECONSTRUCION DE CARRETERAS CON OBRAS COMPLEMENTARIAS DE DRENAJE EN LAS PROVINCIAS LA VEGA Y HATO MAYOR",
    "monto": 1387071900.75,
    "moneda": "DOP",
-   "monto_texto": "RD$1,387.1 millones",
+   "monto_texto": "RD$1.4 mil millones",
    "cierre": "2026-11-12T10:00:00-04:00",
    "cierre_texto": "12 de noviembre, 10:00 a.m.",
    "dias": 6,
@@ -1202,7 +1202,7 @@
    "descripcion": "CONTRATACIÓN DE OBRAS PARA ADECUACIONES, REPARACIONES Y TRABAJOS DE ACABADOS EN CENTROS EDUCATIVOS A NIVEL NACIONAL",
    "monto": 1900000000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1,900 millones",
+   "monto_texto": "RD$1.9 mil millones",
    "cierre": "2026-12-09T10:00:00-04:00",
    "cierre_texto": "9 de diciembre, 10:00 a.m.",
    "dias": 33,
