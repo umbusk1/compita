@@ -12,7 +12,7 @@ on:
 jobs:
   reportes:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -24,6 +24,8 @@ jobs:
         env:
           DATABASE_URL:      ${{ secrets.DATABASE_URL }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # También clasifica el historial que falte (la primera vez, todo 2026)
+          HISTORIAL: "1"
         run: python generar_reportes.py
       - name: Publicar los reportes
         run: |

@@ -20,6 +20,7 @@ from zoneinfo import ZoneInfo
 import psycopg2
 import psycopg2.extras
 import requests
+from concurrent.futures import ThreadPoolExecutor
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -126,30 +127,14 @@ def asegurar_columnas(cur):
     """)
 
 
-def clasificar_pendientes(conn):
-    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("""
-        SELECT id, referencia, descripcion, unidad_compras
-        FROM licitaciones
-        WHERE fecha_presentacion > NOW()
-          AND clasificado_en IS NULL
-        ORDER BY fecha_presentacion ASC
-        LIMIT 1500
-    """)
-    pendientes = [l for l in cur.fetchall() if modalidad(l["referencia"]) in COMPETITIVAS]
-    print(f"Por clasificar: {len(pendientes)}")
-
-    opciones = "\n".join(
-        f"- {sector}: " + " | ".join(subs) for sector, subs in SECTORES.items()
+def clasificar_lote(lote):
+    """Devuelve [(id, sector, subsector)] para un lote de hasta 80 licitaciones."""
+    opciones = "\n".join(f"- {sector}: " + " | ".join(subs) for sector, subs in SECTORES.items())
+    lista = "\n".join(
+        f"{k + 1}. {(l['descripcion'] or '').strip()[:220]} [{(l['unidad_compras'] or '')[:60]}]"
+        for k, l in enumerate(lote)
     )
-    total = 0
-    for i in range(0, len(pendientes), 80):
-        lote = pendientes[i:i + 80]
-        lista = "\n".join(
-            f"{k + 1}. {(l['descripcion'] or '').strip()[:220]} [{(l['unidad_compras'] or '')[:60]}]"
-            for k, l in enumerate(lote)
-        )
-        prompt = f"""Clasifica cada licitación pública de República Dominicana en UN sector y UN subsector de esta lista:
+    prompt = f"""Clasifica cada licitación pública de República Dominicana en UN sector y UN subsector de esta lista:
 {opciones}
 
 Criterios:
@@ -162,28 +147,55 @@ LICITACIONES:
 
 Responde una línea por licitación, en este formato exacto y sin nada más:
 número|SECTOR|subsector"""
-        respuesta = llamar_claude(MODELO_CLASIFICADOR, prompt, 4000)
-        if not respuesta:
-            print("   Lote sin respuesta; se reintentará en la próxima corrida")
+    respuesta = llamar_claude(MODELO_CLASIFICADOR, prompt, 4000)
+    if not respuesta:
+        return []
+    validos = {s: set(subs) for s, subs in SECTORES.items()}
+    salida = []
+    for linea in respuesta.splitlines():
+        partes = [p.strip() for p in linea.split("|")]
+        if len(partes) != 3 or not partes[0].isdigit():
             continue
-        validos = {s: set(subs) for s, subs in SECTORES.items()}
-        cur2 = conn.cursor()
-        for linea in respuesta.splitlines():
-            partes = [p.strip() for p in linea.split("|")]
-            if len(partes) != 3 or not partes[0].isdigit():
-                continue
-            n, sector, sub = int(partes[0]), partes[1].upper(), partes[2]
-            if not (1 <= n <= len(lote)) or sector not in validos:
-                continue
-            if sub not in validos[sector]:
-                sub = "Otros" if sector == "OTRO" else SECTORES[sector][0]
-            cur2.execute(
-                "UPDATE licitaciones SET sector_ia=%s, subsector_ia=%s, clasificado_en=NOW() WHERE id=%s",
-                (sector, sub, lote[n - 1]["id"]),
-            )
-            total += 1
-        conn.commit()
-        print(f"   Lote {i // 80 + 1}: clasificadas hasta ahora {total}")
+        n, sector, sub = int(partes[0]), partes[1].upper(), partes[2]
+        if not (1 <= n <= len(lote)) or sector not in validos:
+            continue
+        if sub not in validos[sector]:
+            sub = "Otros" if sector == "OTRO" else SECTORES[sector][0]
+        salida.append((lote[n - 1]["id"], sector, sub))
+    return salida
+
+
+def clasificar_pendientes(conn, historial=False):
+    """Clasifica las abiertas sin clasificar. Con historial=True, todas las de 2026."""
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    if historial:
+        cur.execute("""
+            SELECT id, referencia, descripcion, unidad_compras FROM licitaciones
+            WHERE clasificado_en IS NULL AND fecha_presentacion >= '2026-01-01'
+            ORDER BY fecha_presentacion DESC LIMIT 30000
+        """)
+    else:
+        cur.execute("""
+            SELECT id, referencia, descripcion, unidad_compras FROM licitaciones
+            WHERE fecha_presentacion > NOW() AND clasificado_en IS NULL
+            ORDER BY fecha_presentacion ASC LIMIT 1500
+        """)
+    pendientes = [l for l in cur.fetchall() if modalidad(l["referencia"]) in COMPETITIVAS]
+    print(f"Por clasificar{' (historial)' if historial else ''}: {len(pendientes)}")
+    lotes = [pendientes[i:i + 80] for i in range(0, len(pendientes), 80)]
+    total = 0
+    with ThreadPoolExecutor(max_workers=6 if historial else 3) as pool:
+        for k, resultado in enumerate(pool.map(clasificar_lote, lotes)):
+            cur2 = conn.cursor()
+            for lid, sector, sub in resultado:
+                cur2.execute(
+                    "UPDATE licitaciones SET sector_ia=%s, subsector_ia=%s, clasificado_en=NOW() WHERE id=%s",
+                    (sector, sub, lid),
+                )
+            conn.commit()
+            total += len(resultado)
+            if (k + 1) % 10 == 0 or k + 1 == len(lotes):
+                print(f"   {k + 1}/{len(lotes)} lotes, {total} clasificadas")
     return total
 
 
@@ -239,6 +251,87 @@ def texto_fecha(f):
     return f"{f.day} de {MESES[f.month - 1]}"
 
 
+MAX_MONTO_CREIBLE = 50_000_000_000  # montos mayores suelen ser errores de captura
+
+
+def subsector_de(clave, sector, subsector):
+    if clave != "mipymes" or sector == "OTRO":
+        return subsector
+    return "Construcción" if sector == "CONSTRUCCION" else "Turismo, hotelería y gastronomía"
+
+
+def pertenece(clave, sector, referencia):
+    if clave == "construccion":
+        return sector == "CONSTRUCCION"
+    if clave == "turismo":
+        return sector == "TURISMO"
+    return modalidad(referencia) in SIMPLIFICADAS_MIPYME
+
+
+def mercado(conn, clave):
+    """Historial del sector desde enero de 2026: por mes, quién compra, plazos y subsectores."""
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("""
+        SELECT referencia, unidad_compras, monto_estimado, moneda, sector_ia, subsector_ia,
+               COALESCE(fecha_publicacion, scrapeado_en) AS publicada, fecha_presentacion
+        FROM licitaciones
+        WHERE sector_ia IS NOT NULL
+          AND COALESCE(fecha_publicacion, scrapeado_en) >= '2026-01-01'
+    """)
+    filas = [f for f in cur.fetchall() if pertenece(clave, f["sector_ia"], f["referencia"])]
+
+    def valor(f):
+        if not f["monto_estimado"] or (f["moneda"] or "DOP") != "DOP":
+            return 0.0
+        v = float(f["monto_estimado"])
+        return v if v <= MAX_MONTO_CREIBLE else 0.0
+
+    ahora = datetime.now(ZONA_RD)
+    meses = {}
+    for m in range(1, ahora.month + 1):
+        meses[f"{ahora.year}-{m:02d}"] = {"mes": f"{ahora.year}-{m:02d}", "etiqueta": MESES[m - 1][:3].capitalize(),
+                                          "cantidad": 0, "valor": 0.0}
+    inst, subs, plazos = {}, {}, []
+    for f in filas:
+        pub = a_rd(f["publicada"])
+        clave_mes = f"{pub.year}-{pub.month:02d}"
+        v = valor(f)
+        if clave_mes in meses:
+            meses[clave_mes]["cantidad"] += 1
+            meses[clave_mes]["valor"] += v
+        nombre = (f["unidad_compras"] or "Sin nombre").strip()
+        i = inst.setdefault(nombre, {"nombre": nombre, "cantidad": 0, "valor": 0.0})
+        i["cantidad"] += 1; i["valor"] += v
+        sub = subsector_de(clave, f["sector_ia"], f["subsector_ia"])
+        s = subs.setdefault(sub, {"nombre": sub, "cantidad": 0, "valor": 0.0})
+        s["cantidad"] += 1; s["valor"] += v
+        if f["fecha_presentacion"] and f["publicada"]:
+            dias = (a_rd(f["fecha_presentacion"]) - pub).total_seconds() / 86400
+            if 0 <= dias <= 180:
+                plazos.append(dias)
+
+    plazos.sort()
+    def pct(p):
+        return round(plazos[min(len(plazos) - 1, int(p * len(plazos)))]) if plazos else None
+
+    def redondear(lista):
+        for x in lista:
+            x["valor"] = round(x["valor"])
+            x["valor_texto"] = formato_monto(x["valor"], "DOP") if x["valor"] else "—"
+        return lista
+
+    total_valor = sum(valor(f) for f in filas)
+    print(f"   Mercado {clave}: {len(filas)} licitaciones desde enero, {formato_monto(total_valor, 'DOP')}")
+    return {
+        "desde": "enero de 2026",
+        "total": {"cantidad": len(filas), "valor": round(total_valor), "valor_texto": formato_monto(total_valor, "DOP")},
+        "meses": redondear(list(meses.values())),
+        "instituciones": redondear(sorted(inst.values(), key=lambda x: -x["cantidad"])[:10]),
+        "subsectores": redondear(sorted(subs.values(), key=lambda x: -x["cantidad"])),
+        "plazo": {"mediana": pct(0.5), "p25": pct(0.25), "p75": pct(0.75), "muestras": len(plazos)},
+    }
+
+
 def generar_reporte(conn, clave):
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute("""
@@ -252,12 +345,7 @@ def generar_reporte(conn, clave):
         ORDER BY fecha_presentacion ASC
     """)
     filas = cur.fetchall()
-    if clave == "construccion":
-        filas = [f for f in filas if f["sector_ia"] == "CONSTRUCCION"]
-    elif clave == "turismo":
-        filas = [f for f in filas if f["sector_ia"] == "TURISMO"]
-    else:
-        filas = [f for f in filas if modalidad(f["referencia"]) in SIMPLIFICADAS_MIPYME]
+    filas = [f for f in filas if pertenece(clave, f["sector_ia"], f["referencia"])]
 
     ahora = datetime.now(ZONA_RD)
     items = []
@@ -273,9 +361,7 @@ def generar_reporte(conn, clave):
             "cierre": cierre.isoformat(),
             "cierre_texto": texto_fecha(cierre) + cierre.strftime(", %-I:%M %p").lower().replace("am", "a.m.").replace("pm", "p.m."),
             "dias": max(0, (cierre.date() - ahora.date()).days),
-            "subsector": f["subsector_ia"] if clave != "mipymes" else (
-                f["subsector_ia"] if f["sector_ia"] == "OTRO" else
-                ("Construcción" if f["sector_ia"] == "CONSTRUCCION" else "Turismo, hotelería y gastronomía")),
+            "subsector": subsector_de(clave, f["sector_ia"], f["subsector_ia"]),
             "modalidad": modalidad(f["referencia"]),
             "url": f["url_detalle"] or "",
         })
@@ -305,6 +391,7 @@ def generar_reporte(conn, clave):
         "resumen": resumen_ia(REPORTES[clave]["titulo"], kpis, destacadas),
         "subsectores": subsectores,
         "licitaciones": items[:300],
+        "mercado": mercado(conn, clave),
     }
     os.makedirs(CARPETA, exist_ok=True)
     with open(os.path.join(CARPETA, f"{clave}.json"), "w", encoding="utf-8") as fh:
@@ -321,6 +408,8 @@ def main():
     asegurar_columnas(cur)
     conn.commit()
     clasificar_pendientes(conn)
+    if os.getenv("HISTORIAL") == "1":
+        clasificar_pendientes(conn, historial=True)
     for clave in REPORTES:
         generar_reporte(conn, clave)
     conn.close()
