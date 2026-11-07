@@ -2,7 +2,7 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-06T19:04:17.789057-04:00",
+ "actualizado": "2026-11-06T21:11:46.921612-04:00",
  "actualizado_texto": "6 de noviembre de 2026",
  "kpis": {
   "abiertas": 86,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$6.8 mil millones",
   "cierran_7_dias": 67
  },
- "resumen": "El sector construcción mantiene 86 licitaciones abiertas por un total de RD$6.8 mil millones, encabezadas por el paquete de adecuaciones y reparaciones de Infraestructura Escolar (RD$1.9 mil millones, cierra 9 de diciembre) y la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas (RD$1.4 mil millones, cierra 12 de noviembre). También destaca la Corporación del Acueducto y Alcantarillado de Santo Domingo, con obras de recolección de aguas residuales en la Av. Jacobo Majluta por RD$600 millones y electrificación de pozos en el Gran Santo Domingo por RD$392.4 millones. De las 86 oportunidades activas, 67 cierran en los próximos siete días, por lo que conviene revisar los plazos y preparar documentación sin demora.",
+ "resumen": "El sector construcción cuenta hoy con 86 licitaciones abiertas por un valor estimado de RD$6.8 mil millones, encabezadas por la Dirección de Infraestructura Escolar con RD$1.9 mil millones para adecuaciones en centros educativos a nivel nacional, el Ministerio de Obras Públicas y Comunicaciones con RD$1.4 mil millones para carreteras en La Vega y Hato Mayor, y la Corporación del Acueducto y Alcantarillado de Santo Domingo con RD$600 millones para la recolección de aguas residuales en la Av. Jacobo Majluta. De estas, 67 procesos cierran en los próximos siete días, por lo que urge revisar plazos y preparar documentación. Empresarios con interés en obras civiles, rehabilitación de edificaciones o suministro de materiales deben priorizar su participación antes de que venzan estas oportunidades.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
@@ -1413,16 +1413,16 @@
   ],
   "instituciones": [
    {
-    "nombre": "Dirección General de Aduanas y Puertos",
-    "cantidad": 50,
-    "valor": 236672483,
-    "valor_texto": "RD$236.7 millones"
-   },
-   {
     "nombre": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
     "cantidad": 50,
     "valor": 3616249796,
     "valor_texto": "RD$3.6 mil millones"
+   },
+   {
+    "nombre": "Dirección General de Aduanas y Puertos",
+    "cantidad": 50,
+    "valor": 236672483,
+    "valor_texto": "RD$236.7 millones"
    },
    {
     "nombre": "Ayuntamiento Municipal de Los Alcarrizos",
