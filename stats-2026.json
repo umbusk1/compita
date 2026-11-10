@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-11-07 00:59:40",
+  "ultima_actualizacion": "2026-11-10 00:46:07",
   "stats": {
     "total": 66578,
     "por_estado": {
@@ -876,7 +876,7 @@
     },
     {
       "fecha": "2026-11-10",
-      "cantidad": 165
+      "cantidad": 166
     },
     {
       "fecha": "2026-11-11",
@@ -884,7 +884,7 @@
     },
     {
       "fecha": "2026-11-12",
-      "cantidad": 163
+      "cantidad": 162
     },
     {
       "fecha": "2026-11-13",
@@ -1008,7 +1008,7 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-11-07",
+    "actualizado": "2026-11-10",
     "total": 66578,
     "tipos": [
       {
