@@ -2,19 +2,19 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-09T23:48:37.721809-04:00",
- "actualizado_texto": "9 de noviembre de 2026",
+ "actualizado": "2026-11-10T19:14:33.593232-04:00",
+ "actualizado_texto": "10 de noviembre de 2026",
  "kpis": {
-  "abiertas": 48,
-  "valor_total": 321087407,
-  "valor_texto": "RD$321.1 millones",
-  "cierran_7_dias": 39
+  "abiertas": 52,
+  "valor_total": 326512765,
+  "valor_texto": "RD$326.5 millones",
+  "cierran_7_dias": 44
  },
- "resumen": "El Estado dominicano mantiene abiertas 48 licitaciones en turismo, hotelería y gastronomía por un valor estimado de RD$321.1 millones, y 39 de ellas cierran en los próximos siete días, por lo que conviene revisar los pliegos cuanto antes. Entre las de mayor monto destacan la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones, el suministro de almuerzos y cenas de la Dirección General de Pasaportes por RD$60 millones, y los servicios de producción de eventos del propio MIREX por RD$40 millones. También sobresalen oportunidades más pequeñas pero numerosas en catering y montaje de eventos para instituciones como el Servicio Nacional de Salud, el Ministerio de Interior y Policía y el INFOTEP, que en conjunto amplían el abanico de opciones para empresas del sector.",
+ "resumen": "El Estado dominicano mantiene abiertas 52 licitaciones en turismo, hotelería y gastronomía por un valor estimado de RD$326.5 millones, y 44 de ellas cierran en los próximos siete días, por lo que urge revisar los pliegos cuanto antes. Entre las de mayor peso destacan la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones, con cierre el 18 de noviembre, y el suministro de almuerzos y cenas de la Dirección General de Pasaportes por RD$60 millones, que cierra el 12 de noviembre. También sobresale la producción de eventos del MIREX por RD$40 millones, con plazo hasta el 15 de diciembre, una ventana algo más amplia para preparar propuestas competitivas.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
-   "cantidad": 23
+   "cantidad": 27
   },
   {
    "nombre": "Alimentación, catering y restaurantes",
@@ -22,179 +22,14 @@
   },
   {
    "nombre": "Alojamiento y hospedaje",
-   "cantidad": 4
+   "cantidad": 5
   },
   {
    "nombre": "Promoción y gestión turística",
-   "cantidad": 2
+   "cantidad": 1
   }
  ],
  "licitaciones": [
-  {
-   "referencia": "CEIRD-CCC-CP-2026-0008",
-   "institucion": "Centro de Exportación e Inversión de la Republica Dominicana",
-   "descripcion": "EP- CONTRATACIÓN DE SERVICIOS DE GESTIÓN DE EVENTOS Y CATERING PARA LA JORNADA INSTITUCIONAL DE SOCIALIZACIÓN DE RESULTADOS DEL PLAN OPERATIVO ANUAL (POA) 2026 Y ALINEAMIENTO ESTRATÉGICO PARA EL 2027",
-   "monto": 3000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$3 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T10:20:00-04:00",
-   "cierre_texto": "10 de noviembre, 10:20 a.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MINISTERIO HACIENDA-DAF-CM-2026-0116",
-   "institucion": "Ministerio de Hacienda",
-   "descripcion": "Contratación de empresa para animación de actividades de bienestar para colaboradores del Ministerio de Hacienda y Economía.",
-   "monto": 1087450.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T11:30:00-04:00",
-   "cierre_texto": "10 de noviembre, 11:30 a.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CERTV-DAF-CM-2026-0020",
-   "institucion": "Corporación Estatal de Radio y Televisión",
-   "descripcion": "Servicio de Catering para varias actividades de esta RTVD, programadas por el Departamento de Protocolo y Eventos de esta CERTV”. Dirigido a MIPYME",
-   "monto": 1000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T12:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 12:00 p.m.",
-   "dias": 1,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MIMARENA-DAF-CM-2026-0155",
-   "institucion": "Ministerio de Medio Ambiente",
-   "descripcion": "Contratación del Servicio de Almuerzo para la Actividad de Reconocimiento de Guardaparques, MiPymes.",
-   "monto": 2000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T12:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 12:00 p.m.",
-   "dias": 1,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "ADN-DAF-CM-2026-0135",
-   "institucion": "Ayuntamiento del Distrito Nacional (ADN)",
-   "descripcion": "SERVICIO DE BUFFET NAVIDEÑO Y REFRIGERIOS DIRIGIDO A MIPYMES",
-   "monto": 2010000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T13:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 1:00 p.m.",
-   "dias": 1,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DPP-DAF-CM-2026-0030",
-   "institucion": "Dirección de Prensa del Presidente",
-   "descripcion": "Contratación de una empresa para los servicios de catering y montaje de salón para el Encuentro con los Periodistas y Comunicadores de Santiago, a celebrarse el 10 de diciembre de 2026.",
-   "monto": 1000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T13:30:00-04:00",
-   "cierre_texto": "10 de noviembre, 1:30 p.m.",
-   "dias": 1,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MINPRE-CCC-CP-2026-0007",
-   "institucion": "Ministerio de la Presidencia",
-   "descripcion": "Contratación de servicios de montaje de eventos para las actividades del Ministerio de la Presidencia y sus dependencias.",
-   "monto": 6400000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$6.4 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T14:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 2:00 p.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MITUR-DAF-CM-2026-0121",
-   "institucion": "Ministerio de Turismo",
-   "descripcion": "CONTRATACIÓN DE SERVICIOS DE MONTAJE PARA ACTIVIDADES DE FOMENTO DEL TURISMO INTERNO A NIVEL NACIONAL. - DIRIGIDO A MIPYMES MUJER.",
-   "monto": 485000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$485,000",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T15:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 3:00 p.m.",
-   "dias": 1,
-   "subsector": "Promoción y gestión turística",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "INDOMET-DAF-CM-2026-0046",
-   "institucion": "Instituto Dominicano de Meteorología",
-   "descripcion": "Actividades de Integración",
-   "monto": 1200000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T16:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 4:00 p.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "INTRANT-DAF-CM-2026-0034",
-   "institucion": "Instituto Nacional de Transito y Transporte Terrestre",
-   "descripcion": "Contratación de Servicios y Salón de Eventos Para Actividades de Políticas Transversales del INTRANT Dirigido a MIPYMES MUJER",
-   "monto": 600000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$600,000",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T16:30:00-04:00",
-   "cierre_texto": "10 de noviembre, 4:30 p.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CAASD-CCC-CP-2026-0019",
-   "institucion": "Corporación del Acueducto y Alcantarillado de Santo Domingo",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE ALQUILERES MOBILIARIOS Y EQUIPOS DE SONIDO PARA SER UTILIZADOS EN LAS INAUGURACIONES DE LA INSTITUCIÓN.",
-   "monto": 4979600.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T17:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 5:00 p.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
   {
    "referencia": "ISFODOSU-DAF-CM-2026-0282",
    "institucion": "Instituto Superior de Formación Docente Salomé Ureña",
@@ -205,7 +40,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T09:00:00-04:00",
    "cierre_texto": "11 de noviembre, 9:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -220,7 +55,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T10:00:00-04:00",
    "cierre_texto": "11 de noviembre, 10:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -235,7 +70,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T10:00:00-04:00",
    "cierre_texto": "11 de noviembre, 10:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -250,7 +85,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T12:00:00-04:00",
    "cierre_texto": "11 de noviembre, 12:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -265,7 +100,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T13:00:00-04:00",
    "cierre_texto": "11 de noviembre, 1:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -280,7 +115,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T14:10:00-04:00",
    "cierre_texto": "11 de noviembre, 2:10 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -295,7 +130,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T15:00:00-04:00",
    "cierre_texto": "11 de noviembre, 3:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -310,7 +145,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T16:00:00-04:00",
    "cierre_texto": "11 de noviembre, 4:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -325,8 +160,38 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T16:30:00-04:00",
    "cierre_texto": "11 de noviembre, 4:30 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alojamiento y hospedaje",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "JMLG-DAF-CM-2026-0016",
+   "institucion": "Junta Municipal de la Guáyiga",
+   "descripcion": "Contratación de servicios de montaje y ambientación para actividades",
+   "monto": 1860000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-12T08:00:00-04:00",
+   "cierre_texto": "12 de noviembre, 8:00 a.m.",
+   "dias": 2,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "JMLG-DAF-CM-2026-0017",
+   "institucion": "Junta Municipal de la Guáyiga",
+   "descripcion": "Contratación de servicios de logística, mobiliario, audiovisual y animación para actividades deportivas y recreativas",
+   "monto": 1040000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-12T08:00:00-04:00",
+   "cierre_texto": "12 de noviembre, 8:00 a.m.",
+   "dias": 2,
+   "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -340,7 +205,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T09:00:00-04:00",
    "cierre_texto": "12 de noviembre, 9:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -355,7 +220,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:00:00-04:00",
    "cierre_texto": "12 de noviembre, 10:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -370,7 +235,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:00:00-04:00",
    "cierre_texto": "12 de noviembre, 10:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -385,7 +250,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:30:00-04:00",
    "cierre_texto": "12 de noviembre, 10:30 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -400,7 +265,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:40:00-04:00",
    "cierre_texto": "12 de noviembre, 10:40 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -415,7 +280,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:50:00-04:00",
    "cierre_texto": "12 de noviembre, 10:50 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -430,7 +295,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T12:00:00-04:00",
    "cierre_texto": "12 de noviembre, 12:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -445,7 +310,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T12:00:00-04:00",
    "cierre_texto": "12 de noviembre, 12:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -460,7 +325,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T13:00:00-04:00",
    "cierre_texto": "12 de noviembre, 1:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alojamiento y hospedaje",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -475,7 +340,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T14:00:00-04:00",
    "cierre_texto": "12 de noviembre, 2:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -490,7 +355,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T17:00:00-04:00",
    "cierre_texto": "12 de noviembre, 5:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -505,7 +370,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T17:30:00-04:00",
    "cierre_texto": "12 de noviembre, 5:30 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -520,7 +385,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T11:35:00-04:00",
    "cierre_texto": "13 de noviembre, 11:35 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -535,7 +400,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T14:00:00-04:00",
    "cierre_texto": "13 de noviembre, 2:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -550,7 +415,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T14:00:00-04:00",
    "cierre_texto": "13 de noviembre, 2:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -565,7 +430,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T15:00:00-04:00",
    "cierre_texto": "13 de noviembre, 3:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -580,7 +445,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T15:40:00-04:00",
    "cierre_texto": "13 de noviembre, 3:40 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -595,7 +460,127 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:30:00-04:00",
    "cierre_texto": "13 de noviembre, 4:30 p.m.",
-   "dias": 4,
+   "dias": 3,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "GCPS-DAF-CM-2026-0275",
+   "institucion": "Gabinete de Coordinación de Políticas Sociales",
+   "descripcion": "SERVICIO DE CATERING PARA EL ENCUENTRO NACIONAL DE GESTORE 2026 DE LOS CENTROS TECNOLOGICOS COMUNITARIOS",
+   "monto": 1841925.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.8 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T11:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 11:00 a.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "GCPS-DAF-CM-2026-0273",
+   "institucion": "Gabinete de Coordinación de Políticas Sociales",
+   "descripcion": "SERVICIO DE CATERING (ALIMENTOS Y BEBIDA PARA EL LANZAMIENTO DE LA VENTANNILLA UNICA DE SERVICIOS EN LOS AYUNTAMIENTOS ) PUNTO SOLIDARIO",
+   "monto": 400000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$400,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T12:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INEFI-DAF-CM-2026-0059",
+   "institucion": "Instituto Nacional de Educacion Fisica",
+   "descripcion": "CONTRATACIÓN DE SERVICIOS DE GESTION DE EVENTOS PARA DISTINTAS ACTIVIDADES, EXCLUSIVAMENTE PARA MIPYMES",
+   "monto": 1900000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T12:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DIGECOG-DAF-CM-2026-0030",
+   "institucion": "Dirección Gral de Contabilidad Gubernamental",
+   "descripcion": "Contratación de servicio de catering para actividad de integración, solicitado por el Departamento de Recursos Humanos de esta Institución",
+   "monto": 896500.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$896,500",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T12:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SGN-DAF-CM-2026-0010",
+   "institucion": "Servicio Geológico Nacional",
+   "descripcion": "CONTRATACION DE SERVICIO DE HOSPEDAJE EN LA PROVINCIA SANCHE RAMIREZ, MUNICIPIO DE (COTUI), SEGUN FICHA ANEXA",
+   "monto": 338983.05,
+   "moneda": "DOP",
+   "monto_texto": "RD$338,983",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T14:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 2:00 p.m.",
+   "dias": 6,
+   "subsector": "Alojamiento y hospedaje",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CULTURA-DAF-CM-2026-0077",
+   "institucion": "Ministerio de Cultura",
+   "descripcion": "CONTRATACION DE SERVICIOS DE MONTAJE DE EVENTOS, ALQUILERES Y ARRENDAMIENTOS DE EQUIPOS PARA SER UTILIZADOS EN ACTIVIDADES PARA EL FOMENTO DE DIFUSION DE LA CULTURA (DIRIGIDO A MIPYMES)",
+   "monto": 2010000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T14:30:00-04:00",
+   "cierre_texto": "16 de noviembre, 2:30 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CULTURA-DAF-CM-2026-0078",
+   "institucion": "Ministerio de Cultura",
+   "descripcion": "CONTRATACION DE AGENCIAS PARA EL ALQUILER DE SALON DE EVENTOS PARA LA CELEBRACION DEL CONGRESO INTERNACIONAL DE CULTURA Y GESTION CULTURAL”. DIRIGIDO A MIPYMES MUJER.",
+   "monto": 2010000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T15:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "EGDC-DAF-CM-2026-0012",
+   "institucion": "Escuela de Graduados de Doctrina Conjunta General de División Gregorio Luperón",
+   "descripcion": "Servicio de catering para graduación",
+   "monto": 550000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$550,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T15:15:00-04:00",
+   "cierre_texto": "16 de noviembre, 3:15 p.m.",
+   "dias": 6,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -610,9 +595,24 @@
    "monto_dudoso": false,
    "cierre": "2026-11-16T16:00:00-04:00",
    "cierre_texto": "16 de noviembre, 4:00 p.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MITUR-DAF-CM-2026-0123",
+   "institucion": "Ministerio de Turismo",
+   "descripcion": "CONTRATACIÓN DE SERVICIOS DE MONTAJE CON BRANDING INCLUIDO, EN ACTIVIDADES DE PROMOCIÓN DE LOS DESTINOS TURÍSTICOS DE LA REPÚBLICA DOMINICANA, SEGÚN LA LEY DE TURISMO. DIRIGIDO A MIPYMES CON CRITERIOS",
+   "monto": 1850000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T17:55:00-04:00",
+   "cierre_texto": "16 de noviembre, 5:55 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -625,9 +625,24 @@
    "monto_dudoso": false,
    "cierre": "2026-11-17T10:00:00-04:00",
    "cierre_texto": "17 de noviembre, 10:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INAPA-DAF-CM-2026-0090",
+   "institucion": "Instituto Nacional de Aguas Potables y Alcantarillados",
+   "descripcion": "CONTRATACION DEL SERVICIO DE MONTAJE DE EVENTOS PARA EL TALLER DE PLANIFICACION COMO HERRAMIENTA PARA EL LOGRO DE LAS METAS DEL INAPA PERIODO DEL 2027",
+   "monto": 1000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-17T10:00:00-04:00",
+   "cierre_texto": "17 de noviembre, 10:00 a.m.",
+   "dias": 7,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -640,7 +655,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-17T12:00:00-04:00",
    "cierre_texto": "17 de noviembre, 12:00 p.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Alojamiento y hospedaje",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -655,9 +670,24 @@
    "monto_dudoso": false,
    "cierre": "2026-11-17T12:00:00-04:00",
    "cierre_texto": "17 de noviembre, 12:00 p.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MUSEO HISTORIA NAT.-DAF-CM-2026-0014",
+   "institucion": "Museo Nacional de Historia Natural (Prof. Eugenio de Jesús Marcano)",
+   "descripcion": "CONTRATACION DE ACTIVIDAD INTEGRACION Y PRESENTACION DE LOGROS INSTITUCIONALES CON LOS COLABORADORES",
+   "monto": 690000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$690,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-17T16:00:00-04:00",
+   "cierre_texto": "17 de noviembre, 4:00 p.m.",
+   "dias": 7,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -670,7 +700,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-18T10:00:00-04:00",
    "cierre_texto": "18 de noviembre, 10:00 a.m.",
-   "dias": 9,
+   "dias": 8,
    "subsector": "Promoción y gestión turística",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -685,8 +715,38 @@
    "monto_dudoso": false,
    "cierre": "2026-11-18T11:00:00-04:00",
    "cierre_texto": "18 de noviembre, 11:00 a.m.",
-   "dias": 9,
+   "dias": 8,
    "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MJ-CCC-CP-2026-0016",
+   "institucion": "Ministerio de la Juventud",
+   "descripcion": "Contratación de Servicio de montaje técnico, protocolar y audiovisual de la Ceremonia de entrega PNJ 2027, dirigido a Mipymes. Por desmonte/ a requerimiento.",
+   "monto": 6400000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$6.4 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T15:30:00-04:00",
+   "cierre_texto": "18 de noviembre, 3:30 p.m.",
+   "dias": 8,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CULTURA-CCC-CP-2026-0006",
+   "institucion": "Ministerio de Cultura",
+   "descripcion": "“CONTRATACIÓN DE SERVICIOS DE ARRENDAMIENTOS DE EQUIPOS Y SERVICIOS CONEXOS PARA REALIZAR ACTIVIDADES DE LA SEDE Y SUS DEPENDENCIAS A NIVEL NACIONAL, DIRIGIDO A EMPRESAS MIPYMES MUJER\"",
+   "monto": 6400000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$6.4 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-19T10:00:00-04:00",
+   "cierre_texto": "19 de noviembre, 10:00 a.m.",
+   "dias": 9,
+   "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
   },
@@ -700,7 +760,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-23T11:30:00-04:00",
    "cierre_texto": "23 de noviembre, 11:30 a.m.",
-   "dias": 14,
+   "dias": 13,
    "subsector": "Eventos y actividades",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -715,7 +775,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T08:00:00-04:00",
    "cierre_texto": "25 de noviembre, 8:00 a.m.",
-   "dias": 16,
+   "dias": 15,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -730,7 +790,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T10:00:00-04:00",
    "cierre_texto": "25 de noviembre, 10:00 a.m.",
-   "dias": 16,
+   "dias": 15,
    "subsector": "Alojamiento y hospedaje",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -745,7 +805,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-15T10:00:00-04:00",
    "cierre_texto": "15 de diciembre, 10:00 a.m.",
-   "dias": 36,
+   "dias": 35,
    "subsector": "Eventos y actividades",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -754,9 +814,9 @@
  "mercado": {
   "desde": "enero de 2026",
   "total": {
-   "cantidad": 1480,
-   "valor": 4829745886,
-   "valor_texto": "RD$4.8 mil millones"
+   "cantidad": 1495,
+   "valor": 4858933294,
+   "valor_texto": "RD$4.9 mil millones"
   },
   "meses": [
    {
@@ -832,9 +892,9 @@
    {
     "mes": "2026-11",
     "etiqueta": "Nov",
-    "cantidad": 54,
-    "valor": 115440030,
-    "valor_texto": "RD$115.4 millones"
+    "cantidad": 69,
+    "valor": 144627439,
+    "valor_texto": "RD$144.6 millones"
    }
   ],
   "instituciones": [
@@ -846,9 +906,9 @@
    },
    {
     "nombre": "Gabinete de Coordinación de Políticas Sociales",
-    "cantidad": 39,
-    "valor": 46533797,
-    "valor_texto": "RD$46.5 millones"
+    "cantidad": 41,
+    "valor": 48775722,
+    "valor_texto": "RD$48.8 millones"
    },
    {
     "nombre": "Ayuntamiento del Distrito Nacional (ADN)",
@@ -881,16 +941,16 @@
     "valor_texto": "RD$42.5 millones"
    },
    {
-    "nombre": "Instituto Nacional de Educacion Fisica",
-    "cantidad": 19,
-    "valor": 64241990,
-    "valor_texto": "RD$64.2 millones"
+    "nombre": "Ministerio de Cultura",
+    "cantidad": 22,
+    "valor": 41685981,
+    "valor_texto": "RD$41.7 millones"
    },
    {
-    "nombre": "Ministerio de Cultura",
-    "cantidad": 19,
-    "valor": 31265981,
-    "valor_texto": "RD$31.3 millones"
+    "nombre": "Instituto Nacional de Educacion Fisica",
+    "cantidad": 20,
+    "valor": 66141990,
+    "valor_texto": "RD$66.1 millones"
    },
    {
     "nombre": "Ministerio de Energía y Minas",
@@ -902,21 +962,21 @@
   "subsectores": [
    {
     "nombre": "Eventos y actividades",
-    "cantidad": 658,
-    "valor": 1658155056,
+    "cantidad": 668,
+    "valor": 1683315056,
     "valor_texto": "RD$1.7 mil millones"
    },
    {
     "nombre": "Alimentación, catering y restaurantes",
-    "cantidad": 614,
-    "valor": 2012377010,
+    "cantidad": 618,
+    "valor": 2016065435,
     "valor_texto": "RD$2 mil millones"
    },
    {
     "nombre": "Alojamiento y hospedaje",
-    "cantidad": 182,
-    "valor": 972219472,
-    "valor_texto": "RD$972.2 millones"
+    "cantidad": 183,
+    "valor": 972558456,
+    "valor_texto": "RD$972.6 millones"
    },
    {
     "nombre": "Promoción y gestión turística",
@@ -935,7 +995,7 @@
    "mediana": 6,
    "p25": 5,
    "p75": 7,
-   "muestras": 1480
+   "muestras": 1495
   }
  }
 }

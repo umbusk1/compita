@@ -2,338 +2,38 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-09T23:48:33.820322-04:00",
- "actualizado_texto": "9 de noviembre de 2026",
+ "actualizado": "2026-11-10T19:14:29.876806-04:00",
+ "actualizado_texto": "10 de noviembre de 2026",
  "kpis": {
-  "abiertas": 86,
-  "valor_total": 6808723837,
-  "valor_texto": "RD$6.8 mil millones",
-  "cierran_7_dias": 71
+  "abiertas": 94,
+  "valor_total": 6672493537,
+  "valor_texto": "RD$6.7 mil millones",
+  "cierran_7_dias": 73
  },
- "resumen": "El sector construcción presenta hoy 86 licitaciones abiertas por un valor estimado de RD$6.8 mil millones, con 71 procesos cerrando en los próximos siete días. Destacan la contratación de obras para adecuaciones y reparaciones en centros educativos a nivel nacional de la Dirección Infraestructura Escolar, por RD$1.9 mil millones, y la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas y Comunicaciones, valorada en RD$1.4 mil millones, además de las obras de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD, por RD$600 millones. Con un volumen tan alto de cierres inminentes, los empresarios del sector deben revisar sin demora los pliegos y plazos para no perder estas oportunidades.",
+ "resumen": "El sector construcción registra hoy 94 licitaciones abiertas por un valor estimado de RD$6.7 mil millones, con 73 procesos que cierran en los próximos 7 días. Destacan la contratación de obras para adecuaciones en centros educativos a nivel nacional de la Dirección de Infraestructura Escolar por RD$1.9 mil millones, la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas por RD$1.4 mil millones, y las obras de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD por RD$600 millones. Además, seis procesos de mantenimiento correctivo de centros educativos por RD$53 millones cada uno, bajo el operativo Navidad en las Aulas, cierran este mismo 13 de noviembre.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
-   "cantidad": 39
-  },
-  {
-   "nombre": "Obras civiles e infraestructura",
-   "cantidad": 21
+   "cantidad": 45
   },
   {
    "nombre": "Materiales y equipos de construcción",
-   "cantidad": 20
+   "cantidad": 22
+  },
+  {
+   "nombre": "Obras civiles e infraestructura",
+   "cantidad": 19
   },
   {
    "nombre": "Edificaciones y viviendas",
-   "cantidad": 4
+   "cantidad": 7
   },
   {
    "nombre": "Diseño, supervisión y estudios técnicos",
-   "cantidad": 2
+   "cantidad": 1
   }
  ],
  "licitaciones": [
-  {
-   "referencia": "ASDE-DAF-CM-2026-0066",
-   "institucion": "Ayuntamiento Santo Domingo Este",
-   "descripcion": "CONTRATACIÓN DE UNA EMPRESA O PERSONA FÍSICA PARA LA EJECUCIÓN DE LOS TRABAJOS DE HABILITACIÓN Y EQUIPAMIENTO FUNERARIA, CIUDAD JUAN BOSCH, REMOZAMIENTO Y EQUIPAMIENTO DE FUNERARIA DE VILLA CARMEN",
-   "monto": 21000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$21 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T08:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 8:00 a.m.",
-   "dias": 1,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "SUPERATE-DAF-CM-2026-0047",
-   "institucion": "Dirección de Desarrollo Social Supérate",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE ADECUACIÓN DEL ESPACIO FÍSICO PARA LA INSTALACIÓN DE LA OFICINA DE SERVICIOS SUPÉRATE EN JARABACOA, PROVINCIA LA VEGA.",
-   "monto": 1778763.49,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.8 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T09:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 9:00 a.m.",
-   "dias": 1,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "SNS-CCC-CP-2026-0039",
-   "institucion": "Servicio Nacional de Salud",
-   "descripcion": "CONTRATACIÓN DE OBRAS PARA EL REMOZAMIENTO DE LAS ÁREAS DE CONSULTAS, LABORATORIO, IMÁGENES Y ÁREAS DE SERVICIOS DEL HOSPITAL DOCENTE UNIVERSITARIO DR. DARÍO CONTRERAS, MUNICIPIO SANTO DOMINGO ESTE, P",
-   "monto": 200197757.44,
-   "moneda": "DOP",
-   "monto_texto": "RD$200.2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T10:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 10:00 a.m.",
-   "dias": 1,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "ASC-CCC-CP-2026-0007",
-   "institucion": "Ayuntamiento del Municipio de San Cristóbal",
-   "descripcion": "CONSTRUCCIÓN DE DIFERENTES OBRAS EN EL MUNICIPIO DE SAN CRISTOBAL",
-   "monto": 46453116.73,
-   "moneda": "DOP",
-   "monto_texto": "RD$46.5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T10:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 10:00 a.m.",
-   "dias": 1,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "Biblioteca Nacional-DAF-CM-2026-0032",
-   "institucion": "Biblioteca Nacional Pedro Henríquez Ureña",
-   "descripcion": "Contratación de servicios de reparación de mobiliarios y estanterías ubicados en la Biblioteca Antillense-Salesiana, para uso de la institución.",
-   "monto": 2000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T10:30:00-04:00",
-   "cierre_texto": "10 de noviembre, 10:30 a.m.",
-   "dias": 1,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CAID-DAF-CM-2026-0119",
-   "institucion": "Centro de Atención Integral para la Discapacidad",
-   "descripcion": "Relanzamiento de Contratación de servicios de suministro e instalación de sistema de aire acondicionado tipo cassette inverter para la sede del CAID Santo Domingo Este, dirigido a MIPYMES, declarado d",
-   "monto": 1050000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T11:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 11:00 a.m.",
-   "dias": 1,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "SNS-CCC-CP-2026-0031",
-   "institucion": "Servicio Nacional de Salud",
-   "descripcion": "Remozamiento y Ampliación del Hospital Municipal Carlos Alberto Zafra",
-   "monto": 110489881.59,
-   "moneda": "DOP",
-   "monto_texto": "RD$110.5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T11:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 11:00 a.m.",
-   "dias": 1,
-   "subsector": "Edificaciones y viviendas",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CEIRD-DAF-CM-2026-0072",
-   "institucion": "Centro de Exportación e Inversión de la Republica Dominicana",
-   "descripcion": "EP-Adecuación Espacio para Data Center de la Institución (Segundo llamado)",
-   "monto": 279513.02,
-   "moneda": "DOP",
-   "monto_texto": "RD$279,513",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T11:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 11:00 a.m.",
-   "dias": 1,
-   "subsector": "Diseño, supervisión y estudios técnicos",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "PROCURADURIA-DAF-CM-2026-0207",
-   "institucion": "Procuraduría General de la República",
-   "descripcion": "SUMINISTRO E INSTALACION DE TOPE DE GRANITOS PARA LA PGR",
-   "monto": 1690000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T12:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 12:00 p.m.",
-   "dias": 1,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "ASDO-DAF-CM-2026-0036",
-   "institucion": "Ayuntamiento Santo Domingo Oeste",
-   "descripcion": "ADQUISICIÓN DE FUNDAS DE ASFALTO FRIO",
-   "monto": 435066.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$435,066",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T12:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 12:00 p.m.",
-   "dias": 1,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGEACCC-DAF-CM-2026-0038",
-   "institucion": "Dir Gral Embellecimiento Ave., Carret y Cruzada Cívica",
-   "descripcion": "Adquisición de pintura y accesorios para pintar",
-   "monto": 438368.82,
-   "moneda": "DOP",
-   "monto_texto": "RD$438,369",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T12:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 12:00 p.m.",
-   "dias": 1,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "ASDE-CCC-LPN-2026-0005",
-   "institucion": "Ayuntamiento Santo Domingo Este",
-   "descripcion": "CONTRATACIÓN DE UNA EMPRESA O PERSONA FÍSICA PARA LA ADQUISICIÓN DE PINTURA PARA REALIZAR TRABAJOS EN EL MUNICIPIO DE SANTO DOMINGO ESTE",
-   "monto": 20000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$20 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T13:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 1:00 p.m.",
-   "dias": 1,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "LPN",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "JDR-DAF-CM-2026-0001",
-   "institucion": "Junta del Distrito Municipal El Rosario",
-   "descripcion": "CONSTRUCCIÓN DE ACERAS Y CONTENES EN DIFERENTES CALLES DEL DISTRITO MUNICIPAL DE EL ROSARIO, CON FONDOS DE LA PRESIDENCIA 2DA ETAPA.",
-   "monto": 3090166.55,
-   "moneda": "DOP",
-   "monto_texto": "RD$3.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T14:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 2:00 p.m.",
-   "dias": 1,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGEACCC-DAF-CM-2026-0041",
-   "institucion": "Dir Gral Embellecimiento Ave., Carret y Cruzada Cívica",
-   "descripcion": "Adquisición de Tierra Negra",
-   "monto": 1710000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T14:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 2:00 p.m.",
-   "dias": 1,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "Ayto. Verón-DAF-CM-2026-0079",
-   "institucion": "Ayuntamiento Distrito Municipal Turístico Verón Punta Cana",
-   "descripcion": "Selección de un contratista para la segunda etapa de la construcción de aceras y contenes, con cargo a una asignación especial del Gobierno Central",
-   "monto": 13222000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$13.2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T15:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 3:00 p.m.",
-   "dias": 1,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "JDMV-DAF-CM-2026-0013",
-   "institucion": "Junta Distrito Municipal La Victoria",
-   "descripcion": "CONSTRUCCIÓN DE DIFERENTES OBRAS MUNICIPALES A SER EJECUTADAS POR LA JUNTA DEL DISTRITO MUNICIPAL LA VICTORIA, CORRESPONDIENTES AL TERCER Y CUARTO TRIMESTRE DEL AÑO 2026 (JULIO–DICIEMBRE).",
-   "monto": 9112815.08,
-   "moneda": "DOP",
-   "monto_texto": "RD$9.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T15:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 3:00 p.m.",
-   "dias": 1,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "AMVB-DAF-CM-2026-0002",
-   "institucion": "Ayuntamiento Municipal de Villa Bisonó",
-   "descripcion": "CONTRATACIÓN DE LOS SERVICIOS DE CONSTRUCCIÓN DE LA «SEGUNDA ETAPA DE LA REHABILITACIÓN DE LA CAÑADA DE BECO, EN EL MUNICIPIO DE VILLA BISONÓ, NAVARRETE».",
-   "monto": 38000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$38 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T15:30:00-04:00",
-   "cierre_texto": "10 de noviembre, 3:30 p.m.",
-   "dias": 1,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "AMR-CCC-CP-2026-0010",
-   "institucion": "Ayuntamiento Municipal de La Romana",
-   "descripcion": "Reconstrucción y reacondicionamiento parque Rio salado ( 1 etapa )",
-   "monto": 2500000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2.5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T16:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 4:00 p.m.",
-   "dias": 1,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MIDE-DAF-CM-2026-0146",
-   "institucion": "Ministerio de Defensa",
-   "descripcion": "Adquisición de aires acondicionados, componentes y materiales de refrigeración",
-   "monto": 785823.65,
-   "moneda": "DOP",
-   "monto_texto": "RD$785,824",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T16:40:00-04:00",
-   "cierre_texto": "10 de noviembre, 4:40 p.m.",
-   "dias": 1,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "EGEHID-DAF-CM-2026-0085",
-   "institucion": "Empresa de Generación Hidroélectrica Dominicana",
-   "descripcion": "Suministro e instalación de piso sintético para el multiuso de Cambita, El Pueblecito, San Cristóbal",
-   "monto": 1900000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.9 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-10T17:00:00-04:00",
-   "cierre_texto": "10 de noviembre, 5:00 p.m.",
-   "dias": 1,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
   {
    "referencia": "MIDE-CCC-CP-2026-0043",
    "institucion": "Ministerio de Defensa",
@@ -344,7 +44,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T08:00:00-04:00",
    "cierre_texto": "11 de noviembre, 8:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -359,7 +59,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T10:00:00-04:00",
    "cierre_texto": "11 de noviembre, 10:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -374,7 +74,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T10:00:00-04:00",
    "cierre_texto": "11 de noviembre, 10:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -389,7 +89,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T11:15:00-04:00",
    "cierre_texto": "11 de noviembre, 11:15 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -404,7 +104,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T12:00:00-04:00",
    "cierre_texto": "11 de noviembre, 12:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -419,7 +119,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T12:25:00-04:00",
    "cierre_texto": "11 de noviembre, 12:25 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -434,7 +134,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T13:30:00-04:00",
    "cierre_texto": "11 de noviembre, 1:30 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -449,7 +149,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T14:15:00-04:00",
    "cierre_texto": "11 de noviembre, 2:15 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -464,7 +164,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T14:50:00-04:00",
    "cierre_texto": "11 de noviembre, 2:50 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -479,7 +179,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T15:00:00-04:00",
    "cierre_texto": "11 de noviembre, 3:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -494,7 +194,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T16:30:00-04:00",
    "cierre_texto": "11 de noviembre, 4:30 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "SO",
    "url": "javascript:void(0);"
@@ -509,7 +209,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T16:30:00-04:00",
    "cierre_texto": "11 de noviembre, 4:30 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "SO",
    "url": "javascript:void(0);"
@@ -524,7 +224,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T16:50:00-04:00",
    "cierre_texto": "11 de noviembre, 4:50 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -539,7 +239,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-11T18:00:00-04:00",
    "cierre_texto": "11 de noviembre, 6:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -554,7 +254,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T08:00:00-04:00",
    "cierre_texto": "12 de noviembre, 8:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -569,7 +269,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T09:00:00-04:00",
    "cierre_texto": "12 de noviembre, 9:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -584,7 +284,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T09:40:00-04:00",
    "cierre_texto": "12 de noviembre, 9:40 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -599,7 +299,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:00:00-04:00",
    "cierre_texto": "12 de noviembre, 10:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -614,7 +314,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:00:00-04:00",
    "cierre_texto": "12 de noviembre, 10:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -629,7 +329,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T10:30:00-04:00",
    "cierre_texto": "12 de noviembre, 10:30 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -644,7 +344,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T13:00:00-04:00",
    "cierre_texto": "12 de noviembre, 1:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -659,7 +359,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T13:30:00-04:00",
    "cierre_texto": "12 de noviembre, 1:30 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -674,7 +374,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T14:00:00-04:00",
    "cierre_texto": "12 de noviembre, 2:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -689,7 +389,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T15:00:00-04:00",
    "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -704,7 +404,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T15:00:00-04:00",
    "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -719,7 +419,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T15:00:00-04:00",
    "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -734,7 +434,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T15:00:00-04:00",
    "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -749,7 +449,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T15:00:00-04:00",
    "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -764,7 +464,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T15:00:00-04:00",
    "cierre_texto": "12 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -779,7 +479,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T15:30:00-04:00",
    "cierre_texto": "12 de noviembre, 3:30 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -794,7 +494,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T16:00:00-04:00",
    "cierre_texto": "12 de noviembre, 4:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -809,7 +509,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-12T17:15:00-04:00",
    "cierre_texto": "12 de noviembre, 5:15 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -824,7 +524,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T08:00:00-04:00",
    "cierre_texto": "13 de noviembre, 8:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -839,7 +539,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T08:10:00-04:00",
    "cierre_texto": "13 de noviembre, 8:10 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -854,7 +554,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T09:00:00-04:00",
    "cierre_texto": "13 de noviembre, 9:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -869,7 +569,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T10:45:00-04:00",
    "cierre_texto": "13 de noviembre, 10:45 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -884,7 +584,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T11:00:00-04:00",
    "cierre_texto": "13 de noviembre, 11:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -899,7 +599,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T13:00:00-04:00",
    "cierre_texto": "13 de noviembre, 1:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -914,7 +614,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T13:30:00-04:00",
    "cierre_texto": "13 de noviembre, 1:30 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -929,7 +629,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T15:00:00-04:00",
    "cierre_texto": "13 de noviembre, 3:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -944,7 +644,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:00:00-04:00",
    "cierre_texto": "13 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -959,7 +659,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:00:00-04:00",
    "cierre_texto": "13 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -974,7 +674,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:00:00-04:00",
    "cierre_texto": "13 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -989,7 +689,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:00:00-04:00",
    "cierre_texto": "13 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1004,7 +704,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:00:00-04:00",
    "cierre_texto": "13 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1019,7 +719,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:00:00-04:00",
    "cierre_texto": "13 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1034,8 +734,23 @@
    "monto_dudoso": false,
    "cierre": "2026-11-13T16:05:00-04:00",
    "cierre_texto": "13 de noviembre, 4:05 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MEM-DAF-CM-2026-0145",
+   "institucion": "Ministerio de Energía y Minas",
+   "descripcion": "Adquisición de Materiales Eléctricos para Redes de Media y Baja Tensión del Proyecto Micro hidroeléctrico Los Martinez, San Jose de Ocoa.",
+   "monto": 2008388.85,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T08:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 8:00 a.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -1049,7 +764,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-16T08:00:00-04:00",
    "cierre_texto": "16 de noviembre, 8:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1064,8 +779,38 @@
    "monto_dudoso": false,
    "cierre": "2026-11-16T09:55:00-04:00",
    "cierre_texto": "16 de noviembre, 9:55 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ACADEMIA AEREA-DAF-CM-2026-0007",
+   "institucion": "Academia Aérea General Brigada Frank Andrés Felix Miranda",
+   "descripcion": "Adquisicion de pinturas",
+   "monto": 689065.2,
+   "moneda": "DOP",
+   "monto_texto": "RD$689,065",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T10:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 10:00 a.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGAP-DAF-CM-2026-0247",
+   "institucion": "Dirección General de Aduanas y Puertos",
+   "descripcion": "Suministro e instalación de accesorios de baños en diferentes áreas y remodelación de los baños Sede Central. – Proceso dirigido a MIPYMES.",
+   "monto": 814669.17,
+   "moneda": "DOP",
+   "monto_texto": "RD$814,669",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T10:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 10:00 a.m.",
+   "dias": 6,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -1079,9 +824,69 @@
    "monto_dudoso": false,
    "cierre": "2026-11-16T10:00:00-04:00",
    "cierre_texto": "16 de noviembre, 10:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "Hosp Marcelino Velez-DAF-CM-2026-0199",
+   "institucion": "Hospital General Regional Dr. Macelino Velez Santana",
+   "descripcion": "COMPRA DE PINTURA Y MATERIALES",
+   "monto": 1129948.7,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T10:20:00-04:00",
+   "cierre_texto": "16 de noviembre, 10:20 a.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "PROCURADURIA-DAF-CM-2026-0204",
+   "institucion": "Procuraduría General de la República",
+   "descripcion": "Adquisición de materiales de refrigeración",
+   "monto": 2001319.3,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T11:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 11:00 a.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGAP-DAF-CM-2026-0189",
+   "institucion": "Dirección General de Aduanas y Puertos",
+   "descripcion": "Servicio de Resane e Instalación de Lona Asfáltica en el Edificio de Aduanas Lope de Vega, Dirigido a MIPYMES.",
+   "monto": 1892012.23,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T11:15:00-04:00",
+   "cierre_texto": "16 de noviembre, 11:15 a.m.",
+   "dias": 6,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SRSEN-DAF-CM-2026-0040",
+   "institucion": "Servicio Regional de Salud Enriquillo",
+   "descripcion": "ADQUISICIÓN DE PINTURAS",
+   "monto": 657952.02,
+   "moneda": "DOP",
+   "monto_texto": "RD$657,952",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T11:40:00-04:00",
+   "cierre_texto": "16 de noviembre, 11:40 a.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -1094,7 +899,142 @@
    "monto_dudoso": false,
    "cierre": "2026-11-16T12:00:00-04:00",
    "cierre_texto": "16 de noviembre, 12:00 p.m.",
-   "dias": 7,
+   "dias": 6,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AMTE-DAF-CM-2026-0018",
+   "institucion": "Ayuntamiento Municipal de Tenares",
+   "descripcion": "SERVICIO PARA LA CONSTRUCION DEL PLAFON DE LA CAPILLA DE LOS NARANJOS, PISO EN SERAMICA CLUB ARROYO SECO, COLOCACION ALCALTARILLA COMUNIDAD EL COROZAL MUNICIPIO TENARES",
+   "monto": 633000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$633,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T12:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AMLD-DAF-CM-2026-0003",
+   "institucion": "Ayuntamiento del Municipio La Descubierta",
+   "descripcion": "ESTACION DE BOMBEROS",
+   "monto": 11978539.03,
+   "moneda": "DOP",
+   "monto_texto": "RD$12 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T12:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Edificaciones y viviendas",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AMLD-DAF-CM-2026-0001",
+   "institucion": "Ayuntamiento del Municipio La Descubierta",
+   "descripcion": "REMODELACIÓN Y AMPLIACIÓN DEL CEMENTERIO MUNICIPAL",
+   "monto": 24055861.84,
+   "moneda": "DOP",
+   "monto_texto": "RD$24.1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T12:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AMLD-DAF-CM-2026-0002",
+   "institucion": "Ayuntamiento del Municipio La Descubierta",
+   "descripcion": "ACERAS Y CONTENES",
+   "monto": 3953582.55,
+   "moneda": "DOP",
+   "monto_texto": "RD$4 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T12:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CAASD-DAF-CM-2026-0110",
+   "institucion": "Corporación del Acueducto y Alcantarillado de Santo Domingo",
+   "descripcion": "ADQUISICIÓN DE CALICHE PARA SER UTILIZADO EN DIFERENTES PUNTOS DE EXCAVACIONES Y CORRECCIONES DE AVERÍA EN EL GRAN SANTO DOMINGO",
+   "monto": 780000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$780,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T13:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 1:00 p.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SIE-DAF-CM-2026-0067",
+   "institucion": "Superintendencia de Electricidad",
+   "descripcion": "Suministro e Instalación de Extractores Industriales",
+   "monto": 700000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$700,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T14:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 2:00 p.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SIE-DAF-CM-2026-0068",
+   "institucion": "Superintendencia de Electricidad",
+   "descripcion": "Adquisición de Tela de Malla para proteger y asegurar las áreas de gestión documental y activos fijos de la nave industrial de la Super intendencia de Electricidad..",
+   "monto": 655600.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$655,600",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T14:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 2:00 p.m.",
+   "dias": 6,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ADN-DAF-CM-2026-0139",
+   "institucion": "Ayuntamiento del Distrito Nacional (ADN)",
+   "descripcion": "Suministro e Instalación de Barreras Automáticas para Control de Acceso Vehicular en Malecón Deportivo, Paseo Marítimo y Paseo 30 de Mayo",
+   "monto": 1699999.98,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.7 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T15:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CAMARA CUENTAS-DAF-CM-2026-0051",
+   "institucion": "Camara de Cuentas de la República",
+   "descripcion": "SERVICIO DE REPARACIÓN DE OFICINA",
+   "monto": 317420.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$317,420",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T15:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 3:00 p.m.",
+   "dias": 6,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1109,7 +1049,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-17T10:00:00-04:00",
    "cierre_texto": "17 de noviembre, 10:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1124,7 +1064,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-17T10:00:00-04:00",
    "cierre_texto": "17 de noviembre, 10:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1139,8 +1079,188 @@
    "monto_dudoso": false,
    "cierre": "2026-11-17T10:00:00-04:00",
    "cierre_texto": "17 de noviembre, 10:00 a.m.",
+   "dias": 7,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGAP-DAF-CM-2026-0199",
+   "institucion": "Dirección General de Aduanas y Puertos",
+   "descripcion": "Suministro y aplicacion de pintura exterior para la Administracion de Haina, Caudeco y AILA Carga DGA.",
+   "monto": 1733316.16,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.7 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-17T12:00:00-04:00",
+   "cierre_texto": "17 de noviembre, 12:00 p.m.",
+   "dias": 7,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CAID-DAF-CM-2026-0130",
+   "institucion": "Centro de Atención Integral para la Discapacidad",
+   "descripcion": "Contratación de servicios de mantenimiento de señalización horizontal y vertical de los parqueos del Centro de Atención Integral para la Discapacidad (CAID)",
+   "monto": 1200000.15,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-17T12:00:00-04:00",
+   "cierre_texto": "17 de noviembre, 12:00 p.m.",
+   "dias": 7,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INABIMA-DAF-CM-2026-0035",
+   "institucion": "Instituto Nacional de Bienestar Magisterial",
+   "descripcion": "CONTRATACIÓN DE EMPRESA PARA SERVICIO DE MANTENIMIENTO DEL PANEL DE ENERGIA Y COMPRESORES DE AIRE",
+   "monto": 907600.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$907,600",
+   "monto_dudoso": false,
+   "cierre": "2026-11-17T15:00:00-04:00",
+   "cierre_texto": "17 de noviembre, 3:00 p.m.",
+   "dias": 7,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MIDE-CCC-CP-2026-0035",
+   "institucion": "Ministerio de Defensa",
+   "descripcion": "CONSTRUCCIÓN DE INSTALACIONES FORTALEZA, MUNICIPIO SAN FERNANDO, PROVINCIA MONTECRISTI.",
+   "monto": 173194028.78,
+   "moneda": "DOP",
+   "monto_texto": "RD$173.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T08:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 8:00 a.m.",
+   "dias": 8,
+   "subsector": "Edificaciones y viviendas",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGII-CCC-CP-2026-0014",
+   "institucion": "Dirección General Impuestos Internos",
+   "descripcion": "Servicio de sustitución de lona asfáltica y aplicación de pintura reflectante para diferentes localidades de la DGII a nivel nacional.",
+   "monto": 4638592.78,
+   "moneda": "DOP",
+   "monto_texto": "RD$4.6 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T10:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 10:00 a.m.",
+   "dias": 8,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CULTURA-DAF-CM-2026-0079",
+   "institucion": "Ministerio de Cultura",
+   "descripcion": "“CONTRATACIÓN DE OBRAS DE MENOR CUANTÍA PARA SER EJECUTADAS EN LA SEDE Y DEPENDENCIAS DE ESTE MINISTERIO, DIRIGIDO A EMPRESAS MIPYMES”.",
+   "monto": 10838982.68,
+   "moneda": "DOP",
+   "monto_texto": "RD$10.8 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T10:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 10:00 a.m.",
+   "dias": 8,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MEM-CCC-CP-2026-0025",
+   "institucion": "Ministerio de Energía y Minas",
+   "descripcion": "Adquisición de materiales de construcción civil e hidráulicos para la ejecución y mantenimiento de proyectos de centrales micro hidroeléctricas en varias comunidades del país",
+   "monto": 6000005.73,
+   "moneda": "DOP",
+   "monto_texto": "RD$6 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T10:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 10:00 a.m.",
+   "dias": 8,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "Ayto. Zambrana-CCC-SO-2026-0001",
+   "institucion": "Ayuntamiento del Distrito Municipal de Zambrana",
+   "descripcion": "Construcción De Verja Perimetral De La Iglesia De Palo De Cuaba",
+   "monto": 1303258.3,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.3 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T12:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 12:00 p.m.",
    "dias": 8,
    "subsector": "Obras civiles e infraestructura",
+   "modalidad": "SO",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "HDMTD-CCC-CP-2026-0003",
+   "institucion": "Hospital General de Especialidades Dr. Mario Tolentino Dipp",
+   "descripcion": "SERVICIO CONSTRUCCION DE CASETA PARA LOS DESECHOS BIOMEDICOS EN CAMARA TRIGORIFICA",
+   "monto": 4700000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$4.7 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T12:30:00-04:00",
+   "cierre_texto": "18 de noviembre, 12:30 p.m.",
+   "dias": 8,
+   "subsector": "Edificaciones y viviendas",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "Ayto. Verón-CCC-CP-2026-0010",
+   "institucion": "Ayuntamiento Distrito Municipal Turístico Verón Punta Cana",
+   "descripcion": "Selección de un contratista para la construcción de un Campo de béisbol en Verón.",
+   "monto": 52200000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$52.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T14:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 2:00 p.m.",
+   "dias": 8,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGAP-DAF-CM-2026-0184",
+   "institucion": "Dirección General de Aduanas y Puertos",
+   "descripcion": "Readecuación de impermeabilizante en edificios Club DGA.",
+   "monto": 5219829.03,
+   "moneda": "DOP",
+   "monto_texto": "RD$5.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-19T10:00:00-04:00",
+   "cierre_texto": "19 de noviembre, 10:00 a.m.",
+   "dias": 9,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "JDMDG-CCC-CP-2026-0001",
+   "institucion": "Junta del Distrito Municipal Gonzalo",
+   "descripcion": "Construcción del Palacio Municipal del Distrito Municipal de Gonzalo",
+   "monto": 24000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$24 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-19T16:00:00-04:00",
+   "cierre_texto": "19 de noviembre, 4:00 p.m.",
+   "dias": 9,
+   "subsector": "Edificaciones y viviendas",
    "modalidad": "CP",
    "url": "javascript:void(0);"
   },
@@ -1154,7 +1274,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-20T10:00:00-04:00",
    "cierre_texto": "20 de noviembre, 10:00 a.m.",
-   "dias": 11,
+   "dias": 10,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1169,7 +1289,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 18,
+   "dias": 17,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1184,7 +1304,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T09:30:00-04:00",
    "cierre_texto": "1 de diciembre, 9:30 a.m.",
-   "dias": 22,
+   "dias": 21,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1199,7 +1319,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-02T12:00:00-04:00",
    "cierre_texto": "2 de diciembre, 12:00 p.m.",
-   "dias": 23,
+   "dias": 22,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1214,7 +1334,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-03T09:30:00-04:00",
    "cierre_texto": "3 de diciembre, 9:30 a.m.",
-   "dias": 24,
+   "dias": 23,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1229,7 +1349,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-09T10:00:00-04:00",
    "cierre_texto": "9 de diciembre, 10:00 a.m.",
-   "dias": 30,
+   "dias": 29,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1244,7 +1364,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-09T10:00:00-04:00",
    "cierre_texto": "9 de diciembre, 10:00 a.m.",
-   "dias": 30,
+   "dias": 29,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1259,7 +1379,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-14T11:00:00-04:00",
    "cierre_texto": "14 de diciembre, 11:00 a.m.",
-   "dias": 35,
+   "dias": 34,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1274,7 +1394,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-15T10:00:00-04:00",
    "cierre_texto": "15 de diciembre, 10:00 a.m.",
-   "dias": 36,
+   "dias": 35,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1289,7 +1409,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-18T12:00:00-04:00",
    "cierre_texto": "18 de diciembre, 12:00 p.m.",
-   "dias": 39,
+   "dias": 38,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1304,7 +1424,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-21T15:00:00-04:00",
    "cierre_texto": "21 de diciembre, 3:00 p.m.",
-   "dias": 42,
+   "dias": 41,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1319,7 +1439,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-29T09:00:00-04:00",
    "cierre_texto": "29 de diciembre, 9:00 a.m.",
-   "dias": 50,
+   "dias": 49,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1328,9 +1448,9 @@
  "mercado": {
   "desde": "enero de 2026",
   "total": {
-   "cantidad": 2697,
-   "valor": 97064646809,
-   "valor_texto": "RD$97.1 mil millones"
+   "cantidad": 2725,
+   "valor": 97404549781,
+   "valor_texto": "RD$97.4 mil millones"
   },
   "meses": [
    {
@@ -1406,23 +1526,23 @@
    {
     "mes": "2026-11",
     "etiqueta": "Nov",
-    "cantidad": 85,
-    "valor": 2226536199,
-    "valor_texto": "RD$2.2 mil millones"
+    "cantidad": 113,
+    "valor": 2566439172,
+    "valor_texto": "RD$2.6 mil millones"
    }
   ],
   "instituciones": [
+   {
+    "nombre": "Dirección General de Aduanas y Puertos",
+    "cantidad": 54,
+    "valor": 246332309,
+    "valor_texto": "RD$246.3 millones"
+   },
    {
     "nombre": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
     "cantidad": 50,
     "valor": 3616249796,
     "valor_texto": "RD$3.6 mil millones"
-   },
-   {
-    "nombre": "Dirección General de Aduanas y Puertos",
-    "cantidad": 50,
-    "valor": 236672483,
-    "valor_texto": "RD$236.7 millones"
    },
    {
     "nombre": "Ayuntamiento Municipal de Los Alcarrizos",
@@ -1432,8 +1552,8 @@
    },
    {
     "nombre": "Ayuntamiento del Distrito Nacional (ADN)",
-    "cantidad": 37,
-    "valor": 1430333358,
+    "cantidad": 38,
+    "valor": 1432033358,
     "valor_texto": "RD$1.4 mil millones"
    },
    {
@@ -1443,16 +1563,16 @@
     "valor_texto": "RD$199.5 millones"
    },
    {
+    "nombre": "Centro de Atención Integral para la Discapacidad",
+    "cantidad": 36,
+    "valor": 72150303,
+    "valor_texto": "RD$72.2 millones"
+   },
+   {
     "nombre": "Corporación de Acueducto y Alcantarillado de Santiago",
     "cantidad": 35,
     "valor": 5494165844,
     "valor_texto": "RD$5.5 mil millones"
-   },
-   {
-    "nombre": "Centro de Atención Integral para la Discapacidad",
-    "cantidad": 35,
-    "valor": 70950303,
-    "valor_texto": "RD$71 millones"
    },
    {
     "nombre": "Empresa de Transmisión Eléctrica Dominicana",
@@ -1476,21 +1596,21 @@
   "subsectores": [
    {
     "nombre": "Rehabilitación y mantenimiento de edificaciones",
-    "cantidad": 1129,
-    "valor": 18798441384,
-    "valor_texto": "RD$18.8 mil millones"
+    "cantidad": 1140,
+    "valor": 18850692668,
+    "valor_texto": "RD$18.9 mil millones"
    },
    {
     "nombre": "Obras civiles e infraestructura",
-    "cantidad": 765,
-    "valor": 63890694965,
+    "cantidad": 769,
+    "valor": 63949851806,
     "valor_texto": "RD$63.9 mil millones"
    },
    {
     "nombre": "Materiales y equipos de construcción",
-    "cantidad": 617,
-    "valor": 3239737480,
-    "valor_texto": "RD$3.2 mil millones"
+    "cantidad": 626,
+    "valor": 3254359759,
+    "valor_texto": "RD$3.3 mil millones"
    },
    {
     "nombre": "Diseño, supervisión y estudios técnicos",
@@ -1500,16 +1620,16 @@
    },
    {
     "nombre": "Edificaciones y viviendas",
-    "cantidad": 85,
-    "valor": 9546503314,
-    "valor_texto": "RD$9.5 mil millones"
+    "cantidad": 89,
+    "valor": 9760375882,
+    "valor_texto": "RD$9.8 mil millones"
    }
   ],
   "plazo": {
    "mediana": 6,
    "p25": 5,
    "p75": 8,
-   "muestras": 2697
+   "muestras": 2725
   }
  }
 }
