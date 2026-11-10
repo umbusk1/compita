@@ -45,6 +45,31 @@ def convertir_fecha(texto):
     return None
 
 
+def conectar():
+    """Abre una conexión nueva a la base de datos (con señales de vida para que no se corte)."""
+    return psycopg2.connect(DATABASE_URL, keepalives=1, keepalives_idle=30,
+                            keepalives_interval=10, keepalives_count=5)
+
+
+def guardar_cambio(lic_id, fecha_nueva, estado_nuevo, cambio_fecha):
+    """Guarda un cambio con una conexión propia, que se cierra al terminar."""
+    conn = conectar()
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE licitaciones
+            SET fecha_presentacion = COALESCE(%s, fecha_presentacion), estado = %s, actualizado_en = NOW()
+            WHERE id = %s
+        """, (fecha_nueva, estado_nuevo, lic_id))
+        if cambio_fecha:
+            cur.execute("UPDATE resultados SET fecha_presentacion = %s WHERE licitacion_id = %s",
+                        (fecha_nueva.astimezone(ZONA_RD).date(), lic_id))
+        conn.commit()
+        cur.close()
+    finally:
+        conn.close()
+
+
 def licitaciones_a_revisar(cur):
     """Licitaciones en algún tablero (no descartadas), vigentes o cerradas hace menos de 15 días."""
     cur.execute("""
@@ -135,9 +160,13 @@ def enviar_avisos(cur, cambios):
 
 def main():
     print('🔄 COMPITA - Actualizar licitaciones vigentes')
-    conn = psycopg2.connect(DATABASE_URL)
+    # La conexión a la base de datos se usa y se cierra enseguida: mientras el robot
+    # espera al portal (varios minutos) una conexión abierta se corta sola.
+    conn = conectar()
     cur = conn.cursor()
     pendientes = licitaciones_a_revisar(cur)
+    cur.close()
+    conn.close()
     print(f'📋 Licitaciones a revisar: {len(pendientes)}')
     if not pendientes:
         return
@@ -172,15 +201,11 @@ def main():
             if not (cambio_fecha or cambio_estado):
                 continue
 
-            cur.execute("""
-                UPDATE licitaciones
-                SET fecha_presentacion = COALESCE(%s, fecha_presentacion), estado = %s, actualizado_en = NOW()
-                WHERE id = %s
-            """, (fecha_nueva, estado_nuevo, lic_id))
-            if cambio_fecha:
-                cur.execute("UPDATE resultados SET fecha_presentacion = %s WHERE licitacion_id = %s",
-                            (fecha_nueva.astimezone(ZONA_RD).date(), lic_id))
-            conn.commit()
+            try:
+                guardar_cambio(lic_id, fecha_nueva, estado_nuevo, cambio_fecha)
+            except Exception as e:
+                print(f'   ⚠️  {referencia}: no se pudo guardar el cambio ({e}); se sigue con la próxima')
+                continue
 
             cancelada = estado_nuevo in ESTADOS_CANCELADA and estado_viejo not in ESTADOS_CANCELADA
             print(f"   ✏️  {referencia}: "
@@ -195,6 +220,8 @@ def main():
                                 'nueva': fecha_nueva, 'estado_nuevo': estado_nuevo, 'cancelada': cancelada})
         browser.close()
 
+    conn = conectar()
+    cur = conn.cursor()
     enviados = enviar_avisos(cur, cambios)
     cur.close()
     conn.close()
