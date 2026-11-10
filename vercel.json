@@ -55,5 +55,15 @@
       "source": "/reportes/:clave",
       "destination": "/reporte-sector.html"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/analizar-notificar-v2?action=disparar&workflow=actualizar-vigentes.yml",
+      "schedule": "40 11 * * 1-5"
+    },
+    {
+      "path": "/api/analizar-notificar-v2?action=disparar&workflow=actualizar-vigentes.yml",
+      "schedule": "40 16 * * 1-5"
+    }
   ]
 }

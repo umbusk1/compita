@@ -35,6 +35,49 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const DASHBOARD_URL = `${SITE_URL}/oportunidades.html`;
 
 // ============================================================================
+// DISPARAR WORKFLOWS DE GITHUB (alarma de Vercel -> GitHub Actions)
+// ============================================================================
+
+// Solo estos workflows se pueden disparar desde aquí.
+const WORKFLOWS_DISPARABLES = new Set(['actualizar-vigentes.yml']);
+const GITHUB_REPO = 'umbusk1/compita';
+
+async function handleDisparar(req, res) {
+  const archivo = String(req.query.workflow || '');
+  if (!WORKFLOWS_DISPARABLES.has(archivo)) {
+    return res.status(400).json({ error: 'Workflow no permitido' });
+  }
+  const token = process.env.GITHUB_DISPATCH_TOKEN;
+  if (!token) {
+    console.error('❌ Falta la variable GITHUB_DISPATCH_TOKEN en Vercel');
+    return res.status(500).json({ error: 'Falta GITHUB_DISPATCH_TOKEN' });
+  }
+  try {
+    const r = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/${archivo}/dispatches`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+        'User-Agent': 'compita-vercel-cron',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ ref: 'main' })
+    });
+    if (r.status === 204) {
+      console.log(`🚀 Workflow ${archivo} disparado`);
+      return res.status(200).json({ success: true, workflow: archivo });
+    }
+    const detalle = (await r.text()).slice(0, 200);
+    console.error(`❌ GitHub respondió ${r.status}: ${detalle}`);
+    return res.status(502).json({ error: `GitHub respondió ${r.status}` });
+  } catch (e) {
+    console.error('❌ Error llamando a GitHub:', e.message);
+    return res.status(502).json({ error: 'No se pudo llamar a GitHub' });
+  }
+}
+
+// ============================================================================
 // HANDLER PRINCIPAL
 // ============================================================================
 
@@ -67,6 +110,13 @@ export default async function handler(req, res) {
   // ── Prueba del triaje semántico (solo lectura: no guarda ni envía correos) ──
   if (req.method === 'POST' && req.query.action === 'probar-triaje') {
     return await handleProbarTriaje(req, res);
+  }
+
+  // ── Disparar un workflow de GitHub Actions (lo llama la alarma de Vercel) ──
+  // Las tareas programadas de GitHub llegan con horas de retraso; la alarma de
+  // Vercel es más puntual, así que ella le ordena a GitHub que arranque el trabajo.
+  if (req.query.action === 'disparar') {
+    return await handleDisparar(req, res);
   }
 
   if (req.method !== 'POST') {

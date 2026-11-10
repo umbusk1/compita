@@ -6,6 +6,10 @@ on:
     - cron: "40 11 * * 1-5"  # 7:40 AM hora RD, lunes a viernes (antes de la jornada)
     - cron: "40 16 * * 1-5"  # 12:40 PM hora RD, lunes a viernes
   workflow_dispatch:
+# Una sola corrida a la vez: si llegan dos (alarma de Vercel y programación de GitHub), la segunda espera.
+concurrency:
+  group: actualizar-vigentes
+  cancel-in-progress: false
 jobs:
   actualizar:
     runs-on: ubuntu-latest
