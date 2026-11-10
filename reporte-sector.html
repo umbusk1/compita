@@ -277,6 +277,15 @@
 
   function pintar() {
     document.title = datos.titulo + ': licitaciones abiertas en República Dominicana | Compita';
+    // Cada sector tiene su propia dirección, título y descripción para los buscadores.
+    var url = 'https://compita.do/reportes/' + clave;
+    var desc = datos.titulo + ': ' + datos.kpis.abiertas.toLocaleString('es-DO') + ' licitaciones abiertas del Estado dominicano por '
+      + datos.kpis.valor_texto + ', ' + datos.kpis.cierran_7_dias.toLocaleString('es-DO') + ' cierran en los próximos 7 días. Reporte gratuito de Compita.';
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', desc);
+    var canon = document.querySelector('link[rel="canonical"]');
+    if (!canon) { canon = document.createElement('link'); canon.rel = 'canonical'; document.head.appendChild(canon); }
+    canon.href = url;
     document.getElementById('eyebrow').textContent = 'Reporte gratuito · actualizado el ' + datos.actualizado_texto;
     document.getElementById('titulo').textContent = datos.titulo;
     document.getElementById('subtitulo').textContent = datos.subtitulo;

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /app.html
+Disallow: /dashboard.html
+Disallow: /oportunidades.html
+Disallow: /cuenta.html
+Disallow: /onboarding.html
+
+Sitemap: https://compita.do/sitemap.xml
