@@ -2,7 +2,7 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-10T19:14:29.876806-04:00",
+ "actualizado": "2026-11-10T21:28:21.915861-04:00",
  "actualizado_texto": "10 de noviembre de 2026",
  "kpis": {
   "abiertas": 94,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$6.7 mil millones",
   "cierran_7_dias": 73
  },
- "resumen": "El sector construcción registra hoy 94 licitaciones abiertas por un valor estimado de RD$6.7 mil millones, con 73 procesos que cierran en los próximos 7 días. Destacan la contratación de obras para adecuaciones en centros educativos a nivel nacional de la Dirección de Infraestructura Escolar por RD$1.9 mil millones, la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas por RD$1.4 mil millones, y las obras de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD por RD$600 millones. Además, seis procesos de mantenimiento correctivo de centros educativos por RD$53 millones cada uno, bajo el operativo Navidad en las Aulas, cierran este mismo 13 de noviembre.",
+ "resumen": "Hoy el sector construcción registra 94 licitaciones abiertas por un valor estimado de RD$6.7 mil millones, con 73 procesos que cierran en los próximos siete días. Destaca la contratación de obras para adecuaciones en centros educativos a nivel nacional de la Dirección de Infraestructura Escolar por RD$1.9 mil millones, la construcción y reconstrucción de carreteras en La Vega y Hato Mayor del Ministerio de Obras Públicas por RD$1.4 mil millones, y las obras de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD por RD$600 millones. Con tantos cierres concentrados en esta semana, las empresas interesadas deben revisar plazos y preparar su documentación sin demora.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
@@ -1010,21 +1010,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "ADN-DAF-CM-2026-0139",
-   "institucion": "Ayuntamiento del Distrito Nacional (ADN)",
-   "descripcion": "Suministro e Instalación de Barreras Automáticas para Control de Acceso Vehicular en Malecón Deportivo, Paseo Marítimo y Paseo 30 de Mayo",
-   "monto": 1699999.98,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-16T15:00:00-04:00",
-   "cierre_texto": "16 de noviembre, 3:00 p.m.",
-   "dias": 6,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "CAMARA CUENTAS-DAF-CM-2026-0051",
    "institucion": "Camara de Cuentas de la República",
    "descripcion": "SERVICIO DE REPARACIÓN DE OFICINA",
@@ -1036,6 +1021,21 @@
    "cierre_texto": "16 de noviembre, 3:00 p.m.",
    "dias": 6,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ADN-DAF-CM-2026-0139",
+   "institucion": "Ayuntamiento del Distrito Nacional (ADN)",
+   "descripcion": "Suministro e Instalación de Barreras Automáticas para Control de Acceso Vehicular en Malecón Deportivo, Paseo Marítimo y Paseo 30 de Mayo",
+   "monto": 1699999.98,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.7 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-16T15:00:00-04:00",
+   "cierre_texto": "16 de noviembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -1085,12 +1085,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DGAP-DAF-CM-2026-0199",
-   "institucion": "Dirección General de Aduanas y Puertos",
-   "descripcion": "Suministro y aplicacion de pintura exterior para la Administracion de Haina, Caudeco y AILA Carga DGA.",
-   "monto": 1733316.16,
+   "referencia": "CAID-DAF-CM-2026-0130",
+   "institucion": "Centro de Atención Integral para la Discapacidad",
+   "descripcion": "Contratación de servicios de mantenimiento de señalización horizontal y vertical de los parqueos del Centro de Atención Integral para la Discapacidad (CAID)",
+   "monto": 1200000.15,
    "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
+   "monto_texto": "RD$1.2 millones",
    "monto_dudoso": false,
    "cierre": "2026-11-17T12:00:00-04:00",
    "cierre_texto": "17 de noviembre, 12:00 p.m.",
@@ -1100,12 +1100,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "CAID-DAF-CM-2026-0130",
-   "institucion": "Centro de Atención Integral para la Discapacidad",
-   "descripcion": "Contratación de servicios de mantenimiento de señalización horizontal y vertical de los parqueos del Centro de Atención Integral para la Discapacidad (CAID)",
-   "monto": 1200000.15,
+   "referencia": "DGAP-DAF-CM-2026-0199",
+   "institucion": "Dirección General de Aduanas y Puertos",
+   "descripcion": "Suministro y aplicacion de pintura exterior para la Administracion de Haina, Caudeco y AILA Carga DGA.",
+   "monto": 1733316.16,
    "moneda": "DOP",
-   "monto_texto": "RD$1.2 millones",
+   "monto_texto": "RD$1.7 millones",
    "monto_dudoso": false,
    "cierre": "2026-11-17T12:00:00-04:00",
    "cierre_texto": "17 de noviembre, 12:00 p.m.",
@@ -1145,21 +1145,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DGII-CCC-CP-2026-0014",
-   "institucion": "Dirección General Impuestos Internos",
-   "descripcion": "Servicio de sustitución de lona asfáltica y aplicación de pintura reflectante para diferentes localidades de la DGII a nivel nacional.",
-   "monto": 4638592.78,
-   "moneda": "DOP",
-   "monto_texto": "RD$4.6 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-18T10:00:00-04:00",
-   "cierre_texto": "18 de noviembre, 10:00 a.m.",
-   "dias": 8,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "CULTURA-DAF-CM-2026-0079",
    "institucion": "Ministerio de Cultura",
    "descripcion": "“CONTRATACIÓN DE OBRAS DE MENOR CUANTÍA PARA SER EJECUTADAS EN LA SEDE Y DEPENDENCIAS DE ESTE MINISTERIO, DIRIGIDO A EMPRESAS MIPYMES”.",
@@ -1172,6 +1157,21 @@
    "dias": 8,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGII-CCC-CP-2026-0014",
+   "institucion": "Dirección General Impuestos Internos",
+   "descripcion": "Servicio de sustitución de lona asfáltica y aplicación de pintura reflectante para diferentes localidades de la DGII a nivel nacional.",
+   "monto": 4638592.78,
+   "moneda": "DOP",
+   "monto_texto": "RD$4.6 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T10:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 10:00 a.m.",
+   "dias": 8,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
