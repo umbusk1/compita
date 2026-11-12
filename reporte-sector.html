@@ -131,10 +131,22 @@
     </div>
     <div class="rounded-2xl p-7 tarjeta">
       <h3 class="lora text-2xl font-bold mb-3" style="color:var(--texto-oscuro);">Recíbelo por correo</h3>
-      <p class="text-sm leading-relaxed mb-5" style="color:var(--texto-medio);">
-        Cada lunes, el resumen de este reporte en tu bandeja. Gratis, y puedes darte de baja cuando quieras.
+      <p class="text-sm leading-relaxed mb-4" style="color:var(--texto-medio);">
+        Cada lunes, el resumen semanal de este reporte en tu bandeja. Gratis, y puedes darte de baja cuando quieras.
       </p>
-      <a id="enlace-suscribir" href="/#reportes" class="inline-block font-bold px-5 py-3 rounded-lg" style="background:var(--violeta); color:#fff;">Suscribirme gratis →</a>
+      <div id="form-suscripcion">
+        <div class="grid gap-2 mb-3">
+          <input type="text" id="sub-nombre" placeholder="Tu nombre" autocomplete="name"
+                 style="width:100%; padding:.7rem .9rem; border:1px solid var(--crema-borde); border-radius:8px; font-family:'Manrope',sans-serif; font-size:.9rem; outline:none;">
+          <input type="email" id="sub-email" placeholder="Tu correo" autocomplete="email"
+                 style="width:100%; padding:.7rem .9rem; border:1px solid var(--crema-borde); border-radius:8px; font-family:'Manrope',sans-serif; font-size:.9rem; outline:none;">
+        </div>
+        <button id="sub-boton" type="button" onclick="suscribirReporte()"
+                style="width:100%; background:var(--violeta); color:#fff; padding:.8rem 1rem; border-radius:8px; border:none; cursor:pointer; font-family:'Manrope',sans-serif; font-weight:700; font-size:.95rem;">
+          Suscribirme gratis
+        </button>
+        <p id="sub-mensaje" class="text-xs" style="margin-top:.6rem; min-height:18px; color:var(--texto-medio);"></p>
+      </div>
     </div>
   </section>
 
@@ -160,6 +172,7 @@
   var partes = location.pathname.split('/').filter(Boolean);
   var clave = new URLSearchParams(location.search).get('s') || partes[partes.length - 1];
   if (!REPORTES[clave]) clave = 'construccion';
+  window.CLAVE_REPORTE = clave;
 
   var datos = null, filtro = 'Todos', soloPronto = false, mostrar = 30;
 
@@ -297,7 +310,6 @@
       document.getElementById('bloque-resumen').classList.remove('hidden');
     }
     document.getElementById('actualizado').textContent = 'Datos actualizados el ' + datos.actualizado_texto + ', de lunes a viernes, dos veces al día.';
-    document.getElementById('enlace-suscribir').href = '/?suscribir=' + clave + '#reportes';
     document.getElementById('otros').innerHTML = Object.keys(REPORTES).filter(function (k) { return k !== clave; })
       .map(function (k) { return '<a class="chip" href="/reportes/' + k + '">' + REPORTES[k] + ' →</a>'; }).join('')
       + '<a class="chip" href="/#reporte">Reporte semanal general →</a>';
@@ -330,6 +342,36 @@
       document.getElementById('lista').innerHTML = '<p class="tarjeta text-sm">El reporte se está preparando. Vuelve a intentarlo en unos minutos.</p>';
     });
 })();
+
+async function suscribirReporte() {
+  var clave = window.CLAVE_REPORTE;
+  var nombre  = document.getElementById('sub-nombre').value.trim();
+  var email   = document.getElementById('sub-email').value.trim();
+  var mensaje = document.getElementById('sub-mensaje');
+  var boton   = document.getElementById('sub-boton');
+  if (!nombre || !email) { mensaje.textContent = '⚠️ Por favor completa tu nombre y tu correo.'; mensaje.style.color = '#cd2d2c'; return; }
+  boton.disabled = true; boton.textContent = 'Procesando...'; mensaje.textContent = '';
+  try {
+    var res = await fetch('https://compita-reporte-semanal.vercel.app/api/suscribir', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre: nombre, email: email, reportes: [clave] })
+    });
+    if (res.ok) {
+      document.getElementById('form-suscripcion').innerHTML =
+        '<div style="text-align:center; padding:.5rem 0;">'
+        + '<div style="font-size:2rem; margin-bottom:.5rem;">🎉</div>'
+        + '<p class="lora" style="font-size:1.2rem; font-weight:700; color:var(--texto-oscuro); margin-bottom:.4rem;">¡Listo!</p>'
+        + '<p style="color:var(--texto-medio); font-size:.9rem; line-height:1.6;">Te enviamos un correo de bienvenida.<br>Tu primer resumen llega el próximo lunes.</p></div>';
+    } else {
+      var d = await res.json().catch(function () { return {}; });
+      mensaje.textContent = '⚠️ ' + (d.error || 'Hubo un problema. Intenta de nuevo.'); mensaje.style.color = '#cd2d2c';
+      boton.disabled = false; boton.textContent = 'Suscribirme gratis';
+    }
+  } catch (err) {
+    mensaje.textContent = '⚠️ Error de conexión. Intenta de nuevo.'; mensaje.style.color = '#cd2d2c';
+    boton.disabled = false; boton.textContent = 'Suscribirme gratis';
+  }
+}
 </script>
 </body>
 </html>
