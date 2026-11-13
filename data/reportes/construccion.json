@@ -2,19 +2,19 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-12T19:32:57.901197-04:00",
+ "actualizado": "2026-11-12T22:07:56.655824-04:00",
  "actualizado_texto": "12 de noviembre de 2026",
  "kpis": {
-  "abiertas": 91,
-  "valor_total": 4644083747,
+  "abiertas": 92,
+  "valor_total": 4649890165,
   "valor_texto": "RD$4.6 mil millones",
   "cierran_7_dias": 70
  },
- "resumen": "El sector construcción registra hoy 91 licitaciones abiertas por un valor estimado de RD$4.6 mil millones, con 70 de ellas cerrando en los próximos siete días. Destaca la contratación de la Dirección de Infraestructura Escolar para adecuaciones en centros educativos a nivel nacional, por RD$1.9 mil millones, junto a las obras de recolección de aguas residuales de la Av. Jacobo Majluta de la Corporación del Acueducto y Alcantarillado de Santo Domingo, valoradas en RD$600 millones, y el remozamiento del Hospital Municipal José A. Columna en Bonao, por RD$299.1 millones, a cargo del Servicio Nacional de Salud. Empresarios del sector deben prestar atención particular a las licitaciones que cierran el 9 de diciembre, dado el alto volumen de recursos en juego.",
+ "resumen": "El sector construcción registra hoy 92 licitaciones abiertas por un valor estimado de RD$4.6 mil millones, con la Dirección de Infraestructura Escolar liderando la oferta gracias a una contratación nacional de RD$1.9 mil millones para adecuaciones en centros educativos, seguida por la Corporación del Acueducto y Alcantarillado de Santo Domingo con obras de recolección de aguas residuales en la Av. Jacobo Majluta por RD$600 millones y el Servicio Nacional de Salud con el remozamiento del Hospital Municipal José A. Columna en Bonao por RD$299.1 millones. Un total de 70 procesos cierran en los próximos siete días, por lo que empresarios interesados deben revisar plazos con urgencia, especialmente los que vencen el 9 de diciembre. Vale la pena monitorear de cerca las múltiples contrataciones de mantenimiento correctivo escolar bajo el operativo Navidad en las Aulas, que suman varias oportunidades de RD$53 millones cada una y cierran el 13 de noviembre.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
-   "cantidad": 47
+   "cantidad": 48
   },
   {
    "nombre": "Materiales y equipos de construcción",
@@ -1145,6 +1145,21 @@
    "url": "javascript:void(0);"
   },
   {
+   "referencia": "MIP-DAF-CM-2026-0077",
+   "institucion": "Ministerio de Interior y Policía",
+   "descripcion": "CONTRATACIÓN DE SERVICIOS ESPECIALIZADOS PARA LA HABILITACION DE LAS CASAS DE PREVENCION Y SEGURIDAD EN SAMANA, SAN CRISTÓBAL, SANTIAGO DE LOS CABALLEROS, SANTO DOMINGO NORTE Y SANTO DOMINGO ESTE ...",
+   "monto": 5806417.57,
+   "moneda": "DOP",
+   "monto_texto": "RD$5.8 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-20T16:00:00-04:00",
+   "cierre_texto": "20 de noviembre, 4:00 p.m.",
+   "dias": 8,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
    "referencia": "DGAP-DAF-CM-2026-0264",
    "institucion": "Dirección General de Aduanas y Puertos",
    "descripcion": "Suministro e instalación de techo en plafón y readecuación de lobby, Adm. San Pedro de Macorís DGA.",
@@ -1403,8 +1418,8 @@
  "mercado": {
   "desde": "enero de 2026",
   "total": {
-   "cantidad": 2755,
-   "valor": 97962698619,
+   "cantidad": 2756,
+   "valor": 97968505036,
    "valor_texto": "RD$98 mil millones"
   },
   "meses": [
@@ -1481,8 +1496,8 @@
    {
     "mes": "2026-11",
     "etiqueta": "Nov",
-    "cantidad": 143,
-    "valor": 3124588010,
+    "cantidad": 144,
+    "valor": 3130394427,
     "valor_texto": "RD$3.1 mil millones"
    }
   ],
@@ -1551,8 +1566,8 @@
   "subsectores": [
    {
     "nombre": "Rehabilitación y mantenimiento de edificaciones",
-    "cantidad": 1158,
-    "valor": 18930072463,
+    "cantidad": 1159,
+    "valor": 18935878881,
     "valor_texto": "RD$18.9 mil millones"
    },
    {
@@ -1584,7 +1599,7 @@
    "mediana": 6,
    "p25": 5,
    "p75": 8,
-   "muestras": 2755
+   "muestras": 2756
   }
  }
 }
