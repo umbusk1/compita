@@ -158,6 +158,22 @@ def enviar_avisos(cur, cambios):
     return enviados
 
 
+def abrir_portal(page, intentos=3, pausa=60):
+    """Abre el portal y espera el cuadro de búsqueda. Si el portal está lento o caído,
+    reintenta unas veces con una pausa antes de rendirse (falla el último intento)."""
+    for n in range(1, intentos + 1):
+        try:
+            page.goto(PORTAL_URL, timeout=60000)
+            page.wait_for_selector('#txtAllWords2Search', timeout=30000)
+            return
+        except Exception as e:
+            if n == intentos:
+                raise
+            print(f'   ⚠️  El portal no cargó (intento {n} de {intentos}): {str(e).splitlines()[0]}. '
+                  f'Se reintenta en {pausa} s')
+            time.sleep(pausa)
+
+
 def main():
     print('🔄 COMPITA - Actualizar licitaciones vigentes')
     # La conexión a la base de datos se usa y se cierra enseguida: mientras el robot
@@ -176,8 +192,7 @@ def main():
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.set_default_timeout(30000)
-        page.goto(PORTAL_URL, timeout=60000)
-        page.wait_for_selector('#txtAllWords2Search', timeout=30000)
+        abrir_portal(page)
 
         for lic_id, referencia, fecha_vieja, estado_viejo in pendientes:
             try:
