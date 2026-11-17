@@ -1750,7 +1750,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
 		        method: 'POST',
 		        headers: {
 		            'Content-Type': 'application/json',
-		            'Authorization': `Bearer ${localStorage.getItem('compita_token')}`
+		            'Authorization': `Bearer ${(localStorage.getItem('token') || sessionStorage.getItem('token'))}`
 		        },
 		        body: JSON.stringify({
 		            action: 'guardar_analisis_pliego',
@@ -2936,7 +2936,7 @@ async function abrirCoach(referencia, descripcion, entidad, monto, fecha_present
                     para recomendarte si participar — con fundamento y condiciones concretas.
                 </p>
                 <div class="bg-violet-50 rounded-lg px-4 py-3 text-sm text-violet-700 mb-6">
-                    El Coach Licitador está incluido en tu Plan Enterprise sin costo adicional.
+                    El Coach Licitador está incluido en tu Plan Platinum.
                 </div>
                 <div class="flex gap-3 justify-end">
                     <button onclick="document.getElementById('coach-modal').remove()"
@@ -3033,7 +3033,7 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('compita_token')}`
+                            'Authorization': `Bearer ${(localStorage.getItem('token') || sessionStorage.getItem('token'))}`
                         },
                         body: JSON.stringify({
                             action: 'guardar_analisis_pliego',
@@ -3071,6 +3071,20 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
         }
 
         if (!analisisOk) return;
+    }
+
+    // Si el análisis solo está en este navegador, guardarlo también en el servidor,
+    // porque el Coach lo busca allí (antes se perdía y el Coach decía "Pliego sin analizar")
+    if (tieneAnalisis) {
+        try {
+            await fetch(`${API_BASE}/api/resultados`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${(localStorage.getItem('token') || sessionStorage.getItem('token'))}` },
+                body: JSON.stringify({ action: 'guardar_analisis_pliego', referencia, analisis: analisisGuardados[referencia] })
+            });
+        } catch (e) {
+            console.warn('No se pudo guardar analisis en BD:', e);
+        }
     }
 
     // ── Con pliego confirmado, llamar al Coach ────────────────────────────────
@@ -3260,7 +3274,7 @@ async function prepararReporteCompita() {
             <div style="display:inline-block;width:40px;height:40px;border:4px solid #3B6D11;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:1rem;"></div>
             <p style="font-size:14px;font-weight:600;color:#374151;margin:0 0 6px;">Preparando Reporte Compita...</p>
             <p style="font-size:12px;color:#9CA3AF;margin:0 0 4px;">Claude está ejecutando el análisis completo</p>
-            <p style="font-size:11px;color:#D1D5DB;margin:0;">Primera vez puede tomar 3-5 minutos · Las siguientes serán instantáneas</p>
+            <p style="font-size:11px;color:#D1D5DB;margin:0;">Esto puede tomar de 3 a 5 minutos. No cierres esta ventana.</p>
         </div>
     `;
 

@@ -86,7 +86,7 @@ async function verificarEnterprise(empresaId) {
 async function handleGetPerfilLicitador(req, res, empresaId) {
   try {
     const esEnterprise = await verificarEnterprise(empresaId);
-    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Enterprise' });
+    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Platinum' });
 
     const result = await pool.query(
       `SELECT id, grupo, codigo, nombre, emisor, vigencia_estandar,
@@ -107,7 +107,7 @@ async function handleGetPerfilLicitador(req, res, empresaId) {
 async function handleInitPerfilLicitador(req, res, empresaId) {
   try {
     const esEnterprise = await verificarEnterprise(empresaId);
-    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Enterprise' });
+    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Platinum' });
 
     await pool.query('SELECT inicializar_perfil_licitador($1)', [empresaId]);
     return res.status(200).json({ message: 'Perfil Licitador inicializado correctamente' });
@@ -120,7 +120,7 @@ async function handleInitPerfilLicitador(req, res, empresaId) {
 async function handleUpdateDocumento(req, res, empresaId) {
   try {
     const esEnterprise = await verificarEnterprise(empresaId);
-    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Enterprise' });
+    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Platinum' });
 
     const { id, fecha_vencimiento, notas, archivo_url } = req.body;
     if (!id) return res.status(400).json({ error: 'Campo "id" requerido' });
@@ -149,7 +149,7 @@ async function handleUpdateDocumento(req, res, empresaId) {
 async function handleAddDocumento(req, res, empresaId) {
   try {
     const esEnterprise = await verificarEnterprise(empresaId);
-    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Enterprise' });
+    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Platinum' });
 
     const { grupo, nombre, emisor, vigencia_estandar } = req.body;
 
@@ -188,7 +188,7 @@ async function handleAddDocumento(req, res, empresaId) {
 async function handleDeleteDocumento(req, res, empresaId) {
   try {
     const esEnterprise = await verificarEnterprise(empresaId);
-    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Enterprise' });
+    if (!esEnterprise) return res.status(403).json({ error: 'Requiere Plan Platinum' });
 
     const { id } = req.query;
     if (!id) return res.status(400).json({ error: 'Campo "id" requerido' });
