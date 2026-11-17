@@ -327,7 +327,7 @@ if (accion === 'kb-consumir') {
   if (!cap.agente_sprint_disponible) {
     return res.status(403).json({
       success: false,
-      error: 'Generar Bonsai con IA requiere Plan Enterprise PLATINUM de Compita.',
+      error: 'Generar Bonsai con IA requiere Plan Platinum de Compita.',
       upgrade_required: true,
     });
   }
@@ -399,7 +399,7 @@ if (accion === 'kb-consumir') {
         if (!cap.agente_sprint_disponible) {
           return res.status(403).json({
             success: false, permitido: false,
-            error: 'El Agente Sprint está disponible solo en el Plan Enterprise PLATINUM',
+            error: 'El Agente Sprint está disponible solo en el Plan Platinum',
             upgrade_required: true
           });
         }
@@ -470,7 +470,7 @@ if (accion === 'kb-consumir') {
       if (!cap.agente_sprint_disponible) {
         return res.status(403).json({
           success: false,
-          error: 'El Coach Licitador está disponible solo en el Plan Enterprise PLATINUM',
+          error: 'El Coach Licitador está disponible solo en el Plan Platinum',
           upgrade_required: true
         });
       }
@@ -732,7 +732,7 @@ ${seccionPliego}
       if (!cap.agente_sprint_disponible) {
         return res.status(403).json({
           success: false,
-          error: 'El Organizador de la Oferta está disponible solo en el Plan Enterprise PLATINUM',
+          error: 'El Organizador de la Oferta está disponible solo en el Plan Platinum',
           upgrade_required: true
         });
       }
