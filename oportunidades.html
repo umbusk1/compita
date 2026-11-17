@@ -2953,7 +2953,12 @@ async function abrirCoach(referencia, descripcion, entidad, monto, fecha_present
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
-function mostrarErrorSinPliego(modal, referencia, motivo) {
+function mostrarErrorSinPliego(modal, referencia, motivo, titulo, texto) {
+    // Por defecto el aviso dice que no hubo pliego; si el pliego existe pero el análisis falló,
+    // quien llama pasa su propio título y texto para mostrar la causa real.
+    titulo = titulo || 'Sin pliego disponible';
+    texto = texto || `No se pudo obtener ni analizar el pliego de <strong>${referencia}</strong>.
+                    Sin él, el Coach no tiene base suficiente para recomendar participar.`;
     modal.querySelector('.bg-white').innerHTML = `
         <div style="padding:1.5rem;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
@@ -2962,10 +2967,9 @@ function mostrarErrorSinPliego(modal, referencia, motivo) {
                     style="font-size:22px;color:#9CA3AF;background:none;border:none;cursor:pointer;line-height:1;">×</button>
             </div>
             <div style="background:#FEF3C7;border-radius:10px;padding:1.25rem;margin-bottom:1rem;">
-                <p style="font-size:14px;font-weight:600;color:#92400E;margin:0 0 8px;">Sin pliego disponible</p>
+                <p style="font-size:14px;font-weight:600;color:#92400E;margin:0 0 8px;">${titulo}</p>
                 <p style="font-size:13px;color:#92400E;margin:0;line-height:1.6;">
-                    No se pudo obtener ni analizar el pliego de <strong>${referencia}</strong>.
-                    Sin él, el Coach no tiene base suficiente para recomendar participar.
+                    ${texto}
                 </p>
             </div>
             <p style="font-size:13px;color:#6B7280;margin:0 0 1.25rem;line-height:1.6;">
@@ -3042,11 +3046,20 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
                 }
                 analisisOk = true;
             } else {
-			                const descargado = JSON.parse(localStorage.getItem('compita_descargas') || '{}')[referencia];
-			                const motivo = descargado
-			                    ? 'El pliego fue descargado pero el análisis automático falló. Por favor haz clic en <strong>Analizar Pliego con IA</strong> primero y luego vuelve al Coach.'
-			                    : 'El portal puede no tener el pliego publicado aún, o este proceso no cuenta con pliego público (exclusividad, comparación de precios sin adjuntos).';
-			                mostrarErrorSinPliego(modal, referencia, motivo);
+			                if (resultado.sin_pliego) {
+			                    // De verdad no se pudo obtener el pliego del portal
+			                    const motivo = 'El portal puede no tener el pliego publicado aún, o este proceso no cuenta con pliego público (exclusividad, comparación de precios sin adjuntos).'
+			                        + (resultado.error ? '<br><span style="font-size:12px;color:#9CA3AF;">Detalle: ' + escapeHtml(resultado.error) + '</span>' : '');
+			                    mostrarErrorSinPliego(modal, referencia, motivo);
+			                } else {
+			                    // Hay pliego (o no sabemos), pero el análisis falló: mostrar la causa real
+			                    const causa = resultado.error ? escapeHtml(resultado.error) : 'El servicio no indicó la causa.';
+			                    mostrarErrorSinPliego(modal, referencia,
+			                        'Causa: ' + causa + '<br>Intenta de nuevo en unos minutos. Si el error se repite, avísale al equipo de Compita.',
+			                        'No se pudo analizar el pliego',
+			                        `Se intentó analizar el pliego de <strong>${referencia}</strong>, pero el análisis automático falló.`
+			                    );
+			                }
 			                return;
             }
         } catch (e) {
