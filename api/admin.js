@@ -501,22 +501,39 @@ async function handleEliminarEmpresa(req, res) {
     const conteoAnalisisProfundos= await pool.query('SELECT COUNT(*) as total FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
     const conteoAnalisis         = await pool.query('SELECT COUNT(*) as total FROM analisis WHERE empresa_id = $1', [empresa_id]);
     const conteoUsuarios         = await pool.query('SELECT COUNT(*) as total FROM usuarios WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
-    const usuariosEmpresa = await pool.query('SELECT id FROM usuarios WHERE empresa_id = $1', [empresa_id]);
-    for (const u of usuariosEmpresa.rows) {
-      await pool.query('DELETE FROM invitaciones_referido WHERE referidor_id = $1', [u.id]);
-      await pool.query('DELETE FROM referidos WHERE referidor_id = $1 OR referido_id = $1', [u.id]);
+    // Todo o nada: si algo falla, no queda la empresa a medio borrar.
+    // Incluye los datos de Platinum (analisis de pliegos, Perfil Licitador y uso mensual),
+    // que antes quedaban enlazados y hacian fallar el borrado.
+    const cliente = await pool.connect();
+    try {
+      await cliente.query('BEGIN');
+      await cliente.query('DELETE FROM analisis WHERE empresa_id = $1', [empresa_id]);
+      await cliente.query('DELETE FROM analisis_profundos WHERE empresa_id = $1', [empresa_id]);
+      await cliente.query('DELETE FROM analisis_pliegos WHERE empresa_id = $1', [empresa_id]);
+      await cliente.query('DELETE FROM perfil_licitador WHERE empresa_id = $1', [empresa_id]);
+      await cliente.query('DELETE FROM uso_mensual WHERE empresa_id = $1', [empresa_id]);
+      await cliente.query('DELETE FROM descargas WHERE empresa_id = $1', [empresa_id]);
+      await cliente.query('DELETE FROM resultados WHERE empresa_id = $1', [empresa_id]);
+      const usuariosEmpresa = await cliente.query('SELECT id FROM usuarios WHERE empresa_id = $1', [empresa_id]);
+      for (const u of usuariosEmpresa.rows) {
+        await cliente.query('DELETE FROM invitaciones_referido WHERE referidor_id = $1', [u.id]);
+        await cliente.query('DELETE FROM referidos WHERE referidor_id = $1 OR referido_id = $1', [u.id]);
+      }
+      await cliente.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
+      await cliente.query('DELETE FROM empresas WHERE id = $1', [empresa_id]);
+      await cliente.query('COMMIT');
+    } catch (e) {
+      await cliente.query('ROLLBACK').catch(() => {});
+      throw e;
+    } finally {
+      cliente.release();
     }
-    await pool.query('DELETE FROM usuarios WHERE empresa_id = $1', [empresa_id]);
-    await pool.query('DELETE FROM empresas WHERE id = $1', [empresa_id]);
     const detalles = `Registros eliminados:\n- ${conteoUsuarios.rows[0].total} usuarios\n- ${conteoResultados.rows[0].total} oportunidades\n- ${conteoDescargas.rows[0].total} descargas\n- ${conteoAnalisisProfundos.rows[0].total} análisis profundos\n- ${conteoAnalisis.rows[0].total} análisis`;
     console.log(`[ADMIN] Empresa ${empresa_id} ELIMINADA por admin ${admin.email}`);
     return res.json({ success: true, mensaje: 'Empresa eliminada permanentemente', detalles });
   } catch (error) {
-    return res.status(500).json({ error: 'Error al eliminar la empresa' });
+    console.error(`[ADMIN] Error eliminando empresa ${empresa_id}:`, error);
+    return res.status(500).json({ error: 'Error al eliminar la empresa: ' + error.message });
   }
 }
 

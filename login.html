@@ -185,6 +185,8 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    // Borrar cualquier sesion anterior (de esta u otra cuenta) para que no se mezclen
+                    ['token', 'user'].forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
                     // Guardar token y datos del usuario
                     if (recordar) {
                         localStorage.setItem('token', data.token);
