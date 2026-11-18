@@ -2951,6 +2951,84 @@ async function abrirCoach(referencia, descripcion, entidad, monto, fecha_present
     `;
     document.body.appendChild(modal);
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    revisarReporteGuardado(referencia, modal);
+}
+
+// ============================================
+// REPORTE GUARDADO (no gasta Claude ni usos del mes)
+// ============================================
+
+function claveReporte(referencia) {
+    return `${datosEmpresa?.id || 0}|${referencia}`;
+}
+
+function leerReportesGuardados() {
+    try { return JSON.parse(localStorage.getItem('compita_reportes') || '{}'); } catch (e) { return {}; }
+}
+
+function guardarReporte(referencia, datos) {
+    const todos = leerReportesGuardados();
+    todos[claveReporte(referencia)] = datos;
+    localStorage.setItem('compita_reportes', JSON.stringify(todos));
+}
+
+function olvidarReporte(referencia) {
+    const todos = leerReportesGuardados();
+    delete todos[claveReporte(referencia)];
+    localStorage.setItem('compita_reportes', JSON.stringify(todos));
+}
+
+// Abre el reporte pasándole la sesión después de #, para que el botón
+// "Ir a KanbanBonsai" funcione sin que el token quede escrito en el archivo
+function abrirReporte(url) {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token') || '';
+    window.open(token ? `${url}#t=${encodeURIComponent(token)}` : url, '_blank');
+}
+
+async function revisarReporteGuardado(referencia, modal) {
+    const guardado = leerReportesGuardados()[claveReporte(referencia)];
+    if (!guardado || !guardado.id || !guardado.url) return;
+
+    let estado;
+    try {
+        const r = await fetch(`${RAILWAY_API}/reporte-estado/${encodeURIComponent(guardado.id)}`,
+            { signal: AbortSignal.timeout(15000) });
+        estado = await r.json();
+    } catch (e) {
+        return;  // Sin conexión con el servicio: se sigue como siempre
+    }
+    if (!estado || !estado.existe) { olvidarReporte(referencia); return; }
+
+    window._pliegoCambio = window._pliegoCambio || {};
+    window._pliegoCambio[referencia] = !!estado.pliego_cambio;
+
+    const cuerpo = modal.querySelector('.px-6.py-6');
+    if (!cuerpo) return;  // El usuario ya avanzó o cerró
+    const fecha = new Date(estado.generado || guardado.generado).toLocaleString('es-DO',
+        { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+    const aviso = estado.pliego_cambio
+        ? `<p style="font-size:12px;color:#92400E;background:#FEF3C7;border-radius:6px;padding:6px 10px;margin:10px 0 0;">
+               El pliego se descargó de nuevo después de este reporte. Conviene consultar al Coach otra vez para actualizarlo.
+           </p>`
+        : '';
+    const panel = document.createElement('div');
+    panel.style.cssText = 'background:#EAF3DE;border-radius:10px;padding:12px 14px;margin-bottom:16px;';
+    panel.innerHTML = `
+        <p style="font-size:13px;font-weight:600;color:#3B6D11;margin:0 0 4px;">Ya tienes un Reporte Compita guardado</p>
+        <p style="font-size:12px;color:#4B5563;margin:0 0 10px;">Preparado el ${fecha}. Abrirlo no gasta usos del mes.</p>
+        <button id="btn-ver-reporte-guardado"
+            style="padding:7px 14px;background:#3B6D11;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
+            Ver reporte guardado →
+        </button>
+        ${aviso}
+    `;
+    cuerpo.insertBefore(panel, cuerpo.firstChild);
+    panel.querySelector('#btn-ver-reporte-guardado').onclick = () => {
+        abrirReporte(guardado.url);
+        modal.remove();
+    };
+    const botonCoach = cuerpo.querySelector('button.bg-violet-600');
+    if (botonCoach) botonCoach.textContent = 'Consultar al Coach de nuevo (1 uso) →';
 }
 
 function mostrarErrorSinPliego(modal, referencia, motivo, titulo, texto) {
@@ -3287,8 +3365,9 @@ async function prepararReporteCompita() {
 			                referencia,
 			                licitacion,
 			                dictamen,
-			                force: true,
-			                token: localStorage.getItem('token') || sessionStorage.getItem('token') || ''
+			                // Rehacer el análisis del pliego solo si el pliego cambió desde el último reporte;
+			                // si no, se reusa el análisis guardado y no se gasta Claude en repetirlo
+			                force: !!(window._pliegoCambio || {})[referencia]
             }),
             signal: AbortSignal.timeout(300000)  // 5 minutos
         });
@@ -3303,6 +3382,11 @@ async function prepararReporteCompita() {
 
 		        const data = await response.json();
         if (!data.success) throw new Error(data.error || 'Error generando el reporte');
+
+        if (data.id && data.url) {
+            guardarReporte(referencia, { id: data.id, url: data.url, generado: data.generado || new Date().toISOString() });
+            if (window._pliegoCambio) delete window._pliegoCambio[referencia];
+        }
 
         modal.querySelector('.bg-white').innerHTML = `
             <div>
@@ -3332,7 +3416,7 @@ async function prepararReporteCompita() {
                     <div style="display:flex;gap:8px;justify-content:flex-end;">
                         <button onclick="document.getElementById('coach-modal').remove()"
                             style="padding:7px 14px;font-size:13px;color:#6B7280;background:none;border:1px solid #E5E7EB;border-radius:8px;cursor:pointer;">Cerrar</button>
-                        <button onclick="window.open('${data.url}', '_blank'); document.getElementById('coach-modal').remove();"
+                        <button onclick="abrirReporte('${data.url}'); document.getElementById('coach-modal').remove();"
                             style="padding:8px 18px;background:#3B6D11;color:white;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">
                             Ver Reporte Compita →
                         </button>
