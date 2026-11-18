@@ -2,7 +2,7 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-17T20:55:25.653459-04:00",
+ "actualizado": "2026-11-17T23:07:57.269486-04:00",
  "actualizado_texto": "17 de noviembre de 2026",
  "kpis": {
   "abiertas": 96,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$397.4 millones",
   "cierran_7_dias": 91
  },
- "resumen": "El sector turismo, hotelería y gastronomía registra hoy 96 licitaciones abiertas por un valor estimado de RD$397.4 millones, con 91 de ellas cerrando en los próximos siete días. Destacan la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones, el servicio de alimentación del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones, y la producción de eventos institucionales del propio Ministerio de Relaciones Exteriores por RD$40 millones. A estas se suman oportunidades de menor cuantía pero cierre inminente en catering y montaje de eventos, como las del Servicio Nacional de Salud, el Ministerio de Interior y Policía y el Instituto Dominicano de Aviación Civil.",
+ "resumen": "El sector de turismo, hotelería y gastronomía registra hoy 96 licitaciones abiertas por un valor estimado de RD$397.4 millones, con 91 de ellas cerrando en los próximos siete días. Destacan la contratación de agencia de viajes y hospedaje del Ministerio de Relaciones Exteriores por RD$80 millones con cierre el 18 de noviembre, el servicio de alimentación del Ministerio de la Vivienda por RD$65 millones, y la producción de eventos del MIREX por RD$40 millones con cierre el 15 de diciembre. A estas se suman oportunidades menores pero numerosas en catering, montaje de eventos y hospedaje de instituciones como el Servicio Nacional de Salud, el INFOTEP y el Instituto Dominicano de Aviación Civil, que exigen atención inmediata por parte de los proveedores del sector.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
@@ -46,21 +46,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "CORAMON-DAF-CM-2026-0049",
-   "institucion": "Corporación de Acueducto y Alcantarillado de Monseñor Nouel",
-   "descripcion": "ADQUISICION DE SERVICIOS PARA LA JORNADA DE INTEGRACION PARA TODO EL PERSONAL DE CORAMON",
-   "monto": 677966.1,
-   "moneda": "DOP",
-   "monto_texto": "RD$677,966",
-   "monto_dudoso": false,
-   "cierre": "2026-11-18T08:00:00-04:00",
-   "cierre_texto": "18 de noviembre, 8:00 a.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "DGAP-DAF-CM-2026-0232",
    "institucion": "Dirección General de Aduanas y Puertos",
    "descripcion": "Contratación del servicio de catering para actividad, DGA.",
@@ -72,6 +57,21 @@
    "cierre_texto": "18 de noviembre, 8:00 a.m.",
    "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CORAMON-DAF-CM-2026-0049",
+   "institucion": "Corporación de Acueducto y Alcantarillado de Monseñor Nouel",
+   "descripcion": "ADQUISICION DE SERVICIOS PARA LA JORNADA DE INTEGRACION PARA TODO EL PERSONAL DE CORAMON",
+   "monto": 677966.1,
+   "moneda": "DOP",
+   "monto_texto": "RD$677,966",
+   "monto_dudoso": false,
+   "cierre": "2026-11-18T08:00:00-04:00",
+   "cierre_texto": "18 de noviembre, 8:00 a.m.",
+   "dias": 1,
+   "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -451,10 +451,10 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "AYUNTAMIENTO STGO-DAF-CM-2026-0123",
+   "referencia": "AYUNTAMIENTO STGO-DAF-CM-2026-0122",
    "institucion": "Ayuntamiento Santiago de los Caballeros",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE LUCES PARA EVENTO DE NAVIDAD 2026 EN EL AYUNTAMIENTO DE SANTIAGO A REQUERIMIENTO DEL DEPARTAMENTO DE CULTURA Y EDUCACIÓN CIUDADANA",
-   "monto": 1703000.0,
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE SONIDO PROFESIONAL PARA EVENTOS DE NAVIDAD 2026 EN EL AYUNTAMIENTO DE SANTIAGO REQUERIMIENTO DEL DEPARTAMENTO DE CULTURA Y EDUCACIÓN CIUDADANA",
+   "monto": 1700000.0,
    "moneda": "DOP",
    "monto_texto": "RD$1.7 millones",
    "monto_dudoso": false,
@@ -466,10 +466,10 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "AYUNTAMIENTO STGO-DAF-CM-2026-0122",
+   "referencia": "AYUNTAMIENTO STGO-DAF-CM-2026-0123",
    "institucion": "Ayuntamiento Santiago de los Caballeros",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE SONIDO PROFESIONAL PARA EVENTOS DE NAVIDAD 2026 EN EL AYUNTAMIENTO DE SANTIAGO REQUERIMIENTO DEL DEPARTAMENTO DE CULTURA Y EDUCACIÓN CIUDADANA",
-   "monto": 1700000.0,
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE LUCES PARA EVENTO DE NAVIDAD 2026 EN EL AYUNTAMIENTO DE SANTIAGO A REQUERIMIENTO DEL DEPARTAMENTO DE CULTURA Y EDUCACIÓN CIUDADANA",
+   "monto": 1703000.0,
    "moneda": "DOP",
    "monto_texto": "RD$1.7 millones",
    "monto_dudoso": false,
@@ -811,21 +811,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROPEEP-DAF-CM-2026-0052",
-   "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
-   "descripcion": "CONTRATACION DE COMPAÑÍA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS LA VEGA",
-   "monto": 1900000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.9 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T14:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 2:00 p.m.",
-   "dias": 6,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "PROPEEP-DAF-CM-2026-0054",
    "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
    "descripcion": "CONTRATACION DE COMPAÑÍA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS SAMANA - LAS TERRENAS",
@@ -841,9 +826,9 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROPEEP-DAF-CM-2026-0055",
+   "referencia": "PROPEEP-DAF-CM-2026-0053",
    "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
-   "descripcion": "CONTRATACION DE COMPAÑÍA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS MONTE PLATA – DON JUAN",
+   "descripcion": "CONTRATACION DE COMPAÑÍA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS MONTECRISTI",
    "monto": 1900000.0,
    "moneda": "DOP",
    "monto_texto": "RD$1.9 millones",
@@ -871,6 +856,21 @@
    "url": "javascript:void(0);"
   },
   {
+   "referencia": "PROPEEP-DAF-CM-2026-0055",
+   "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
+   "descripcion": "CONTRATACION DE COMPAÑÍA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS MONTE PLATA – DON JUAN",
+   "monto": 1900000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-23T14:00:00-04:00",
+   "cierre_texto": "23 de noviembre, 2:00 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
    "referencia": "PROPEEP-DAF-CM-2026-0047",
    "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
    "descripcion": "CONTRATACION DE COMPAÑIA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS( DISTRITO NACIONAL)",
@@ -886,9 +886,9 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROPEEP-DAF-CM-2026-0053",
+   "referencia": "PROPEEP-DAF-CM-2026-0052",
    "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
-   "descripcion": "CONTRATACION DE COMPAÑÍA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS MONTECRISTI",
+   "descripcion": "CONTRATACION DE COMPAÑÍA PARA MONTAJE DE EVENTOS EN PARQUES DE TERRITORIOS PRIORIZADOS DEL PAIS LA VEGA",
    "monto": 1900000.0,
    "moneda": "DOP",
    "monto_texto": "RD$1.9 millones",
@@ -1111,21 +1111,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "CAID-DAF-CM-2026-0118",
-   "institucion": "Centro de Atención Integral para la Discapacidad",
-   "descripcion": "Contratación de servicios de catering para la realización de actividad institucional del CAID Santiago, dirigido a MIPYMES.",
-   "monto": 1060000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T15:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 3:30 p.m.",
-   "dias": 6,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "SRSEN-DAF-CM-2026-0044",
    "institucion": "Servicio Regional de Salud Enriquillo",
    "descripcion": "SERVICIO DE MONTAJE DE EVENTOS",
@@ -1137,6 +1122,21 @@
    "cierre_texto": "23 de noviembre, 3:30 p.m.",
    "dias": 6,
    "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CAID-DAF-CM-2026-0118",
+   "institucion": "Centro de Atención Integral para la Discapacidad",
+   "descripcion": "Contratación de servicios de catering para la realización de actividad institucional del CAID Santiago, dirigido a MIPYMES.",
+   "monto": 1060000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-23T15:30:00-04:00",
+   "cierre_texto": "23 de noviembre, 3:30 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -1171,9 +1171,9 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROPEEP-DAF-CM-2026-0057",
+   "referencia": "PROPEEP-DAF-CM-2026-0056",
    "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
-   "descripcion": "Contratación De Compañía Para Montaje De Eventos En Parques De Territorios Priorizados Del País (LA ROMANA).",
+   "descripcion": "Contratación De Compañía Para Montaje De Eventos En Parques De Territorios Priorizados Del País (HATO MAYOR - EL VALLE).",
    "monto": 1900000.0,
    "moneda": "DOP",
    "monto_texto": "RD$1.9 millones",
@@ -1186,9 +1186,9 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROPEEP-DAF-CM-2026-0056",
+   "referencia": "PROPEEP-DAF-CM-2026-0057",
    "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
-   "descripcion": "Contratación De Compañía Para Montaje De Eventos En Parques De Territorios Priorizados Del País (HATO MAYOR - EL VALLE).",
+   "descripcion": "Contratación De Compañía Para Montaje De Eventos En Parques De Territorios Priorizados Del País (LA ROMANA).",
    "monto": 1900000.0,
    "moneda": "DOP",
    "monto_texto": "RD$1.9 millones",
@@ -1216,21 +1216,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROPEEP-DAF-CM-2026-0059",
-   "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
-   "descripcion": "Contratación De Compañía Para Montaje De Eventos En Parques De Territorios Priorizados Del País (LA ALTAGRACIA - BOCA YUMA).",
-   "monto": 1900000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.9 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T16:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 4:00 p.m.",
-   "dias": 6,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "MINERD-DAF-CM-2026-0495",
    "institucion": "Ministerio de Educación",
    "descripcion": "Contratación de servicio de catering y montaje para apertura de 3 centros educativos Eje Este del país. Dirigido a MiPymes.",
@@ -1242,6 +1227,21 @@
    "cierre_texto": "23 de noviembre, 4:00 p.m.",
    "dias": 6,
    "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "PROPEEP-DAF-CM-2026-0059",
+   "institucion": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
+   "descripcion": "Contratación De Compañía Para Montaje De Eventos En Parques De Territorios Priorizados Del País (LA ALTAGRACIA - BOCA YUMA).",
+   "monto": 1900000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-23T16:00:00-04:00",
+   "cierre_texto": "23 de noviembre, 4:00 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -1261,21 +1261,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "ETED-CCC-CP-2026-0058",
-   "institucion": "Empresa de Transmisión Eléctrica Dominicana",
-   "descripcion": "CONTRATACIÓN AGENCIA DE VIAJES PARA LA GESTIÓN DE BOLETOS AÉREOS A COLABORADORES DE ETED, EN REPRESENTACIÓN Y/O CAPACITACIONES DE LA INSTITUCIÓN",
-   "monto": 5000000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T16:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 4:30 p.m.",
-   "dias": 6,
-   "subsector": "Promoción y gestión turística",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "DGCINE-DAF-CM-2026-0013",
    "institucion": "Dirección General de Cine",
    "descripcion": "Contratación de hotel para actividad de integración de los colaboradores de esta DGCINE",
@@ -1288,6 +1273,21 @@
    "dias": 6,
    "subsector": "Alojamiento y hospedaje",
    "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ETED-CCC-CP-2026-0058",
+   "institucion": "Empresa de Transmisión Eléctrica Dominicana",
+   "descripcion": "CONTRATACIÓN AGENCIA DE VIAJES PARA LA GESTIÓN DE BOLETOS AÉREOS A COLABORADORES DE ETED, EN REPRESENTACIÓN Y/O CAPACITACIONES DE LA INSTITUCIÓN",
+   "monto": 5000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$5 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-23T16:30:00-04:00",
+   "cierre_texto": "23 de noviembre, 4:30 p.m.",
+   "dias": 6,
+   "subsector": "Promoción y gestión turística",
+   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
