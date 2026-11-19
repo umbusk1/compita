@@ -2,7 +2,7 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-18T20:17:58.940912-04:00",
+ "actualizado": "2026-11-18T20:54:38.237778-04:00",
  "actualizado_texto": "18 de noviembre de 2026",
  "kpis": {
   "abiertas": 80,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$287 millones",
   "cierran_7_dias": 77
  },
- "resumen": "Hoy el radar de Compita registra 80 licitaciones abiertas para el sector turismo, hotelería y gastronomía, con un valor estimado total de RD$287 millones. Entre las de mayor monto destacan la contratación de alimentación del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones, la producción de eventos del Ministerio de Relaciones Exteriores por RD$40 millones, y el alquiler de espacios para eventos del Servicio Nacional de Salud por RD$14 millones. De las 80 oportunidades, 77 cierran en los próximos siete días, por lo que empresarios de catering, hospedaje y gestión de eventos deben revisar los plazos con urgencia.",
+ "resumen": "El sector turismo, hotelería y gastronomía registra hoy 80 licitaciones abiertas por un valor estimado de RD$287 millones, con 77 de ellas cerrando en los próximos 7 días. Destaca la contratación de servicios de alimentación del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones, seguida por la producción de eventos del Ministerio de Relaciones Exteriores con RD$40 millones y el alquiler de espacios para eventos del Servicio Nacional de Salud por RD$14 millones. Empresarios del rubro deben prestar atención a los plazos ajustados, pues la mayoría de estas oportunidades cierran entre el 19 y el 25 de noviembre.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
@@ -27,6 +27,43 @@
   {
    "nombre": "Promoción y gestión turística",
    "cantidad": 3
+  }
+ ],
+ "cierres_por_dia": [
+  {
+   "fecha": "2026-11-19",
+   "cantidad": 14,
+   "valor": 24640931
+  },
+  {
+   "fecha": "2026-11-20",
+   "cantidad": 16,
+   "valor": 18547263
+  },
+  {
+   "fecha": "2026-11-23",
+   "cantidad": 39,
+   "valor": 84213943
+  },
+  {
+   "fecha": "2026-11-24",
+   "cantidad": 6,
+   "valor": 29079493
+  },
+  {
+   "fecha": "2026-11-25",
+   "cantidad": 2,
+   "valor": 20000000
+  },
+  {
+   "fecha": "2026-12-02",
+   "cantidad": 1,
+   "valor": 5500000
+  },
+  {
+   "fecha": "2026-12-15",
+   "cantidad": 1,
+   "valor": 40000000
   }
  ],
  "licitaciones": [

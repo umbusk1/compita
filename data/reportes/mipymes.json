@@ -2,7 +2,7 @@
  "clave": "mipymes",
  "titulo": "Oportunidades para MIPYMES",
  "subtitulo": "Compras Menores y Comparaciones de Precios de todos los rubros, las modalidades simplificadas donde una empresa pequeña puede competir",
- "actualizado": "2026-11-18T20:18:02.048222-04:00",
+ "actualizado": "2026-11-18T20:54:41.304092-04:00",
  "actualizado_texto": "18 de noviembre de 2026",
  "kpis": {
   "abiertas": 520,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$1.6 mil millones",
   "cierran_7_dias": 508
  },
- "resumen": "Hoy el Estado dominicano mantiene abiertas 520 licitaciones por un valor estimado de RD$1.6 mil millones, y 508 de ellas cierran en los próximos siete días, por lo que conviene revisar sus plazos sin demora. Entre las de mayor monto destacan la construcción de la Fortaleza General José María Cabral del Ministerio de Defensa por RD$157.1 millones, los pozos de agua potable en la región Sur del Instituto Nacional de Aguas Potables y Alcantarillados por RD$108.1 millones, y el mantenimiento de centros educativos en Santo Domingo por RD$53.4 millones. También hay oportunidades de menor monto pero igualmente accesibles, como la adquisición de equipos informáticos de la Comisión Presidencial de Apoyo al Desarrollo Barrial y la compra de pintura del Ayuntamiento de Santo Domingo Este, ambas por RD$6.4 millones.",
+ "resumen": "Hoy el Estado dominicano mantiene abiertas 520 licitaciones por un valor estimado de RD$1.6 mil millones, y 508 de ellas cierran en los próximos siete días, por lo que conviene actuar rápido. Entre las de mayor monto destacan la construcción de la Fortaleza General José María Cabral del Ministerio de Defensa, por RD$157.1 millones, y la construcción de pozos de agua del INAPA en la región sur, por RD$108.1 millones, ambas aún dentro del plazo de presentación. Para MIPYMES con menor capacidad de contratación también hay opciones accesibles, como la adquisición de equipos informáticos de la Comisión Presidencial de Apoyo al Desarrollo Barrial por RD$6.4 millones, e incluso una licitación de insumos médicos del Hospital General Docente de la Policía Nacional dirigida específicamente a empresas mipymes de mujeres.",
  "subsectores": [
   {
    "nombre": "Construcción",
@@ -67,6 +67,58 @@
   {
    "nombre": "Capacitación y formación",
    "cantidad": 5
+  }
+ ],
+ "cierres_por_dia": [
+  {
+   "fecha": "2026-11-19",
+   "cantidad": 142,
+   "valor": 288706932
+  },
+  {
+   "fecha": "2026-11-20",
+   "cantidad": 156,
+   "valor": 652131547
+  },
+  {
+   "fecha": "2026-11-23",
+   "cantidad": 161,
+   "valor": 291105916
+  },
+  {
+   "fecha": "2026-11-24",
+   "cantidad": 38,
+   "valor": 143361520
+  },
+  {
+   "fecha": "2026-11-25",
+   "cantidad": 11,
+   "valor": 49951996
+  },
+  {
+   "fecha": "2026-11-26",
+   "cantidad": 6,
+   "valor": 19680598
+  },
+  {
+   "fecha": "2026-11-27",
+   "cantidad": 2,
+   "valor": 3923336
+  },
+  {
+   "fecha": "2026-11-30",
+   "cantidad": 2,
+   "valor": 6711600
+  },
+  {
+   "fecha": "2026-12-02",
+   "cantidad": 1,
+   "valor": 5500000
+  },
+  {
+   "fecha": "2026-12-03",
+   "cantidad": 1,
+   "valor": 108060368
   }
  ],
  "licitaciones": [

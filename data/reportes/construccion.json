@@ -2,7 +2,7 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-18T20:17:54.795268-04:00",
+ "actualizado": "2026-11-18T20:54:34.843240-04:00",
  "actualizado_texto": "18 de noviembre de 2026",
  "kpis": {
   "abiertas": 100,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$5.9 mil millones",
   "cierran_7_dias": 79
  },
- "resumen": "El sector construcción abre hoy con 100 licitaciones activas por RD$5.9 mil millones, encabezadas por la Dirección de Infraestructura Escolar con RD$1.9 mil millones para adecuaciones en centros educativos a nivel nacional, la CAASD con RD$600 millones para obras de recolección de aguas residuales en la Av. Jacobo Majluta, y el Servicio Nacional de Salud con RD$486.4 millones para la construcción del Hospital Materno Infantil de La Vega. De estas, 79 procesos cierran en los próximos siete días, por lo que conviene priorizar la revisión de pliegos esta misma semana. Entre los cierres más urgentes destacan la licitación de la Dirección de Infraestructura Escolar y la del Servicio Nacional de Salud para el Hospital Municipal José A. Columna, ambas con fecha límite el 9 de diciembre.",
+ "resumen": "Hoy el sector construcción presenta 100 licitaciones abiertas por un valor estimado de RD$5.9 mil millones, con 79 procesos que cierran en los próximos siete días. Destacan la contratación de la Dirección de Infraestructura Escolar para adecuaciones en centros educativos a nivel nacional por RD$1.9 mil millones, las obras de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD por RD$600 millones, y la construcción del Hospital Materno Infantil La Vega del Servicio Nacional de Salud por RD$486.4 millones. Con casi ocho de cada diez procesos venciendo esta semana, es momento de revisar pliegos y preparar ofertas sin demora.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
@@ -31,6 +31,73 @@
   {
    "nombre": "Edificaciones y viviendas",
    "cantidad": 2
+  }
+ ],
+ "cierres_por_dia": [
+  {
+   "fecha": "2026-11-19",
+   "cantidad": 24,
+   "valor": 117504037
+  },
+  {
+   "fecha": "2026-11-20",
+   "cantidad": 32,
+   "valor": 456598447
+  },
+  {
+   "fecha": "2026-11-23",
+   "cantidad": 17,
+   "valor": 76256006
+  },
+  {
+   "fecha": "2026-11-24",
+   "cantidad": 6,
+   "valor": 29136555
+  },
+  {
+   "fecha": "2026-11-26",
+   "cantidad": 1,
+   "valor": 4447142
+  },
+  {
+   "fecha": "2026-11-27",
+   "cantidad": 2,
+   "valor": 3923336
+  },
+  {
+   "fecha": "2026-12-01",
+   "cantidad": 1,
+   "valor": 24449487
+  },
+  {
+   "fecha": "2026-12-02",
+   "cantidad": 1,
+   "valor": 36302119
+  },
+  {
+   "fecha": "2026-12-03",
+   "cantidad": 2,
+   "valor": 278060368
+  },
+  {
+   "fecha": "2026-12-09",
+   "cantidad": 2,
+   "valor": 2199098188
+  },
+  {
+   "fecha": "2026-12-14",
+   "cantidad": 1,
+   "valor": 17611294
+  },
+  {
+   "fecha": "2026-12-15",
+   "cantidad": 1,
+   "valor": 55323244
+  },
+  {
+   "fecha": "2026-12-18",
+   "cantidad": 1,
+   "valor": 600000000
   }
  ],
  "licitaciones": [
