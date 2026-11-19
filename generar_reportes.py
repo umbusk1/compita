@@ -451,6 +451,21 @@ def generar_reporte(conn, clave):
         "valor_texto": formato_monto(valor, "DOP"),
         "cierran_7_dias": sum(1 for i in items if i["dias"] <= 7),
     }
+    # Cierres por día (hora de RD) de TODAS las abiertas, no solo de las 300 que se guardan en "licitaciones".
+    # Se usa para dibujar el calendario de cierres de las tarjetas. El valor sigue la misma regla que
+    # kpis["valor_total"]: solo montos en pesos y no dudosos. Solo se guardan los próximos 30 días.
+    por_dia = {}
+    for i in items:
+        fecha_cierre = i["cierre"][:10]
+        if (datetime.fromisoformat(fecha_cierre).date() - ahora.date()).days > 30:
+            continue
+        d = por_dia.setdefault(fecha_cierre, {"fecha": fecha_cierre, "cantidad": 0, "valor": 0})
+        d["cantidad"] += 1
+        if i["monto"] and i["moneda"] in ("DOP", "RD$", "") and not i["monto_dudoso"]:
+            d["valor"] += i["monto"]
+    cierres_por_dia = [{"fecha": d["fecha"], "cantidad": d["cantidad"], "valor": round(d["valor"])}
+                       for d in sorted(por_dia.values(), key=lambda d: d["fecha"])]
+
     conteo = {}
     for i in items:
         conteo[i["subsector"]] = conteo.get(i["subsector"], 0) + 1
@@ -468,6 +483,7 @@ def generar_reporte(conn, clave):
         "kpis": kpis,
         "resumen": resumen_ia(REPORTES[clave]["titulo"], kpis, destacadas),
         "subsectores": subsectores,
+        "cierres_por_dia": cierres_por_dia,
         "licitaciones": items[:300],
         "mercado": mercado(conn, clave),
     }
