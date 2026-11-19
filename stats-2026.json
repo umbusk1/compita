@@ -1,5 +1,5 @@
 {
-  "ultima_actualizacion": "2026-11-19 02:06:59",
+  "ultima_actualizacion": "2026-11-19 23:40:37",
   "stats": {
     "total": 69718,
     "por_estado": {
@@ -7,13 +7,13 @@
       "todas": {
         "Suspended": 7,
         "NonAwarded": 103,
-        "Canceled": 165,
+        "Canceled": 166,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 19092,
-        "ClosedForReplies": 18016,
+        "Awarded": 19108,
+        "ClosedForReplies": 18050,
         "Proceso publicado": 510,
-        "Published": 29426,
+        "Published": 29375,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
