@@ -2,7 +2,7 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-20T19:58:00.054430-04:00",
+ "actualizado": "2026-11-20T22:49:29.344319-04:00",
  "actualizado_texto": "20 de noviembre de 2026",
  "kpis": {
   "abiertas": 89,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$307.2 millones",
   "cierran_7_dias": 82
  },
- "resumen": "El sector turismo, hotelería y gastronomía registra hoy 89 licitaciones abiertas por un valor estimado de RD$307.2 millones, con 82 procesos que cierran en los próximos siete días. Destaca la contratación del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones para servicios de alimentación, junto a la del Ministerio de Relaciones Exteriores por RD$40 millones para producción de eventos y la del Servicio Nacional de Salud por RD$14 millones para alquiler de espacios de eventos a nivel nacional. Con un cierre tan próximo en la mayoría de los casos, las empresas del sector deben actuar con rapidez para participar en estos procesos.",
+ "resumen": "El sector turismo, hotelería y gastronomía registra hoy 89 licitaciones abiertas por un valor estimado de RD$307.2 millones, con 82 procesos cerrando en los próximos 7 días. Destaca la contratación de alimentación del Ministerio de la Vivienda por RD$65 millones y los servicios de producción de eventos del MIREX por RD$40 millones, ambas entre las oportunidades de mayor cuantía. También sobresale la contratación de alquiler de espacios para eventos del Servicio Nacional de Salud por RD$14 millones, en un panorama donde predominan los servicios de catering y montaje de eventos con cierres inminentes.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
@@ -1087,12 +1087,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "GCPS-DAF-CM-2026-0294",
-   "institucion": "Gabinete de Coordinación de Políticas Sociales",
-   "descripcion": "SERVICIO DE CATERING PARA CAPACITACION DE PLANIFICACION Y FORMULACION DEL GABINETE DE POLITICA SOCIAL",
-   "monto": 300000.0,
+   "referencia": "DGDF-DAF-CM-2026-0015",
+   "institucion": "Dirección General de Desarrollo Fronterizo",
+   "descripcion": "ADQUISICION DE ALMUERZO PARA REUNION CON LOS COLABORADORES T4",
+   "monto": 674598.0,
    "moneda": "DOP",
-   "monto_texto": "RD$300,000",
+   "monto_texto": "RD$674,598",
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
@@ -1117,12 +1117,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DGDF-DAF-CM-2026-0015",
-   "institucion": "Dirección General de Desarrollo Fronterizo",
-   "descripcion": "ADQUISICION DE ALMUERZO PARA REUNION CON LOS COLABORADORES T4",
-   "monto": 674598.0,
+   "referencia": "GCPS-DAF-CM-2026-0294",
+   "institucion": "Gabinete de Coordinación de Políticas Sociales",
+   "descripcion": "SERVICIO DE CATERING PARA CAPACITACION DE PLANIFICACION Y FORMULACION DEL GABINETE DE POLITICA SOCIAL",
+   "monto": 300000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$674,598",
+   "monto_texto": "RD$300,000",
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
@@ -1342,21 +1342,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "SUPERATE-DAF-CM-2026-0112",
-   "institucion": "Dirección de Desarrollo Social Supérate",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE GESTIÓN DE EVENTOS INSTITUCIONALES PARA LAS REGIONALES ENRIQUILLO Y EL VALLE",
-   "monto": 1650000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.6 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-12-01T09:00:00-04:00",
-   "cierre_texto": "1 de diciembre, 9:00 a.m.",
-   "dias": 11,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "SUPERATE-DAF-CM-2026-0104",
    "institucion": "Dirección de Desarrollo Social Supérate",
    "descripcion": "CONTRATACIÓN DE SERVICIO PARA LA HABILITACIÓN Y REMOZAMIENTO DE LA OFICINA REGIONAL YUMA EN HIGÜEY, PROVINCIA LA ALTAGRACIA",
@@ -1368,6 +1353,21 @@
    "cierre_texto": "1 de diciembre, 9:00 a.m.",
    "dias": 11,
    "subsector": "Infraestructura y servicios turísticos",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SUPERATE-DAF-CM-2026-0112",
+   "institucion": "Dirección de Desarrollo Social Supérate",
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE GESTIÓN DE EVENTOS INSTITUCIONALES PARA LAS REGIONALES ENRIQUILLO Y EL VALLE",
+   "monto": 1650000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.6 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-01T09:00:00-04:00",
+   "cierre_texto": "1 de diciembre, 9:00 a.m.",
+   "dias": 11,
+   "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
