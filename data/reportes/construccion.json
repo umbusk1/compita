@@ -2,15 +2,15 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-23T23:56:44.494831-04:00",
- "actualizado_texto": "23 de noviembre de 2026",
+ "actualizado": "2026-11-24T01:29:48.971773-04:00",
+ "actualizado_texto": "24 de noviembre de 2026",
  "kpis": {
   "abiertas": 96,
   "valor_total": 5831180046,
   "valor_texto": "RD$5.8 mil millones",
-  "cierran_7_dias": 70
+  "cierran_7_dias": 73
  },
- "resumen": "El sector construcción mantiene hoy 96 licitaciones activas por un total de RD$5.8 mil millones, con 70 de ellas cerrando en los próximos siete días. Destacan la contratación de Infraestructura Escolar para adecuaciones en centros educativos a nivel nacional por RD$1.9 mil millones con cierre el 9 de diciembre, las obras de recolección de aguas residuales de CAASD en la Av. Jacobo Majluta por RD$600 millones con cierre el 18 de diciembre, y la construcción del Hospital Materno Infantil de La Vega del Servicio Nacional de Salud por RD$486.4 millones con cierre el 30 de diciembre. Empresarios del sector deben priorizar revisión de pliegos esta semana dado el alto volumen de cierres inminentes.",
+ "resumen": "Hoy el sector construcción registra 96 licitaciones abiertas con un valor estimado total de RD$5.8 mil millones, y 73 de ellas cierran en los próximos 7 días, por lo que conviene revisar los pliegos cuanto antes. Entre las oportunidades de mayor peso destacan la Dirección de Infraestructura Escolar con RD$1.9 mil millones para adecuaciones y reparaciones de centros educativos a nivel nacional, la CAASD con RD$600 millones para obras de recolección de aguas residuales en la Av. Jacobo Majluta, y el Servicio Nacional de Salud con RD$486.4 millones para la construcción del Hospital Materno Infantil de La Vega. Con un volumen tan alto de procesos próximos a cerrar, priorizar la preparación de ofertas en estas licitaciones de mayor monto puede marcar la diferencia esta semana.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
@@ -116,7 +116,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T08:00:00-04:00",
    "cierre_texto": "24 de noviembre, 8:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -131,7 +131,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T10:00:00-04:00",
    "cierre_texto": "24 de noviembre, 10:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -146,7 +146,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T10:00:00-04:00",
    "cierre_texto": "24 de noviembre, 10:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -161,7 +161,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T11:00:00-04:00",
    "cierre_texto": "24 de noviembre, 11:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -176,7 +176,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T11:30:00-04:00",
    "cierre_texto": "24 de noviembre, 11:30 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -191,7 +191,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T11:30:00-04:00",
    "cierre_texto": "24 de noviembre, 11:30 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -206,7 +206,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -221,7 +221,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -236,7 +236,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -251,7 +251,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:05:00-04:00",
    "cierre_texto": "24 de noviembre, 12:05 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -266,7 +266,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T14:00:00-04:00",
    "cierre_texto": "24 de noviembre, 2:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -281,7 +281,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T14:00:00-04:00",
    "cierre_texto": "24 de noviembre, 2:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -296,7 +296,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:00:00-04:00",
    "cierre_texto": "24 de noviembre, 3:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -311,7 +311,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:00:00-04:00",
    "cierre_texto": "24 de noviembre, 3:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -326,7 +326,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:30:00-04:00",
    "cierre_texto": "24 de noviembre, 3:30 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -341,7 +341,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T17:00:00-04:00",
    "cierre_texto": "24 de noviembre, 5:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -356,7 +356,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T08:00:00-04:00",
    "cierre_texto": "25 de noviembre, 8:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -371,7 +371,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T08:35:00-04:00",
    "cierre_texto": "25 de noviembre, 8:35 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -386,7 +386,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T09:30:00-04:00",
    "cierre_texto": "25 de noviembre, 9:30 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -401,7 +401,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -416,7 +416,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T12:00:00-04:00",
    "cierre_texto": "25 de noviembre, 12:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -431,7 +431,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T13:00:00-04:00",
    "cierre_texto": "25 de noviembre, 1:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -446,7 +446,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T13:15:00-04:00",
    "cierre_texto": "25 de noviembre, 1:15 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -461,7 +461,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T14:00:00-04:00",
    "cierre_texto": "25 de noviembre, 2:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -476,7 +476,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T15:00:00-04:00",
    "cierre_texto": "25 de noviembre, 3:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -491,7 +491,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T15:30:00-04:00",
    "cierre_texto": "25 de noviembre, 3:30 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -506,7 +506,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -521,7 +521,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -536,7 +536,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -551,7 +551,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:00:00-04:00",
    "cierre_texto": "25 de noviembre, 5:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -566,7 +566,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:00:00-04:00",
    "cierre_texto": "25 de noviembre, 5:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -581,7 +581,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T09:30:00-04:00",
    "cierre_texto": "26 de noviembre, 9:30 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -596,7 +596,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T11:00:00-04:00",
    "cierre_texto": "26 de noviembre, 11:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -611,7 +611,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T11:00:00-04:00",
    "cierre_texto": "26 de noviembre, 11:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -626,7 +626,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T14:00:00-04:00",
    "cierre_texto": "26 de noviembre, 2:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -641,7 +641,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T15:00:00-04:00",
    "cierre_texto": "26 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -656,7 +656,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:00:00-04:00",
    "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -671,7 +671,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:00:00-04:00",
    "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -686,7 +686,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:00:00-04:00",
    "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -701,7 +701,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:00:00-04:00",
    "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -716,7 +716,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:40:00-04:00",
    "cierre_texto": "26 de noviembre, 4:40 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -731,7 +731,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T09:30:00-04:00",
    "cierre_texto": "27 de noviembre, 9:30 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -746,7 +746,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T10:00:00-04:00",
    "cierre_texto": "27 de noviembre, 10:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -761,7 +761,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T10:00:00-04:00",
    "cierre_texto": "27 de noviembre, 10:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -776,7 +776,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T11:00:00-04:00",
    "cierre_texto": "27 de noviembre, 11:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -791,7 +791,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T11:20:00-04:00",
    "cierre_texto": "27 de noviembre, 11:20 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -806,7 +806,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:00:00-04:00",
    "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -821,7 +821,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:10:00-04:00",
    "cierre_texto": "27 de noviembre, 12:10 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -836,7 +836,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T13:00:00-04:00",
    "cierre_texto": "27 de noviembre, 1:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -851,7 +851,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -866,7 +866,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -881,7 +881,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -896,7 +896,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T15:00:00-04:00",
    "cierre_texto": "27 de noviembre, 3:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -911,7 +911,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T15:00:00-04:00",
    "cierre_texto": "27 de noviembre, 3:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -926,7 +926,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T15:00:00-04:00",
    "cierre_texto": "27 de noviembre, 3:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -941,7 +941,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T15:20:00-04:00",
    "cierre_texto": "27 de noviembre, 3:20 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -956,7 +956,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T16:00:00-04:00",
    "cierre_texto": "27 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -971,7 +971,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:00:00-04:00",
    "cierre_texto": "27 de noviembre, 5:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -986,7 +986,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:30:00-04:00",
    "cierre_texto": "27 de noviembre, 5:30 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1001,7 +1001,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:40:00-04:00",
    "cierre_texto": "27 de noviembre, 5:40 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1016,7 +1016,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:45:00-04:00",
    "cierre_texto": "27 de noviembre, 5:45 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1031,7 +1031,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T18:00:00-04:00",
    "cierre_texto": "27 de noviembre, 6:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1046,7 +1046,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T18:00:00-04:00",
    "cierre_texto": "27 de noviembre, 6:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1061,7 +1061,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T08:00:00-04:00",
    "cierre_texto": "30 de noviembre, 8:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1076,7 +1076,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1091,7 +1091,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1106,7 +1106,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T10:30:00-04:00",
    "cierre_texto": "30 de noviembre, 10:30 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1121,7 +1121,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T11:00:00-04:00",
    "cierre_texto": "30 de noviembre, 11:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1136,7 +1136,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T15:00:00-04:00",
    "cierre_texto": "30 de noviembre, 3:00 p.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1151,7 +1151,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T16:30:00-04:00",
    "cierre_texto": "30 de noviembre, 4:30 p.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1166,7 +1166,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T09:30:00-04:00",
    "cierre_texto": "1 de diciembre, 9:30 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1181,7 +1181,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T10:00:00-04:00",
    "cierre_texto": "1 de diciembre, 10:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1196,7 +1196,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T15:00:00-04:00",
    "cierre_texto": "1 de diciembre, 3:00 p.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1211,7 +1211,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-02T10:00:00-04:00",
    "cierre_texto": "2 de diciembre, 10:00 a.m.",
-   "dias": 9,
+   "dias": 8,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1226,7 +1226,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-02T12:00:00-04:00",
    "cierre_texto": "2 de diciembre, 12:00 p.m.",
-   "dias": 9,
+   "dias": 8,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1241,7 +1241,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-02T15:00:00-04:00",
    "cierre_texto": "2 de diciembre, 3:00 p.m.",
-   "dias": 9,
+   "dias": 8,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1256,7 +1256,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-03T09:30:00-04:00",
    "cierre_texto": "3 de diciembre, 9:30 a.m.",
-   "dias": 10,
+   "dias": 9,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1271,7 +1271,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-03T10:00:00-04:00",
    "cierre_texto": "3 de diciembre, 10:00 a.m.",
-   "dias": 10,
+   "dias": 9,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1286,7 +1286,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-03T15:00:00-04:00",
    "cierre_texto": "3 de diciembre, 3:00 p.m.",
-   "dias": 10,
+   "dias": 9,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1301,7 +1301,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-04T12:00:00-04:00",
    "cierre_texto": "4 de diciembre, 12:00 p.m.",
-   "dias": 11,
+   "dias": 10,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1316,7 +1316,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-09T10:00:00-04:00",
    "cierre_texto": "9 de diciembre, 10:00 a.m.",
-   "dias": 16,
+   "dias": 15,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1331,7 +1331,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-09T10:00:00-04:00",
    "cierre_texto": "9 de diciembre, 10:00 a.m.",
-   "dias": 16,
+   "dias": 15,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1346,7 +1346,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-09T10:30:00-04:00",
    "cierre_texto": "9 de diciembre, 10:30 a.m.",
-   "dias": 16,
+   "dias": 15,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1361,7 +1361,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-14T11:00:00-04:00",
    "cierre_texto": "14 de diciembre, 11:00 a.m.",
-   "dias": 21,
+   "dias": 20,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1376,7 +1376,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-15T10:00:00-04:00",
    "cierre_texto": "15 de diciembre, 10:00 a.m.",
-   "dias": 22,
+   "dias": 21,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1391,7 +1391,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-15T11:00:00-04:00",
    "cierre_texto": "15 de diciembre, 11:00 a.m.",
-   "dias": 22,
+   "dias": 21,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1406,7 +1406,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-18T12:00:00-04:00",
    "cierre_texto": "18 de diciembre, 12:00 p.m.",
-   "dias": 25,
+   "dias": 24,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1421,7 +1421,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-21T15:00:00-04:00",
    "cierre_texto": "21 de diciembre, 3:00 p.m.",
-   "dias": 28,
+   "dias": 27,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1436,7 +1436,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-28T12:00:00-04:00",
    "cierre_texto": "28 de diciembre, 12:00 p.m.",
-   "dias": 35,
+   "dias": 34,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1451,7 +1451,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-29T09:00:00-04:00",
    "cierre_texto": "29 de diciembre, 9:00 a.m.",
-   "dias": 36,
+   "dias": 35,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1466,7 +1466,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-30T10:00:00-04:00",
    "cierre_texto": "30 de diciembre, 10:00 a.m.",
-   "dias": 37,
+   "dias": 36,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1481,7 +1481,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-06T10:00:00-04:00",
    "cierre_texto": "6 de enero, 10:00 a.m.",
-   "dias": 44,
+   "dias": 43,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1496,7 +1496,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-07T10:00:00-04:00",
    "cierre_texto": "7 de enero, 10:00 a.m.",
-   "dias": 45,
+   "dias": 44,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1511,7 +1511,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-11T10:00:00-04:00",
    "cierre_texto": "11 de enero, 10:00 a.m.",
-   "dias": 49,
+   "dias": 48,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1526,7 +1526,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-12T10:00:00-04:00",
    "cierre_texto": "12 de enero, 10:00 a.m.",
-   "dias": 50,
+   "dias": 49,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1541,7 +1541,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-12T12:00:00-04:00",
    "cierre_texto": "12 de enero, 12:00 p.m.",
-   "dias": 50,
+   "dias": 49,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"

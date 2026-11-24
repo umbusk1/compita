@@ -2,15 +2,15 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-23T23:56:47.703878-04:00",
- "actualizado_texto": "23 de noviembre de 2026",
+ "actualizado": "2026-11-24T01:29:52.822786-04:00",
+ "actualizado_texto": "24 de noviembre de 2026",
  "kpis": {
   "abiertas": 68,
   "valor_total": 259812592,
   "valor_texto": "RD$259.8 millones",
-  "cierran_7_dias": 60
+  "cierran_7_dias": 65
  },
- "resumen": "Hoy el sector turismo, hotelería y gastronomía registra 68 licitaciones abiertas por un valor estimado de RD$259.8 millones, con 60 de ellas cerrando en los próximos siete días. La oportunidad más destacada es la del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones para servicios de alimentación, seguida por el Ministerio de Relaciones Exteriores con RD$40 millones para producción de eventos y el Ministerio de Interior y Policía con RD$10 millones en catering institucional. Con el cierre de año encima, predominan los procesos de catering, montaje de eventos y cenas navideñas en diversas instituciones, por lo que las empresas del sector deben revisar fechas límite y preparar sus ofertas con urgencia.",
+ "resumen": "El sector turismo, hotelería y gastronomía registra hoy 68 licitaciones activas por un valor estimado de RD$259.8 millones, con 65 de ellas cerrando en los próximos siete días. Destaca la contratación de servicios de alimentación del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones con cierre el 7 de enero, junto a la producción de eventos del Ministerio de Relaciones Exteriores por RD$40 millones que cierra el 15 de diciembre, ambas entre las de mayor cuantía del listado. También conviene atender el servicio de catering del Ministerio de Interior y Policía y el hospedaje nacional del Servicio Nacional de Salud, cada uno por RD$10 millones y con cierre el 25 de noviembre, en medio de una ola de oportunidades menores vinculadas a montajes de eventos y cenas navideñas que vence esta misma semana.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
@@ -82,7 +82,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T10:00:00-04:00",
    "cierre_texto": "24 de noviembre, 10:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -97,7 +97,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T10:30:00-04:00",
    "cierre_texto": "24 de noviembre, 10:30 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -112,7 +112,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -127,7 +127,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -142,7 +142,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -157,7 +157,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -172,7 +172,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -187,7 +187,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T13:00:00-04:00",
    "cierre_texto": "24 de noviembre, 1:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -202,7 +202,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T14:10:00-04:00",
    "cierre_texto": "24 de noviembre, 2:10 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -217,7 +217,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:00:00-04:00",
    "cierre_texto": "24 de noviembre, 3:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -232,7 +232,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:00:00-04:00",
    "cierre_texto": "24 de noviembre, 3:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -247,7 +247,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:30:00-04:00",
    "cierre_texto": "24 de noviembre, 3:30 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -262,7 +262,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T16:30:00-04:00",
    "cierre_texto": "24 de noviembre, 4:30 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -277,7 +277,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T16:50:00-04:00",
    "cierre_texto": "24 de noviembre, 4:50 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -292,7 +292,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T17:00:00-04:00",
    "cierre_texto": "24 de noviembre, 5:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -307,7 +307,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T17:21:00-04:00",
    "cierre_texto": "24 de noviembre, 5:21 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -322,7 +322,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T17:25:00-04:00",
    "cierre_texto": "24 de noviembre, 5:25 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -337,7 +337,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T17:35:00-04:00",
    "cierre_texto": "24 de noviembre, 5:35 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -352,7 +352,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T17:40:00-04:00",
    "cierre_texto": "24 de noviembre, 5:40 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -367,7 +367,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T08:00:00-04:00",
    "cierre_texto": "25 de noviembre, 8:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -382,7 +382,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T10:00:00-04:00",
    "cierre_texto": "25 de noviembre, 10:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alojamiento y hospedaje",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -397,7 +397,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -412,7 +412,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -427,7 +427,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -442,7 +442,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -457,7 +457,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T12:00:00-04:00",
    "cierre_texto": "25 de noviembre, 12:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -472,7 +472,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T13:00:00-04:00",
    "cierre_texto": "25 de noviembre, 1:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -487,7 +487,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T15:00:00-04:00",
    "cierre_texto": "25 de noviembre, 3:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -502,7 +502,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -517,7 +517,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -532,7 +532,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -547,7 +547,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:30:00-04:00",
    "cierre_texto": "25 de noviembre, 5:30 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -562,7 +562,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:55:00-04:00",
    "cierre_texto": "25 de noviembre, 5:55 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -577,7 +577,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T08:00:00-04:00",
    "cierre_texto": "26 de noviembre, 8:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -592,7 +592,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T08:00:00-04:00",
    "cierre_texto": "26 de noviembre, 8:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -607,7 +607,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T10:00:00-04:00",
    "cierre_texto": "26 de noviembre, 10:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -622,7 +622,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T14:00:00-04:00",
    "cierre_texto": "26 de noviembre, 2:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -637,7 +637,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T15:00:00-04:00",
    "cierre_texto": "26 de noviembre, 3:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -652,7 +652,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T15:30:00-04:00",
    "cierre_texto": "26 de noviembre, 3:30 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -667,7 +667,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T15:40:00-04:00",
    "cierre_texto": "26 de noviembre, 3:40 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -682,7 +682,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T17:11:00-04:00",
    "cierre_texto": "26 de noviembre, 5:11 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -697,7 +697,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T08:00:00-04:00",
    "cierre_texto": "27 de noviembre, 8:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -712,7 +712,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T08:00:00-04:00",
    "cierre_texto": "27 de noviembre, 8:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -727,7 +727,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T09:00:00-04:00",
    "cierre_texto": "27 de noviembre, 9:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -742,7 +742,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T10:20:00-04:00",
    "cierre_texto": "27 de noviembre, 10:20 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -757,7 +757,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T11:00:00-04:00",
    "cierre_texto": "27 de noviembre, 11:00 a.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -772,7 +772,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:00:00-04:00",
    "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -787,7 +787,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:00:00-04:00",
    "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -802,7 +802,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:00:00-04:00",
    "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -817,7 +817,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:10:00-04:00",
    "cierre_texto": "27 de noviembre, 12:10 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -832,7 +832,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -847,7 +847,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T15:15:00-04:00",
    "cierre_texto": "27 de noviembre, 3:15 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -862,7 +862,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T16:00:00-04:00",
    "cierre_texto": "27 de noviembre, 4:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -877,7 +877,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T16:30:00-04:00",
    "cierre_texto": "27 de noviembre, 4:30 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -892,7 +892,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T16:30:00-04:00",
    "cierre_texto": "27 de noviembre, 4:30 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -907,7 +907,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:15:00-04:00",
    "cierre_texto": "27 de noviembre, 5:15 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -922,7 +922,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:55:00-04:00",
    "cierre_texto": "27 de noviembre, 5:55 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -937,7 +937,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T18:00:00-04:00",
    "cierre_texto": "27 de noviembre, 6:00 p.m.",
-   "dias": 4,
+   "dias": 3,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -952,7 +952,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -967,7 +967,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -982,7 +982,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T08:00:00-04:00",
    "cierre_texto": "1 de diciembre, 8:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -997,7 +997,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T08:00:00-04:00",
    "cierre_texto": "1 de diciembre, 8:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1012,7 +1012,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T09:00:00-04:00",
    "cierre_texto": "1 de diciembre, 9:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1027,7 +1027,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T09:00:00-04:00",
    "cierre_texto": "1 de diciembre, 9:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Infraestructura y servicios turísticos",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1042,7 +1042,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T17:20:00-04:00",
    "cierre_texto": "1 de diciembre, 5:20 p.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1057,7 +1057,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-02T10:00:00-04:00",
    "cierre_texto": "2 de diciembre, 10:00 a.m.",
-   "dias": 9,
+   "dias": 8,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1072,7 +1072,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-15T10:00:00-04:00",
    "cierre_texto": "15 de diciembre, 10:00 a.m.",
-   "dias": 22,
+   "dias": 21,
    "subsector": "Eventos y actividades",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1087,7 +1087,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-07T10:00:00-04:00",
    "cierre_texto": "7 de enero, 10:00 a.m.",
-   "dias": 45,
+   "dias": 44,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
