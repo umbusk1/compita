@@ -2,43 +2,38 @@
  "clave": "construccion",
  "titulo": "Construcción",
  "subtitulo": "Obras, edificaciones, mantenimiento, materiales y estudios técnicos",
- "actualizado": "2026-11-20T22:49:26.177718-04:00",
- "actualizado_texto": "20 de noviembre de 2026",
+ "actualizado": "2026-11-23T23:56:44.494831-04:00",
+ "actualizado_texto": "23 de noviembre de 2026",
  "kpis": {
-  "abiertas": 86,
-  "valor_total": 5696518232,
-  "valor_texto": "RD$5.7 mil millones",
-  "cierran_7_dias": 60
+  "abiertas": 96,
+  "valor_total": 5831180046,
+  "valor_texto": "RD$5.8 mil millones",
+  "cierran_7_dias": 70
  },
- "resumen": "Hoy el sector construcción presenta 86 licitaciones abiertas por un valor estimado de RD$5.7 mil millones, con 60 de ellas cerrando en los próximos 7 días. Destacan la contratación de obras en centros educativos a nivel nacional de la Dirección de Infraestructura Escolar por RD$1.9 mil millones, las obras de recolección de aguas residuales en la Av. Jacobo Majluta de CAASD por RD$600 millones, y la construcción del Hospital Materno Infantil La Vega del Servicio Nacional de Salud por RD$486.4 millones. Los empresarios deben actuar con rapidez, ya que varias de estas oportunidades de alto valor cierran entre el 9 y el 30 de diciembre.",
+ "resumen": "El sector construcción mantiene hoy 96 licitaciones activas por un total de RD$5.8 mil millones, con 70 de ellas cerrando en los próximos siete días. Destacan la contratación de Infraestructura Escolar para adecuaciones en centros educativos a nivel nacional por RD$1.9 mil millones con cierre el 9 de diciembre, las obras de recolección de aguas residuales de CAASD en la Av. Jacobo Majluta por RD$600 millones con cierre el 18 de diciembre, y la construcción del Hospital Materno Infantil de La Vega del Servicio Nacional de Salud por RD$486.4 millones con cierre el 30 de diciembre. Empresarios del sector deben priorizar revisión de pliegos esta semana dado el alto volumen de cierres inminentes.",
  "subsectores": [
   {
    "nombre": "Rehabilitación y mantenimiento de edificaciones",
-   "cantidad": 34
+   "cantidad": 40
   },
   {
    "nombre": "Obras civiles e infraestructura",
-   "cantidad": 30
+   "cantidad": 31
   },
   {
    "nombre": "Materiales y equipos de construcción",
-   "cantidad": 13
+   "cantidad": 16
   },
   {
    "nombre": "Diseño, supervisión y estudios técnicos",
-   "cantidad": 6
+   "cantidad": 5
   },
   {
    "nombre": "Edificaciones y viviendas",
-   "cantidad": 3
+   "cantidad": 4
   }
  ],
  "cierres_por_dia": [
-  {
-   "fecha": "2026-11-23",
-   "cantidad": 17,
-   "valor": 76256006
-  },
   {
    "fecha": "2026-11-24",
    "cantidad": 16,
@@ -51,33 +46,33 @@
   },
   {
    "fecha": "2026-11-26",
-   "cantidad": 9,
-   "valor": 125191214
+   "cantidad": 10,
+   "valor": 125884214
   },
   {
    "fecha": "2026-11-27",
-   "cantidad": 3,
-   "valor": 5926860
+   "cantidad": 22,
+   "valor": 94390787
   },
   {
    "fecha": "2026-11-30",
-   "cantidad": 6,
-   "valor": 198980152
+   "cantidad": 7,
+   "valor": 214031390
   },
   {
    "fecha": "2026-12-01",
-   "cantidad": 2,
-   "valor": 25323693
+   "cantidad": 3,
+   "valor": 31323693
   },
   {
    "fecha": "2026-12-02",
-   "cantidad": 1,
-   "valor": 36302119
+   "cantidad": 3,
+   "valor": 97202119
   },
   {
    "fecha": "2026-12-03",
-   "cantidad": 2,
-   "valor": 278060368
+   "cantidad": 3,
+   "valor": 279060368
   },
   {
    "fecha": "2026-12-04",
@@ -86,8 +81,8 @@
   },
   {
    "fecha": "2026-12-09",
-   "cantidad": 2,
-   "valor": 2199098188
+   "cantidad": 3,
+   "valor": 2237144091
   },
   {
    "fecha": "2026-12-14",
@@ -96,271 +91,21 @@
   },
   {
    "fecha": "2026-12-15",
-   "cantidad": 1,
-   "valor": 55323244
+   "cantidad": 2,
+   "valor": 56086994
   },
   {
    "fecha": "2026-12-18",
    "cantidad": 1,
    "valor": 600000000
+  },
+  {
+   "fecha": "2026-12-21",
+   "cantidad": 1,
+   "valor": 55000000
   }
  ],
  "licitaciones": [
-  {
-   "referencia": "ECORD-DAF-CM-2026-0026",
-   "institucion": "ECO5RD",
-   "descripcion": "“Contratación de Obras para la Construcción de Garita de Seguridad, Verja Frontal y Cierre Perimetral del Relleno Sanitario para la Disposición Final de Residuos Sólidos\"",
-   "monto": 14299732.68,
-   "moneda": "DOP",
-   "monto_texto": "RD$14.3 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T09:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 9:00 a.m.",
-   "dias": 3,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CAID-DAF-CM-2026-0145",
-   "institucion": "Centro de Atención Integral para la Discapacidad",
-   "descripcion": "Contratación De Servicios De Pintura De Pasillos Interiores Y Fachadas Exteriores Del Centro De Atención Integral Para La Discapacidad (CAID) Santiago",
-   "monto": 450000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$450,000",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T09:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 9:00 a.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGAP-DAF-CM-2026-0264",
-   "institucion": "Dirección General de Aduanas y Puertos",
-   "descripcion": "Suministro e instalación de techo en plafón y readecuación de lobby, Adm. San Pedro de Macorís DGA.",
-   "monto": 1238901.79,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T09:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 9:30 a.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CEIZTUR-CCC-CP-2026-0039",
-   "institucion": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
-   "descripcion": "Mejoramiento entorno monumento natural El Saltadero, municipio Cabrera, provincia María Trinidad Sánchez, Relanzamiento",
-   "monto": 40389204.6,
-   "moneda": "DOP",
-   "monto_texto": "RD$40.4 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T10:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 10:30 a.m.",
-   "dias": 3,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "JDMV-DAF-CM-2026-0014",
-   "institucion": "Junta Distrito Municipal La Victoria",
-   "descripcion": "CONSTRUCCIÓN DEL PARQUE LOS REDIMIDOS 3RA PARTE DEL PRESUPUESTO PARTICIPATIVO MUNICIPAL.",
-   "monto": 499985.04,
-   "moneda": "DOP",
-   "monto_texto": "RD$499,985",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T12:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 12:00 p.m.",
-   "dias": 3,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DIGEMAPS-DAF-CM-2026-0020",
-   "institucion": "Dirección General de Medicamentos, Alimentos y Productos Sanitarios",
-   "descripcion": "Contratación de Servicios para la Evaluación de Vulnerabilidad Estructural del LEPCH.",
-   "monto": 840000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$840,000",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T13:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 1:00 p.m.",
-   "dias": 3,
-   "subsector": "Diseño, supervisión y estudios técnicos",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CORAAPLATA-DAF-CM-2026-0044",
-   "institucion": "Corporación de Acueducto y Alcantarillado Puerto Plata",
-   "descripcion": "LIMPIEZA Y AFORO DE POZOS TUBULARES DEL DISTRITO MUNICIPAL DEL ESTRECHO Y BARRANCON DEL MUNICIPIO DE LUPERON",
-   "monto": 904470.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$904,470",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T13:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 1:00 p.m.",
-   "dias": 3,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CSLEA-DAF-CM-2026-0052",
-   "institucion": "Ciudad Sanitaria Dr. Luis Eduardo Aybar",
-   "descripcion": "CONTRATACION DE SERVICIOPARA REACONDICIONAMIENTO Y ACTUALIZACION TOTAL DE PUERTA CORREDIZA AUTOMATICA DE ALUMINIO Y VIDRIO ACCESO PRINCIPAL HOSP.CLINICO-QUIRURGIC",
-   "monto": 277905.34,
-   "moneda": "DOP",
-   "monto_texto": "RD$277,905",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T14:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 2:30 p.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CAID-DAF-CM-2026-0144",
-   "institucion": "Centro de Atención Integral para la Discapacidad",
-   "descripcion": "Adquisición de pintura para el Centro de Atención Integral para la Discapacidad (CAID)",
-   "monto": 1701915.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T14:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 2:30 p.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "AMBC-DAF-CM-2026-0022",
-   "institucion": "Ayuntamiento Municipal de Boca Chica",
-   "descripcion": "CONSTRUCCION DE ACERAS Y CONTENES, BADENES,IMBORNALES Y FILTRANTES",
-   "monto": 3732325.18,
-   "moneda": "DOP",
-   "monto_texto": "RD$3.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T15:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 3:00 p.m.",
-   "dias": 3,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "HTDDC-DAF-CM-2026-0228",
-   "institucion": "Hospital Traumatológico Dr. Darío Contreras",
-   "descripcion": "SERVICIO DE SUSTITUCIÓN Y ADECUACIÓN DE PUERTAS PLOMADAS",
-   "monto": 1878450.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.9 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T15:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 3:00 p.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CEIZTUR-DAF-CM-2026-0079",
-   "institucion": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
-   "descripcion": "Reforzamiento de los Baños en el Ministerio de Turismo, Sede Principal, Distrito Nacional",
-   "monto": 3300000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$3.3 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T15:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 3:00 p.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "HSLM-DAF-CM-2026-0241",
-   "institucion": "Hospital Materno Infantil San Lorenzo de Los Minas",
-   "descripcion": "SERVICIO DE MANTENIMIENTO DE LAS FACHADAS EXTERIORES DE ESTE HOSPITAL",
-   "monto": 2010000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T15:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 3:30 p.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "SRSEN-DAF-CM-2026-0043",
-   "institucion": "Servicio Regional de Salud Enriquillo",
-   "descripcion": "SERVICIO DE MANO DE OBRA DE PINTURA",
-   "monto": 742400.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$742,400",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T16:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 4:00 p.m.",
-   "dias": 3,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGDC-DAF-CM-2026-0037",
-   "institucion": "Dirección General de Desarrollo Comunidad",
-   "descripcion": "ADQUISICIÓN DE MADERA PARA REPARACIONES",
-   "monto": 1495296.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T17:00:00-04:00",
-   "cierre_texto": "23 de noviembre, 5:00 p.m.",
-   "dias": 3,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGDC-DAF-CM-2026-0041",
-   "institucion": "Dirección General de Desarrollo Comunidad",
-   "descripcion": "ADQUISICIÓN DE ZINC",
-   "monto": 1496200.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T17:25:00-04:00",
-   "cierre_texto": "23 de noviembre, 5:25 p.m.",
-   "dias": 3,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "DGDC-DAF-CM-2026-0043",
-   "institucion": "Dirección General de Desarrollo Comunidad",
-   "descripcion": "Adquisición de Pinturas",
-   "monto": 999220.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$999,220",
-   "monto_dudoso": false,
-   "cierre": "2026-11-23T17:30:00-04:00",
-   "cierre_texto": "23 de noviembre, 5:30 p.m.",
-   "dias": 3,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
   {
    "referencia": "MIDE-CCC-CP-2026-0053",
    "institucion": "Ministerio de Defensa",
@@ -371,22 +116,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T08:00:00-04:00",
    "cierre_texto": "24 de noviembre, 8:00 a.m.",
-   "dias": 4,
-   "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "ASDE-CCC-CP-2026-0023",
-   "institucion": "Ayuntamiento Santo Domingo Este",
-   "descripcion": "CONTRATACIÓN DE UNA EMPRESA O PERSONA FÍSICA PARA LA ADQUISICIÓN DE PINTURA Y THINNER PARA REALIZAR TRABAJOS EN EL MUNICIPIO DE SANTO DOMINGO ESTE.",
-   "monto": 6400000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$6.4 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-24T10:00:00-04:00",
-   "cierre_texto": "24 de noviembre, 10:00 a.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -401,9 +131,24 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T10:00:00-04:00",
    "cierre_texto": "24 de noviembre, 10:00 a.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ASDE-CCC-CP-2026-0023",
+   "institucion": "Ayuntamiento Santo Domingo Este",
+   "descripcion": "CONTRATACIÓN DE UNA EMPRESA O PERSONA FÍSICA PARA LA ADQUISICIÓN DE PINTURA Y THINNER PARA REALIZAR TRABAJOS EN EL MUNICIPIO DE SANTO DOMINGO ESTE.",
+   "monto": 6400000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$6.4 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-24T10:00:00-04:00",
+   "cierre_texto": "24 de noviembre, 10:00 a.m.",
+   "dias": 1,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
@@ -416,7 +161,22 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T11:00:00-04:00",
    "cierre_texto": "24 de noviembre, 11:00 a.m.",
-   "dias": 4,
+   "dias": 1,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ASIS-DAF-CM-2026-0004",
+   "institucion": "Ayuntamiento Municipal San Ignacio de Sabaneta",
+   "descripcion": "CONSTRUCCION DE ACERAS Y CONTENES",
+   "monto": 6053374.35,
+   "moneda": "DOP",
+   "monto_texto": "RD$6.1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-24T11:30:00-04:00",
+   "cierre_texto": "24 de noviembre, 11:30 a.m.",
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -431,23 +191,8 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T11:30:00-04:00",
    "cierre_texto": "24 de noviembre, 11:30 a.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Materiales y equipos de construcción",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "ASIS-DAF-CM-2026-0004",
-   "institucion": "Ayuntamiento Municipal San Ignacio de Sabaneta",
-   "descripcion": "CONSTRUCCION DE ACERAS Y CONTENES",
-   "monto": 6053374.35,
-   "moneda": "DOP",
-   "monto_texto": "RD$6.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-24T11:30:00-04:00",
-   "cierre_texto": "24 de noviembre, 11:30 a.m.",
-   "dias": 4,
-   "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -461,7 +206,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -476,7 +221,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -491,7 +236,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:00:00-04:00",
    "cierre_texto": "24 de noviembre, 12:00 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -506,24 +251,9 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T12:05:00-04:00",
    "cierre_texto": "24 de noviembre, 12:05 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "AYUNT. BAYAGUANA-DAF-CM-2026-0001",
-   "institucion": "AYUNTAMIENTO MUNICIPAL DE BAYAGUANA",
-   "descripcion": "CONSTRUCCIÓN DE ACERAS Y CONTENES EN VARIOS SECTORES DE SECTORES: BARRIO LA TORMENTA DEL DESIERTO, BARRIO LA ESPERANZA Y BARRIO BRISA DEL ESTE DEL MUNICIPIO DE BAYAGUANA",
-   "monto": 5825541.2,
-   "moneda": "DOP",
-   "monto_texto": "RD$5.8 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-24T14:00:00-04:00",
-   "cierre_texto": "24 de noviembre, 2:00 p.m.",
-   "dias": 4,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -536,8 +266,23 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T14:00:00-04:00",
    "cierre_texto": "24 de noviembre, 2:00 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AYUNT. BAYAGUANA-DAF-CM-2026-0001",
+   "institucion": "AYUNTAMIENTO MUNICIPAL DE BAYAGUANA",
+   "descripcion": "CONSTRUCCIÓN DE ACERAS Y CONTENES EN VARIOS SECTORES DE SECTORES: BARRIO LA TORMENTA DEL DESIERTO, BARRIO LA ESPERANZA Y BARRIO BRISA DEL ESTE DEL MUNICIPIO DE BAYAGUANA",
+   "monto": 5825541.2,
+   "moneda": "DOP",
+   "monto_texto": "RD$5.8 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-24T14:00:00-04:00",
+   "cierre_texto": "24 de noviembre, 2:00 p.m.",
+   "dias": 1,
+   "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -551,7 +296,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:00:00-04:00",
    "cierre_texto": "24 de noviembre, 3:00 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -566,7 +311,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:00:00-04:00",
    "cierre_texto": "24 de noviembre, 3:00 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -581,7 +326,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T15:30:00-04:00",
    "cierre_texto": "24 de noviembre, 3:30 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -596,7 +341,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-24T17:00:00-04:00",
    "cierre_texto": "24 de noviembre, 5:00 p.m.",
-   "dias": 4,
+   "dias": 1,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -611,7 +356,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T08:00:00-04:00",
    "cierre_texto": "25 de noviembre, 8:00 a.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -626,7 +371,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T08:35:00-04:00",
    "cierre_texto": "25 de noviembre, 8:35 a.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -641,7 +386,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T09:30:00-04:00",
    "cierre_texto": "25 de noviembre, 9:30 a.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -656,7 +401,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -671,7 +416,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T12:00:00-04:00",
    "cierre_texto": "25 de noviembre, 12:00 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -686,7 +431,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T13:00:00-04:00",
    "cierre_texto": "25 de noviembre, 1:00 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -701,7 +446,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T13:15:00-04:00",
    "cierre_texto": "25 de noviembre, 1:15 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -716,7 +461,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T14:00:00-04:00",
    "cierre_texto": "25 de noviembre, 2:00 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -731,7 +476,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T15:00:00-04:00",
    "cierre_texto": "25 de noviembre, 3:00 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -746,38 +491,8 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T15:30:00-04:00",
    "cierre_texto": "25 de noviembre, 3:30 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "CEIZTUR-DAF-CM-2026-0082",
-   "institucion": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
-   "descripcion": "Construcción Parque Municipal Las Lagunas, Distrito Municipal Las Lagunas, Municipio Padres Las Casas, Provincia de Azua",
-   "monto": 18121869.14,
-   "moneda": "DOP",
-   "monto_texto": "RD$18.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-25T16:00:00-04:00",
-   "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 5,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "URBE-DAF-CM-2026-0016",
-   "institucion": "Unidad Ejecutora para la Readecuación de Barrios y Entornos (URBE)",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE TASACIONES DE INMUEBLE PARA SER USADAS EN EL PROYECTO CONSTRUCCIÓN DE OBRAS DE JARABACOA",
-   "monto": 354000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$354,000",
-   "monto_dudoso": false,
-   "cierre": "2026-11-25T16:00:00-04:00",
-   "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 5,
-   "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -791,8 +506,38 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "URBE-DAF-CM-2026-0016",
+   "institucion": "Unidad Ejecutora para la Readecuación de Barrios y Entornos (URBE)",
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE TASACIONES DE INMUEBLE PARA SER USADAS EN EL PROYECTO CONSTRUCCIÓN DE OBRAS DE JARABACOA",
+   "monto": 354000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$354,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-25T16:00:00-04:00",
+   "cierre_texto": "25 de noviembre, 4:00 p.m.",
+   "dias": 2,
+   "subsector": "Diseño, supervisión y estudios técnicos",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CEIZTUR-DAF-CM-2026-0082",
+   "institucion": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
+   "descripcion": "Construcción Parque Municipal Las Lagunas, Distrito Municipal Las Lagunas, Municipio Padres Las Casas, Provincia de Azua",
+   "monto": 18121869.14,
+   "moneda": "DOP",
+   "monto_texto": "RD$18.1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-25T16:00:00-04:00",
+   "cierre_texto": "25 de noviembre, 4:00 p.m.",
+   "dias": 2,
+   "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -806,7 +551,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:00:00-04:00",
    "cierre_texto": "25 de noviembre, 5:00 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -821,7 +566,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:00:00-04:00",
    "cierre_texto": "25 de noviembre, 5:00 p.m.",
-   "dias": 5,
+   "dias": 2,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -836,24 +581,9 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T09:30:00-04:00",
    "cierre_texto": "26 de noviembre, 9:30 a.m.",
-   "dias": 6,
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "INDRHI-DAF-CM-2026-0111",
-   "institucion": "Instituto Nacional de Recursos Hidráulicos",
-   "descripcion": "CONSTRUCCIÓN CÁRCAMO DE BOMBEO DE LA CASETA MAGUEYAL Y REHABILITACIÓN DEL DIQUE. LOCALIZACIÓN D/R VALLE DE SAN JUAN, D/R SAN JUAN.",
-   "monto": 10505542.4,
-   "moneda": "DOP",
-   "monto_texto": "RD$10.5 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-26T11:00:00-04:00",
-   "cierre_texto": "26 de noviembre, 11:00 a.m.",
-   "dias": 6,
-   "subsector": "Obras civiles e infraestructura",
-   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -866,7 +596,22 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T11:00:00-04:00",
    "cierre_texto": "26 de noviembre, 11:00 a.m.",
-   "dias": 6,
+   "dias": 3,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INDRHI-DAF-CM-2026-0111",
+   "institucion": "Instituto Nacional de Recursos Hidráulicos",
+   "descripcion": "CONSTRUCCIÓN CÁRCAMO DE BOMBEO DE LA CASETA MAGUEYAL Y REHABILITACIÓN DEL DIQUE. LOCALIZACIÓN D/R VALLE DE SAN JUAN, D/R SAN JUAN.",
+   "monto": 10505542.4,
+   "moneda": "DOP",
+   "monto_texto": "RD$10.5 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-26T11:00:00-04:00",
+   "cierre_texto": "26 de noviembre, 11:00 a.m.",
+   "dias": 3,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -881,38 +626,23 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T14:00:00-04:00",
    "cierre_texto": "26 de noviembre, 2:00 p.m.",
-   "dias": 6,
+   "dias": 3,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "MIDEREC-DAF-CM-2026-0121",
-   "institucion": "Ministerio de Deportes, Educación Física y Recreación",
-   "descripcion": "REPARACION DE LA PISCINA OLIMPICA DE LA VEGA DIRIGIDO A MIPYMES",
-   "monto": 53599682.12,
+   "referencia": "ARD-DAF-CM-2026-0118",
+   "institucion": "Armada de República Dominicana",
+   "descripcion": "CONTRATACIÓN PARA EL SERVICIO DE REPARACIÓN Y ACONDICIONAMIENTO A TODO COSTO DE LA LANCHA AUXILIAR ¨RIO OZAMA¨, LA-01, ARD.",
+   "monto": 693000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$53.6 millones",
+   "monto_texto": "RD$693,000",
    "monto_dudoso": false,
-   "cierre": "2026-11-26T16:00:00-04:00",
-   "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 6,
+   "cierre": "2026-11-26T15:00:00-04:00",
+   "cierre_texto": "26 de noviembre, 3:00 p.m.",
+   "dias": 3,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "HOSP RAMON DE LARA-DAF-CM-2026-0132",
-   "institucion": "Hospital Ramón de Lara FFAA",
-   "descripcion": "Adquisición de Materiales Ferreteros",
-   "monto": 708719.8,
-   "moneda": "DOP",
-   "monto_texto": "RD$708,720",
-   "monto_dudoso": false,
-   "cierre": "2026-11-26T16:00:00-04:00",
-   "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 6,
-   "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -926,7 +656,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:00:00-04:00",
    "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 6,
+   "dias": 3,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -941,9 +671,39 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:00:00-04:00",
    "cierre_texto": "26 de noviembre, 4:00 p.m.",
-   "dias": 6,
+   "dias": 3,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MIDEREC-DAF-CM-2026-0121",
+   "institucion": "Ministerio de Deportes, Educación Física y Recreación",
+   "descripcion": "REPARACION DE LA PISCINA OLIMPICA DE LA VEGA DIRIGIDO A MIPYMES",
+   "monto": 53599682.12,
+   "moneda": "DOP",
+   "monto_texto": "RD$53.6 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-26T16:00:00-04:00",
+   "cierre_texto": "26 de noviembre, 4:00 p.m.",
+   "dias": 3,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "HOSP RAMON DE LARA-DAF-CM-2026-0132",
+   "institucion": "Hospital Ramón de Lara FFAA",
+   "descripcion": "Adquisición de Materiales Ferreteros",
+   "monto": 708719.8,
+   "moneda": "DOP",
+   "monto_texto": "RD$708,720",
+   "monto_dudoso": false,
+   "cierre": "2026-11-26T16:00:00-04:00",
+   "cierre_texto": "26 de noviembre, 4:00 p.m.",
+   "dias": 3,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -956,7 +716,37 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T16:40:00-04:00",
    "cierre_texto": "26 de noviembre, 4:40 p.m.",
-   "dias": 6,
+   "dias": 3,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SENPA-DAF-CM-2026-0016",
+   "institucion": "Servicio Nacional de Protección Ambiental",
+   "descripcion": "SERVICIO DE ADECUACION Y ACONDICIONAMIENTO EN LOS DEPARTAMENTOS DE RELACIONES PUBLICAS Y PROTOCOLO.",
+   "monto": 408700.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$408,700",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T09:30:00-04:00",
+   "cierre_texto": "27 de noviembre, 9:30 a.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AMR-DAF-CM-2026-0066",
+   "institucion": "Ayuntamiento Municipal de La Romana",
+   "descripcion": "Remozamiento del parquecito y cancha la cayas 1824 m2, calle Flamnoyan ( Presupuesto Participativo )",
+   "monto": 334000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$334,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T10:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 10:00 a.m.",
+   "dias": 4,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -971,22 +761,97 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T10:00:00-04:00",
    "cierre_texto": "27 de noviembre, 10:00 a.m.",
-   "dias": 7,
+   "dias": 4,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "INESPRE-DAF-CM-2026-0067",
-   "institucion": "Instituto Estabilización de Precios",
-   "descripcion": "Rehabilitación de Mercados en Gerencias Regionales de San Juan y La Venezuela.",
-   "monto": 3623336.4,
+   "referencia": "ISFODOSU-DAF-CM-2026-0312",
+   "institucion": "Instituto Superior de Formación Docente Salomé Ureña",
+   "descripcion": "VRG-Reparación y Acondicionamiento del Piso de Almacén de Rectoría",
+   "monto": 430805.58,
    "moneda": "DOP",
-   "monto_texto": "RD$3.6 millones",
+   "monto_texto": "RD$430,806",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T11:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 11:00 a.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CEIZTUR-DAF-CM-2026-0085",
+   "institucion": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
+   "descripcion": "Servicio de reparación de verja perimetral, Malecón Santo Domingo Este",
+   "monto": 330000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$330,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T11:20:00-04:00",
+   "cierre_texto": "27 de noviembre, 11:20 a.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "POLITUR-DAF-CM-2026-0021",
+   "institucion": "Dirección Central de Policía de Turismo",
+   "descripcion": "SOLICITUD DE SERVICIOS DE REPARACION Y MANTENIMIENTO DE INFRAESTRUCTURA",
+   "monto": 1010800.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T12:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 12:00 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AYUNTAMIENTO SAN P.-DAF-CM-2026-0051",
+   "institucion": "Ayuntamiento de San Pedro de Macoris",
+   "descripcion": "MEJORAMIENTO Y REHABILITACIÓN DE BADENES, CONTENES, MUROS DIVISORES Y CALLES EN DISTINTAS CALLES Y AVENIDAS DEL MUNICIPIO DE SAN PEDRO DE MACORÍS.",
+   "monto": 1500000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.5 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T12:10:00-04:00",
+   "cierre_texto": "27 de noviembre, 12:10 p.m.",
+   "dias": 4,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DIE-DAF-CM-2026-0046",
+   "institucion": "Dirección Infraestructura Escolar",
+   "descripcion": "CONTRATACIÓN DE OBRAS PARA MANTENIMIENTO CORRECTIVO DE VARIOS CENTROS EDUCATIVOS EN LA REGIÓN ESTE, DIRIGIDO EXCLUSIVAMENTE A MIPYMES",
+   "monto": 43182208.18,
+   "moneda": "DOP",
+   "monto_texto": "RD$43.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T13:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 1:00 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "HMRA-DAF-CM-2026-0126",
+   "institucion": "Hospital Materno Dr. Reynaldo Almanzar",
+   "descripcion": "Mantenimiento para Cámaras Frigorífica",
+   "monto": 1150000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.1 millones",
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 7,
+   "dias": 4,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1001,8 +866,188 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 7,
+   "dias": 4,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INESPRE-DAF-CM-2026-0067",
+   "institucion": "Instituto Estabilización de Precios",
+   "descripcion": "Rehabilitación de Mercados en Gerencias Regionales de San Juan y La Venezuela.",
+   "monto": 3623336.4,
+   "moneda": "DOP",
+   "monto_texto": "RD$3.6 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T14:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 2:00 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CESAC-DAF-CM-2026-0193",
+   "institucion": "Cuerpo Especializado en Seguridad Aeroportuaria",
+   "descripcion": "ADQUISICION DE PINTURAS Y MATERIALES",
+   "monto": 2009119.68,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T15:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 3:00 p.m.",
+   "dias": 4,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "IPES-DAF-CM-2026-0025",
+   "institucion": "Instituto Policial de Educación Superior",
+   "descripcion": "SERVICIO DE MANTENIMIENTO DE PLANTA PROCESADORA DE AGUA",
+   "monto": 656198.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$656,198",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T15:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 3:00 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ASDN-DAF-CM-2026-0055",
+   "institucion": "Ayuntamiento Santo Domingo Norte",
+   "descripcion": "Contratación de Obras de Infraestructura del Presupuesto Administrativo",
+   "monto": 11000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$11 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T15:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 3:00 p.m.",
+   "dias": 4,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AMR-DAF-CM-2026-0065",
+   "institucion": "Ayuntamiento Municipal de La Romana",
+   "descripcion": "Reparación del Parqueo al lado del ayuntamiento municipal de la Romana",
+   "monto": 600000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$600,000",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T15:20:00-04:00",
+   "cierre_texto": "27 de noviembre, 3:20 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MIVHED-DAF-CM-2026-0076",
+   "institucion": "Ministerio de la Vivienda, Hábitat y Edificaciones",
+   "descripcion": "Adquisición e Instalación de Alambre Trinchera para el Almacén de Hato Nuevo del MIVHED.",
+   "monto": 409460.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$409,460",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T16:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 4:00 p.m.",
+   "dias": 4,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AYUNT LOS ALCARRIZOS-DAF-CM-2026-0066",
+   "institucion": "Ayuntamiento Municipal de Los Alcarrizos",
+   "descripcion": "CONSTRUCCION DE LA SEGUNDA ETAPA DE LA FUNERARIA MUNICIPAL EN LA ZONA OESTE, DEL MUNICIPIO LOS ALCARRIZOS",
+   "monto": 19999998.62,
+   "moneda": "DOP",
+   "monto_texto": "RD$20 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T17:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 5:00 p.m.",
+   "dias": 4,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INDRHI-DAF-CM-2026-0118",
+   "institucion": "Instituto Nacional de Recursos Hidráulicos",
+   "descripcion": "SERVICIO DE REPARACION DE BOMBA TURBINA , EJE TRANSMISION VERTICAL , PERTENECIENTE A LA ESTACION DE BOMBEO JOBITO IV, DIRECCION REGIONAL SISTEMA DE RIEGO DEL ESTE",
+   "monto": 1200000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T17:30:00-04:00",
+   "cierre_texto": "27 de noviembre, 5:30 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "FAD-DAF-CM-2026-0087",
+   "institucion": "Fuerza Aérea Dominicana",
+   "descripcion": "Servicio de Reparación y Mantenimiento de Transformadores Dirigido a Mipymes Mujer.",
+   "monto": 818919.9,
+   "moneda": "DOP",
+   "monto_texto": "RD$818,920",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T17:40:00-04:00",
+   "cierre_texto": "27 de noviembre, 5:40 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INDRHI-DAF-CM-2026-0119",
+   "institucion": "Instituto Nacional de Recursos Hidráulicos",
+   "descripcion": "SERVICIO DE REPARACION COMPLETA DE LA RETROEXCVADORA FICHA M-155, AL SERVICIO DE LA DIRECCION REGIONAL SISTEMA DE RIEGO VALLE DE AZUA",
+   "monto": 1400000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.4 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T17:45:00-04:00",
+   "cierre_texto": "27 de noviembre, 5:45 p.m.",
+   "dias": 4,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AYUNTAMIENTO STGO-DAF-CM-2026-0129",
+   "institucion": "Ayuntamiento Santiago de los Caballeros",
+   "descripcion": "ADQUISICIÓN DE MUROS DE HORMIGÓN PARA SEPARACIÓN VIAL A REQUERIMIENTO DE LA DIRECCIÓN DE TRÁNSITO Y MOVILIDAD URBANA",
+   "monto": 1655084.8,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.7 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T18:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 6:00 p.m.",
+   "dias": 4,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "FAD-DAF-CM-2026-0089",
+   "institucion": "Fuerza Aérea Dominicana",
+   "descripcion": "ADQUISICION DE PUERTAS Y VENTANAS",
+   "monto": 368632.56,
+   "moneda": "DOP",
+   "monto_texto": "RD$368,633",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T18:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 6:00 p.m.",
+   "dias": 4,
+   "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -1016,7 +1061,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T08:00:00-04:00",
    "cierre_texto": "30 de noviembre, 8:00 a.m.",
-   "dias": 10,
+   "dias": 7,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1031,7 +1076,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 10,
+   "dias": 7,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1046,7 +1091,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 10,
+   "dias": 7,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1061,7 +1106,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T10:30:00-04:00",
    "cierre_texto": "30 de noviembre, 10:30 a.m.",
-   "dias": 10,
+   "dias": 7,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -1076,9 +1121,24 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T11:00:00-04:00",
    "cierre_texto": "30 de noviembre, 11:00 a.m.",
-   "dias": 10,
+   "dias": 7,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ETED-DAF-CM-2026-0195",
+   "institucion": "Empresa de Transmisión Eléctrica Dominicana",
+   "descripcion": "SERVICIO DE READECUACION DE DIVERSAS OFICINAS DE LA ETED, DIRIGIDO A MIPYME.",
+   "monto": 15051238.31,
+   "moneda": "DOP",
+   "monto_texto": "RD$15.1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-30T15:00:00-04:00",
+   "cierre_texto": "30 de noviembre, 3:00 p.m.",
+   "dias": 7,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -1091,7 +1151,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T16:30:00-04:00",
    "cierre_texto": "30 de noviembre, 4:30 p.m.",
-   "dias": 10,
+   "dias": 7,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -1106,9 +1166,24 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T09:30:00-04:00",
    "cierre_texto": "1 de diciembre, 9:30 a.m.",
-   "dias": 11,
+   "dias": 8,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "EGEHID-DAF-CM-2026-0083",
+   "institucion": "Empresa de Generación Hidroélectrica Dominicana",
+   "descripcion": "Techado Gradería, Iluminación y Media Tensión del Play de Softball El Fundo, Municipio Villa Los Almácigos, Prov. Santiago Rodriguez.",
+   "monto": 6000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$6 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-01T10:00:00-04:00",
+   "cierre_texto": "1 de diciembre, 10:00 a.m.",
+   "dias": 8,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -1121,8 +1196,23 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T15:00:00-04:00",
    "cierre_texto": "1 de diciembre, 3:00 p.m.",
-   "dias": 11,
+   "dias": 8,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MICM-DAF-CM-2026-0090",
+   "institucion": "Ministerio de Industria, Comercio y Mipymes",
+   "descripcion": "Contratación de los Servicios para la Instalación de Soportes para la Torre de Enfriamiento - T1",
+   "monto": 900000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$900,000",
+   "monto_dudoso": false,
+   "cierre": "2026-12-02T10:00:00-04:00",
+   "cierre_texto": "2 de diciembre, 10:00 a.m.",
+   "dias": 9,
+   "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -1136,9 +1226,24 @@
    "monto_dudoso": false,
    "cierre": "2026-12-02T12:00:00-04:00",
    "cierre_texto": "2 de diciembre, 12:00 p.m.",
-   "dias": 12,
+   "dias": 9,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "ADN-CCC-CP-2026-0040",
+   "institucion": "Ayuntamiento del Distrito Nacional (ADN)",
+   "descripcion": "CONSTRUCCIÓN DE LA FUNERARIA DISTRITAL SAN CARLOS",
+   "monto": 60000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$60 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-02T15:00:00-04:00",
+   "cierre_texto": "2 de diciembre, 3:00 p.m.",
+   "dias": 9,
+   "subsector": "Edificaciones y viviendas",
+   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
@@ -1151,7 +1256,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-03T09:30:00-04:00",
    "cierre_texto": "3 de diciembre, 9:30 a.m.",
-   "dias": 13,
+   "dias": 10,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1166,9 +1271,24 @@
    "monto_dudoso": false,
    "cierre": "2026-12-03T10:00:00-04:00",
    "cierre_texto": "3 de diciembre, 10:00 a.m.",
-   "dias": 13,
+   "dias": 10,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MAPRE-DAF-CM-2026-0058",
+   "institucion": "Ministerio Administrativo de la Presidencia",
+   "descripcion": "SUMINISTRO E INSTALACIÓN DE PUERTAS DE CRISTAL EN JUAN DOLIO, PROVINCIA SAN PEDRO DE MACORÍS",
+   "monto": 999999.99,
+   "moneda": "DOP",
+   "monto_texto": "RD$1,000,000",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T15:00:00-04:00",
+   "cierre_texto": "3 de diciembre, 3:00 p.m.",
+   "dias": 10,
+   "subsector": "Materiales y equipos de construcción",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -1181,24 +1301,9 @@
    "monto_dudoso": false,
    "cierre": "2026-12-04T12:00:00-04:00",
    "cierre_texto": "4 de diciembre, 12:00 p.m.",
-   "dias": 14,
+   "dias": 11,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "SNS-CCC-LPN-2026-0022",
-   "institucion": "Servicio Nacional de Salud",
-   "descripcion": "CONTRATACION DE OBRA PARA EL REMOZAMIENTO DEL HOSPITAL MUNICIPAL JOSE A. COLUMNA, MUNICIIPIO BONAO",
-   "monto": 299098187.54,
-   "moneda": "DOP",
-   "monto_texto": "RD$299.1 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-12-09T10:00:00-04:00",
-   "cierre_texto": "9 de diciembre, 10:00 a.m.",
-   "dias": 19,
-   "subsector": "Rehabilitación y mantenimiento de edificaciones",
-   "modalidad": "LPN",
    "url": "javascript:void(0);"
   },
   {
@@ -1211,9 +1316,39 @@
    "monto_dudoso": false,
    "cierre": "2026-12-09T10:00:00-04:00",
    "cierre_texto": "9 de diciembre, 10:00 a.m.",
-   "dias": 19,
+   "dias": 16,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SNS-CCC-LPN-2026-0022",
+   "institucion": "Servicio Nacional de Salud",
+   "descripcion": "CONTRATACION DE OBRA PARA EL REMOZAMIENTO DEL HOSPITAL MUNICIPAL JOSE A. COLUMNA, MUNICIIPIO BONAO",
+   "monto": 299098187.54,
+   "moneda": "DOP",
+   "monto_texto": "RD$299.1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-09T10:00:00-04:00",
+   "cierre_texto": "9 de diciembre, 10:00 a.m.",
+   "dias": 16,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "LPN",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "APORDOM-DAF-CM-2026-0035",
+   "institucion": "APORDOM (Autoridad Portuaria Dominicana)",
+   "descripcion": "CONSTRUCCIÓN DE MUELLE TURÍSTICO CAYO LEVANTADO, SAMANÁ.",
+   "monto": 38045903.65,
+   "moneda": "DOP",
+   "monto_texto": "RD$38 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-09T10:30:00-04:00",
+   "cierre_texto": "9 de diciembre, 10:30 a.m.",
+   "dias": 16,
+   "subsector": "Obras civiles e infraestructura",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -1226,7 +1361,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-14T11:00:00-04:00",
    "cierre_texto": "14 de diciembre, 11:00 a.m.",
-   "dias": 24,
+   "dias": 21,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1241,9 +1376,24 @@
    "monto_dudoso": false,
    "cierre": "2026-12-15T10:00:00-04:00",
    "cierre_texto": "15 de diciembre, 10:00 a.m.",
-   "dias": 25,
+   "dias": 22,
    "subsector": "Materiales y equipos de construcción",
    "modalidad": "LPN",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "IDAC-DAF-CM-2026-0127",
+   "institucion": "Instituto Dominicano de Aviación Civíl",
+   "descripcion": "Readecuación y Acondicionamiento de la Torre de Control de Transito Aéreo Gregorio Luperón- Puerto Plata.",
+   "monto": 763750.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$763,750",
+   "monto_dudoso": false,
+   "cierre": "2026-12-15T11:00:00-04:00",
+   "cierre_texto": "15 de diciembre, 11:00 a.m.",
+   "dias": 22,
+   "subsector": "Rehabilitación y mantenimiento de edificaciones",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -1256,7 +1406,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-18T12:00:00-04:00",
    "cierre_texto": "18 de diciembre, 12:00 p.m.",
-   "dias": 28,
+   "dias": 25,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1271,7 +1421,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-21T15:00:00-04:00",
    "cierre_texto": "21 de diciembre, 3:00 p.m.",
-   "dias": 31,
+   "dias": 28,
    "subsector": "Diseño, supervisión y estudios técnicos",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1286,7 +1436,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-28T12:00:00-04:00",
    "cierre_texto": "28 de diciembre, 12:00 p.m.",
-   "dias": 38,
+   "dias": 35,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1301,7 +1451,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-29T09:00:00-04:00",
    "cierre_texto": "29 de diciembre, 9:00 a.m.",
-   "dias": 39,
+   "dias": 36,
    "subsector": "Rehabilitación y mantenimiento de edificaciones",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1316,7 +1466,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-30T10:00:00-04:00",
    "cierre_texto": "30 de diciembre, 10:00 a.m.",
-   "dias": 40,
+   "dias": 37,
    "subsector": "Edificaciones y viviendas",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1331,7 +1481,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-06T10:00:00-04:00",
    "cierre_texto": "6 de enero, 10:00 a.m.",
-   "dias": 47,
+   "dias": 44,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1346,7 +1496,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-07T10:00:00-04:00",
    "cierre_texto": "7 de enero, 10:00 a.m.",
-   "dias": 48,
+   "dias": 45,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1361,7 +1511,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-11T10:00:00-04:00",
    "cierre_texto": "11 de enero, 10:00 a.m.",
-   "dias": 52,
+   "dias": 49,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1376,7 +1526,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-12T10:00:00-04:00",
    "cierre_texto": "12 de enero, 10:00 a.m.",
-   "dias": 53,
+   "dias": 50,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1391,7 +1541,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-12T12:00:00-04:00",
    "cierre_texto": "12 de enero, 12:00 p.m.",
-   "dias": 53,
+   "dias": 50,
    "subsector": "Obras civiles e infraestructura",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -1400,9 +1550,9 @@
  "mercado": {
   "desde": "enero de 2026",
   "total": {
-   "cantidad": 2873,
-   "valor": 100485220008,
-   "valor_texto": "RD$100.5 mil millones"
+   "cantidad": 2900,
+   "valor": 100696137827,
+   "valor_texto": "RD$100.7 mil millones"
   },
   "meses": [
    {
@@ -1478,9 +1628,9 @@
    {
     "mes": "2026-11",
     "etiqueta": "Nov",
-    "cantidad": 261,
-    "valor": 5647109398,
-    "valor_texto": "RD$5.6 mil millones"
+    "cantidad": 288,
+    "valor": 5858027218,
+    "valor_texto": "RD$5.9 mil millones"
    }
   ],
   "instituciones": [
@@ -1492,9 +1642,15 @@
    },
    {
     "nombre": "Comité Ejecutor de Infraesctrutura de Zona Turísticas",
-    "cantidad": 55,
-    "valor": 3748418014,
+    "cantidad": 56,
+    "valor": 3748748014,
     "valor_texto": "RD$3.7 mil millones"
+   },
+   {
+    "nombre": "Ayuntamiento Municipal de Los Alcarrizos",
+    "cantidad": 41,
+    "valor": 430794542,
+    "valor_texto": "RD$430.8 millones"
    },
    {
     "nombre": "Centro de Atención Integral para la Discapacidad",
@@ -1503,40 +1659,34 @@
     "valor_texto": "RD$75.5 millones"
    },
    {
-    "nombre": "Ayuntamiento Municipal de Los Alcarrizos",
-    "cantidad": 40,
-    "valor": 410794543,
-    "valor_texto": "RD$410.8 millones"
-   },
-   {
     "nombre": "Ayuntamiento del Distrito Nacional (ADN)",
-    "cantidad": 38,
-    "valor": 1432033358,
-    "valor_texto": "RD$1.4 mil millones"
+    "cantidad": 39,
+    "valor": 1492033358,
+    "valor_texto": "RD$1.5 mil millones"
    },
    {
     "nombre": "Instituto Superior de Formación Docente Salomé Ureña",
-    "cantidad": 38,
-    "valor": 200170803,
-    "valor_texto": "RD$200.2 millones"
+    "cantidad": 39,
+    "valor": 200601608,
+    "valor_texto": "RD$200.6 millones"
    },
    {
     "nombre": "Dirección Infraestructura Escolar",
-    "cantidad": 35,
-    "valor": 5854580107,
+    "cantidad": 36,
+    "valor": 5897762316,
     "valor_texto": "RD$5.9 mil millones"
+   },
+   {
+    "nombre": "Empresa de Transmisión Eléctrica Dominicana",
+    "cantidad": 36,
+    "valor": 266687749,
+    "valor_texto": "RD$266.7 millones"
    },
    {
     "nombre": "Corporación de Acueducto y Alcantarillado de Santiago",
     "cantidad": 35,
     "valor": 5494165844,
     "valor_texto": "RD$5.5 mil millones"
-   },
-   {
-    "nombre": "Empresa de Transmisión Eléctrica Dominicana",
-    "cantidad": 35,
-    "valor": 251636510,
-    "valor_texto": "RD$251.6 millones"
    },
    {
     "nombre": "Ministerio de Defensa",
@@ -1548,20 +1698,20 @@
   "subsectores": [
    {
     "nombre": "Rehabilitación y mantenimiento de edificaciones",
-    "cantidad": 1206,
-    "valor": 19356773973,
+    "cantidad": 1220,
+    "valor": 19424469593,
     "valor_texto": "RD$19.4 mil millones"
    },
    {
     "nombre": "Obras civiles e infraestructura",
-    "cantidad": 814,
-    "valor": 65979826170,
-    "valor_texto": "RD$66 mil millones"
+    "cantidad": 820,
+    "valor": 66056706072,
+    "valor_texto": "RD$66.1 mil millones"
    },
    {
     "nombre": "Materiales y equipos de construcción",
-    "cantidad": 652,
-    "valor": 3298677459,
+    "cantidad": 658,
+    "valor": 3305019756,
     "valor_texto": "RD$3.3 mil millones"
    },
    {
@@ -1572,16 +1722,16 @@
    },
    {
     "nombre": "Edificaciones y viviendas",
-    "cantidad": 93,
-    "valor": 10249738481,
-    "valor_texto": "RD$10.2 mil millones"
+    "cantidad": 94,
+    "valor": 10309738481,
+    "valor_texto": "RD$10.3 mil millones"
    }
   ],
   "plazo": {
    "mediana": 6,
    "p25": 5,
    "p75": 8,
-   "muestras": 2873
+   "muestras": 2900
   }
  }
 }
