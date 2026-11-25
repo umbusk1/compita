@@ -2,15 +2,15 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-24T22:21:26.017682-04:00",
- "actualizado_texto": "24 de noviembre de 2026",
+ "actualizado": "2026-11-25T00:34:24.581984-04:00",
+ "actualizado_texto": "25 de noviembre de 2026",
  "kpis": {
   "abiertas": 57,
   "valor_total": 223747368,
   "valor_texto": "RD$223.7 millones",
-  "cierran_7_dias": 54
+  "cierran_7_dias": 55
  },
- "resumen": "El sector turismo, hotelería y gastronomía registra hoy 57 licitaciones abiertas por un valor estimado de RD$223.7 millones, con 54 procesos que cierran en los próximos siete días. Entre las oportunidades más relevantes destacan el Ministerio de la Vivienda, Hábitat y Edificaciones con RD$65 millones para servicios de alimentación, el Ministerio de Relaciones Exteriores con RD$40 millones en producción de eventos, y el Ministerio de Interior y Policía con RD$10 millones en catering institucional. La temporada navideña impulsa además una ola de licitaciones de menor monto en montaje de eventos y catering, desde la Policía Nacional y la Procuraduría General hasta ayuntamientos como Santo Domingo Norte, lo que amplía las opciones para empresas de todos los tamaños del sector.",
+ "resumen": "El Estado dominicano mantiene abiertas 57 licitaciones en turismo, hotelería y gastronomía por RD$223.7 millones, lideradas por el Ministerio de la Vivienda con RD$65 millones para alimentación, el Ministerio de Relaciones Exteriores con RD$40 millones para producción de eventos, y el Ministerio de Interior y Policía con RD$10 millones en servicios de catering. La temporada navideña impulsa una ola de contrataciones de montaje y catering en instituciones como el Ayuntamiento Santo Domingo Norte, la Policía Nacional y la Procuraduría General, cada una por RD$6.4 millones. De las 57 oportunidades activas, 55 cierran en los próximos siete días, por lo que las empresas del sector deben actuar con rapidez para no quedar fuera.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
@@ -77,7 +77,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T08:00:00-04:00",
    "cierre_texto": "25 de noviembre, 8:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -92,7 +92,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T10:00:00-04:00",
    "cierre_texto": "25 de noviembre, 10:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alojamiento y hospedaje",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -107,7 +107,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -122,7 +122,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -137,7 +137,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -152,7 +152,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T11:00:00-04:00",
    "cierre_texto": "25 de noviembre, 11:00 a.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -167,7 +167,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T12:00:00-04:00",
    "cierre_texto": "25 de noviembre, 12:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -182,7 +182,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T13:00:00-04:00",
    "cierre_texto": "25 de noviembre, 1:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -197,7 +197,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T15:00:00-04:00",
    "cierre_texto": "25 de noviembre, 3:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -212,7 +212,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -227,7 +227,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -242,7 +242,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T16:00:00-04:00",
    "cierre_texto": "25 de noviembre, 4:00 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -257,7 +257,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:30:00-04:00",
    "cierre_texto": "25 de noviembre, 5:30 p.m.",
-   "dias": 1,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -272,22 +272,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-25T17:55:00-04:00",
    "cierre_texto": "25 de noviembre, 5:55 p.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MITUR-DAF-CM-2026-0138",
-   "institucion": "Ministerio de Turismo",
-   "descripcion": "CONTRATACIÓN DE SERVICIOS DE MONTAJE PARA ACTIVIDADES DE FOMENTO DEL TURISMO INTERNO A NIVEL NACIONAL GRUPO VII. (DIRIGIDO A MIPYMES MUJER).",
-   "monto": 1700000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-26T08:00:00-04:00",
-   "cierre_texto": "26 de noviembre, 8:00 a.m.",
-   "dias": 2,
+   "dias": 0,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -302,9 +287,24 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T08:00:00-04:00",
    "cierre_texto": "26 de noviembre, 8:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MITUR-DAF-CM-2026-0138",
+   "institucion": "Ministerio de Turismo",
+   "descripcion": "CONTRATACIÓN DE SERVICIOS DE MONTAJE PARA ACTIVIDADES DE FOMENTO DEL TURISMO INTERNO A NIVEL NACIONAL GRUPO VII. (DIRIGIDO A MIPYMES MUJER).",
+   "monto": 1700000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.7 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-26T08:00:00-04:00",
+   "cierre_texto": "26 de noviembre, 8:00 a.m.",
+   "dias": 1,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -317,7 +317,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T10:00:00-04:00",
    "cierre_texto": "26 de noviembre, 10:00 a.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -332,7 +332,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T12:00:00-04:00",
    "cierre_texto": "26 de noviembre, 12:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -347,7 +347,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T14:00:00-04:00",
    "cierre_texto": "26 de noviembre, 2:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -362,7 +362,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T15:00:00-04:00",
    "cierre_texto": "26 de noviembre, 3:00 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -377,7 +377,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T15:30:00-04:00",
    "cierre_texto": "26 de noviembre, 3:30 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -392,7 +392,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T15:40:00-04:00",
    "cierre_texto": "26 de noviembre, 3:40 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -407,7 +407,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-26T17:11:00-04:00",
    "cierre_texto": "26 de noviembre, 5:11 p.m.",
-   "dias": 2,
+   "dias": 1,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -422,7 +422,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T08:00:00-04:00",
    "cierre_texto": "27 de noviembre, 8:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -437,7 +437,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T08:00:00-04:00",
    "cierre_texto": "27 de noviembre, 8:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -452,7 +452,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T09:00:00-04:00",
    "cierre_texto": "27 de noviembre, 9:00 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -467,7 +467,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T10:20:00-04:00",
    "cierre_texto": "27 de noviembre, 10:20 a.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -482,22 +482,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T11:00:00-04:00",
    "cierre_texto": "27 de noviembre, 11:00 a.m.",
-   "dias": 3,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MERCADOM-DAF-CM-2026-0043",
-   "institucion": "Mercados Dominicanos de Abasto Agropecuario",
-   "descripcion": "ADQ DE SERVICIO DE ALMUERZO OPERATIVO",
-   "monto": 999999.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$999,999",
-   "monto_dudoso": false,
-   "cierre": "2026-11-27T12:00:00-04:00",
-   "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -512,7 +497,22 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:00:00-04:00",
    "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 3,
+   "dias": 2,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MERCADOM-DAF-CM-2026-0043",
+   "institucion": "Mercados Dominicanos de Abasto Agropecuario",
+   "descripcion": "ADQ DE SERVICIO DE ALMUERZO OPERATIVO",
+   "monto": 999999.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$999,999",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T12:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 12:00 p.m.",
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -527,7 +527,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:00:00-04:00",
    "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -542,7 +542,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:10:00-04:00",
    "cierre_texto": "27 de noviembre, 12:10 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -557,7 +557,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T14:00:00-04:00",
    "cierre_texto": "27 de noviembre, 2:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -572,7 +572,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T15:15:00-04:00",
    "cierre_texto": "27 de noviembre, 3:15 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -587,23 +587,8 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T16:00:00-04:00",
    "cierre_texto": "27 de noviembre, 4:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MJ-DAF-CM-2026-0059",
-   "institucion": "Ministerio de la Juventud",
-   "descripcion": "Contratación de servicios de catering para eventos institucionales del PNJ, incluyendo la Gran Gala y las Entregas Regionales A requerimiento/ por desmonte (dirigido a MiPymes)",
-   "monto": 1250000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.2 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-27T16:30:00-04:00",
-   "cierre_texto": "27 de noviembre, 4:30 p.m.",
-   "dias": 3,
-   "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -617,7 +602,22 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T16:30:00-04:00",
    "cierre_texto": "27 de noviembre, 4:30 p.m.",
-   "dias": 3,
+   "dias": 2,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MJ-DAF-CM-2026-0059",
+   "institucion": "Ministerio de la Juventud",
+   "descripcion": "Contratación de servicios de catering para eventos institucionales del PNJ, incluyendo la Gran Gala y las Entregas Regionales A requerimiento/ por desmonte (dirigido a MiPymes)",
+   "monto": 1250000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T16:30:00-04:00",
+   "cierre_texto": "27 de noviembre, 4:30 p.m.",
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -632,7 +632,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:15:00-04:00",
    "cierre_texto": "27 de noviembre, 5:15 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -647,7 +647,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T17:55:00-04:00",
    "cierre_texto": "27 de noviembre, 5:55 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -662,7 +662,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-27T18:00:00-04:00",
    "cierre_texto": "27 de noviembre, 6:00 p.m.",
-   "dias": 3,
+   "dias": 2,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -677,7 +677,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -692,7 +692,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -707,7 +707,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T12:00:00-04:00",
    "cierre_texto": "30 de noviembre, 12:00 p.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -722,7 +722,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T12:30:00-04:00",
    "cierre_texto": "30 de noviembre, 12:30 p.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -737,7 +737,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T13:00:00-04:00",
    "cierre_texto": "30 de noviembre, 1:00 p.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Alojamiento y hospedaje",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -752,7 +752,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T14:30:00-04:00",
    "cierre_texto": "30 de noviembre, 2:30 p.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -767,7 +767,7 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T14:30:00-04:00",
    "cierre_texto": "30 de noviembre, 2:30 p.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -782,24 +782,9 @@
    "monto_dudoso": false,
    "cierre": "2026-11-30T16:15:00-04:00",
    "cierre_texto": "30 de noviembre, 4:15 p.m.",
-   "dias": 6,
+   "dias": 5,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "PROCURADURIA-CCC-CP-2026-0007",
-   "institucion": "Procuraduría General de la República",
-   "descripcion": "Contratación de servicios de montaje de eventos para la Procuraduría General de la República y sus Dependencias.",
-   "monto": 6400000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$6.4 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-12-01T08:00:00-04:00",
-   "cierre_texto": "1 de diciembre, 8:00 a.m.",
-   "dias": 7,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CP",
    "url": "javascript:void(0);"
   },
   {
@@ -812,7 +797,22 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T08:00:00-04:00",
    "cierre_texto": "1 de diciembre, 8:00 a.m.",
-   "dias": 7,
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "PROCURADURIA-CCC-CP-2026-0007",
+   "institucion": "Procuraduría General de la República",
+   "descripcion": "Contratación de servicios de montaje de eventos para la Procuraduría General de la República y sus Dependencias.",
+   "monto": 6400000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$6.4 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-01T08:00:00-04:00",
+   "cierre_texto": "1 de diciembre, 8:00 a.m.",
+   "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -827,7 +827,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T09:00:00-04:00",
    "cierre_texto": "1 de diciembre, 9:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -842,7 +842,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T09:00:00-04:00",
    "cierre_texto": "1 de diciembre, 9:00 a.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Infraestructura y servicios turísticos",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -857,7 +857,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T12:00:00-04:00",
    "cierre_texto": "1 de diciembre, 12:00 p.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
@@ -872,7 +872,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-01T17:20:00-04:00",
    "cierre_texto": "1 de diciembre, 5:20 p.m.",
-   "dias": 7,
+   "dias": 6,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -887,7 +887,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-02T10:00:00-04:00",
    "cierre_texto": "2 de diciembre, 10:00 a.m.",
-   "dias": 8,
+   "dias": 7,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -902,7 +902,7 @@
    "monto_dudoso": false,
    "cierre": "2026-12-15T10:00:00-04:00",
    "cierre_texto": "15 de diciembre, 10:00 a.m.",
-   "dias": 21,
+   "dias": 20,
    "subsector": "Eventos y actividades",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
@@ -917,7 +917,7 @@
    "monto_dudoso": false,
    "cierre": "2027-01-07T10:00:00-04:00",
    "cierre_texto": "7 de enero, 10:00 a.m.",
-   "dias": 44,
+   "dias": 43,
    "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "LPN",
    "url": "javascript:void(0);"
