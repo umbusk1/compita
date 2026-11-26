@@ -2,7 +2,7 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-25T21:45:25.722960-04:00",
+ "actualizado": "2026-11-25T23:45:38.288298-04:00",
  "actualizado_texto": "25 de noviembre de 2026",
  "kpis": {
   "abiertas": 58,
@@ -10,7 +10,7 @@
   "valor_texto": "RD$213.7 millones",
   "cierran_7_dias": 55
  },
- "resumen": "Hoy el sector turismo, hotelería y gastronomía registra 58 licitaciones abiertas por un valor estimado de RD$213.7 millones, de las cuales 55 cierran en los próximos siete días. Destaca la contratación de servicio de alimentación del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones con cierre el 7 de enero, junto con la contratación de servicios de producción de eventos del Ministerio de Relaciones Exteriores por RD$40 millones con cierre el 15 de diciembre. A estas se suman múltiples procesos de montaje, alimentación y ambientación navideña en instituciones como la Policía Nacional, SENASA, la Procuraduría General de la República y el Ayuntamiento de La Romana, todos por montos entre RD$1.9 y RD$6.4 millones, con cierres concentrados entre el 26 de noviembre y el 1 de diciembre.",
+ "resumen": "Hoy el sector turismo, hotelería y gastronomía registra 58 licitaciones abiertas por un valor estimado de RD$213.7 millones, con 55 de ellas cerrando en los próximos 7 días. Destaca la contratación de servicio de alimentación del Ministerio de la Vivienda por RD$65 millones, que cierra el 7 de enero, junto con la producción de eventos del Ministerio de Relaciones Exteriores por RD$40 millones, que cierra el 15 de diciembre. También resaltan varias licitaciones de montaje y logística de eventos navideños, como las de la Policía Nacional, la Procuraduría General y SENASA, cada una por alrededor de RD$6.4 millones, que cierran entre el 1 y el 3 de diciembre.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
@@ -68,21 +68,6 @@
  ],
  "licitaciones": [
   {
-   "referencia": "MITUR-DAF-CM-2026-0138",
-   "institucion": "Ministerio de Turismo",
-   "descripcion": "CONTRATACIÓN DE SERVICIOS DE MONTAJE PARA ACTIVIDADES DE FOMENTO DEL TURISMO INTERNO A NIVEL NACIONAL GRUPO VII. (DIRIGIDO A MIPYMES MUJER).",
-   "monto": 1700000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-26T08:00:00-04:00",
-   "cierre_texto": "26 de noviembre, 8:00 a.m.",
-   "dias": 1,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "DIDA-CCC-CP-2026-0006",
    "institucion": "Dirección de Información y Defensa Afiliados Seguridad Social",
    "descripcion": "“CONTRATACIÓN DE SERVICIO DE ALQUILER DE SALÓN DE EVENTOS PARA LA PRESENTACIÓN DE LOS RESULTADOS INSTITUCIONALES DEL AÑO 2026 Y DIFUSIÓN DE LOS LINEAMIENTOS DEL PLAN OPERATIVO ANUAL (POA) 2027.”",
@@ -95,6 +80,21 @@
    "dias": 1,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MITUR-DAF-CM-2026-0138",
+   "institucion": "Ministerio de Turismo",
+   "descripcion": "CONTRATACIÓN DE SERVICIOS DE MONTAJE PARA ACTIVIDADES DE FOMENTO DEL TURISMO INTERNO A NIVEL NACIONAL GRUPO VII. (DIRIGIDO A MIPYMES MUJER).",
+   "monto": 1700000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.7 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-11-26T08:00:00-04:00",
+   "cierre_texto": "26 de noviembre, 8:00 a.m.",
+   "dias": 1,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
    "url": "javascript:void(0);"
   },
   {
@@ -278,6 +278,21 @@
    "url": "javascript:void(0);"
   },
   {
+   "referencia": "MERCADOM-DAF-CM-2026-0043",
+   "institucion": "Mercados Dominicanos de Abasto Agropecuario",
+   "descripcion": "ADQ DE SERVICIO DE ALMUERZO OPERATIVO",
+   "monto": 999999.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$999,999",
+   "monto_dudoso": false,
+   "cierre": "2026-11-27T12:00:00-04:00",
+   "cierre_texto": "27 de noviembre, 12:00 p.m.",
+   "dias": 2,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
    "referencia": "Bellas Artes-DAF-CM-2026-0047",
    "institucion": "Dirección General de Bellas Artes",
    "descripcion": "Contratación de los Servicios para ser utilizados en diferentes actividades para la socialización de logros institucionales 2026, y metas 2027, (Dirigida a MIPYMES MUJER).",
@@ -299,21 +314,6 @@
    "monto": 1731600.0,
    "moneda": "DOP",
    "monto_texto": "RD$1.7 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-11-27T12:00:00-04:00",
-   "cierre_texto": "27 de noviembre, 12:00 p.m.",
-   "dias": 2,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
-   "referencia": "MERCADOM-DAF-CM-2026-0043",
-   "institucion": "Mercados Dominicanos de Abasto Agropecuario",
-   "descripcion": "ADQ DE SERVICIO DE ALMUERZO OPERATIVO",
-   "monto": 999999.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$999,999",
    "monto_dudoso": false,
    "cierre": "2026-11-27T12:00:00-04:00",
    "cierre_texto": "27 de noviembre, 12:00 p.m.",
@@ -533,12 +533,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "TRABAJO-DAF-CM-2026-0046",
-   "institucion": "Ministerio de Trabajo",
-   "descripcion": "Contratación de servicio para ambientación y brindis de fin de año para la Sede central de este Ministerio de Trabajo.",
-   "monto": 1900000.0,
+   "referencia": "MMUJER-DAF-CM-2026-0098",
+   "institucion": "Ministerio de la Mujer",
+   "descripcion": "Contratación de servicios de montaje para encuentros territoriales, mesas técnicas, webinario internacional y actividades del Ministerio de la Mujer a nivel nacional, dirigidos a mipymes.",
+   "monto": 1541800.34,
    "moneda": "DOP",
-   "monto_texto": "RD$1.9 millones",
+   "monto_texto": "RD$1.5 millones",
    "monto_dudoso": false,
    "cierre": "2026-11-30T14:30:00-04:00",
    "cierre_texto": "30 de noviembre, 2:30 p.m.",
@@ -548,12 +548,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "MMUJER-DAF-CM-2026-0098",
-   "institucion": "Ministerio de la Mujer",
-   "descripcion": "Contratación de servicios de montaje para encuentros territoriales, mesas técnicas, webinario internacional y actividades del Ministerio de la Mujer a nivel nacional, dirigidos a mipymes.",
-   "monto": 1541800.34,
+   "referencia": "TRABAJO-DAF-CM-2026-0046",
+   "institucion": "Ministerio de Trabajo",
+   "descripcion": "Contratación de servicio para ambientación y brindis de fin de año para la Sede central de este Ministerio de Trabajo.",
+   "monto": 1900000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1.5 millones",
+   "monto_texto": "RD$1.9 millones",
    "monto_dudoso": false,
    "cierre": "2026-11-30T14:30:00-04:00",
    "cierre_texto": "30 de noviembre, 2:30 p.m.",
@@ -653,21 +653,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DGDC-DAF-CM-2026-0061",
-   "institucion": "Dirección General de Desarrollo Comunidad",
-   "descripcion": "Contratación de los servicios de Almuerzo y Catering para ACTIVIDAD DE INTEGRACION,Santiago (zona Norte)",
-   "monto": 1315500.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.3 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-12-01T11:00:00-04:00",
-   "cierre_texto": "1 de diciembre, 11:00 a.m.",
-   "dias": 6,
-   "subsector": "Alimentación, catering y restaurantes",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "CEIRD-DAF-CM-2026-0086",
    "institucion": "Centro de Exportación e Inversión de la Republica Dominicana",
    "descripcion": "AP-Servicios Logísticos para Jornada POA 2026 y Alineamiento Estratégico 2027 (MiPyme Mujer)",
@@ -679,6 +664,21 @@
    "cierre_texto": "1 de diciembre, 11:00 a.m.",
    "dias": 6,
    "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGDC-DAF-CM-2026-0061",
+   "institucion": "Dirección General de Desarrollo Comunidad",
+   "descripcion": "Contratación de los servicios de Almuerzo y Catering para ACTIVIDAD DE INTEGRACION,Santiago (zona Norte)",
+   "monto": 1315500.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.3 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-01T11:00:00-04:00",
+   "cierre_texto": "1 de diciembre, 11:00 a.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -788,12 +788,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "AMR-DAF-CM-2026-0071",
-   "institucion": "Ayuntamiento Municipal de La Romana",
-   "descripcion": "COMPRA DE LUCES Y MANO DE OBRA DECORTIVA PARA NAVIDAD ( PARQUE CENTRAL JUAN PABLO DUARTE )",
-   "monto": 2010273.0,
+   "referencia": "EGESERD-DAF-CM-2026-0010",
+   "institucion": "Escuela de Graduados de Estudios Superiores del Ejército",
+   "descripcion": "servicio de picadera , alquiler, montaje y organizacion de evento",
+   "monto": 1600000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
+   "monto_texto": "RD$1.6 millones",
    "monto_dudoso": false,
    "cierre": "2026-12-01T17:00:00-04:00",
    "cierre_texto": "1 de diciembre, 5:00 p.m.",
@@ -818,12 +818,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "EGESERD-DAF-CM-2026-0010",
-   "institucion": "Escuela de Graduados de Estudios Superiores del Ejército",
-   "descripcion": "servicio de picadera , alquiler, montaje y organizacion de evento",
-   "monto": 1600000.0,
+   "referencia": "AMR-DAF-CM-2026-0071",
+   "institucion": "Ayuntamiento Municipal de La Romana",
+   "descripcion": "COMPRA DE LUCES Y MANO DE OBRA DECORTIVA PARA NAVIDAD ( PARQUE CENTRAL JUAN PABLO DUARTE )",
+   "monto": 2010273.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1.6 millones",
+   "monto_texto": "RD$2 millones",
    "monto_dudoso": false,
    "cierre": "2026-12-01T17:00:00-04:00",
    "cierre_texto": "1 de diciembre, 5:00 p.m.",
