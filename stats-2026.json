@@ -1,19 +1,19 @@
 {
-  "ultima_actualizacion": "2026-11-26 03:16:42",
+  "ultima_actualizacion": "2026-11-27 01:04:27",
   "stats": {
     "total": 71948,
     "por_estado": {
       "abiertas": 71948,
       "todas": {
         "Suspended": 7,
-        "NonAwarded": 110,
-        "Canceled": 177,
+        "NonAwarded": 111,
+        "Canceled": 179,
         "Proceso cancelado": 59,
         "Proceso adjudicado y celebrado": 1904,
-        "Awarded": 19822,
-        "ClosedForReplies": 18653,
+        "Awarded": 19850,
+        "ClosedForReplies": 18642,
         "Proceso publicado": 510,
-        "Published": 30270,
+        "Published": 30250,
         "Proceso con etapa cerrada": 386,
         "Suspendido": 3,
         "Proceso desierto": 47
@@ -1056,7 +1056,7 @@
     }
   ],
   "competitividad": {
-    "actualizado": "2026-11-26",
+    "actualizado": "2026-11-27",
     "total": 71948,
     "tipos": [
       {
