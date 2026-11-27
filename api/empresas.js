@@ -4,6 +4,7 @@
 //   - Listar, crear, editar en bloque o desactivar empresas: solo administradores.
 import { neon } from '@neondatabase/serverless';
 import jwt from 'jsonwebtoken';
+import { maxFamiliasPlan } from './_planes.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -85,7 +86,8 @@ export default async function handler(req, res) {
 		  });
 		}
 
-		const limite = empresa[0].max_familias_unspsc || 5;
+		// El límite sale del plan actual (no de un número guardado que quedaba viejo al cambiar de plan).
+		const limite = maxFamiliasPlan(empresa[0].plan);
 
 		return res.status(200).json({
 		  success: true,
@@ -128,7 +130,7 @@ export default async function handler(req, res) {
 		}
 
 		const plan = empresa[0].plan;
-		const limite = empresa[0].max_familias_unspsc || 5;
+		const limite = maxFamiliasPlan(plan);
 
         // Validar límite
         if (familias_unspsc.length > limite) {

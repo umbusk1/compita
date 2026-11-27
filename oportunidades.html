@@ -861,6 +861,39 @@
 <script>
         const API_BASE = window.location.origin;
 		const RAILWAY_API = 'https://compita-descarga-pliegos-production.up.railway.app';
+
+		// Pase para el servicio de análisis (Railway). Compita lo entrega solo si el plan está
+		// vigente y hay cupo para la función pedida (zip, analisis, agente_033, reporte).
+		async function pedirPaseServicio(tipo) {
+			const r = await fetch(`${API_BASE}/api/business-features`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
+				body: JSON.stringify({ empresa_id: datosEmpresa && datosEmpresa.id, tipo, accion: 'token-servicio' })
+			});
+			const d = await r.json().catch(() => ({}));
+			if (!r.ok || d.permitido === false) {
+				throw new Error(d.error || 'No tienes cupo disponible para esta función este mes.');
+			}
+			return d.token_servicio || null;
+		}
+
+		// Cabeceras para llamar a Railway: lleva el pase si el servidor lo entregó.
+		function cabecerasServicio(pase) {
+			const h = { 'Content-Type': 'application/json' };
+			if (pase) h['Authorization'] = 'Bearer ' + pase;
+			return h;
+		}
+
+		// Anota un uso en el contador mensual (Agente 033, análisis dentro del Coach, etc.)
+		async function registrarUsoCupo(tipo, referencia) {
+			try {
+				await fetch(`${API_BASE}/api/business-features`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
+					body: JSON.stringify({ empresa_id: datosEmpresa && datosEmpresa.id, tipo, accion: 'registrar', referencia })
+				});
+			} catch (e) { console.warn('No se pudo registrar el uso:', e); }
+		}
 		let todasOportunidades = [];
         let oportunidadesFiltradas = [];
         let planActual = 'free_trial';
@@ -1010,15 +1043,20 @@ async function cargarDatosUsuario() {
 			    'estandar': 'Plan Estándar',
 			    'business': 'Plan Business',
 			    'enterprise_gold': 'Enterprise GOLD ',
+			    'enterprise_titanium': 'Titanium',
 			    'enterprise_platinum': 'Enterprise PLATINUM'
 			};
 			if (nombres[planActual]) {
 				textoPlan.textContent = nombres[planActual];
+				if (planActual === 'enterprise_titanium' && data.empresa.trial_fin) {
+					const hasta = new Date(String(data.empresa.trial_fin).slice(0, 10) + 'T12:00:00');
+					textoPlan.textContent = 'Titanium · hasta ' + hasta.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+				}
 				badgePlan.classList.remove('hidden');
 			}
 
             // ===== NUEVO: Detectar trial expirado =====
-            if (planActual === 'free_trial') {
+            if ((planActual === 'free_trial' || planActual === 'enterprise_titanium') && data.empresa.trial_fin) {
                 const ahora = new Date();
                 const fin = new Date(data.empresa.trial_fin);
                 const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
@@ -1027,13 +1065,13 @@ async function cargarDatosUsuario() {
                     // Trial expirado - mostrar modal bloqueante
                     mostrarModalTrialExpirado();
                     return; // No cargar nada más
-                } else {
+                } else if (planActual === 'free_trial') {
                     // Trial activo - mostrar medidor
                     mostrarMedidorTrial(data.empresa.trial_fin);
                 }
             }
 
-            if (planActual === 'business' || planActual === 'enterprise_gold' || planActual === 'enterprise_platinum' || planActual === 'free_trial') {
+            if (planActual === 'business' || planActual === 'enterprise_gold' || planActual === 'enterprise_platinum' || planActual === 'enterprise_titanium' || planActual === 'free_trial') {
 			    await cargarCuposBusiness();
 			}
         } else {
@@ -1050,6 +1088,10 @@ async function cargarDatosUsuario() {
 function mostrarModalTrialExpirado() {
     const modal = document.getElementById('modal-trial-expirado');
     modal.classList.remove('hidden');
+    if (planActual === 'enterprise_titanium') {
+        const titulo = modal.querySelector('h3');
+        if (titulo) titulo.textContent = 'Tu acceso Titanium ha finalizado';
+    }
 
     // Difuminar y deshabilitar el contenido detrás
     const contenidoPrincipal = document.querySelector('.container');
@@ -1095,8 +1137,26 @@ async function cargarCuposBusiness() {
         const dataZip = await responseZip.json();
         const dataAnalisis = await responseAnalisis.json();
 
+        // Titanium tiene topes también en Agente 033 y Coach: se consultan aparte
+        let extra = {};
+        if (planActual === 'enterprise_titanium') {
+            const pedir = (t) => fetch(`${API_BASE}/api/business-features`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}` },
+                body: JSON.stringify({ empresa_id: empresaId, tipo: t, accion: 'validar' })
+            }).then(r => r.json()).catch(() => ({}));
+            const [d033, dSprint] = await Promise.all([pedir('agente_033'), pedir('agente_sprint')]);
+            extra = {
+                a033_limite: d033.limite != null ? d033.limite : null,
+                a033_disponibles: d033.cupos_restantes || 0,
+                sprint_limite: dSprint.limite != null ? dSprint.limite : null,
+                sprint_disponibles: dSprint.cupos_restantes || 0
+            };
+        }
+
         // Guardar en variable global
         cuposDisponibles = {
+            ...extra,
             zip_usados: dataZip.usados || 0,
             zip_limite: dataZip.limite || 10,
             zip_disponibles: dataZip.cupos_restantes || 0,
@@ -1231,11 +1291,13 @@ function renderizarOportunidades() {
         let esBusiness = false;
         if (planActual === 'business' || planActual === 'enterprise_gold' || planActual === 'enterprise_platinum') {
     	esBusiness = true;
-		} else if (planActual === 'free_trial' && datosEmpresa && datosEmpresa.trial_fin) {
+		} else if ((planActual === 'free_trial' || planActual === 'enterprise_titanium') && datosEmpresa && datosEmpresa.trial_fin) {
             const ahora = new Date();
             const fin = new Date(datosEmpresa.trial_fin);
             const diasRestantes = Math.ceil((fin - ahora) / (1000 * 60 * 60 * 24));
             esBusiness = diasRestantes >= 0;
+        } else if (planActual === 'free_trial' || planActual === 'enterprise_titanium') {
+            esBusiness = true; // sin fecha de fin registrada: no se bloquea por un dato faltante
         }
 
         return `
@@ -1307,7 +1369,7 @@ function renderizarOportunidades() {
 
                 <!-- Cabecera de cupos -->
                 <p class="text-sm font-bold text-gray-900 mb-3">
-                    ${planActual === 'enterprise_platinum' ? '💎 PLAN PLATINUM:' : planActual === 'enterprise_gold' ? '⭐ PLAN GOLD:' : '🚀 PLAN BUSINESS:'}
+                    ${planActual === 'enterprise_platinum' ? '💎 PLAN PLATINUM:' : planActual === 'enterprise_titanium' ? '🔷 PLAN TITANIUM:' : planActual === 'enterprise_gold' ? '⭐ PLAN GOLD:' : '🚀 PLAN BUSINESS:'}
                     <span class="font-normal text-xs">
                         📄 Descargas PDF: <span class="font-semibold">${(planActual === 'enterprise_gold' || planActual === 'enterprise_platinum') ? '∞' : (cuposDisponibles ? `${cuposDisponibles.zip_disponibles}/${cuposDisponibles.zip_limite}` : '?')}</span>
                         &nbsp;•&nbsp;
@@ -1315,12 +1377,13 @@ function renderizarOportunidades() {
                         &nbsp;•&nbsp;
                         Reinicia: <span class="font-semibold">${(() => { const hoy = new Date(); const proximoMes = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 1); return proximoMes.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }); })()}</span>
                         ${planActual === 'enterprise_gold' ? '&nbsp;•&nbsp; 📋 Agente 033: <span class="font-semibold">5/mes</span>' : ''}
+                        ${planActual === 'enterprise_titanium' ? '&nbsp;•&nbsp; 📋 Agente 033: <span class="font-semibold">' + (cuposDisponibles && cuposDisponibles.a033_limite != null ? cuposDisponibles.a033_disponibles + '/' + cuposDisponibles.a033_limite : '?') + '</span> &nbsp;•&nbsp; 🗂️ Coach+KB: <span class="font-semibold">' + (cuposDisponibles && cuposDisponibles.sprint_limite != null ? cuposDisponibles.sprint_disponibles + '/' + cuposDisponibles.sprint_limite : '?') + '</span>' : ''}
                         ${planActual === 'enterprise_platinum' ? '&nbsp;•&nbsp; 📋 Agente 033: <span class="font-semibold">∞</span> &nbsp;•&nbsp; 🗂️ Coach+KB: <span class="font-semibold">5/mes</span>' : ''}
                     </span>
                 </p>
 
                 <!-- Botones -->
-                <div class="grid grid-cols-1 ${planActual === 'enterprise_platinum' ? 'md:grid-cols-4' : planActual === 'enterprise_gold' ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-3">
+                <div class="grid grid-cols-1 ${(planActual === 'enterprise_platinum' || planActual === 'enterprise_titanium') ? 'md:grid-cols-4' : planActual === 'enterprise_gold' ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-3">
 
                     <!-- Botón 1: Descargar Pliego (PDF) -->
                     <div>
@@ -1349,14 +1412,14 @@ function renderizarOportunidades() {
 
                     <!-- Botones 3 y 4: solo Enterprise -->
                     ${(() => {
-                    if (planActual !== 'enterprise_gold' && planActual !== 'enterprise_platinum') return '';
+                    if (planActual !== 'enterprise_gold' && planActual !== 'enterprise_platinum' && planActual !== 'enterprise_titanium') return '';
                     let html = '<div>'
                     + '<button onclick="generarF033(\'' + op.referencia + '\')" class="w-full flex items-center justify-center gap-2 bg-indigo-700 text-white px-4 py-3 rounded-lg hover:bg-indigo-800 transition font-medium text-sm">'
                     + '<span>📋</span><span>Generar F033 (Agente 033)</span>'
                     + '</button>'
                     + '<div id="mensaje-f033-' + op.referencia + '" style="display:none; margin-top:8px; color:green; font-size:13px; text-align:center;">✅ F033 generado y descargado.</div>'
                     + '</div>';
-                    if (planActual === 'enterprise_platinum') {
+                    if (planActual === 'enterprise_platinum' || planActual === 'enterprise_titanium') {
                     html += '<div>'
                     + '<button onclick="abrirCoach(\'' + op.referencia + '\', \'' + escapeHtml(op.que) + '\', \'' + escapeHtml(op.quien) + '\', ' + (op.monto_estimado || 0) + ', \'' + (op.fecha_presentacion || '') + '\', \'' + (op.tipo || '') + '\')" '
                     + 'class="w-full flex items-center justify-center gap-2 bg-violet-600 text-white px-4 py-3 rounded-lg hover:bg-violet-700 transition font-medium text-sm">'
@@ -1503,7 +1566,7 @@ async function descargarDocumentos(referencia, resultado_id) {
 
         const scraperResponse = await fetch(`${RAILWAY_API}/descargar-pliego`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: cabecerasServicio(validacion.token_servicio),
             body: JSON.stringify({
                 referencia: referencia
             })
@@ -1664,7 +1727,7 @@ async function analizarConIA(referencia, titulo, descripcion, monto, fecha_prese
 
         const analisisResponse = await fetch(`${RAILWAY_API}/analizar-pliego`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: cabecerasServicio(validacion.token_servicio),
 			body: JSON.stringify({
                 referencia: referencia,
                 titulo: titulo,
@@ -2614,9 +2677,10 @@ async function generarF033(referencia) {
             Agente 033 trabajando... (1-2 min)
         `;
 
+        const pase033 = await pedirPaseServicio('agente_033');
         const response = await fetch(`${RAILWAY_API}/agente-033`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: cabecerasServicio(pase033),
             body: JSON.stringify({ referencia }),
             signal: AbortSignal.timeout(300000)
         });
@@ -2628,6 +2692,7 @@ async function generarF033(referencia) {
 
         // Descargar el .docx resultante
         const blob = await response.blob();
+        await registrarUsoCupo('agente_033', referencia);
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -3086,9 +3151,10 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
 
         let analisisOk = false;
         try {
+            const paseAnalisis = await pedirPaseServicio('analisis');
             const analisisResponse = await fetch(`${RAILWAY_API}/analizar-pliego`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: cabecerasServicio(paseAnalisis),
                 body: JSON.stringify({
                     referencia, titulo: descripcion, descripcion, monto,
                     empresa_id: empresaId,
@@ -3105,6 +3171,7 @@ async function ejecutarCoach(referencia, descripcion, entidad, monto, fecha_pres
                 // Guardar en localStorage
                 analisisGuardados[referencia] = resultado.analisis;
                 localStorage.setItem('compita_analisis', JSON.stringify(analisisGuardados));
+                registrarUsoCupo('analisis', referencia);
                 // Guardar en Neon
                 try {
                     await fetch(`${API_BASE}/api/resultados`, {
@@ -3357,9 +3424,10 @@ async function prepararReporteCompita() {
     `;
 
     try {
+        const paseReporte = await pedirPaseServicio('reporte');
         const response = await fetch(`${RAILWAY_API}/generar-reporte`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: cabecerasServicio(paseReporte),
             body: JSON.stringify({
 			                empresa_id: datosEmpresa?.id,
 			                referencia,

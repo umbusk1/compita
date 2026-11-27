@@ -1,6 +1,7 @@
 import pg from 'pg';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';import { PLAN_TITANIUM, planConVencimiento, normalizarPlan, maxFamiliasPlan } from './_planes.js';
+
 // Dirección pública del sitio para los enlaces de los correos (nov 2026).
 // Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
 const SITE_URL = process.env.SITE_URL || 'https://compita.do';
@@ -22,7 +23,16 @@ function verificarToken(authHeader) {
       return null;
     }
     const token = authHeader.substring(7);
-    return jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    // Nov 2026: las sesiones de usuarios normales (y los enlaces de correo) se firman con
+    // la misma clave. Sin esta comprobación, cualquier usuario con sesión iniciada pasaba
+    // por administrador. Una sesión de administrador tiene id y rol, y no tiene empresaId
+    // ni tipo (es la misma regla que usa api/empresas.js).
+    if (!decoded || !decoded.id || decoded.empresaId || decoded.userId || decoded.tipo
+        || !['admin', 'superadmin'].includes(decoded.rol)) {
+      return null;
+    }
+    return decoded;
   } catch (error) {
     return null;
   }
@@ -308,6 +318,29 @@ async function handleDetalle(req, res) {
   });
 }
 
+// Planes que un administrador puede asignar desde el backoffice.
+const PLANES_ASIGNABLES = [
+  'free_trial', 'prueba_gratis', 'estandar', 'business',
+  'enterprise_gold', 'enterprise_platinum', PLAN_TITANIUM, 'cancelado'
+];
+
+const NOMBRES_PLAN = {
+  free_trial: 'Prueba gratuita', prueba_gratis: 'Prueba gratuita', estandar: 'Estándar',
+  business: 'Business', enterprise_gold: 'Enterprise GOLD', enterprise_platinum: 'Enterprise PLATINUM',
+  enterprise_titanium: 'Titanium', cancelado: 'Cancelado'
+};
+
+// Valida una fecha 'AAAA-MM-DD' (el campo "Acceso hasta" del backoffice).
+function fechaValida(texto) {
+  if (typeof texto !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(texto)) return false;
+  const d = new Date(texto + 'T00:00:00Z');
+  return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === texto;
+}
+
+function hoyISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 // ACTUALIZAR EMPRESA
 async function handleActualizar(req, res) {
   if (req.method !== 'POST') {
@@ -319,19 +352,45 @@ async function handleActualizar(req, res) {
     return res.status(401).json({ error: 'No autorizado' });
   }
 
-  const { empresa_id, plan, activo } = req.body;
+  const { empresa_id, plan: planRecibido, activo, acceso_hasta } = req.body;
 
   if (!empresa_id) {
     return res.status(400).json({ error: 'empresa_id es requerido' });
   }
+  if (!planRecibido || !PLANES_ASIGNABLES.includes(planRecibido)) {
+    return res.status(400).json({ error: 'Plan inválido' });
+  }
+  const plan = normalizarPlan(planRecibido);
+
+  // Fecha de vencimiento: obligatoria para Titanium, opcional para la prueba gratuita.
+  let accesoHasta = null;
+  if (acceso_hasta) {
+    if (!fechaValida(acceso_hasta)) {
+      return res.status(400).json({ error: 'La fecha "Acceso hasta" no es válida' });
+    }
+    accesoHasta = acceso_hasta;
+  }
+  if (plan === PLAN_TITANIUM) {
+    if (!accesoHasta) {
+      return res.status(400).json({ error: 'El plan Titanium requiere una fecha "Acceso hasta"' });
+    }
+    if (accesoHasta < hoyISO()) {
+      return res.status(400).json({ error: 'La fecha "Acceso hasta" debe ser hoy o una fecha futura' });
+    }
+  }
+  const fijarFecha = planConVencimiento(plan) && accesoHasta;
 
   await pool.query(`
     UPDATE empresas
-    SET plan = $1, activo = $2
-    WHERE id = $3
-  `, [plan, activo, empresa_id]);
+    SET plan = $1,
+        activo = $2,
+        max_familias_unspsc = $3,
+        trial_inicio = CASE WHEN $4::date IS NOT NULL THEN COALESCE(trial_inicio, CURRENT_DATE) ELSE trial_inicio END,
+        trial_fin = COALESCE($4::date, trial_fin)
+    WHERE id = $5
+  `, [plan, activo, maxFamiliasPlan(plan), fijarFecha ? accesoHasta : null, empresa_id]);
 
-  console.log(`[ADMIN] Empresa ${empresa_id} actualizada: plan=${plan}, activo=${activo} por admin ${admin.email}`);
+  console.log(`[ADMIN] Empresa ${empresa_id} actualizada: plan=${plan}, activo=${activo}, acceso_hasta=${fijarFecha ? accesoHasta : '-'} por admin ${admin.email}`);
 
   return res.json({ success: true, mensaje: 'Empresa actualizada correctamente' });
 }
@@ -385,11 +444,36 @@ async function handleCrearEmpresa(req, res) {
     return res.status(401).json({ error: 'No autorizado' });
   }
 
-  const { nombre, dominio, contacto_nombre, email, password, plan, palabras_clave } = req.body;
+  const { nombre, dominio, contacto_nombre, email, password, plan: planRecibido, palabras_clave, acceso_hasta } = req.body;
 
-  if (!nombre || !contacto_nombre || !email || !password || !plan) {
+  if (!nombre || !contacto_nombre || !email || !password || !planRecibido) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
+  if (!PLANES_ASIGNABLES.includes(planRecibido)) {
+    return res.status(400).json({ error: 'Plan inválido' });
+  }
+  const plan = normalizarPlan(planRecibido);
+
+  // Fecha de fin: Titanium la exige; la prueba gratuita usa 7 días si no se indica otra.
+  let accesoHasta = null;
+  if (acceso_hasta) {
+    if (!fechaValida(acceso_hasta)) {
+      return res.status(400).json({ error: 'La fecha "Acceso hasta" no es válida' });
+    }
+    accesoHasta = acceso_hasta;
+  }
+  if (plan === PLAN_TITANIUM) {
+    if (!accesoHasta) {
+      return res.status(400).json({ error: 'El plan Titanium requiere una fecha "Acceso hasta"' });
+    }
+    if (accesoHasta < hoyISO()) {
+      return res.status(400).json({ error: 'La fecha "Acceso hasta" debe ser hoy o una fecha futura' });
+    }
+  }
+  if (plan === 'free_trial' && !accesoHasta) {
+    accesoHasta = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  }
+  const conVencimiento = planConVencimiento(plan);
 
   try {
     const emailExiste = await pool.query(
@@ -413,9 +497,9 @@ async function handleCrearEmpresa(req, res) {
       '',
       plan,
       palabras_clave || [],
-      plan === 'prueba_gratis' ? new Date() : null,
-      plan === 'prueba_gratis' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) : null,
-      plan === 'prueba_gratis' || plan === 'business' || plan === 'enterprise' ? 5 : 2
+      conVencimiento ? hoyISO() : null,
+      conVencimiento ? accesoHasta : null,
+      maxFamiliasPlan(plan)
     ]);
 
     const empresaId = resultEmpresa.rows[0].id;
@@ -438,7 +522,7 @@ async function handleCrearEmpresa(req, res) {
             from: 'Compita <no-reply@compita.umbusk.com>',
             to: [email],
             subject: '🎉 Bienvenido a Compita - Tus credenciales de acceso',
-            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🎉 ¡Bienvenido a Compita!</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${contacto_nombre}</strong>,</p><p>Tu cuenta en Compita ha sido creada exitosamente.</p><div style="background:white;border-left:4px solid #667eea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#667eea">📋 Tus credenciales:</h3><p><strong>Usuario:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Plan:</strong> ${plan.toUpperCase()}</p></div><div style="text-align:center;margin:30px 0"><a href="${SITE_URL}/login.html" style="background:#667eea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🚀 Iniciar Sesión</a></div></div></body></html>`
+            html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px"><div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:30px;text-align:center;border-radius:10px 10px 0 0"><h1 style="color:white;margin:0">🎉 ¡Bienvenido a Compita!</h1></div><div style="background:#f9fafb;padding:30px;border-radius:0 0 10px 10px"><p>Hola <strong>${contacto_nombre}</strong>,</p><p>Tu cuenta en Compita ha sido creada exitosamente.</p><div style="background:white;border-left:4px solid #667eea;padding:20px;margin:20px 0;border-radius:5px"><h3 style="margin-top:0;color:#667eea">📋 Tus credenciales:</h3><p><strong>Usuario:</strong> ${email}</p><p><strong>Contraseña temporal:</strong> <code style="background:#f3f4f6;padding:5px 10px;border-radius:4px">${password}</code></p><p><strong>Plan:</strong> ${NOMBRES_PLAN[plan] || plan}</p>${conVencimiento && accesoHasta ? `<p><strong>Acceso hasta:</strong> ${accesoHasta}</p>` : ''}</div><div style="text-align:center;margin:30px 0"><a href="${SITE_URL}/login.html" style="background:#667eea;color:white;padding:15px 30px;text-decoration:none;border-radius:5px;font-weight:bold;display:inline-block">🚀 Iniciar Sesión</a></div></div></body></html>`
           })
         });
       }

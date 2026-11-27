@@ -1,7 +1,8 @@
 // api/perfil.js - Maneja datos de usuario, empresa y Perfil Licitador (Enterprise)
 import pkg from 'pg';
 const { Pool } = pkg;
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';import { capacidadesPlan, accesoVencido } from './_planes.js';
+
 // Dirección pública del sitio para los enlaces de los correos (nov 2026).
 // Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
 const SITE_URL = process.env.SITE_URL || 'https://compita.do';
@@ -71,12 +72,14 @@ export default async function handler(req, res) {
 }
 
 // ── Verificar que la empresa es Enterprise ────────────────────────────────────
+// Perfil Licitador: Platinum y Titanium (este último solo mientras su acceso esté vigente).
 async function verificarEnterprise(empresaId) {
   const r = await pool.query(
-    'SELECT plan FROM empresas WHERE id = $1',
+    'SELECT plan, trial_fin FROM empresas WHERE id = $1',
     [empresaId]
   );
-  return r.rows.length > 0 && r.rows[0].plan === 'enterprise_platinum';
+  if (r.rows.length === 0) return false;
+  return capacidadesPlan(r.rows[0].plan).perfil_licitador && !accesoVencido(r.rows[0]);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -330,7 +333,8 @@ async function handleEnviarAlertas(req, res) {
       FROM perfil_licitador pl
       JOIN empresas e ON e.id = pl.empresa_id
       JOIN usuarios u ON u.empresa_id = e.id AND u.rol IN ('admin', 'owner')
-      WHERE e.plan           = 'enterprise_platinum'
+      WHERE (e.plan = 'enterprise_platinum'
+             OR (e.plan = 'enterprise_titanium' AND (e.trial_fin IS NULL OR e.trial_fin >= CURRENT_DATE)))
         AND e.activo         = TRUE
         AND pl.es_permanente = FALSE
         AND pl.fecha_vencimiento IS NOT NULL
