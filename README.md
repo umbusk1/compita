@@ -392,3 +392,25 @@ Consultor en Diseño Social, Innovación y Tecnología
 ---
 
 **¿Preguntas? ¿Sugerencias?** Contacta a Umbusk LLC
+
+
+---
+
+## Planes, vencimiento y plan Titanium (nov 2026)
+
+Fuente única de los planes: `api/_planes.js` (el guion bajo hace que Vercel no lo publique como función; solo lo importan los demás archivos).
+
+| Plan | PDF/mes | Análisis IA/mes | Agente 033/mes | Coach + Reporte/mes | Perfil Licitador | Historial | Familias UNSPSC |
+|------|---------|-----------------|----------------|---------------------|------------------|-----------|-----------------|
+| Estándar | — | — | — | — | — | 30 días | 2 |
+| Prueba gratuita (`free_trial`) | 10 | 5 | — | — | — | 90 días | 5 |
+| Business | 10 | 5 | — | — | — | 90 días | 5 |
+| Enterprise GOLD | ∞ | ∞ | 5 | — | — | 90 días | 5 |
+| Enterprise PLATINUM | ∞ | ∞ | ∞ | 5 | Sí | 90 días | 5 |
+| **Titanium** (`enterprise_titanium`) | 20 | 15 | 5 | 5 | Sí | 90 días | 5 |
+
+- `prueba_gratis` es un nombre antiguo de `free_trial`; el código los trata como el mismo plan.
+- **Vencimiento real:** la prueba gratuita y Titanium terminan en la fecha de la columna `trial_fin`. Pasada esa fecha, `business-features` responde 403 (`trial_expirado`), el análisis diario omite a la empresa (sin correos ni gasto de IA) y Perfil Licitador se bloquea. Si `trial_fin` está vacío, no se bloquea a nadie.
+- **Titanium** no se vende ni pasa por Stripe: un administrador lo asigna desde el backoffice (`admin.html`, "Editar empresa" o "Crear empresa") con una fecha obligatoria en "Acceso hasta". Los topes se cambian en `TOPES_TITANIUM` de `api/_planes.js` (y en los textos de `cuenta.html`).
+- **Pase para Railway:** `business-features` (acciones `validar` y `token-servicio`) entrega un pase firmado de 20 minutos y de una sola función; `compita-descarga-pliegos` lo exige. Se activa definiendo `SERVICIO_TOKEN_SECRET` con el mismo valor en Vercel y en Railway. Sin esa variable, el servicio funciona como antes.
+- **Backoffice:** las funciones de `api/admin.js` solo aceptan sesiones de administrador (tienen `id` y `rol`, y no tienen `empresaId` ni `tipo`).

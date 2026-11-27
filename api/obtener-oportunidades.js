@@ -1,6 +1,7 @@
 // api/obtener-oportunidades.js
 import { neon } from '@neondatabase/serverless';
 import jwt from 'jsonwebtoken';
+import { diasHistorialPlan } from './_planes.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -134,7 +135,7 @@ export default async function handler(req, res) {
     } catch {}
 
     const ahora = new Date();
-    let diasHistorial = plan === 'business' || plan === 'enterprise' ? 90 : 30;
+    let diasHistorial = diasHistorialPlan(plan);
     const fechaLimite = new Date(ahora);
     fechaLimite.setDate(fechaLimite.getDate() - diasHistorial);
 

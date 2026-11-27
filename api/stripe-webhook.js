@@ -2,6 +2,7 @@
 import Stripe from 'stripe';
 import pkg from 'pg';
 const { Pool } = pkg;
+import { maxFamiliasPlan } from './_planes.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const pool = new Pool({
@@ -95,9 +96,10 @@ async function handleCheckoutCompleted(session) {
      SET plan = $1,
          activo = true,
          stripe_customer_id = $2,
-         stripe_subscription_id = $3
+         stripe_subscription_id = $3,
+         max_familias_unspsc = $5
      WHERE id = $4`,
-    [plan, session.customer, subscriptionId, empresaId]
+    [plan, session.customer, subscriptionId, empresaId, maxFamiliasPlan(plan)]
   );
 
   console.log(`✅ Empresa ${empresaId} activada con plan ${plan}`);
@@ -195,9 +197,10 @@ async function handleSubscriptionUpdated(subscription) {
     await pool.query(
       `UPDATE empresas
        SET activo = $1,
-           plan = $2
+           plan = $2,
+           max_familias_unspsc = $4
        WHERE id = $3`,
-      [activo, plan, empresaId]
+      [activo, plan, empresaId, maxFamiliasPlan(plan)]
     );
     console.log(`✅ Empresa ${empresaId} - Plan: ${plan}, Estado: ${activo ? 'Activa' : 'Inactiva'}`);
   } else {

@@ -12,7 +12,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import pkg from 'pg';
 const { Pool } = pkg;
 import { Resend } from 'resend';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';import { accesoVencido } from './_planes.js';
+
 // Dirección pública del sitio para los enlaces de los correos (nov 2026).
 // Para mudarse a compita.do basta con cambiar este valor o definir SITE_URL en Vercel.
 const SITE_URL = process.env.SITE_URL || 'https://compita.do';
@@ -755,21 +756,24 @@ async function analizarDiario() {
   try {
     const empresasRes = await pool.query(`
       SELECT e.id, e.nombre, e.descripcion, e.palabras_clave, e.exclusiones,
-             e.monto_minimo_alta, e.plan, e.familias_unspsc, e.regiones_interes, e.website,
+             e.monto_minimo_alta, e.plan, e.trial_fin, e.familias_unspsc, e.regiones_interes, e.website,
              u.email as owner_email, u.referido_codigo
       FROM empresas e
       JOIN usuarios u ON u.empresa_id = e.id
       WHERE u.activo = true AND e.palabras_clave IS NOT NULL
     `);
 
+    let vencidas = 0;
     const empresas = empresasRes.rows.filter(emp => {
+      // Nov 2026: una prueba gratuita o un acceso Titanium vencido ya no consume análisis ni envía correos.
+      if (accesoVencido(emp)) { vencidas++; return false; }
       const pc = Array.isArray(emp.palabras_clave)
         ? emp.palabras_clave.join(', ')
         : (emp.palabras_clave || '');
       return pc.trim().length > 0;
     });
 
-    console.log(`✅ ${empresas.length} empresas activas\n`);
+    console.log(`✅ ${empresas.length} empresas activas (${vencidas} omitidas por prueba o acceso vencido)\n`);
     let empresasProcesadas = 0;
 
     if (empresas.length === 0) {
@@ -1108,23 +1112,6 @@ function generarEmailSegunPlan(resultado) {
       Compita - Sistema de Análisis de Licitaciones con IA
     </p>`;
 
-  // La prueba gratis es del plan Business: recibe el correo completo (nov 2026)
-  if (plan === 'trial_gratuito') {
-    return `
-      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
-        <h2 style="color:#4F46E5;">🎯 Nuevas Oportunidades Detectadas</h2>
-        <p>Hola,</p>
-        <p>Compita ha detectado <strong>${alta + media} nuevas oportunidades</strong> que podrían interesarte.</p>
-        <div style="background:#F3F4F6;padding:30px;border-radius:8px;text-align:center;margin:20px 0;">
-          <p style="font-size:36px;font-weight:bold;margin:0;color:#4F46E5;">${alta + media}</p>
-          <p style="margin:10px 0 0 0;color:#6B7280;font-size:18px;">oportunidades esperando</p>
-        </div>
-        <a href="${DASHBOARD_URL}" style="display:inline-block;background:#4F46E5;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;margin:20px 0;font-weight:bold;">Ver en Dashboard →</a>
-        <p style="margin-top:30px;padding-top:20px;border-top:1px solid #E5E7EB;font-size:12px;color:#6B7280;">💡 Actualiza a un plan de pago para recibir detalles completos en el email.</p>
-        ${footerReferido}${footerFirma}
-      </div>`;
-  }
-
   if (plan === 'estandar') {
     const todasOportunidades = [...oportunidades_alta, ...oportunidades_media];
     return `
@@ -1150,7 +1137,7 @@ function generarEmailSegunPlan(resultado) {
 
   // Business, prueba gratis y Enterprise reciben el correo completo.
   // Antes, GOLD y PLATINUM no tenían plantilla y nunca recibían alertas (nov 2026).
-  if (['business', 'free_trial', 'prueba_gratis', 'enterprise', 'enterprise_gold', 'enterprise_platinum'].includes(plan)) {
+  if (['business', 'free_trial', 'prueba_gratis', 'enterprise', 'enterprise_gold', 'enterprise_platinum', 'enterprise_titanium'].includes(plan)) {
     const todasOportunidades = [...oportunidades_alta, ...oportunidades_media];
     return `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">

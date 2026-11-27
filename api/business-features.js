@@ -3,6 +3,9 @@
 import { neon } from '@neondatabase/serverless';
 import Anthropic from '@anthropic-ai/sdk';
 import jwt from 'jsonwebtoken';
+import {
+  capacidadesPlan, tieneAccesoBusiness, accesoVencido, emitirTokenServicio,
+} from './_planes.js';
 
 // ============================================================================
 // HELPERS
@@ -53,31 +56,7 @@ function obtenerRegionLicitacion(unidad_compras, descripcion) {
   return 'Nacional';
 }
 
-/**
- * Devuelve las capacidades y límites según el plan.
- * enterprise = tratado igual que enterprise_platinum (compatibilidad con Wilkin).
- */
-function capacidadesPlan(plan) {
-  const esPlatinum = ['enterprise_platinum', 'enterprise'].includes(plan);
-  const esGold     = plan === 'enterprise_gold';
-  const esBusiness = ['business', 'free_trial'].includes(plan);
-
-  return {
-    // Botones 1 y 2
-    zip_ilimitado:             esPlatinum || esGold,
-    analisis_ilimitado:        esPlatinum || esGold,
-    zip_limite:                esBusiness ? 10 : (esPlatinum || esGold ? 9999 : 0),
-    analisis_limite:           esBusiness ?  5 : (esPlatinum || esGold ? 9999 : 0),
-    // Botón 3 — Agente 033
-    agente_033_disponible:     esPlatinum || esGold,
-    agente_033_ilimitado:      esPlatinum,
-    agente_033_limite_mes:     esGold ? 5 : (esPlatinum ? 9999 : 0),
-    // Botón 4 — Agente Sprint (Coach + Reporte) + KanbanBonsai IA
-    // Todos comparten el mismo contador agente_sprint en uso_mensual
-    agente_sprint_disponible:  esPlatinum,
-    agente_sprint_limite_mes:  esPlatinum ? 5 : 0,
-  };
-}
+// capacidadesPlan() vive ahora en ./_planes.js (fuente única de planes y topes).
 
 // ============================================================================
 // HANDLER
@@ -239,18 +218,30 @@ export default async function handler(req, res) {
     if (!empresa_id) return res.status(400).json({ success: false, error: 'Falta empresa_id' });
 
     const empresaRows = await sql`
-      SELECT plan, limite_zips_mes, limite_analisis_mes FROM empresas WHERE id = ${empresa_id} LIMIT 1
+      SELECT plan, trial_fin, limite_zips_mes, limite_analisis_mes FROM empresas WHERE id = ${empresa_id} LIMIT 1
     `;
     if (empresaRows.length === 0) return res.status(404).json({ success: false, error: 'Empresa no encontrada' });
 
     const { plan } = empresaRows[0];
     const cap = capacidadesPlan(plan);
 
-    const planesPermitidos = ['business', 'enterprise', 'enterprise_gold', 'enterprise_platinum', 'free_trial'];
-    if (!planesPermitidos.includes(plan)) {
+    if (!tieneAccesoBusiness(plan)) {
       return res.status(403).json({
         success: false,
         error: 'Esta funcionalidad está disponible a partir del Plan Business',
+        upgrade_required: true
+      });
+    }
+
+    // Vencimiento real, decidido en el servidor (prueba gratuita y plan Titanium).
+    if (accesoVencido(empresaRows[0])) {
+      return res.status(403).json({
+        success: false,
+        permitido: false,
+        trial_expirado: true,
+        error: plan === 'enterprise_titanium'
+          ? 'Tu acceso Titanium terminó. Escríbenos a moises@umbusk.com para renovarlo.'
+          : 'Tu prueba gratuita terminó. Elige un plan para continuar.',
         upgrade_required: true
       });
     }
@@ -358,7 +349,7 @@ if (accion === 'kb-consumir') {
     // ====================================================
     // VALIDAR CUPO
     // ====================================================
-    if (accion === 'validar') {
+    if (accion === 'validar' || accion === 'token-servicio') {
       let permitido = false, cuposRestantes = 0, usados = 0, limite = 0;
 
       if (tipo === 'zip') {
@@ -407,11 +398,29 @@ if (accion === 'kb-consumir') {
         limite = cap.agente_sprint_limite_mes + (uso.agente_sprint_adicionales || 0);
         cuposRestantes = limite - usados;
         permitido = cuposRestantes > 0;
+
+      } else if (tipo === 'reporte') {
+        // El Reporte Compita forma parte del Coach: el uso ya se contó cuando se
+        // ejecutó el Coach, así que aquí solo se comprueba que el plan lo incluya.
+        if (!cap.agente_sprint_disponible) {
+          return res.status(403).json({
+            success: false, permitido: false,
+            error: 'El Reporte Compita está disponible solo en el Plan Platinum',
+            upgrade_required: true
+          });
+        }
+        permitido = true; cuposRestantes = 9999;
       }
+
+      // Pase firmado para el servicio de análisis (Railway). Solo se entrega si hay cupo.
+      const token_servicio = permitido
+        ? emitirTokenServicio({ empresaId: empresa_id, permisos: [tipo] })
+        : null;
 
       return res.status(200).json({
         success: true, permitido,
-        cupos_restantes: Math.max(0, cuposRestantes), usados, limite, tipo
+        cupos_restantes: Math.max(0, cuposRestantes), usados, limite, tipo,
+        token_servicio
       });
     }
 

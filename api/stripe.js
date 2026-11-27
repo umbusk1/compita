@@ -188,8 +188,9 @@ async function handleAction(req, res) {
         subscription_data: {
           billing_cycle_anchor: getFirstDayOfNextMonth(),
           proration_behavior: 'create_prorations',
-          // Trial de 7 días solo para Plan Business
-          ...(plan === 'business' && { trial_period_days: 7 }),
+          // Nov 2026: ya no hay prueba de 7 días en Stripe. Todos los usuarios empiezan con
+          // la prueba gratuita de Compita (7 días, sin tarjeta); darles otra al suscribirse
+          // a Business era una segunda prueba gratis.
         },
         metadata: {
           empresa_id: empresaId.toString(),
