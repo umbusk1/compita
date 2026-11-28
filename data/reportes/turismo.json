@@ -2,23 +2,23 @@
  "clave": "turismo",
  "titulo": "Turismo, hotelería y gastronomía",
  "subtitulo": "Hoteles, salones y catering para eventos del Estado, además de infraestructura turística",
- "actualizado": "2026-11-27T21:25:52.857128-04:00",
+ "actualizado": "2026-11-27T23:30:20.674208-04:00",
  "actualizado_texto": "27 de noviembre de 2026",
  "kpis": {
-  "abiertas": 32,
-  "valor_total": 172184727,
-  "valor_texto": "RD$172.2 millones",
-  "cierran_7_dias": 30
+  "abiertas": 44,
+  "valor_total": 191363704,
+  "valor_texto": "RD$191.4 millones",
+  "cierran_7_dias": 40
  },
- "resumen": "El sector turismo, hotelería y gastronomía registra hoy 32 licitaciones abiertas por un valor estimado de RD$172.2 millones, con 30 de ellas cerrando en los próximos siete días. La oportunidad más alta es la contratación de alimentación del Ministerio de la Vivienda, Hábitat y Edificaciones por RD$65 millones, seguida por los servicios de producción de eventos del Ministerio de Relaciones Exteriores por RD$40 millones y el montaje de eventos de la Procuraduría General de la República por RD$6.4 millones. La agenda de diciembre está dominada por contrataciones de montaje, decoración navideña y logística de eventos institucionales, por lo que las empresas de este rubro deben revisar cuanto antes los pliegos antes de que venzan los plazos.",
+ "resumen": "El sector turismo, hotelería y gastronomía registra hoy 44 licitaciones abiertas por un valor estimado de RD$191.4 millones, con 40 de ellas cerrando en los próximos 7 días. La oportunidad más destacada es la contratación de alimentación del Ministerio de la Vivienda por RD$65 millones, seguida de la producción de eventos del Ministerio de Relaciones Exteriores por RD$40 millones y los servicios de montaje de eventos solicitados por la Policía Nacional, la Procuraduría General y la Dirección Nacional de Control de Drogas, cada uno por RD$6.4 millones. Diciembre se perfila como un mes de alta demanda en montaje y logística de eventos navideños y actividades de fin de año, con múltiples convocatorias dirigidas exclusivamente a MIPYMES y MIPYMES Mujer.",
  "subsectores": [
   {
    "nombre": "Eventos y actividades",
-   "cantidad": 20
+   "cantidad": 25
   },
   {
    "nombre": "Alimentación, catering y restaurantes",
-   "cantidad": 8
+   "cantidad": 15
   },
   {
    "nombre": "Alojamiento y hospedaje",
@@ -47,8 +47,18 @@
   },
   {
    "fecha": "2026-12-03",
-   "cantidad": 1,
-   "valor": 6300000
+   "cantidad": 9,
+   "valor": 15168978
+  },
+  {
+   "fecha": "2026-12-04",
+   "cantidad": 2,
+   "valor": 3810000
+  },
+  {
+   "fecha": "2026-12-07",
+   "cantidad": 2,
+   "valor": 6500000
   },
   {
    "fecha": "2026-12-15",
@@ -58,12 +68,12 @@
  ],
  "licitaciones": [
   {
-   "referencia": "SUPERATE-DAF-CM-2026-0113",
+   "referencia": "SUPERATE-DAF-CM-2026-0090",
    "institucion": "Dirección de Desarrollo Social Supérate",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE GESTIÓN DE EVENTOS INSTITUCIONALES PARA LAS REGIONALES CIBAO NORTE, CIBAO SUR Y VALDESIA.",
-   "monto": 1850000.0,
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE MONTAJE PARA LAS ACTIVIDADES DE LA DIRECCIÓN DE DESARROLLO SOCIAL SUPÉRATE.",
+   "monto": 2000000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1.9 millones",
+   "monto_texto": "RD$2 millones",
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
@@ -73,12 +83,12 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "SUPERATE-DAF-CM-2026-0090",
+   "referencia": "SUPERATE-DAF-CM-2026-0113",
    "institucion": "Dirección de Desarrollo Social Supérate",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE MONTAJE PARA LAS ACTIVIDADES DE LA DIRECCIÓN DE DESARROLLO SOCIAL SUPÉRATE.",
-   "monto": 2000000.0,
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE GESTIÓN DE EVENTOS INSTITUCIONALES PARA LAS REGIONALES CIBAO NORTE, CIBAO SUR Y VALDESIA.",
+   "monto": 1850000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$2 millones",
+   "monto_texto": "RD$1.9 millones",
    "monto_dudoso": false,
    "cierre": "2026-11-30T09:00:00-04:00",
    "cierre_texto": "30 de noviembre, 9:00 a.m.",
@@ -178,10 +188,10 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "POLICIA NACIONAL-CCC-CP-2026-0041",
-   "institucion": "Policia Nacional",
-   "descripcion": "CONTRATACION DE SERVICIOS DE ORGANIZACION, MONTAJE, DESMONTAJE Y SUPERVISION DE EVENTOS DIRIGIDO EXCLUSIVAMENTE A EMPRESAS MIPYMES MUJER",
-   "monto": 6435001.0,
+   "referencia": "PROCURADURIA-CCC-CP-2026-0007",
+   "institucion": "Procuraduría General de la República",
+   "descripcion": "Contratación de servicios de montaje de eventos para la Procuraduría General de la República y sus Dependencias.",
+   "monto": 6400000.0,
    "moneda": "DOP",
    "monto_texto": "RD$6.4 millones",
    "monto_dudoso": false,
@@ -193,10 +203,10 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "PROCURADURIA-CCC-CP-2026-0007",
-   "institucion": "Procuraduría General de la República",
-   "descripcion": "Contratación de servicios de montaje de eventos para la Procuraduría General de la República y sus Dependencias.",
-   "monto": 6400000.0,
+   "referencia": "POLICIA NACIONAL-CCC-CP-2026-0041",
+   "institucion": "Policia Nacional",
+   "descripcion": "CONTRATACION DE SERVICIOS DE ORGANIZACION, MONTAJE, DESMONTAJE Y SUPERVISION DE EVENTOS DIRIGIDO EXCLUSIVAMENTE A EMPRESAS MIPYMES MUJER",
+   "monto": 6435001.0,
    "moneda": "DOP",
    "monto_texto": "RD$6.4 millones",
    "monto_dudoso": false,
@@ -223,21 +233,6 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "SUPERATE-DAF-CM-2026-0112",
-   "institucion": "Dirección de Desarrollo Social Supérate",
-   "descripcion": "CONTRATACIÓN DE SERVICIO DE GESTIÓN DE EVENTOS INSTITUCIONALES PARA LAS REGIONALES ENRIQUILLO Y EL VALLE",
-   "monto": 1650000.0,
-   "moneda": "DOP",
-   "monto_texto": "RD$1.6 millones",
-   "monto_dudoso": false,
-   "cierre": "2026-12-01T09:00:00-04:00",
-   "cierre_texto": "1 de diciembre, 9:00 a.m.",
-   "dias": 4,
-   "subsector": "Eventos y actividades",
-   "modalidad": "CM",
-   "url": "javascript:void(0);"
-  },
-  {
    "referencia": "SUPERATE-DAF-CM-2026-0104",
    "institucion": "Dirección de Desarrollo Social Supérate",
    "descripcion": "CONTRATACIÓN DE SERVICIO PARA LA HABILITACIÓN Y REMOZAMIENTO DE LA OFICINA REGIONAL YUMA EN HIGÜEY, PROVINCIA LA ALTAGRACIA",
@@ -253,17 +248,17 @@
    "url": "javascript:void(0);"
   },
   {
-   "referencia": "DGDC-DAF-CM-2026-0061",
-   "institucion": "Dirección General de Desarrollo Comunidad",
-   "descripcion": "Contratación de los servicios de Almuerzo y Catering para ACTIVIDAD DE INTEGRACION,Santiago (zona Norte)",
-   "monto": 1315500.0,
+   "referencia": "SUPERATE-DAF-CM-2026-0112",
+   "institucion": "Dirección de Desarrollo Social Supérate",
+   "descripcion": "CONTRATACIÓN DE SERVICIO DE GESTIÓN DE EVENTOS INSTITUCIONALES PARA LAS REGIONALES ENRIQUILLO Y EL VALLE",
+   "monto": 1650000.0,
    "moneda": "DOP",
-   "monto_texto": "RD$1.3 millones",
+   "monto_texto": "RD$1.6 millones",
    "monto_dudoso": false,
-   "cierre": "2026-12-01T11:00:00-04:00",
-   "cierre_texto": "1 de diciembre, 11:00 a.m.",
+   "cierre": "2026-12-01T09:00:00-04:00",
+   "cierre_texto": "1 de diciembre, 9:00 a.m.",
    "dias": 4,
-   "subsector": "Alimentación, catering y restaurantes",
+   "subsector": "Eventos y actividades",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -279,6 +274,21 @@
    "cierre_texto": "1 de diciembre, 11:00 a.m.",
    "dias": 4,
    "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "DGDC-DAF-CM-2026-0061",
+   "institucion": "Dirección General de Desarrollo Comunidad",
+   "descripcion": "Contratación de los servicios de Almuerzo y Catering para ACTIVIDAD DE INTEGRACION,Santiago (zona Norte)",
+   "monto": 1315500.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.3 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-01T11:00:00-04:00",
+   "cierre_texto": "1 de diciembre, 11:00 a.m.",
+   "dias": 4,
+   "subsector": "Alimentación, catering y restaurantes",
    "modalidad": "CM",
    "url": "javascript:void(0);"
   },
@@ -493,6 +503,111 @@
    "url": "javascript:void(0);"
   },
   {
+   "referencia": "MICM-DAF-CM-2026-0167",
+   "institucion": "Ministerio de Industria, Comercio y Mipymes",
+   "descripcion": "Contratación de los Servicios de Animación y Catering para la Realización de las Actividades “Encendido del Arbolito” y “Viernes Navideños”, a llevarse a cabo en las instalaciones del MICM.",
+   "monto": 1183427.9,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T10:00:00-04:00",
+   "cierre_texto": "3 de diciembre, 10:00 a.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MIMARENA-DAF-CM-2026-0173",
+   "institucion": "Ministerio de Medio Ambiente",
+   "descripcion": "Contratación de servicio de almuerzo para actividad de integración de este ministerio, Compras Verdes. (MiPymes Mujer)",
+   "monto": 2010000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T12:00:00-04:00",
+   "cierre_texto": "3 de diciembre, 12:00 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CEIRD-DAF-CM-2026-0090",
+   "institucion": "Centro de Exportación e Inversión de la Republica Dominicana",
+   "descripcion": "AP-Servicio de Catering Eventos Institucionales",
+   "monto": 614200.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$614,200",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T14:30:00-04:00",
+   "cierre_texto": "3 de diciembre, 2:30 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "INEFI-DAF-CM-2026-0067",
+   "institucion": "Instituto Nacional de Educacion Fisica",
+   "descripcion": "SOLICITUD DE ALMUERZO, MONTAJE Y LOGISTICA PARA INTEGRACION DE PERSONAL ADMINISTRATIVO Y DOCENTE A NIVEL NACIONAL, EXCLUSIVAMENTE PARA MIPYMES MUJER",
+   "monto": 1900000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.9 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T15:00:00-04:00",
+   "cierre_texto": "3 de diciembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CNZFE-DAF-CM-2026-0034",
+   "institucion": "Consejo Nacional de Zonas Francas de Exportación (CNZFE)",
+   "descripcion": "Adquisición de alimentos y bebidas para atenciones protocolares a inversionistas y delegaciones extranjeras en el marco de las actividades de promoción de inversión en Zonas Francas",
+   "monto": 394500.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$394,500",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T15:00:00-04:00",
+   "cierre_texto": "3 de diciembre, 3:00 p.m.",
+   "dias": 6,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MEM-DAF-CM-2026-0152",
+   "institucion": "Ministerio de Energía y Minas",
+   "descripcion": "Contratación de servicio de montaje, desmontaje y alimentos y bebidas para Taller Nacional sobre Desarrollo de Recursos Humanos para programa Nucleoeléctrico, dirigido a MiPymes",
+   "monto": 883180.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$883,180",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T15:30:00-04:00",
+   "cierre_texto": "3 de diciembre, 3:30 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "CORPHOTEL-DAF-CM-2026-0012",
+   "institucion": "Corporación de Fomento Industria Hotelera y Desarrollo del Turismo",
+   "descripcion": "CONTRATACION DE SERVICIOS DE GESTION DE EVENTO PARA AMENIZACION DE ACTIVIDAD DE INTEGRACION CON LOS COLABORADORES DE LOS PROYECTOS Y DE LA OFICINA PRINCIPAL",
+   "monto": 950000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$950,000",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T15:30:00-04:00",
+   "cierre_texto": "3 de diciembre, 3:30 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
    "referencia": "ARS SENASA-CCC-CP-2026-0020",
    "institucion": "Seguro Nacional de Salud (SENASA)",
    "descripcion": "Contratación de Servicios de Montaje y Logística para Reuniones y Eventos, Dirigido a MIPYMES.",
@@ -503,6 +618,81 @@
    "cierre": "2026-12-03T16:00:00-04:00",
    "cierre_texto": "3 de diciembre, 4:00 p.m.",
    "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CP",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AYUNTAMIENTO STGO-DAF-CM-2026-0132",
+   "institucion": "Ayuntamiento Santiago de los Caballeros",
+   "descripcion": "CONTRATACIÓN DE SERVICIOS PARA EVENTOS NAVIDEÑOS DEL CONCEJO DE REGIDORES A REQUERIMIENTO DE PRESIDENCIA",
+   "monto": 933670.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$933,670",
+   "monto_dudoso": false,
+   "cierre": "2026-12-03T18:00:00-04:00",
+   "cierre_texto": "3 de diciembre, 6:00 p.m.",
+   "dias": 6,
+   "subsector": "Eventos y actividades",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "SUPERATE-DAF-CM-2026-0098",
+   "institucion": "Dirección de Desarrollo Social Supérate",
+   "descripcion": "SERVICIO DE REFRIGERIO Y CATERING PARA TALLERES DAR-CE, MAPAS Y LC. DIRIGIDO A MIPYMES.",
+   "monto": 1800000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1.8 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-04T09:00:00-04:00",
+   "cierre_texto": "4 de diciembre, 9:00 a.m.",
+   "dias": 7,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "MISPAS-DAF-CM-2026-0220",
+   "institucion": "Ministerio de Salud Pública y Asistencia Social",
+   "descripcion": "Servicios de Catering/Refrigerios, dirigidos a Mipymes,(Compras Verdes)",
+   "monto": 2010000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$2 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-04T09:00:00-04:00",
+   "cierre_texto": "4 de diciembre, 9:00 a.m.",
+   "dias": 7,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "AMNA-DAF-CM-2026-0026",
+   "institucion": "Ayuntamiento Municipal Nagua",
+   "descripcion": "Contratación de Alimentos y Bebidas para la comida de los obreros, Actividades culturales, Festividades Patronales, Carnaval Municipal, Celebración Navideñas y demás Eventos Institucionales del Ayunta",
+   "monto": 1000000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$1 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-07T12:00:00-04:00",
+   "cierre_texto": "7 de diciembre, 12:00 p.m.",
+   "dias": 10,
+   "subsector": "Alimentación, catering y restaurantes",
+   "modalidad": "CM",
+   "url": "javascript:void(0);"
+  },
+  {
+   "referencia": "IDAC-CCC-CP-2026-0033",
+   "institucion": "Instituto Dominicano de Aviación Civíl",
+   "descripcion": "CONTRATACION DE SERVICIOS DE AGENCIA PARA USO DE SALONES.",
+   "monto": 5500000.0,
+   "moneda": "DOP",
+   "monto_texto": "RD$5.5 millones",
+   "monto_dudoso": false,
+   "cierre": "2026-12-07T12:30:00-04:00",
+   "cierre_texto": "7 de diciembre, 12:30 p.m.",
+   "dias": 10,
    "subsector": "Eventos y actividades",
    "modalidad": "CP",
    "url": "javascript:void(0);"
@@ -541,8 +731,8 @@
  "mercado": {
   "desde": "enero de 2026",
   "total": {
-   "cantidad": 1672,
-   "valor": 5227661499,
+   "cantidad": 1684,
+   "valor": 5246840477,
    "valor_texto": "RD$5.2 mil millones"
   },
   "meses": [
@@ -619,9 +809,9 @@
    {
     "mes": "2026-11",
     "etiqueta": "Nov",
-    "cantidad": 246,
-    "valor": 513355643,
-    "valor_texto": "RD$513.4 millones"
+    "cantidad": 258,
+    "valor": 532534621,
+    "valor_texto": "RD$532.5 millones"
    }
   ],
   "instituciones": [
@@ -651,9 +841,9 @@
    },
    {
     "nombre": "Ministerio de Salud Pública y Asistencia Social",
-    "cantidad": 28,
-    "valor": 57579249,
-    "valor_texto": "RD$57.6 millones"
+    "cantidad": 29,
+    "valor": 59589249,
+    "valor_texto": "RD$59.6 millones"
    },
    {
     "nombre": "Direccion General de Proyectos Estrategicos y Especiales de la Presidencia de la Republica (PROPEEP)",
@@ -663,9 +853,9 @@
    },
    {
     "nombre": "Centro de Exportación e Inversión de la Republica Dominicana",
-    "cantidad": 26,
-    "valor": 51319273,
-    "valor_texto": "RD$51.3 millones"
+    "cantidad": 27,
+    "valor": 51933473,
+    "valor_texto": "RD$51.9 millones"
    },
    {
     "nombre": "Procuraduría General de la República",
@@ -680,23 +870,23 @@
     "valor_texto": "RD$39.7 millones"
    },
    {
-    "nombre": "Ministerio de Cultura",
+    "nombre": "Instituto Nacional de Educacion Fisica",
     "cantidad": 23,
-    "valor": 43390255,
-    "valor_texto": "RD$43.4 millones"
+    "valor": 72039990,
+    "valor_texto": "RD$72 millones"
    }
   ],
   "subsectores": [
    {
     "nombre": "Eventos y actividades",
-    "cantidad": 767,
-    "valor": 1871666958,
+    "cantidad": 772,
+    "valor": 1881117236,
     "valor_texto": "RD$1.9 mil millones"
    },
    {
     "nombre": "Alimentación, catering y restaurantes",
-    "cantidad": 683,
-    "valor": 2175036461,
+    "cantidad": 690,
+    "valor": 2184765161,
     "valor_texto": "RD$2.2 mil millones"
    },
    {
@@ -722,7 +912,7 @@
    "mediana": 6,
    "p25": 5,
    "p75": 7,
-   "muestras": 1672
+   "muestras": 1684
   }
  }
 }
